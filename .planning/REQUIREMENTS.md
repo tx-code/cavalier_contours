@@ -43,9 +43,9 @@ one roadmap phase.
 
 ### Capability Absorption
 
-- [ ] **CAP-01**: Candidate capabilities from old C++ and Clipper2 are selected only after audit, fixtures, and gap ranking.
-- [ ] **CAP-02**: Each absorbed capability preserves the Rust crate's arc-aware model or explicitly documents why it is polygon-only.
-- [ ] **CAP-03**: Absorbed capabilities include tests, examples or docs, and FFI impact notes when externally visible.
+- [x] **CAP-01**: Candidate capabilities from old C++ and Clipper2 are selected only after audit, fixtures, and gap ranking.
+- [x] **CAP-02**: Each absorbed capability preserves the Rust crate's arc-aware model or explicitly documents why it is polygon-only.
+- [x] **CAP-03**: Absorbed capabilities include tests, examples or docs, and FFI impact notes when externally visible.
 
 ### API and FFI
 
@@ -55,7 +55,7 @@ one roadmap phase.
 
 ### Demo
 
-- [ ] **DEM-01**: The demo UI is updated only when a new or changed geometry capability needs visual validation.
+- [x] **DEM-01**: The demo UI is updated only when a new or changed geometry capability needs visual validation.
 
 ## v2 Requirements
 
@@ -114,13 +114,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ROB-02 | Phase 6 | Complete |
 | ROB-03 | Phase 6 | Complete |
 | ROB-04 | Phase 6 | Complete |
-| CAP-01 | Phase 7 | Pending |
-| CAP-02 | Phase 7 | Pending |
-| CAP-03 | Phase 7 | Pending |
+| CAP-01 | Phase 7 | Complete |
+| CAP-02 | Phase 7 | Complete |
+| CAP-03 | Phase 7 | Complete |
 | API-01 | Phase 8 | Pending |
 | API-02 | Phase 8 | Pending |
 | API-03 | Phase 8 | Pending |
-| DEM-01 | Phase 7 | Pending |
+| DEM-01 | Phase 7 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total

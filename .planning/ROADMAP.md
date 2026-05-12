@@ -22,7 +22,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Benchmark Baseline** - Establish performance baselines and benchmark provenance rules. (completed 2026-05-12)
 - [x] **Phase 5: Clipper2 Oracle Boundary** - Add polygon-only oracle evidence without changing production behavior. (completed 2026-05-12)
 - [x] **Phase 6: Robustness Gap Closure** - Rank and fix the highest-value current Rust robustness issues. (completed 2026-05-12)
-- [ ] **Phase 7: Capability Absorption Pipeline** - Select and absorb compatible capabilities with tests and visible validation when needed.
+- [x] **Phase 7: Capability Absorption Pipeline** - Select and absorb compatible capabilities with tests and visible validation when needed. (completed 2026-05-12)
 - [ ] **Phase 8: API, FFI, and Migration Readiness** - Harden external surfaces and migration notes for release-quality use.
 
 ## Phase Details
@@ -138,7 +138,7 @@ Plans:
 - [x] 07-01: Select candidate capabilities from audit and gap evidence.
 - [x] 07-02: Design capability-specific behavior and API boundaries.
 - [x] 07-03: Implement the first absorbed capability slice.
-- [ ] 07-04: Update examples, docs, FFI notes, or demo UI only as needed.
+- [x] 07-04: Update examples, docs, FFI notes, or demo UI only as needed.
 
 ### Phase 8: API, FFI, and Migration Readiness
 **Goal**: Make the absorbed behavior usable and explainable through Rust APIs, C FFI, and migration guidance.
@@ -169,5 +169,5 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 4. Benchmark Baseline | 3/3 | Complete    | 2026-05-12 |
 | 5. Clipper2 Oracle Boundary | 4/4 | Complete    | 2026-05-12 |
 | 6. Robustness Gap Closure | 4/4 | Complete | 2026-05-12 |
-| 7. Capability Absorption Pipeline | 0/4 | Not started | - |
+| 7. Capability Absorption Pipeline | 4/4 | Complete    | 2026-05-12 |
 | 8. API, FFI, and Migration Readiness | 0/3 | Not started | - |
