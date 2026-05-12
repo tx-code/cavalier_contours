@@ -165,6 +165,24 @@ pub fn run_fixture(fixture: &FixtureCase) -> FixtureRunSummary {
                 options,
             );
         }
+        (
+            FixtureOperation::Properties(input),
+            ExpectedFixtureData::Properties { result, options },
+        ) => {
+            let actual = [PlineProperties::from_pline_with_eps(
+                &input.input,
+                false,
+                fixture.tolerance.remove_redundant_eps,
+                fixture.tolerance.position_eps,
+            )];
+            assert_fixture_property_sets_match(
+                fixture,
+                "properties result",
+                &actual,
+                std::slice::from_ref(result),
+                options,
+            );
+        }
         _ => {
             panic!(
                 "fixture `{}` operation and expected data variants do not match: operation={:?}, expected={:?}",

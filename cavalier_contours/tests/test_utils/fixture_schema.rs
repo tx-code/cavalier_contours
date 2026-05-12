@@ -5,6 +5,9 @@ use super::PlineProperties;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UsageLabel {
     ForkOwnedChangeable,
+    MigrationSensitive,
+    TranslatedFixtureCandidate,
+    BenchmarkCandidate,
     HistoricalReference,
     ReferenceOnly,
     OracleComparable,
@@ -45,6 +48,7 @@ pub enum FixtureOperationKind {
     Offset,
     Boolean,
     ContainsProperties,
+    Properties,
 }
 
 #[derive(Debug, Clone)]
@@ -52,6 +56,7 @@ pub enum FixtureOperation {
     Offset(OffsetFixtureInput),
     Boolean(BooleanFixtureInput),
     ContainsProperties(ContainsPropertiesFixtureInput),
+    Properties(PropertiesFixtureInput),
 }
 
 impl FixtureOperation {
@@ -60,6 +65,7 @@ impl FixtureOperation {
             Self::Offset(_) => FixtureOperationKind::Offset,
             Self::Boolean(_) => FixtureOperationKind::Boolean,
             Self::ContainsProperties(_) => FixtureOperationKind::ContainsProperties,
+            Self::Properties(_) => FixtureOperationKind::Properties,
         }
     }
 }
@@ -101,6 +107,11 @@ pub struct ContainsPropertiesFixtureOptions {
     pub pos_equal_eps: Option<f64>,
 }
 
+#[derive(Debug, Clone)]
+pub struct PropertiesFixtureInput {
+    pub input: Polyline<f64>,
+}
+
 #[derive(Debug, Clone, Copy)]
 pub struct FixtureTolerance {
     pub property_eps: f64,
@@ -132,6 +143,10 @@ pub enum ExpectedFixtureData {
         contains: PlineContainsResult,
         subject_properties: PlineProperties,
         clip_properties: PlineProperties,
+        options: PropertyExpectationOptions,
+    },
+    Properties {
+        result: PlineProperties,
         options: PropertyExpectationOptions,
     },
     MetadataOnly {

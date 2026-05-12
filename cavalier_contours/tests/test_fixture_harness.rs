@@ -6,7 +6,8 @@ use test_utils::{
     BooleanFixtureInput, BooleanFixtureOptions, ComparisonMode, ContainsPropertiesFixtureInput,
     ContainsPropertiesFixtureOptions, ExpectedFixtureData, FixtureCase, FixtureOperation,
     FixtureProvenance, FixtureTolerance, GeometryModel, OffsetFixtureInput, OffsetFixtureOptions,
-    PlineProperties, PropertyExpectationOptions, UsageLabel, fixture_metadata, run_fixture,
+    PlineProperties, PropertiesFixtureInput, PropertyExpectationOptions, UsageLabel,
+    fixture_metadata, run_fixture,
 };
 
 const CURRENT_RUST_SEED_COMMIT: &str = "a6b56ac";
@@ -136,6 +137,28 @@ fn contains_properties_seed() -> FixtureCase {
     )
 }
 
+fn properties_seed() -> FixtureCase {
+    FixtureCase::new(
+        "current-rust-properties-rectangle",
+        current_rust_provenance("cavalier_contours/tests/test_pline_properties.rs"),
+        GeometryModel::BulgeArcPolyline,
+        FixtureOperation::Properties(PropertiesFixtureInput {
+            input: pline_closed![
+                (0.0, 0.0, 0.0),
+                (4.0, 0.0, 0.0),
+                (4.0, 3.0, 0.0),
+                (0.0, 3.0, 0.0),
+            ],
+        }),
+        ComparisonMode::ApproximateParity,
+        FixtureTolerance::default(),
+        ExpectedFixtureData::Properties {
+            result: PlineProperties::new(4, 12.0, 14.0, 0.0, 0.0, 4.0, 3.0, vec![]),
+            options: PropertyExpectationOptions::default(),
+        },
+    )
+}
+
 fn metadata_only_gap_seed() -> FixtureCase {
     FixtureCase::new(
         "metadata-only-gap-future-oracle-classification",
@@ -156,7 +179,12 @@ fn metadata_only_gap_seed() -> FixtureCase {
 
 #[test]
 fn current_rust_seed_fixtures_execute_through_runner() {
-    for fixture in [offset_seed(), boolean_seed(), contains_properties_seed()] {
+    for fixture in [
+        offset_seed(),
+        boolean_seed(),
+        contains_properties_seed(),
+        properties_seed(),
+    ] {
         let summary = run_fixture(&fixture);
         assert!(summary.executed, "fixture {} should execute", fixture.id);
         assert_eq!(
