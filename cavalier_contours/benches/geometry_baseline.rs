@@ -3,8 +3,11 @@ use cavalier_contours::polyline::{
     BooleanOp, PlineCreation, PlineSource, PlineSourceMut, Polyline, seg_fast_approx_bounding_box,
 };
 use criterion::{BenchmarkId, Criterion, criterion_group, criterion_main};
-use std::f64::consts::{PI, TAU};
-use std::hint::black_box;
+use std::{
+    f64::consts::{PI, TAU},
+    hint::black_box,
+    time::Duration,
+};
 
 const ARCS_TO_LINES_ERROR: f64 = 0.01;
 const PATHOLOGICAL_SEGMENT_COUNTS: [usize; 4] = [10, 25, 50, 100];
@@ -440,7 +443,10 @@ fn bench_properties(c: &mut Criterion) {
 
 criterion_group! {
     name = geometry_baseline;
-    config = Criterion::default().sample_size(10);
+    config = Criterion::default()
+        .sample_size(10)
+        .warm_up_time(Duration::from_millis(100))
+        .measurement_time(Duration::from_millis(300));
     targets = bench_offsets, bench_booleans, bench_intersections, bench_spatial_index, bench_properties
 }
 criterion_main!(geometry_baseline);

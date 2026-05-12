@@ -21,6 +21,17 @@ The full command writes generated Criterion output under `target/criterion`.
 Those generated outputs are local measurement artifacts and must not be
 committed.
 
+## Harness Mode
+
+The benchmark target uses Criterion `0.8.2` with:
+
+- `sample_size = 10`
+- `warm_up_time = 100ms`
+- `measurement_time = 300ms`
+
+This is a repeatable baseline configuration for broad coverage across many
+profile families. It is not a production regression threshold.
+
 ## Coverage
 
 The benchmark target establishes current Rust and historical-profile-shaped
@@ -55,6 +66,21 @@ Record these fields when capturing a full local baseline:
 - Benchmark command and whether `-- --test` smoke mode or full Criterion
   measurement mode was used.
 - Cargo profile notes, including workspace dev dependency optimization.
+
+## Captured Baseline Run
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-05-12 |
+| Timezone | China Standard Time |
+| OS | Microsoft Windows NT 10.0.26200.0 |
+| CPU | 12th Gen Intel(R) Core(TM) i5-12600KF |
+| Source revision | `688a72fd2d2a1255f742dd56eb49649ffbb8b82e` before final verification-doc commit |
+| `rustc -Vv` | `rustc 1.92.0 (ded5c06cf 2025-12-08)`, host `x86_64-pc-windows-msvc`, LLVM `21.1.3` |
+| `cargo -V` | `cargo 1.92.0 (344c4567c 2025-10-21)` |
+| Smoke mode | `cargo bench -p cavalier_contours --bench geometry_baseline -- --test` passed |
+| Full measurement mode | `cargo bench -p cavalier_contours --bench geometry_baseline` passed |
+| Generated output | Created under `target/criterion`; not committed |
 
 ## Cost Accounting
 
