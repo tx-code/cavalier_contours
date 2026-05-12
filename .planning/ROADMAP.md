@@ -136,8 +136,8 @@ Plans:
 
 Plans:
 - [x] 07-01: Select candidate capabilities from audit and gap evidence.
-- [ ] 07-02: Design capability-specific behavior and API boundaries.
-- [ ] 07-03: Implement the first absorbed capability slice.
+- [x] 07-02: Design capability-specific behavior and API boundaries.
+- [x] 07-03: Implement the first absorbed capability slice.
 - [ ] 07-04: Update examples, docs, FFI notes, or demo UI only as needed.
 
 ### Phase 8: API, FFI, and Migration Readiness

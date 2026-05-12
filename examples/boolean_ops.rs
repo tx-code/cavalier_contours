@@ -3,12 +3,14 @@ use cavalier_contours::{
     polyline::{
         BooleanOp, BooleanResultInfo, PlineBooleanOptions, PlineSource, PlineSourceMut, Polyline,
     },
+    static_aabb2d_index::AABB,
 };
 
 fn main() {
     union_operations();
     intersection_operations();
     difference_operations();
+    rect_clip_operations();
     special_cases();
 }
 
@@ -207,6 +209,30 @@ fn difference_operations() {
     println!("Inner - outer rectangle: empty result as expected");
 
     println!("Difference operations completed successfully!\n");
+}
+
+fn rect_clip_operations() {
+    println!("Testing rectangle clipping convenience operation...");
+
+    let mut circle = Polyline::new_closed();
+    circle.add(-5.0, 0.0, 1.0);
+    circle.add(5.0, 0.0, 1.0);
+
+    let rect = AABB::new(-2.0, -3.0, 3.0, 3.0);
+    let clipped = circle.rect_clip(rect);
+
+    assert!(
+        !clipped.pos_plines.is_empty(),
+        "Rect clip should produce at least one clipped positive polyline"
+    );
+
+    println!(
+        "Rect clip result: pos={}, neg={}, info={:?}",
+        clipped.pos_plines.len(),
+        clipped.neg_plines.len(),
+        clipped.result_info
+    );
+    println!("Rectangle clipping convenience operation completed successfully!\n");
 }
 
 // XOR test combined with special cases for brevity

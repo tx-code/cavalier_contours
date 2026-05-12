@@ -1682,6 +1682,68 @@ pub trait PlineSource {
         polyline_boolean(self, other, operation, options)
     }
 
+    /// Clip this polyline to an axis-aligned rectangle using default options.
+    ///
+    /// This is a convenience method equivalent to boolean intersection (`And`) with a rectangle
+    /// polyline built from `rect`.
+    ///
+    /// See [PlineSource::rect_clip_opt] for more information.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `Self::Num` type fails to cast to/from a `u16` (required for spatial index).
+    ///
+    /// # Examples
+    /// ```
+    /// # use cavalier_contours::polyline::*;
+    /// # use static_aabb2d_index::AABB;
+    /// # use cavalier_contours::pline_closed;
+    /// let circle = pline_closed![(-5.0, 0.0, 1.0), (5.0, 0.0, 1.0)];
+    /// let rect = AABB::new(-2.0, -3.0, 2.0, 3.0);
+    /// let result = circle.rect_clip(rect);
+    /// assert!(!result.pos_plines.is_empty());
+    /// ```
+    fn rect_clip(&self, rect: AABB<Self::Num>) -> BooleanResult<Self::OutputPolyline> {
+        self.rect_clip_opt(rect, &Default::default())
+    }
+
+    /// Clip this polyline to an axis-aligned rectangle with options provided.
+    ///
+    /// The rectangle bounds are normalized so swapped min/max values are accepted.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `Self::Num` type fails to cast to/from a `u16` (required for spatial index).
+    ///
+    /// # Examples
+    /// ```
+    /// # use cavalier_contours::polyline::*;
+    /// # use static_aabb2d_index::AABB;
+    /// # use cavalier_contours::pline_closed;
+    /// let subject = pline_closed![(-5.0, 0.0, 1.0), (5.0, 0.0, 1.0)];
+    /// let rect = AABB::new(2.0, 3.0, -2.0, -3.0);
+    /// let result = subject.rect_clip_opt(rect, &PlineBooleanOptions::default());
+    /// assert!(!result.pos_plines.is_empty());
+    /// ```
+    fn rect_clip_opt(
+        &self,
+        rect: AABB<Self::Num>,
+        options: &PlineBooleanOptions<Self::Num>,
+    ) -> BooleanResult<Self::OutputPolyline> {
+        let min_x = num_traits::real::Real::min(rect.min_x, rect.max_x);
+        let max_x = num_traits::real::Real::max(rect.min_x, rect.max_x);
+        let min_y = num_traits::real::Real::min(rect.min_y, rect.max_y);
+        let max_y = num_traits::real::Real::max(rect.min_y, rect.max_y);
+
+        let mut rect_pline = Self::OutputPolyline::with_capacity(4, true);
+        rect_pline.add(min_x, min_y, Self::Num::zero());
+        rect_pline.add(max_x, min_y, Self::Num::zero());
+        rect_pline.add(max_x, max_y, Self::Num::zero());
+        rect_pline.add(min_x, max_y, Self::Num::zero());
+
+        self.boolean_opt(&rect_pline, BooleanOp::And, options)
+    }
+
     /// Determine if this polyline fully contains another using default options.
     ///
     /// Caution: Polylines with self-intersections may generate unexpected results.

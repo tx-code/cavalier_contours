@@ -314,6 +314,84 @@ mod test_same {
     );
 }
 
+mod test_rect_clip {
+    use super::*;
+    use cavalier_contours::pline_closed;
+    use static_aabb2d_index::AABB;
+
+    // Selected Phase 7 candidate: rect-clip-convenience.
+    fn rect_pline_from_aabb(rect: AABB<f64>) -> Polyline<f64> {
+        let min_x = rect.min_x.min(rect.max_x);
+        let max_x = rect.min_x.max(rect.max_x);
+        let min_y = rect.min_y.min(rect.max_y);
+        let max_y = rect.min_y.max(rect.max_y);
+
+        let mut result = Polyline::new_closed();
+        result.add(min_x, min_y, 0.0);
+        result.add(max_x, min_y, 0.0);
+        result.add(max_x, max_y, 0.0);
+        result.add(min_x, max_y, 0.0);
+        result
+    }
+
+    #[test]
+    fn rect_clip_matches_boolean_and() {
+        let subject = pline_closed![(-10.0, 0.0, 1.0), (10.0, 0.0, 1.0)];
+        let rect = AABB::new(-4.0, -3.0, 7.0, 5.0);
+        let rect_pline = rect_pline_from_aabb(rect);
+
+        let expected = subject.boolean(&rect_pline, BooleanOp::And);
+        let actual = subject.rect_clip(rect);
+
+        let expected_pos = create_boolean_property_set(&expected.pos_plines);
+        let actual_pos = create_boolean_property_set(&actual.pos_plines);
+        let expected_neg = create_boolean_property_set(&expected.neg_plines);
+        let actual_neg = create_boolean_property_set(&actual.neg_plines);
+
+        assert!(
+            property_sets_match_abs_a(&actual_pos, &expected_pos)
+                && property_sets_match_abs_a(&actual_neg, &expected_neg),
+            "rect_clip should match explicit boolean intersection"
+        );
+    }
+
+    #[test]
+    fn rect_clip_normalizes_swapped_bounds() {
+        let subject = pline_closed![(-10.0, 0.0, 1.0), (10.0, 0.0, 1.0)];
+
+        let normal = AABB::new(-4.0, -3.0, 7.0, 5.0);
+        let swapped = AABB::new(7.0, 5.0, -4.0, -3.0);
+
+        let normal_result = subject.rect_clip(normal);
+        let swapped_result = subject.rect_clip(swapped);
+
+        let normal_pos = create_boolean_property_set(&normal_result.pos_plines);
+        let swapped_pos = create_boolean_property_set(&swapped_result.pos_plines);
+        let normal_neg = create_boolean_property_set(&normal_result.neg_plines);
+        let swapped_neg = create_boolean_property_set(&swapped_result.neg_plines);
+
+        assert!(
+            property_sets_match_abs_a(&normal_pos, &swapped_pos)
+                && property_sets_match_abs_a(&normal_neg, &swapped_neg),
+            "rect_clip should normalize swapped min/max bounds"
+        );
+    }
+
+    #[test]
+    fn rect_clip_open_polyline_returns_empty() {
+        let mut open = Polyline::new();
+        open.add(-1.0, 0.0, 0.0);
+        open.add(1.0, 0.0, 0.0);
+
+        let result = open.rect_clip(AABB::new(-2.0, -2.0, 2.0, 2.0));
+
+        assert!(
+            result.pos_plines.is_empty() && result.neg_plines.is_empty(),
+            "open polyline rect_clip should return no result polylines"
+        );
+    }
+}
+
 fn verify_slice_set(
     result_pline: &BooleanResultPline<Polyline>,
     pline1: &Polyline,
