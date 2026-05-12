@@ -70,7 +70,7 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: Inventory old C++ tests, examples, and benchmark profiles for fixture value.
+- [x] 03-01: Inventory old C++ tests, examples, and benchmark profiles for fixture value.
 - [ ] 03-02: Translate prioritized behavior cases into Rust fixtures.
 - [ ] 03-03: Validate imported fixtures through the property harness.
 
