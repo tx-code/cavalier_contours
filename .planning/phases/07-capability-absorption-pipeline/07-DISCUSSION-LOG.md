@@ -1,7 +1,7 @@
 # Phase 07: capability-absorption-pipeline - Discussion Log
 
 > **Audit trail only.** Do not use as input to planning, research, or execution agents.
-> Decisions are captured in CONTEXT.md — this log preserves the alternatives considered.
+> Decisions are captured in CONTEXT.md - this log preserves the alternatives considered.
 
 **Date:** 2026-05-12
 **Phase:** 07-capability-absorption-pipeline
