@@ -18,7 +18,7 @@ one roadmap phase.
 ### Fixtures
 
 - [x] **FIX-01**: The project defines a durable fixture schema with source, geometry model, tolerance policy, comparison mode, and expected properties.
-- [ ] **FIX-02**: Tests can compare geometry by properties such as area, extents, path length, orientation, containment, repeat vertices, and result counts.
+- [x] **FIX-02**: Tests can compare geometry by properties such as area, extents, path length, orientation, containment, repeat vertices, and result counts.
 - [ ] **FIX-03**: High-value old C++ tests and benchmark profiles are translated or represented as Rust regression fixtures.
 - [ ] **FIX-04**: Eligible Clipper2 polygon-only cases are represented as Rust fixtures with explicit comparability classification.
 
@@ -101,7 +101,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUD-03 | Phase 1 | Complete |
 | AUD-04 | Phase 1 | Complete |
 | FIX-01 | Phase 2 | Complete |
-| FIX-02 | Phase 2 | Pending |
+| FIX-02 | Phase 2 | Complete |
 | FIX-03 | Phase 3 | Pending |
 | FIX-04 | Phase 5 | Pending |
 | BEN-01 | Phase 4 | Pending |

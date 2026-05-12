@@ -55,7 +55,7 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Define fixture schema and manifest conventions.
+- [x] 02-01: Define fixture schema and manifest conventions.
 - [ ] 02-02: Extend property comparison helpers for absorbed cases.
 - [ ] 02-03: Add seed fixtures proving the schema and harness work.
 
