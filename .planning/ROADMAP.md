@@ -56,7 +56,7 @@ Plans:
 
 Plans:
 - [x] 02-01: Define fixture schema and manifest conventions.
-- [ ] 02-02: Extend property comparison helpers for absorbed cases.
+- [x] 02-02: Extend property comparison helpers for absorbed cases.
 - [ ] 02-03: Add seed fixtures proving the schema and harness work.
 
 ### Phase 3: Historical C++ Evidence Mining
