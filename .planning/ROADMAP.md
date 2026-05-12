@@ -57,7 +57,7 @@ Plans:
 Plans:
 - [x] 02-01: Define fixture schema and manifest conventions.
 - [x] 02-02: Extend property comparison helpers for absorbed cases.
-- [ ] 02-03: Add seed fixtures proving the schema and harness work.
+- [x] 02-03: Add seed fixtures proving the schema and harness work.
 
 ### Phase 3: Historical C++ Evidence Mining
 **Goal**: Turn old C++ CavalierContours tests and examples into classified Rust regression evidence.

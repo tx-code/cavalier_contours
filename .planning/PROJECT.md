@@ -35,6 +35,11 @@ polygon-only Clipper2 reference results.
   offsets, booleans, shape offsets, and FFI behavior.
 - [validated] CI builds and tests the workspace on Linux, Windows, and macOS,
   with formatting, clippy, and docs checks.
+- [validated] Phase 1 recorded the cross-source capability inventory,
+  provenance boundaries, comparison taxonomy, and public API/FFI surface audit.
+- [validated] Phase 2 added a test-only typed fixture schema, reusable property
+  harness, and current-Rust seed fixtures for offset, boolean, and
+  contains/properties behavior.
 
 ### Active
 
@@ -88,6 +93,10 @@ changes: cross-library case inventory, normalized fixtures, expected-result
 rules, benchmark baselines, and a clear distinction between exact parity,
 approximate parity, and intentionally different arc-aware behavior.
 
+Phase 2 established the first normalized fixture layer in Rust test utilities.
+The harness is intentionally test-only and seeds only current Rust behavior;
+old C++ mining, Clipper2 oracle output, and benchmarks remain downstream work.
+
 ## Constraints
 
 - **Mainline implementation**: Rust `cavalier_contours` remains the only primary
@@ -133,4 +142,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-05-12 after initialization*
+*Last updated: 2026-05-12 after Phase 2 completion*
