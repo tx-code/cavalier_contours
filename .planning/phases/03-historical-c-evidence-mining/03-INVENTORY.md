@@ -54,7 +54,7 @@
 |------|--------|-------|
 | `cargo test -p cavalier_contours --test test_historical_cavalier_contours` | pass | Executes `executable-green` offset/property fixtures and asserts `metadata-only-gap` / `metadata-only-not-comparable` records do not execute. |
 | `cargo test -p cavalier_contours --test test_fixture_harness` | pass | Confirms Phase 2 seed fixtures still execute through the extended harness. |
-| `cargo test --workspace` | pending final gate | Phase 03 final verification runs this after inventory/test synchronization. |
+| `cargo test --workspace` | pass | Full workspace gate passed after inventory/test synchronization. |
 
 ## Requirement Coverage
 
