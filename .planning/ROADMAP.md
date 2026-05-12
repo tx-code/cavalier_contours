@@ -24,6 +24,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Robustness Gap Closure** - Rank and fix the highest-value current Rust robustness issues. (completed 2026-05-12)
 - [x] **Phase 7: Capability Absorption Pipeline** - Select and absorb compatible capabilities with tests and visible validation when needed. (completed 2026-05-12)
 - [x] **Phase 8: API, FFI, and Migration Readiness** - Harden external surfaces and migration notes for release-quality use. (completed 2026-05-12)
+- [ ] **Phase 9: C++ Parity Deep Comparison (No Clipper)** - Deeply compare old C++ logic against Rust on boolean/offset/intersection behavior and classify true bugs versus intentional divergences.
 
 ## Phase Details
 
@@ -156,6 +157,21 @@ Plans:
 - [x] 08-02: Update ABI tests, generated header, and external docs if needed.
 - [x] 08-03: Write old C++ migration notes and milestone readiness summary.
 
+### Phase 9: C++ Parity Deep Comparison (No Clipper)
+**Goal**: Establish logic-level parity status between old C++ CavalierContours and Rust `cavalier_contours` without involving Clipper-derived evidence.
+**Depends on**: Phase 8
+**Requirements**: [PAR-01, PAR-02, PAR-03]
+**Success Criteria** (what must be TRUE):
+  1. A file-level parity map lists C++ modules/tests and mapped Rust modules/tests for boolean, offset, intersection, and base geometry logic.
+  2. High-value C++ behavior cases run as executable Rust parity tests where possible; remaining cases are explicitly classified as `bug`, `intentional-divergence`, or `not-comparable`.
+  3. Every confirmed mismatch has evidence and a fix/defer decision with verification notes.
+**Plans**: 3 plans
+
+Plans:
+- [ ] 09-01: Build boolean/combined-operation parity map and executable case set.
+- [ ] 09-02: Build offset/intersection parity map and executable case set.
+- [ ] 09-03: Classify mismatches, implement selected fixes, and close verification gates.
+
 ## Progress
 
 **Execution Order:**
@@ -171,3 +187,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 6. Robustness Gap Closure | 4/4 | Complete | 2026-05-12 |
 | 7. Capability Absorption Pipeline | 4/4 | Complete    | 2026-05-12 |
 | 8. API, FFI, and Migration Readiness | 3/3 | Complete    | 2026-05-12 |
+| 9. C++ Parity Deep Comparison (No Clipper) | 0/3 | Not started | - |

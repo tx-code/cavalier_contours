@@ -78,6 +78,12 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **SUR-01**: Redesign the demo UI as a productized geometry workbench.
 - **SUR-02**: Provide a production Clipper2 backend or runtime dependency.
 
+### C++ Parity Deep Comparison
+
+- **PAR-01**: The project maps old C++ logic modules/tests to Rust modules/tests for deep parity review without Clipper involvement.
+- **PAR-02**: High-value C++ cases in boolean, offset, and intersection paths are executed or explicitly classified with evidence.
+- **PAR-03**: Confirmed C++ vs Rust mismatches are classified as bug, intentional divergence, or not-comparable with recorded fix/defer decisions.
+
 ## Out of Scope
 
 Explicitly excluded to prevent scope creep.
@@ -121,11 +127,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | API-02 | Phase 8 | Complete |
 | API-03 | Phase 8 | Complete |
 | DEM-01 | Phase 7 | Complete |
+| PAR-01 | Phase 9 | Pending |
+| PAR-02 | Phase 9 | Pending |
+| PAR-03 | Phase 9 | Pending |
 
 **Coverage:**
 - v1 requirements: 25 total
-- Mapped to phases: 25
-- Unmapped: 0
+- v1 mapped to phases: 25
+- v1 unmapped: 0
+- additional tracked post-v1 requirements: 3 (`PAR-01..PAR-03`), mapped to Phase 9
 
 ---
 *Requirements defined: 2026-05-12*
