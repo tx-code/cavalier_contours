@@ -123,7 +123,7 @@ impl Default for PropertyExpectationOptions {
             compare_orientation: false,
             compare_open_closed: false,
             compare_repeat_vertices: false,
-            compare_user_data: true,
+            compare_user_data: false,
             compare_abs_area: false,
         }
     }
