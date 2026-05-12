@@ -10,10 +10,10 @@ one roadmap phase.
 
 ### Audit
 
-- [ ] **AUD-01**: The project records a capability inventory across Rust `cavalier_contours`, old C++ CavalierContours, and Clipper2.
-- [ ] **AUD-02**: The project records license, provenance, and acceptable-use boundaries for mined tests, fixtures, benchmarks, and reference behavior.
-- [ ] **AUD-03**: The project defines a behavior taxonomy for exact parity, approximate parity, intentional divergence, and not-comparable cases.
-- [ ] **AUD-04**: The project compares public Rust APIs, C FFI surface, old C++ C API, and relevant Clipper2 operations for migration and compatibility planning.
+- [x] **AUD-01**: The project records a capability inventory across Rust `cavalier_contours`, old C++ CavalierContours, and Clipper2.
+- [x] **AUD-02**: The project records license, provenance, and acceptable-use boundaries for mined tests, fixtures, benchmarks, and reference behavior.
+- [x] **AUD-03**: The project defines a behavior taxonomy for exact parity, approximate parity, intentional divergence, and not-comparable cases.
+- [x] **AUD-04**: The project compares public Rust APIs, C FFI surface, old C++ C API, and relevant Clipper2 operations for migration and compatibility planning.
 
 ### Fixtures
 
@@ -96,10 +96,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUD-01 | Phase 1 | Pending |
-| AUD-02 | Phase 1 | Pending |
-| AUD-03 | Phase 1 | Pending |
-| AUD-04 | Phase 1 | Pending |
+| AUD-01 | Phase 1 | Complete |
+| AUD-02 | Phase 1 | Complete |
+| AUD-03 | Phase 1 | Complete |
+| AUD-04 | Phase 1 | Complete |
 | FIX-01 | Phase 2 | Pending |
 | FIX-02 | Phase 2 | Pending |
 | FIX-03 | Phase 3 | Pending |

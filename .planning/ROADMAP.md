@@ -16,7 +16,7 @@ evidence to prioritize robustness fixes and selected capability absorption.
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Absorption Contract Audit** - Define source boundaries, comparability rules, and API migration baseline.
+- [x] **Phase 1: Absorption Contract Audit** - Define source boundaries, comparability rules, and API migration baseline. (completed 2026-05-12)
 - [ ] **Phase 2: Fixture Schema and Property Harness** - Create durable geometry fixture and comparison infrastructure.
 - [ ] **Phase 3: Historical C++ Evidence Mining** - Translate high-value old C++ behavior into Rust regression evidence.
 - [ ] **Phase 4: Benchmark Baseline** - Establish performance baselines and benchmark provenance rules.
@@ -39,10 +39,10 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 4 plans
 
 Plans:
-- [ ] 01-01: Build the three-codebase capability inventory.
-- [ ] 01-02: Record license, provenance, and acceptable-use boundaries.
-- [ ] 01-03: Define the behavior taxonomy and comparison policy.
-- [ ] 01-04: Compare API, FFI, and migration surfaces.
+- [x] 01-01: Build the three-codebase capability inventory.
+- [x] 01-02: Record license, provenance, and acceptable-use boundaries.
+- [x] 01-03: Define the behavior taxonomy and comparison policy.
+- [x] 01-04: Compare API, FFI, and migration surfaces.
 
 ### Phase 2: Fixture Schema and Property Harness
 **Goal**: Create the reusable evidence format and Rust comparison helpers needed before importing more cases.
@@ -163,7 +163,7 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Absorption Contract Audit | 0/4 | Not started | - |
+| 1. Absorption Contract Audit | 4/4 | Complete    | 2026-05-12 |
 | 2. Fixture Schema and Property Harness | 0/3 | Not started | - |
 | 3. Historical C++ Evidence Mining | 0/3 | Not started | - |
 | 4. Benchmark Baseline | 0/3 | Not started | - |
