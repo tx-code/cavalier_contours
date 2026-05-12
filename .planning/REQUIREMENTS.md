@@ -24,9 +24,9 @@ one roadmap phase.
 
 ### Benchmarks
 
-- [ ] **BEN-01**: The project records a current Rust benchmark baseline for offsets, booleans, intersections, and spatial-index-heavy cases.
-- [ ] **BEN-02**: Historical old C++ benchmark profile families are mapped to Rust benchmark or measurement cases.
-- [ ] **BEN-03**: Benchmarks document whether arc approximation, conversion, and oracle execution costs are included or excluded.
+- [x] **BEN-01**: The project records a current Rust benchmark baseline for offsets, booleans, intersections, and spatial-index-heavy cases.
+- [x] **BEN-02**: Historical old C++ benchmark profile families are mapped to Rust benchmark or measurement cases.
+- [x] **BEN-03**: Benchmarks document whether arc approximation, conversion, and oracle execution costs are included or excluded.
 
 ### Oracle
 
@@ -104,9 +104,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FIX-02 | Phase 2 | Complete |
 | FIX-03 | Phase 3 | Complete |
 | FIX-04 | Phase 5 | Pending |
-| BEN-01 | Phase 4 | Pending |
-| BEN-02 | Phase 4 | Pending |
-| BEN-03 | Phase 4 | Pending |
+| BEN-01 | Phase 4 | Complete |
+| BEN-02 | Phase 4 | Complete |
+| BEN-03 | Phase 4 | Complete |
 | ORC-01 | Phase 5 | Pending |
 | ORC-02 | Phase 5 | Pending |
 | ORC-03 | Phase 5 | Pending |

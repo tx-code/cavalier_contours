@@ -85,9 +85,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: Add or document current Rust measurement baseline.
-- [ ] 04-02: Map historical C++ benchmark families to Rust cases.
-- [ ] 04-03: Document benchmark provenance and cost-accounting rules.
+- [x] 04-01: Add or document current Rust measurement baseline.
+- [x] 04-02: Map historical C++ benchmark families to Rust cases.
+- [x] 04-03: Document benchmark provenance and cost-accounting rules.
 
 ### Phase 5: Clipper2 Oracle Boundary
 **Goal**: Use Clipper2 as a dev-only polygon reference without redefining arc-aware Rust behavior.
