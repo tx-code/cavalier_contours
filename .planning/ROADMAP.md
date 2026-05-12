@@ -72,7 +72,7 @@ Plans:
 Plans:
 - [x] 03-01: Inventory old C++ tests, examples, and benchmark profiles for fixture value.
 - [x] 03-02: Translate prioritized behavior cases into Rust fixtures.
-- [ ] 03-03: Validate imported fixtures through the property harness.
+- [x] 03-03: Validate imported fixtures through the property harness.
 
 ### Phase 4: Benchmark Baseline
 **Goal**: Establish repeatable measurement coverage for current Rust behavior and historical benchmark families.
