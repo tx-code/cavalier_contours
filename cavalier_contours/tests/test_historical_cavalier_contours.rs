@@ -6,8 +6,9 @@ use test_utils::{
     BooleanFixtureInput, BooleanFixtureOptions, ComparisonMode, ExpectedFixtureData, FixtureCase,
     FixtureOperation, FixtureProvenance, FixtureTolerance, GeometryModel, OffsetFixtureInput,
     OffsetFixtureOptions, PlineProperties, PropertiesFixtureInput, PropertyExpectationOptions,
-    UsageLabel, run_fixture,
+    UsageLabel, fixture_metadata, run_fixture,
 };
+use test_utils::{FixtureMetadata, FixtureOperationKind};
 
 const OLD_CPP_REPO: &str = "CavalierContours";
 const OLD_CPP_COMMIT: &str = "31a012947aa2e7e9474e2ec90502825afe8b99a4";
@@ -222,4 +223,91 @@ fn historical_metadata_records_do_not_execute() {
         );
         assert_eq!(summary.metadata.source_repo, OLD_CPP_REPO);
     }
+}
+
+#[test]
+fn historical_fixture_metadata_is_observable() {
+    let executable_fixtures = executable_historical_fixtures();
+    let executable_metadata = fixture_metadata(&executable_fixtures);
+
+    assert_metadata(
+        &executable_metadata,
+        "historical-cpp-offset-closed-rectangle-inward",
+        "tests/tests/TEST_cavc_parallel_offset.cpp",
+        UsageLabel::TranslatedFixtureCandidate,
+        ComparisonMode::ApproximateParity,
+        FixtureOperationKind::Offset,
+        true,
+    );
+    assert_metadata(
+        &executable_metadata,
+        "historical-cpp-offset-collapsed-rectangle",
+        "tests/tests/TEST_cavc_parallel_offset.cpp",
+        UsageLabel::TranslatedFixtureCandidate,
+        ComparisonMode::ApproximateParity,
+        FixtureOperationKind::Offset,
+        true,
+    );
+    assert_metadata(
+        &executable_metadata,
+        "historical-cpp-properties-ccw-circle-x-aligned",
+        "tests/tests/TEST_cavc_pline_function.cpp",
+        UsageLabel::TranslatedFixtureCandidate,
+        ComparisonMode::ApproximateParity,
+        FixtureOperationKind::Properties,
+        true,
+    );
+
+    let metadata_only_records = metadata_only_historical_records();
+    let metadata_only = fixture_metadata(&metadata_only_records);
+
+    assert_metadata(
+        &metadata_only,
+        "historical-cpp-combine-circle-rectangle-union",
+        "tests/tests/TEST_cavc_combine_plines.cpp",
+        UsageLabel::TranslatedFixtureCandidate,
+        ComparisonMode::Gap,
+        FixtureOperationKind::Boolean,
+        false,
+    );
+    assert_metadata(
+        &metadata_only,
+        "historical-cpp-c-api-surface-migration-record",
+        "c_api_include/cavaliercontours.h",
+        UsageLabel::MigrationSensitive,
+        ComparisonMode::NotComparable,
+        FixtureOperationKind::Properties,
+        false,
+    );
+    assert_metadata(
+        &metadata_only,
+        "historical-cpp-static-spatial-index-query-record",
+        "tests/tests/TEST_staticspatialindex.cpp",
+        UsageLabel::BenchmarkCandidate,
+        ComparisonMode::NotComparable,
+        FixtureOperationKind::Offset,
+        false,
+    );
+}
+
+fn assert_metadata(
+    metadata: &[FixtureMetadata],
+    id: &'static str,
+    source_path: &'static str,
+    usage_label: UsageLabel,
+    comparison: ComparisonMode,
+    operation: FixtureOperationKind,
+    executable: bool,
+) {
+    let actual = metadata
+        .iter()
+        .find(|item| item.id == id)
+        .unwrap_or_else(|| panic!("missing fixture metadata for {id}"));
+
+    assert_eq!(actual.source_repo, OLD_CPP_REPO);
+    assert_eq!(actual.source_path, source_path);
+    assert_eq!(actual.usage_label, usage_label);
+    assert_eq!(actual.comparison, comparison);
+    assert_eq!(actual.operation, operation);
+    assert_eq!(actual.executable, executable);
 }
