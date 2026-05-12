@@ -25,19 +25,19 @@
 
 ## Selected Executable Fixture Candidates
 
-| Fixture ID | Source path | Old C++ case | Operation kind | Comparison mode | Expected property source | Tolerance policy | Fallback if execution fails | Planned status |
-|------------|-------------|--------------|----------------|-----------------|--------------------------|------------------|-----------------------------|----------------|
-| `historical-cpp-offset-closed-rectangle-inward` | `tests/tests/TEST_cavc_parallel_offset.cpp` | `closed_rectangle_inward` | Offset | `ApproximateParity` | `vertex_count=4`, `area=96`, `path_length=44`, extents `(2,2)-(18,8)` | default | convert to metadata-only `Gap` with observed mismatch | executable candidate |
-| `historical-cpp-offset-collapsed-rectangle` | `tests/tests/TEST_cavc_parallel_offset.cpp` | `collapsed_rectangle` | Offset | `ApproximateParity` when empty offset result passes | empty offset result | default | metadata-only `Gap` if current Rust emits geometry | executable candidate |
-| `historical-cpp-combine-circle-rectangle-union` | `tests/tests/TEST_cavc_combine_plines.cpp` | `circle_rectangle_union`, `combine_mode=0` | Boolean | `ApproximateParity` with `compare_abs_area=true` | old `expectedRemaining` property row | default | metadata-only `Gap` if Rust boolean output differs | executable candidate |
-| `historical-cpp-properties-ccw-circle-x-aligned` | `tests/tests/TEST_cavc_pline_function.cpp` | `ccw_circle_x_aligned`, radius `5`, center `(1,1)` | Properties | `ApproximateParity` | computed old test expectations: `PI*25`, `2*PI*5`, extents `(-4,-4)-(6,6)` | default | metadata-only `Gap` if current property calculation differs | executable candidate |
+| Fixture ID | Source path | Old C++ case | Operation kind | Comparison mode | Expected property source | Tolerance policy | Fallback if execution fails | Final status |
+|------------|-------------|--------------|----------------|-----------------|--------------------------|------------------|-----------------------------|--------------|
+| `historical-cpp-offset-closed-rectangle-inward` | `tests/tests/TEST_cavc_parallel_offset.cpp` | `closed_rectangle_inward` | Offset | `ApproximateParity` | `vertex_count=4`, `area=96`, `path_length=44`, extents `(2,2)-(18,8)` | default | convert to metadata-only `Gap` with observed mismatch | `executable-green` |
+| `historical-cpp-offset-collapsed-rectangle` | `tests/tests/TEST_cavc_parallel_offset.cpp` | `collapsed_rectangle` | Offset | `ApproximateParity` | empty offset result | default | metadata-only `Gap` if current Rust emits geometry | `executable-green` |
+| `historical-cpp-combine-circle-rectangle-union` | `tests/tests/TEST_cavc_combine_plines.cpp` | `circle_rectangle_union`, `combine_mode=0` | Boolean | `Gap` | old `expectedRemaining` row has `vertex_count=10`; current Rust produces equivalent area/path/extents with `vertex_count=8` | default | metadata-only gap record | `metadata-only-gap` |
+| `historical-cpp-properties-ccw-circle-x-aligned` | `tests/tests/TEST_cavc_pline_function.cpp` | `ccw_circle_x_aligned`, radius `5`, center `(1,1)` | Properties | `ApproximateParity` | computed old test expectations: `PI*25`, `2*PI*5`, extents `(-4,-4)-(6,6)` | default | metadata-only `Gap` if current property calculation differs | `executable-green` |
 
 ## Metadata-Only Evidence
 
-| Record ID | Source path | Usage label | Comparison mode | Operation kind | Rationale |
-|-----------|-------------|-------------|-----------------|----------------|-----------|
-| `historical-cpp-c-api-surface-migration-record` | `c_api_include/cavaliercontours.h`; `src/cavaliercontours.cpp` | `migration-sensitive` | `NotComparable` | Offset metadata | Records old construction/list/offset/combine/property function surface for migration notes. Phase 3 makes no C FFI code or generated header change. |
-| `historical-cpp-static-spatial-index-query-record` | `tests/tests/TEST_staticspatialindex.cpp` | `translated-fixture-candidate`, `benchmark-candidate` | `NotComparable` | Offset metadata | Records query result IDs `{6,29,31,75}`, visitor semantics, and early-stop behavior. Performance treatment is deferred to Phase 4. |
+| Record ID | Source path | Usage label | Comparison mode | Operation kind | Final status | Rationale |
+|-----------|-------------|-------------|-----------------|----------------|--------------|-----------|
+| `historical-cpp-c-api-surface-migration-record` | `c_api_include/cavaliercontours.h`; `src/cavaliercontours.cpp` | `migration-sensitive` | `NotComparable` | Properties metadata | `metadata-only-not-comparable` | Records old construction/list/offset/combine/property function surface for migration notes. Phase 3 makes no C FFI code or generated header change. |
+| `historical-cpp-static-spatial-index-query-record` | `tests/tests/TEST_staticspatialindex.cpp` | `translated-fixture-candidate`, `benchmark-candidate` | `NotComparable` | Offset metadata | `metadata-only-not-comparable` | Records query result IDs `{6,29,31,75}`, visitor semantics, and early-stop behavior. Performance treatment is deferred to Phase 4. |
 
 ## Deferred Evidence
 
@@ -48,9 +48,16 @@
 | FFI execution tests and generated header drift checks | API/FFI migration phase | C API is migration-sensitive evidence only here. |
 | Clipper2 polygon-only oracle output | Phase 5 | Clipper2 eligibility and arc approximation policy are separate scope. |
 
+## Harness Validation
+
+| Gate | Status | Notes |
+|------|--------|-------|
+| `cargo test -p cavalier_contours --test test_historical_cavalier_contours` | pass | Executes `executable-green` offset/property fixtures and asserts `metadata-only-gap` / `metadata-only-not-comparable` records do not execute. |
+| `cargo test -p cavalier_contours --test test_fixture_harness` | pass | Confirms Phase 2 seed fixtures still execute through the extended harness. |
+| `cargo test --workspace` | pending final gate | Phase 03 final verification runs this after inventory/test synchronization. |
+
 ## Requirement Coverage
 
 | Requirement | Coverage |
 |-------------|----------|
 | `FIX-03` | Inventories old C++ offset, combine/boolean, property, C API, and spatial-index evidence with provenance, classification, tolerance policy, and selected translated fixture IDs. |
-
