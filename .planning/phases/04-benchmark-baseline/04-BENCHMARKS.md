@@ -21,19 +21,27 @@ The full command writes generated Criterion output under `target/criterion`.
 Those generated outputs are local measurement artifacts and must not be
 committed.
 
-## Initial Coverage
+## Coverage
 
-Wave 1 establishes current Rust benchmark groups for:
+The benchmark target establishes current Rust and historical-profile-shaped
+benchmark groups for:
 
-- `offset/current`: public `parallel_offset` calls.
-- `boolean/current`: shifted and coincident `boolean` calls across all boolean
-  operations.
+- `offset/native` and `offset/no_arcs`: public `parallel_offset` calls.
+- `boolean/shifted/native`, `boolean/shifted/no_arcs`,
+  `boolean/coincident/native`, and `boolean/coincident/no_arcs`: public
+  `boolean` calls across all boolean operations.
 - `intersections/current_only`: public `find_intersects` cases. These are
   current-only because the historical C++ benchmark suite does not include a
   matching intersection benchmark file.
-- `spatial_index/current`: `create_approx_aabb_index` and query-with-reused-stack
-  style workloads.
-- `properties/current`: area, extents, path length, and winding-number calls.
+- `spatial_index/create/native`, `spatial_index/create/no_arcs`,
+  `spatial_index/query_reuse_stack/native`, and
+  `spatial_index/query_reuse_stack/no_arcs`: `create_approx_aabb_index` and
+  query-with-reused-stack style workloads.
+- `properties/area/*`, `properties/extents/*`, `properties/path_length/*`, and
+  `properties/winding_number_grid/*`: property calls over mapped profile
+  families.
+
+Historical profile and operation mapping is recorded in `04-BENCHMARK-MAP.md`.
 
 ## Environment Fields
 
@@ -65,4 +73,3 @@ Record these fields when capturing a full local baseline:
 Phase 4 does not define performance budgets, CI regression thresholds, Clipper2
 comparisons, FFI benchmarks, FFI header regeneration, production algorithm
 changes, or UI changes.
-
