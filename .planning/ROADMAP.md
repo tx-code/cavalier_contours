@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Absorption Contract Audit** - Define source boundaries, comparability rules, and API migration baseline. (completed 2026-05-12)
 - [x] **Phase 2: Fixture Schema and Property Harness** - Create durable geometry fixture and comparison infrastructure. (completed 2026-05-12)
-- [ ] **Phase 3: Historical C++ Evidence Mining** - Translate high-value old C++ behavior into Rust regression evidence.
+- [x] **Phase 3: Historical C++ Evidence Mining** - Translate high-value old C++ behavior into Rust regression evidence. (completed 2026-05-12)
 - [ ] **Phase 4: Benchmark Baseline** - Establish performance baselines and benchmark provenance rules.
 - [ ] **Phase 5: Clipper2 Oracle Boundary** - Add polygon-only oracle evidence without changing production behavior.
 - [ ] **Phase 6: Robustness Gap Closure** - Rank and fix the highest-value current Rust robustness issues.
@@ -165,7 +165,7 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 |-------|----------------|--------|-----------|
 | 1. Absorption Contract Audit | 4/4 | Complete    | 2026-05-12 |
 | 2. Fixture Schema and Property Harness | 3/3 | Complete    | 2026-05-12 |
-| 3. Historical C++ Evidence Mining | 0/3 | Not started | - |
+| 3. Historical C++ Evidence Mining | 3/3 | Complete    | 2026-05-12 |
 | 4. Benchmark Baseline | 0/3 | Not started | - |
 | 5. Clipper2 Oracle Boundary | 0/4 | Not started | - |
 | 6. Robustness Gap Closure | 0/4 | Not started | - |
