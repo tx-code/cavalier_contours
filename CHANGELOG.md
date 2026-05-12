@@ -4,6 +4,12 @@ All notable changes to the cavalier_contours crate will be documented in this fi
 
 ## Unreleased
 
+### Added ⭐
+
+- Added `PlineSource::rect_clip` and `PlineSource::rect_clip_opt` as
+  convenience APIs for clipping closed area polylines against axis-aligned
+  rectangles through the existing boolean intersection path.
+
 ### Fixed 🐛
 
 - Improved `parallel_offset` robustness for repeat-position/degenerate input by sanitizing repeat

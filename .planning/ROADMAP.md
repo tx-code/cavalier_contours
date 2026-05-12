@@ -152,8 +152,8 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 08-01: Audit public API and FFI compatibility after absorbed changes.
-- [ ] 08-02: Update ABI tests, generated header, and external docs if needed.
+- [x] 08-01: Audit public API and FFI compatibility after absorbed changes.
+- [x] 08-02: Update ABI tests, generated header, and external docs if needed.
 - [ ] 08-03: Write old C++ migration notes and milestone readiness summary.
 
 ## Progress

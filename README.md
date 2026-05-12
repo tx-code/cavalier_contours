@@ -33,6 +33,8 @@ assert!(offset_pline[1].fuzzy_eq(PlineVertex::new(0.8, 0.0, 1.0)));
 ```
 
 See more examples [here](examples/README.md).
+Migration guidance for users coming from old C++ CavalierContours is in
+[MIGRATION.md](MIGRATION.md).
 
 [👉 Click to run the WASM web demo 👈](https://www.cavaliercontours.dev/)
 
@@ -41,6 +43,7 @@ See more examples [here](examples/README.md).
 - Polylines defined with line and arc segments (fixed radius, arcs are not approximated as line segments)
 - Polyline parallel offsetting (works on open, closed, and self-intersecting polylines)
 - Boolean operations between two closed polylines (union, intersection, difference)
+- Rectangle clipping convenience on closed polylines through `rect_clip` / `rect_clip_opt`
 - Polyline containment and intersection tests
 - Winding number (point in closed polyline) test
 - Area, length, redundant vertex removal, and other geometric functions
