@@ -135,7 +135,7 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 07-01: Select candidate capabilities from audit and gap evidence.
+- [x] 07-01: Select candidate capabilities from audit and gap evidence.
 - [ ] 07-02: Design capability-specific behavior and API boundaries.
 - [ ] 07-03: Implement the first absorbed capability slice.
 - [ ] 07-04: Update examples, docs, FFI notes, or demo UI only as needed.
