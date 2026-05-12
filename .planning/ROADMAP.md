@@ -23,7 +23,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Clipper2 Oracle Boundary** - Add polygon-only oracle evidence without changing production behavior. (completed 2026-05-12)
 - [x] **Phase 6: Robustness Gap Closure** - Rank and fix the highest-value current Rust robustness issues. (completed 2026-05-12)
 - [x] **Phase 7: Capability Absorption Pipeline** - Select and absorb compatible capabilities with tests and visible validation when needed. (completed 2026-05-12)
-- [ ] **Phase 8: API, FFI, and Migration Readiness** - Harden external surfaces and migration notes for release-quality use.
+- [x] **Phase 8: API, FFI, and Migration Readiness** - Harden external surfaces and migration notes for release-quality use. (completed 2026-05-12)
 
 ## Phase Details
 
@@ -154,7 +154,7 @@ Plans:
 Plans:
 - [x] 08-01: Audit public API and FFI compatibility after absorbed changes.
 - [x] 08-02: Update ABI tests, generated header, and external docs if needed.
-- [ ] 08-03: Write old C++ migration notes and milestone readiness summary.
+- [x] 08-03: Write old C++ migration notes and milestone readiness summary.
 
 ## Progress
 
@@ -170,4 +170,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 5. Clipper2 Oracle Boundary | 4/4 | Complete    | 2026-05-12 |
 | 6. Robustness Gap Closure | 4/4 | Complete | 2026-05-12 |
 | 7. Capability Absorption Pipeline | 4/4 | Complete    | 2026-05-12 |
-| 8. API, FFI, and Migration Readiness | 0/3 | Not started | - |
+| 8. API, FFI, and Migration Readiness | 3/3 | Complete    | 2026-05-12 |

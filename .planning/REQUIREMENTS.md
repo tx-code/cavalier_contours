@@ -49,9 +49,9 @@ one roadmap phase.
 
 ### API and FFI
 
-- [ ] **API-01**: Public Rust API and FFI changes include explicit compatibility notes.
-- [ ] **API-02**: Any FFI surface change updates ABI tests and regenerates `cavalier_contours_ffi.h`.
-- [ ] **API-03**: The project produces migration notes for users coming from old C++ CavalierContours.
+- [x] **API-01**: Public Rust API and FFI changes include explicit compatibility notes.
+- [x] **API-02**: Any FFI surface change updates ABI tests and regenerates `cavalier_contours_ffi.h`.
+- [x] **API-03**: The project produces migration notes for users coming from old C++ CavalierContours.
 
 ### Demo
 
@@ -117,9 +117,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CAP-01 | Phase 7 | Complete |
 | CAP-02 | Phase 7 | Complete |
 | CAP-03 | Phase 7 | Complete |
-| API-01 | Phase 8 | Pending |
-| API-02 | Phase 8 | Pending |
-| API-03 | Phase 8 | Pending |
+| API-01 | Phase 8 | Complete |
+| API-02 | Phase 8 | Complete |
+| API-03 | Phase 8 | Complete |
 | DEM-01 | Phase 7 | Complete |
 
 **Coverage:**
