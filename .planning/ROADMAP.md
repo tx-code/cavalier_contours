@@ -24,7 +24,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Robustness Gap Closure** - Rank and fix the highest-value current Rust robustness issues. (completed 2026-05-12)
 - [x] **Phase 7: Capability Absorption Pipeline** - Select and absorb compatible capabilities with tests and visible validation when needed. (completed 2026-05-12)
 - [x] **Phase 8: API, FFI, and Migration Readiness** - Harden external surfaces and migration notes for release-quality use. (completed 2026-05-12)
-- [ ] **Phase 9: C++ Parity Deep Comparison (No Clipper)** - Deeply compare old C++ logic against Rust on boolean/offset/intersection behavior and classify true bugs versus intentional divergences.
+- [x] **Phase 9: C++ Parity Deep Comparison (No Clipper)** - Deeply compare old C++ logic against Rust on boolean/offset/intersection behavior and classify true bugs versus intentional divergences. (completed 2026-05-12)
 
 ## Phase Details
 
@@ -168,9 +168,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 09-01: Build boolean/combined-operation parity map and executable case set.
-- [ ] 09-02: Build offset/intersection parity map and executable case set.
-- [ ] 09-03: Classify mismatches, implement selected fixes, and close verification gates.
+- [x] 09-01: Build boolean/combined-operation parity map and executable case set.
+- [x] 09-02: Build offset/intersection parity map and executable case set.
+- [x] 09-03: Classify mismatches, implement selected fixes, and close verification gates.
 
 ## Progress
 
@@ -187,4 +187,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 6. Robustness Gap Closure | 4/4 | Complete | 2026-05-12 |
 | 7. Capability Absorption Pipeline | 4/4 | Complete    | 2026-05-12 |
 | 8. API, FFI, and Migration Readiness | 3/3 | Complete    | 2026-05-12 |
-| 9. C++ Parity Deep Comparison (No Clipper) | 0/3 | Not started | - |
+| 9. C++ Parity Deep Comparison (No Clipper) | 3/3 | Complete | 2026-05-12 |
