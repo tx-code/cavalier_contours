@@ -20,7 +20,7 @@ one roadmap phase.
 - [x] **FIX-01**: The project defines a durable fixture schema with source, geometry model, tolerance policy, comparison mode, and expected properties.
 - [x] **FIX-02**: Tests can compare geometry by properties such as area, extents, path length, orientation, containment, repeat vertices, and result counts.
 - [x] **FIX-03**: High-value old C++ tests and benchmark profiles are translated or represented as Rust regression fixtures.
-- [ ] **FIX-04**: Eligible Clipper2 polygon-only cases are represented as Rust fixtures with explicit comparability classification.
+- [x] **FIX-04**: Eligible Clipper2 polygon-only cases are represented as Rust fixtures with explicit comparability classification.
 
 ### Benchmarks
 
@@ -30,9 +30,9 @@ one roadmap phase.
 
 ### Oracle
 
-- [ ] **ORC-01**: A dev-only Clipper2 comparison path exists for eligible polygon-only boolean and offset cases.
-- [ ] **ORC-02**: Any arc-to-polygon comparison records approximation tolerance and does not redefine native arc behavior.
-- [ ] **ORC-03**: Oracle results are reported as evidence for gap ranking, not as automatic production behavior.
+- [x] **ORC-01**: A dev-only Clipper2 comparison path exists for eligible polygon-only boolean and offset cases.
+- [x] **ORC-02**: Any arc-to-polygon comparison records approximation tolerance and does not redefine native arc behavior.
+- [x] **ORC-03**: Oracle results are reported as evidence for gap ranking, not as automatic production behavior.
 
 ### Robustness
 
@@ -103,13 +103,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FIX-01 | Phase 2 | Complete |
 | FIX-02 | Phase 2 | Complete |
 | FIX-03 | Phase 3 | Complete |
-| FIX-04 | Phase 5 | Pending |
+| FIX-04 | Phase 5 | Complete |
 | BEN-01 | Phase 4 | Complete |
 | BEN-02 | Phase 4 | Complete |
 | BEN-03 | Phase 4 | Complete |
-| ORC-01 | Phase 5 | Pending |
-| ORC-02 | Phase 5 | Pending |
-| ORC-03 | Phase 5 | Pending |
+| ORC-01 | Phase 5 | Complete |
+| ORC-02 | Phase 5 | Complete |
+| ORC-03 | Phase 5 | Complete |
 | ROB-01 | Phase 6 | Pending |
 | ROB-02 | Phase 6 | Pending |
 | ROB-03 | Phase 6 | Pending |

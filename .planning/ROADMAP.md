@@ -20,7 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Fixture Schema and Property Harness** - Create durable geometry fixture and comparison infrastructure. (completed 2026-05-12)
 - [x] **Phase 3: Historical C++ Evidence Mining** - Translate high-value old C++ behavior into Rust regression evidence. (completed 2026-05-12)
 - [x] **Phase 4: Benchmark Baseline** - Establish performance baselines and benchmark provenance rules. (completed 2026-05-12)
-- [ ] **Phase 5: Clipper2 Oracle Boundary** - Add polygon-only oracle evidence without changing production behavior.
+- [x] **Phase 5: Clipper2 Oracle Boundary** - Add polygon-only oracle evidence without changing production behavior. (completed 2026-05-12)
 - [ ] **Phase 6: Robustness Gap Closure** - Rank and fix the highest-value current Rust robustness issues.
 - [ ] **Phase 7: Capability Absorption Pipeline** - Select and absorb compatible capabilities with tests and visible validation when needed.
 - [ ] **Phase 8: API, FFI, and Migration Readiness** - Harden external surfaces and migration notes for release-quality use.
@@ -101,10 +101,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 05-01: Classify Clipper2 tests and examples for polygon-only eligibility.
-- [ ] 05-02: Add Clipper2-derived fixture representations.
-- [ ] 05-03: Implement or script the dev-only oracle comparison path.
-- [ ] 05-04: Emit oracle evidence reports for gap ranking.
+- [x] 05-01: Classify Clipper2 tests and examples for polygon-only eligibility.
+- [x] 05-02: Add Clipper2-derived fixture representations.
+- [x] 05-03: Implement or script the dev-only oracle comparison path.
+- [x] 05-04: Emit oracle evidence reports for gap ranking.
 
 ### Phase 6: Robustness Gap Closure
 **Goal**: Rank and fix the highest-value current Rust robustness issues using the evidence built in earlier phases.
@@ -167,7 +167,7 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 2. Fixture Schema and Property Harness | 3/3 | Complete    | 2026-05-12 |
 | 3. Historical C++ Evidence Mining | 3/3 | Complete    | 2026-05-12 |
 | 4. Benchmark Baseline | 3/3 | Complete    | 2026-05-12 |
-| 5. Clipper2 Oracle Boundary | 0/4 | Not started | - |
+| 5. Clipper2 Oracle Boundary | 4/4 | Complete    | 2026-05-12 |
 | 6. Robustness Gap Closure | 0/4 | Not started | - |
 | 7. Capability Absorption Pipeline | 0/4 | Not started | - |
 | 8. API, FFI, and Migration Readiness | 0/3 | Not started | - |
