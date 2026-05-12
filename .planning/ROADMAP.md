@@ -25,6 +25,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 7: Capability Absorption Pipeline** - Select and absorb compatible capabilities with tests and visible validation when needed. (completed 2026-05-12)
 - [x] **Phase 8: API, FFI, and Migration Readiness** - Harden external surfaces and migration notes for release-quality use. (completed 2026-05-12)
 - [x] **Phase 9: C++ Parity Deep Comparison (No Clipper)** - Deeply compare old C++ logic against Rust on boolean/offset/intersection behavior and classify true bugs versus intentional divergences. (completed 2026-05-12)
+- [x] **Phase 10: C++ Function-Level Parity Deepening (No Clipper)** - Extend parity from operation-level cases into function-level C++ `pline_function` behavior and classify any newly surfaced logic gaps. (completed 2026-05-13)
 
 ## Phase Details
 
@@ -172,6 +173,21 @@ Plans:
 - [x] 09-02: Build offset/intersection parity map and executable case set.
 - [x] 09-03: Classify mismatches, implement selected fixes, and close verification gates.
 
+### Phase 10: C++ Function-Level Parity Deepening (No Clipper)
+**Goal**: Deepen old C++ vs Rust parity by executing C++ `TEST_cavc_pline_function.cpp`-style function-level checks (area/path/extents/winding/boolean-self invariants) and classifying any new gaps.
+**Depends on**: Phase 9
+**Requirements**: [PAR-04, PAR-05, PAR-06]
+**Success Criteria** (what must be TRUE):
+  1. A function-level map connects C++ `pline_function` expectations to Rust APIs and tests.
+  2. Executable Rust parity tests cover selected high-value C++ function-level assertions with evidence.
+  3. Newly surfaced mismatches are classified as `bug`, `intentional-divergence`, or `not-comparable`, with fix/defer notes.
+**Plans**: 3 plans
+
+Plans:
+- [x] 10-01: Add executable function-level parity tests from C++ `pline_function` behavior.
+- [x] 10-02: Write function-level parity classification report and gap decisions.
+- [x] 10-03: Close verification gates and sync roadmap/requirements/state.
+
 ## Progress
 
 **Execution Order:**
@@ -188,3 +204,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 7. Capability Absorption Pipeline | 4/4 | Complete    | 2026-05-12 |
 | 8. API, FFI, and Migration Readiness | 3/3 | Complete    | 2026-05-12 |
 | 9. C++ Parity Deep Comparison (No Clipper) | 3/3 | Complete | 2026-05-12 |
+| 10. C++ Function-Level Parity Deepening (No Clipper) | 3/3 | Complete   | 2026-05-13 |

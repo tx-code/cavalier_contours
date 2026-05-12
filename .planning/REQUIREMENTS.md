@@ -83,6 +83,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-01**: The project maps old C++ logic modules/tests to Rust modules/tests for deep parity review without Clipper involvement.
 - **PAR-02**: High-value C++ cases in boolean, offset, and intersection paths are executed or explicitly classified with evidence.
 - **PAR-03**: Confirmed C++ vs Rust mismatches are classified as bug, intentional divergence, or not-comparable with recorded fix/defer decisions.
+- **PAR-04**: The project maps old C++ `TEST_cavc_pline_function.cpp` function-level expectations to Rust function-level APIs and tests.
+- **PAR-05**: Selected C++ function-level expectations (area/path/extents/winding/self-boolean invariants) execute in Rust parity tests with evidence.
+- **PAR-06**: Newly surfaced function-level mismatches are classified with explicit fix/defer decisions.
 
 ## Out of Scope
 
@@ -130,13 +133,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-01 | Phase 9 | Complete |
 | PAR-02 | Phase 9 | Complete |
 | PAR-03 | Phase 9 | Complete |
+| PAR-04 | Phase 10 | Complete |
+| PAR-05 | Phase 10 | Complete |
+| PAR-06 | Phase 10 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 3 (`PAR-01..PAR-03`), mapped to Phase 9
+- additional tracked post-v1 requirements: 6 (`PAR-01..PAR-06`), mapped to Phases 9-10
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-12 after Phase 9 completion*
+*Last updated: 2026-05-13 after Phase 10 completion*
