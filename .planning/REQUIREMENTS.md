@@ -36,10 +36,10 @@ one roadmap phase.
 
 ### Robustness
 
-- [ ] **ROB-01**: The project maintains a ranked robustness backlog for offsets, booleans, intersections, tolerances, degenerates, repeat vertices, tangencies, overlaps, and open/closed behavior.
-- [ ] **ROB-02**: Top-ranked robustness gaps have focused regression tests before or with fixes.
-- [ ] **ROB-03**: Top-ranked current Rust robustness issues are fixed without broad API churn.
-- [ ] **ROB-04**: Robustness phases pass the workspace verification gate required for the changed surface.
+- [x] **ROB-01**: The project maintains a ranked robustness backlog for offsets, booleans, intersections, tolerances, degenerates, repeat vertices, tangencies, overlaps, and open/closed behavior.
+- [x] **ROB-02**: Top-ranked robustness gaps have focused regression tests before or with fixes.
+- [x] **ROB-03**: Top-ranked current Rust robustness issues are fixed without broad API churn.
+- [x] **ROB-04**: Robustness phases pass the workspace verification gate required for the changed surface.
 
 ### Capability Absorption
 
@@ -110,10 +110,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ORC-01 | Phase 5 | Complete |
 | ORC-02 | Phase 5 | Complete |
 | ORC-03 | Phase 5 | Complete |
-| ROB-01 | Phase 6 | Pending |
-| ROB-02 | Phase 6 | Pending |
-| ROB-03 | Phase 6 | Pending |
-| ROB-04 | Phase 6 | Pending |
+| ROB-01 | Phase 6 | Complete |
+| ROB-02 | Phase 6 | Complete |
+| ROB-03 | Phase 6 | Complete |
+| ROB-04 | Phase 6 | Complete |
 | CAP-01 | Phase 7 | Pending |
 | CAP-02 | Phase 7 | Pending |
 | CAP-03 | Phase 7 | Pending |
@@ -129,4 +129,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-12 after roadmap creation*
+*Last updated: 2026-05-12 after Phase 6 completion*

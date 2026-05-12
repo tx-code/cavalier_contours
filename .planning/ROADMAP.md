@@ -21,7 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Historical C++ Evidence Mining** - Translate high-value old C++ behavior into Rust regression evidence. (completed 2026-05-12)
 - [x] **Phase 4: Benchmark Baseline** - Establish performance baselines and benchmark provenance rules. (completed 2026-05-12)
 - [x] **Phase 5: Clipper2 Oracle Boundary** - Add polygon-only oracle evidence without changing production behavior. (completed 2026-05-12)
-- [ ] **Phase 6: Robustness Gap Closure** - Rank and fix the highest-value current Rust robustness issues.
+- [x] **Phase 6: Robustness Gap Closure** - Rank and fix the highest-value current Rust robustness issues. (completed 2026-05-12)
 - [ ] **Phase 7: Capability Absorption Pipeline** - Select and absorb compatible capabilities with tests and visible validation when needed.
 - [ ] **Phase 8: API, FFI, and Migration Readiness** - Harden external surfaces and migration notes for release-quality use.
 
@@ -118,10 +118,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 06-01: Build the ranked robustness backlog from fixtures, benchmarks, and oracle evidence.
-- [ ] 06-02: Add focused regressions for top-ranked failures.
-- [ ] 06-03: Implement the first robustness fixes.
-- [ ] 06-04: Run and document the required verification gates.
+- [x] 06-01: Build the ranked robustness backlog from fixtures, benchmarks, and oracle evidence.
+- [x] 06-02: Add focused regressions for top-ranked failures.
+- [x] 06-03: Implement the first robustness fixes.
+- [x] 06-04: Run and document the required verification gates.
 
 ### Phase 7: Capability Absorption Pipeline
 **Goal**: Select and absorb compatible capabilities from the reference repositories after evidence and robustness gates exist.
@@ -168,6 +168,6 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 3. Historical C++ Evidence Mining | 3/3 | Complete    | 2026-05-12 |
 | 4. Benchmark Baseline | 3/3 | Complete    | 2026-05-12 |
 | 5. Clipper2 Oracle Boundary | 4/4 | Complete    | 2026-05-12 |
-| 6. Robustness Gap Closure | 0/4 | Not started | - |
+| 6. Robustness Gap Closure | 4/4 | Complete | 2026-05-12 |
 | 7. Capability Absorption Pipeline | 0/4 | Not started | - |
 | 8. API, FFI, and Migration Readiness | 0/3 | Not started | - |
