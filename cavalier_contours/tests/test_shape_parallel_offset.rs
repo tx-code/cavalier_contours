@@ -38,7 +38,7 @@ macro_rules! declare_offset_tests {
 }
 mod test_simple {
     use super::*;
-    use cavalier_contours::pline_closed_userdata;
+    use cavalier_contours::{pline_closed_userdata, pline_open_userdata};
 
     declare_offset_tests!(
         empty_returns_empty {
@@ -46,6 +46,36 @@ mod test_simple {
         }
         set_of_empty_returns_empty {
           ([Polyline::<f64>::new_closed(), Polyline::new_closed()], 5.0) => []
+        }
+        repeat_position_only_loop_returns_empty {
+          ([pline_closed_userdata![[501], (0.0, 0.0, 0.0), (0.0, 0.0, 0.0), (0.0, 0.0, 0.0)]], 1.0) => []
+        }
+        collinear_closed_loop_returns_empty {
+          ([pline_closed_userdata![[502], (0.0, 0.0, 0.0), (10.0, 0.0, 0.0), (20.0, 0.0, 0.0), (30.0, 0.0, 0.0)]], 1.0) => []
+        }
+        open_polyline_input_returns_empty {
+          ([pline_open_userdata![[503], (0.0, 0.0, 0.0), (10.0, 0.0, 0.0), (10.0, 10.0, 0.0)]], 1.0) => []
+        }
+        valid_rectangle_with_repeat_position_noise {
+            ([
+                pline_closed_userdata![[9], (0.0, 0.0, 0.0), (10.0, 0.0, 0.0), (10.0, 10.0, 0.0), (0.0, 10.0, 0.0)],
+                pline_closed_userdata![[501], (0.0, 0.0, 0.0), (0.0, 0.0, 0.0), (0.0, 0.0, 0.0)]
+            ], 1.0) =>
+            [PlineProperties::new(4, 64.0, 32.0, 1.0, 1.0, 9.0, 9.0, vec![9])]
+        }
+        valid_rectangle_with_collinear_degenerate_noise {
+            ([
+                pline_closed_userdata![[9], (0.0, 0.0, 0.0), (10.0, 0.0, 0.0), (10.0, 10.0, 0.0), (0.0, 10.0, 0.0)],
+                pline_closed_userdata![[502], (0.0, 0.0, 0.0), (10.0, 0.0, 0.0), (20.0, 0.0, 0.0), (30.0, 0.0, 0.0)]
+            ], 1.0) =>
+            [PlineProperties::new(4, 64.0, 32.0, 1.0, 1.0, 9.0, 9.0, vec![9])]
+        }
+        valid_rectangle_with_open_polyline_noise {
+            ([
+                pline_closed_userdata![[9], (0.0, 0.0, 0.0), (10.0, 0.0, 0.0), (10.0, 10.0, 0.0), (0.0, 10.0, 0.0)],
+                pline_open_userdata![[503], (0.0, 0.0, 0.0), (10.0, 0.0, 0.0), (10.0, 10.0, 0.0)]
+            ], 1.0) =>
+            [PlineProperties::new(4, 64.0, 32.0, 1.0, 1.0, 9.0, 9.0, vec![9])]
         }
         rectangle_inside_shape {
             ([pline_closed_userdata![[4], (100.0, 100.0, -0.5), (80.0, 90.0, 0.374794619217547), (210.0, 0.0, 0.0), (230.0, 0.0, 1.0), (320.0, 0.0, -0.5), (280.0, 0.0, 0.5), (390.0, 210.0, 0.0), (280.0, 120.0, 0.5)],

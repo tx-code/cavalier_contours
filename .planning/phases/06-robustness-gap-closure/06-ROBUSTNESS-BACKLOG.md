@@ -53,7 +53,13 @@ Score is 1-5 for each column. Higher total means better Phase 6 target.
 
 ### Regression Status
 
-Pending 06-02.
+06-02 added focused regressions for all-repeat-position loops, collinear closed
+loops, open polyline input, and valid loops mixed with each invalid input class.
+Current Rust already passed repeat-position and collinear closed-loop coverage.
+The open polyline cases failed before the fix: open input returned a zero-area
+closed result, and valid-plus-open input panicked in `PlineViewData`. 06-03 fixed
+the promoted boundary by making `Shape::from_plines` skip `PlineOrientation::Open`
+instead of treating open input as clockwise area loops.
 
 ## No-Fix / Defer Decisions
 
@@ -71,4 +77,3 @@ Pending 06-02.
 | Requirement | Coverage |
 |-------------|----------|
 | `ROB-01` | This backlog ranks robustness candidates across offsets, booleans, intersections, tolerances, degenerates, repeat vertices, tangencies, overlaps, and open/closed behavior. |
-

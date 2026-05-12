@@ -153,12 +153,12 @@ where
     {
         let mut ccw_plines = Vec::new();
         let mut cw_plines = Vec::new();
-        // skip empty polylines
+        // Shape offsets operate on area loops; open paths are not valid shape boundaries.
         for pl in plines.into_iter().filter(|p| p.vertex_count() > 1) {
-            if pl.orientation() == PlineOrientation::CounterClockwise {
-                ccw_plines.push(IndexedPolyline::new(pl));
-            } else {
-                cw_plines.push(IndexedPolyline::new(pl));
+            match pl.orientation() {
+                PlineOrientation::CounterClockwise => ccw_plines.push(IndexedPolyline::new(pl)),
+                PlineOrientation::Clockwise => cw_plines.push(IndexedPolyline::new(pl)),
+                PlineOrientation::Open => {}
             }
         }
 
