@@ -96,37 +96,37 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUD-01 | Pending roadmap | Pending |
-| AUD-02 | Pending roadmap | Pending |
-| AUD-03 | Pending roadmap | Pending |
-| AUD-04 | Pending roadmap | Pending |
-| FIX-01 | Pending roadmap | Pending |
-| FIX-02 | Pending roadmap | Pending |
-| FIX-03 | Pending roadmap | Pending |
-| FIX-04 | Pending roadmap | Pending |
-| BEN-01 | Pending roadmap | Pending |
-| BEN-02 | Pending roadmap | Pending |
-| BEN-03 | Pending roadmap | Pending |
-| ORC-01 | Pending roadmap | Pending |
-| ORC-02 | Pending roadmap | Pending |
-| ORC-03 | Pending roadmap | Pending |
-| ROB-01 | Pending roadmap | Pending |
-| ROB-02 | Pending roadmap | Pending |
-| ROB-03 | Pending roadmap | Pending |
-| ROB-04 | Pending roadmap | Pending |
-| CAP-01 | Pending roadmap | Pending |
-| CAP-02 | Pending roadmap | Pending |
-| CAP-03 | Pending roadmap | Pending |
-| API-01 | Pending roadmap | Pending |
-| API-02 | Pending roadmap | Pending |
-| API-03 | Pending roadmap | Pending |
-| DEM-01 | Pending roadmap | Pending |
+| AUD-01 | Phase 1 | Pending |
+| AUD-02 | Phase 1 | Pending |
+| AUD-03 | Phase 1 | Pending |
+| AUD-04 | Phase 1 | Pending |
+| FIX-01 | Phase 2 | Pending |
+| FIX-02 | Phase 2 | Pending |
+| FIX-03 | Phase 3 | Pending |
+| FIX-04 | Phase 5 | Pending |
+| BEN-01 | Phase 4 | Pending |
+| BEN-02 | Phase 4 | Pending |
+| BEN-03 | Phase 4 | Pending |
+| ORC-01 | Phase 5 | Pending |
+| ORC-02 | Phase 5 | Pending |
+| ORC-03 | Phase 5 | Pending |
+| ROB-01 | Phase 6 | Pending |
+| ROB-02 | Phase 6 | Pending |
+| ROB-03 | Phase 6 | Pending |
+| ROB-04 | Phase 6 | Pending |
+| CAP-01 | Phase 7 | Pending |
+| CAP-02 | Phase 7 | Pending |
+| CAP-03 | Phase 7 | Pending |
+| API-01 | Phase 8 | Pending |
+| API-02 | Phase 8 | Pending |
+| API-03 | Phase 8 | Pending |
+| DEM-01 | Phase 7 | Pending |
 
 **Coverage:**
 - v1 requirements: 25 total
-- Mapped to phases: 0
-- Unmapped: 25 pending roadmap
+- Mapped to phases: 25
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-12 after initial definition*
+*Last updated: 2026-05-12 after roadmap creation*
