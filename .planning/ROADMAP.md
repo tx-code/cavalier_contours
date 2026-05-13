@@ -32,6 +32,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 14: Circle Offset and Collapse Matrix Parity (No Clipper)** - Execute full generated circle offset and collapsed-offset matrix parity with vertex-level output checks. (completed 2026-05-13)
 - [x] **Phase 15: Half-Circle Offset and Collapse Matrix Parity (No Clipper)** - Execute full generated half-circle offset and collapsed-offset matrix parity with vertex-level output checks and updated next-target alignment map. (completed 2026-05-13)
 - [x] **Phase 16: C++ Offset Matrix Expansion and Reversed Parity (No Clipper)** - Execute broader old C++ `parallel_offset` simple/specific case matrices with reversed-input parity and input-immutability checks. (completed 2026-05-13)
+- [x] **Phase 17: C++ Coincident Combine Matrix Parity Expansion (No Clipper)** - Import and execute old C++ coincident combine case matrices, classifying confirmed parity and explicit divergence behavior. (completed 2026-05-13)
 
 ## Phase Details
 
@@ -284,6 +285,21 @@ Plans:
 - [x] 16-02: Classify outcomes and publish next-step alignment map.
 - [x] 16-03: Close verification gates and sync planning state.
 
+### Phase 17: C++ Coincident Combine Matrix Parity Expansion (No Clipper)
+**Goal**: Deepen C++ boolean/combine parity by importing coincident-heavy case matrices from `TEST_cavc_combine_plines.cpp` and classifying observed geometry alignment versus divergences.
+**Depends on**: Phase 16
+**Requirements**: [PAR-25, PAR-26, PAR-27]
+**Success Criteria** (what must be TRUE):
+  1. Old C++ coincident combine case matrices are executable in Rust parity tests for `Or`, `Not`, `And`, and `Xor`.
+  2. Geometry parity outcomes are source-traceable with explicit handling for any confirmed divergence case.
+  3. Follow-up alignment scope is explicitly mapped and phase closes with full verification gates.
+**Plans**: 3 plans
+
+Plans:
+- [x] 17-01: Import coincident combine case matrices into executable parity tests.
+- [x] 17-02: Classify outcomes and publish next-step alignment map.
+- [x] 17-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -307,3 +323,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 14. Circle Offset and Collapse Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 15. Half-Circle Offset and Collapse Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 16. C++ Offset Matrix Expansion and Reversed Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
+| 17. C++ Coincident Combine Matrix Parity Expansion (No Clipper) | 3/3 | Complete   | 2026-05-13 |

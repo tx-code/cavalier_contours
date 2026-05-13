@@ -104,6 +104,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-22**: Old C++ `TEST_cavc_parallel_offset.cpp` simple and specific `parallel_offset` matrices execute as Rust parity tests with source-traceable expected property sets.
 - **PAR-23**: Reversed-input parity (`invert_direction` + negated delta) executes across imported offset matrices with sign-adjusted area and matching geometric properties.
 - **PAR-24**: Imported offset parity includes collapsed-result and input-immutability checks and publishes next deep-alignment scope.
+- **PAR-25**: Old C++ `TEST_cavc_combine_plines.cpp` coincident case matrices execute as Rust parity tests across `Or`, `Not`, `And`, and `Xor` combine modes.
+- **PAR-26**: Coincident combine outcomes are classified with explicit parity/divergence decisions and source-traceable evidence.
+- **PAR-27**: Coincident combine phase closes with explicit next-target alignment map and full verification gate closure.
 
 ## Out of Scope
 
@@ -172,13 +175,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-22 | Phase 16 | Complete |
 | PAR-23 | Phase 16 | Complete |
 | PAR-24 | Phase 16 | Complete |
+| PAR-25 | Phase 17 | Complete |
+| PAR-26 | Phase 17 | Complete |
+| PAR-27 | Phase 17 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 24 (`PAR-01..PAR-24`), mapped to Phases 9-16
+- additional tracked post-v1 requirements: 27 (`PAR-01..PAR-27`), mapped to Phases 9-17
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-13 after Phase 16 completion*
+*Last updated: 2026-05-13 after Phase 17 completion*
