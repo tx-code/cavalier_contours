@@ -86,6 +86,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-04**: The project maps old C++ `TEST_cavc_pline_function.cpp` function-level expectations to Rust function-level APIs and tests.
 - **PAR-05**: Selected C++ function-level expectations (area/path/extents/winding/self-boolean invariants) execute in Rust parity tests with evidence.
 - **PAR-06**: Newly surfaced function-level mismatches are classified with explicit fix/defer decisions.
+- **PAR-07**: Closest-point expectations from old C++ `pline_function` cases are mapped into executable Rust parity checks with explicit index tie-break policy.
+- **PAR-08**: A bounded subset of old C++ generated function-case matrices is executed in Rust parity tests or explicitly marked not-comparable.
+- **PAR-09**: Closest-point and generated-matrix mismatches are classified with evidence and explicit fix/defer decisions.
 
 ## Out of Scope
 
@@ -136,13 +139,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-04 | Phase 10 | Complete |
 | PAR-05 | Phase 10 | Complete |
 | PAR-06 | Phase 10 | Complete |
+| PAR-07 | Phase 11 | Complete |
+| PAR-08 | Phase 11 | Complete |
+| PAR-09 | Phase 11 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 6 (`PAR-01..PAR-06`), mapped to Phases 9-10
+- additional tracked post-v1 requirements: 9 (`PAR-01..PAR-09`), mapped to Phases 9-11
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-13 after Phase 10 completion*
+*Last updated: 2026-05-13 after Phase 11 completion*

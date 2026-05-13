@@ -26,6 +26,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 8: API, FFI, and Migration Readiness** - Harden external surfaces and migration notes for release-quality use. (completed 2026-05-12)
 - [x] **Phase 9: C++ Parity Deep Comparison (No Clipper)** - Deeply compare old C++ logic against Rust on boolean/offset/intersection behavior and classify true bugs versus intentional divergences. (completed 2026-05-12)
 - [x] **Phase 10: C++ Function-Level Parity Deepening (No Clipper)** - Extend parity from operation-level cases into function-level C++ `pline_function` behavior and classify any newly surfaced logic gaps. (completed 2026-05-13)
+- [x] **Phase 11: Closest-Point and Generated Matrix Parity Expansion (No Clipper)** - Expand C++ `pline_function` parity coverage into closest-point and broader generated function-case matrices, with explicit tie-break and comparability classification. (completed 2026-05-13)
 
 ## Phase Details
 
@@ -188,6 +189,21 @@ Plans:
 - [x] 10-02: Write function-level parity classification report and gap decisions.
 - [x] 10-03: Close verification gates and sync roadmap/requirements/state.
 
+### Phase 11: Closest-Point and Generated Matrix Parity Expansion (No Clipper)
+**Goal**: Expand function-level parity from selected C++ `pline_function` checks to closest-point and broader generated case matrices while preserving explicit comparability boundaries.
+**Depends on**: Phase 10
+**Requirements**: [PAR-07, PAR-08, PAR-09]
+**Success Criteria** (what must be TRUE):
+  1. C++ closest-point expectations are mapped into executable Rust parity tests with clear index tie-break handling.
+  2. A bounded generated case subset from old C++ function matrices is executed or explicitly marked not-comparable with reasons.
+  3. Any new mismatches are classified as `bug`, `intentional-divergence`, or `not-comparable` with fix/defer decisions.
+**Plans**: 3 plans
+
+Plans:
+- [x] 11-01: Add closest-point parity expansion from C++ `pline_function` references.
+- [x] 11-02: Add bounded generated function-case parity subset and classification notes.
+- [x] 11-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -205,3 +221,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 8. API, FFI, and Migration Readiness | 3/3 | Complete    | 2026-05-12 |
 | 9. C++ Parity Deep Comparison (No Clipper) | 3/3 | Complete | 2026-05-12 |
 | 10. C++ Function-Level Parity Deepening (No Clipper) | 3/3 | Complete   | 2026-05-13 |
+| 11. Closest-Point and Generated Matrix Parity Expansion (No Clipper) | 3/3 | Complete   | 2026-05-13 |
