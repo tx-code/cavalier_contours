@@ -40,12 +40,19 @@ endpoint-stickiness branch closure.
   - `non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_closed_pline2`
 - Added non-circle reversed-overlap-endpoint-order probe with adjacent-line flip:
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip`
+- Added non-circle reversed-overlap-endpoint-order closed/open variants that
+  also pin expected closure-edge basic intersections:
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_intersect`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_intersect`
+- Clarified bounded parity behavior for these variants: closure edges can
+  produce additional real basic intersections that are independent of
+  overlap-adjacent duplicate filtering.
 
 ## Next Alignment Targets (No Clipper)
 
 | Priority | Target | Rust file/module | Decision Boundary |
 |----------|--------|------------------|-------------------|
-| P1 | Extend reversed-overlap-endpoint-order non-circle probes to closed/open variants where one side is closed | `cavalier_contours/src/polyline/internal/pline_intersects.rs` | Keep source-traceable cases and avoid broad refactors. |
+| P1 | Add bounded wrap-around-adjacency endpoint-dedup probes where closure edges do not add independent crossings | `cavalier_contours/src/polyline/internal/pline_intersects.rs` | Keep source-traceable cases and isolate dedup behavior from unrelated geometry. |
 | P2 | Extend collection-level parity to mixed arc/arc-overlap adjacency in non-circle closed shapes where direct old C++ mapping is available | `cavalier_contours/src/polyline/internal/pline_intersects.rs`, `cavalier_contours/tests/test_pline_seg_intersect.rs` | Keep source mapping explicit and bounded. |
 | P2 | Extend combine/offset-derived intersection fixture parity only when direct C++ source mapping exists | `cavalier_contours/tests/test_cpp_combine_parity.rs`, `cavalier_contours/tests/test_cpp_offset_parity.rs` | Keep provenance explicit and no-Clipper. |
 
