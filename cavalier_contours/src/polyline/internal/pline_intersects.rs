@@ -1116,6 +1116,86 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn skip_intr_at_end_open_pline1_uses_next_segment_index() {
+        let mut pline1 = Polyline::new();
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(2.0, 0.0, 0.0);
+        pline1.add(2.0, 2.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(1.75, -0.25, 0.0);
+        pline2.add(2.25, 0.25, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 0);
+        assert_eq!(intrs.basic_intersects.len(), 1);
+        assert_eq!(intrs.basic_intersects[0].start_index1, 1);
+        assert_eq!(intrs.basic_intersects[0].start_index2, 0);
+        assert_fuzzy_eq!(intrs.basic_intersects[0].point, Vector2::new(2.0, 0.0));
+    }
+
+    #[test]
+    fn skip_intr_at_end_closed_pline1_uses_next_segment_index() {
+        let mut pline1 = Polyline::new_closed();
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(2.0, 0.0, 0.0);
+        pline1.add(2.0, 2.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(1.75, -0.25, 0.0);
+        pline2.add(2.25, 0.25, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 0);
+        assert_eq!(intrs.basic_intersects.len(), 1);
+        assert_eq!(intrs.basic_intersects[0].start_index1, 1);
+        assert_eq!(intrs.basic_intersects[0].start_index2, 0);
+        assert_fuzzy_eq!(intrs.basic_intersects[0].point, Vector2::new(2.0, 0.0));
+    }
+
+    #[test]
+    fn skip_intr_at_end_open_pline2_uses_next_segment_index() {
+        let mut pline1 = Polyline::new();
+        pline1.add(-0.2, 0.0, 0.0);
+        pline1.add(0.2, 0.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(0.0, -1.0, 0.0);
+        pline2.add(0.0, 0.0, 0.0);
+        pline2.add(0.4, 0.8, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 0);
+        assert_eq!(intrs.basic_intersects.len(), 1);
+        assert_eq!(intrs.basic_intersects[0].start_index1, 0);
+        assert_eq!(intrs.basic_intersects[0].start_index2, 1);
+        assert_fuzzy_eq!(intrs.basic_intersects[0].point, Vector2::new(0.0, 0.0));
+    }
+
+    #[test]
+    fn skip_intr_at_end_closed_pline2_uses_next_segment_index() {
+        let mut pline1 = Polyline::new();
+        pline1.add(-0.2, 0.0, 0.0);
+        pline1.add(0.2, 0.0, 0.0);
+
+        let mut pline2 = Polyline::new_closed();
+        pline2.add(0.0, -1.0, 0.0);
+        pline2.add(0.0, 0.0, 0.0);
+        pline2.add(0.4, 0.8, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 0);
+        assert_eq!(intrs.basic_intersects.len(), 1);
+        assert_eq!(intrs.basic_intersects[0].start_index1, 0);
+        assert_eq!(intrs.basic_intersects[0].start_index2, 1);
+        assert_fuzzy_eq!(intrs.basic_intersects[0].point, Vector2::new(0.0, 0.0));
+    }
+
+    #[test]
     fn circles_touching() {
         // two closed circles touching
         let mut pline1 = Polyline::new_closed();
