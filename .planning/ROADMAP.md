@@ -517,6 +517,21 @@ Plans:
 - [x] 31-02: Publish half-circle closest-point parity report and next-scope map.
 - [x] 31-03: Close verification gates and sync planning state.
 
+### Phase 32: C-API Function-Surface Combine-Self Matrix Parity (No Clipper)
+**Goal**: Close remaining function-surface self-boolean invariants across source-backed circle and closed half-circle matrices at C-API boundary.
+**Depends on**: Phase 31
+**Requirements**: [PAR-70, PAR-71, PAR-72]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests execute source-backed circle and closed half-circle matrix cases through self-boolean operations (`union`, `intersect`, `exclude`, `xor`).
+  2. Output vertex and no-modify invariants match source-backed expectations for function-surface self-combine behavior.
+  3. Full workspace and planning health gates are green, and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 32-01: Add function-surface combine-with-self matrix parity test.
+- [x] 32-02: Publish combine-self parity report and next-scope map.
+- [x] 32-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -555,3 +570,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 29. C-API Optioned Coincident Output Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 30. C-API Closest-Point Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 31. C-API Half-Circle Closest-Point Strict Index Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 32. C-API Function-Surface Combine-Self Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |

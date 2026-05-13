@@ -162,6 +162,53 @@ fn run_boolean_props(
     }
 }
 
+fn plinelist_vertexes(plinelist: *const cavc_plinelist) -> Vec<Vec<cavc_vertex>> {
+    let mut count = u32::MAX;
+    unsafe {
+        assert_eq!(cavc_plinelist_get_count(plinelist, &mut count), 0);
+    }
+
+    let mut result = Vec::with_capacity(count as usize);
+    for i in 0..count {
+        let mut pline = ptr::null();
+        unsafe {
+            assert_eq!(cavc_plinelist_get_pline(plinelist, i, &mut pline), 0);
+        }
+        result.push(read_vertices(pline));
+    }
+
+    result
+}
+
+fn run_boolean_vertexes(
+    pline1: *const cavc_pline,
+    pline2: *const cavc_pline,
+    operation: u32,
+) -> (Vec<Vec<cavc_vertex>>, Vec<Vec<cavc_vertex>>) {
+    let mut pos_plines = ptr::null();
+    let mut neg_plines = ptr::null();
+
+    unsafe {
+        assert_eq!(
+            cavc_pline_boolean(
+                pline1,
+                pline2,
+                operation,
+                ptr::null(),
+                &mut pos_plines,
+                &mut neg_plines
+            ),
+            0
+        );
+
+        let pos = plinelist_vertexes(pos_plines);
+        let neg = plinelist_vertexes(neg_plines);
+        cavc_plinelist_f(pos_plines as *mut _);
+        cavc_plinelist_f(neg_plines as *mut _);
+        (pos, neg)
+    }
+}
+
 fn run_boolean_props_with_options(
     pline1: *const cavc_pline,
     pline2: *const cavc_pline,
@@ -1154,6 +1201,75 @@ fn pline_function_surface_half_circle_closest_point_strict_index_cpp_matrix_pari
                 "half-circle closest distance",
             );
         }
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_function_surface_closed_matrix_combine_with_self_cpp_parity() {
+    let mut closed_cases = Vec::new();
+    for case in cpp_circle_matrix_cases() {
+        closed_cases.push(cpp_circle_case_vertices(case));
+    }
+    for case in cpp_half_circle_matrix_cases() {
+        if case.is_closed {
+            closed_cases.push(cpp_half_circle_case_vertices(case));
+        }
+    }
+
+    for (case_idx, case_vertices) in closed_cases.iter().enumerate() {
+        let pline = create_pline(case_vertices, true);
+        let expected = read_vertices(pline);
+
+        let (remaining, subtracted) = run_boolean_vertexes(pline, pline, 0);
+        assert_eq!(
+            remaining.len(),
+            1,
+            "union with self should keep one pline at case #{case_idx}"
+        );
+        assert!(
+            subtracted.is_empty(),
+            "union with self should not produce subtracted plines at case #{case_idx}"
+        );
+        compare_vertexes(&remaining[0], &expected);
+
+        let (remaining, subtracted) = run_boolean_vertexes(pline, pline, 2);
+        assert!(
+            remaining.is_empty(),
+            "exclude with self should be empty at case #{case_idx}"
+        );
+        assert!(
+            subtracted.is_empty(),
+            "exclude with self should not produce subtracted plines at case #{case_idx}"
+        );
+
+        let (remaining, subtracted) = run_boolean_vertexes(pline, pline, 1);
+        assert_eq!(
+            remaining.len(),
+            1,
+            "intersect with self should keep one pline at case #{case_idx}"
+        );
+        assert!(
+            subtracted.is_empty(),
+            "intersect with self should not produce subtracted plines at case #{case_idx}"
+        );
+        compare_vertexes(&remaining[0], &expected);
+
+        let (remaining, subtracted) = run_boolean_vertexes(pline, pline, 3);
+        assert!(
+            remaining.is_empty(),
+            "xor with self should be empty at case #{case_idx}"
+        );
+        assert!(
+            subtracted.is_empty(),
+            "xor with self should not produce subtracted plines at case #{case_idx}"
+        );
+
+        let after = read_vertices(pline);
+        compare_vertexes(&after, &expected);
+
         unsafe {
             cavc_pline_f(pline);
         }
