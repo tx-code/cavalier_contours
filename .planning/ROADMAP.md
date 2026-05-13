@@ -1177,6 +1177,21 @@ Plans:
 - [x] 75-02: Publish post-coverage alignment map for next bounded targets.
 - [x] 75-03: Close verification gates and sync planning state.
 
+### Phase 76: C-API CCW Userdata Setter Symmetry Coverage (No Clipper)
+**Goal**: Harden shape userdata API symmetry by adding direct behavior coverage for `cavc_shape_set_ccw_pline_userdata_values` equivalent to CW setter semantics.
+**Depends on**: Phase 75
+**Requirements**: [PAR-202, PAR-203, PAR-204]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly cover `cavc_shape_set_ccw_pline_userdata_values` success path, null-shape error path, out-of-bounds error path, and clear-path semantics.
+  2. CCW userdata setter behavior is proven consistent with the already-covered CW setter contract for count/value roundtrip and clear behavior.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 76-01: Add direct CCW userdata setter symmetry parity test.
+- [x] 76-02: Publish post-symmetry alignment map for next bounded targets.
+- [x] 76-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1259,3 +1274,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 73. C-API Pline Core Suite Source-Coverage Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 74. C-API AABBIndex Extents Source Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 75. C-API Option Lifecycle & CW Userdata Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 76. C-API CCW Userdata Setter Symmetry Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |

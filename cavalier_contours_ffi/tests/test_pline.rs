@@ -6019,3 +6019,80 @@ fn shape_set_cw_pline_userdata_values_ffi() {
         cavc_shape_f(shape);
     }
 }
+
+#[test]
+fn shape_set_ccw_pline_userdata_values_ffi() {
+    let outer = create_pline(
+        &[
+            (-200.0, 200.0, 0.0),
+            (-200.0, -200.0, 0.0),
+            (200.0, -200.0, 0.0),
+            (200.0, 200.0, 0.0),
+        ],
+        true,
+    );
+    let inner = create_pline(
+        &[
+            (-100.0, 0.0, 0.0),
+            (0.0, 100.0, 0.0),
+            (100.0, 0.0, 0.0),
+            (0.0, -100.0, 0.0),
+        ],
+        true,
+    );
+
+    unsafe {
+        let mut list = ptr::null_mut();
+        assert_eq!(cavc_plinelist_create(0, &mut list), 0);
+        assert_eq!(cavc_plinelist_push(list, outer), 0);
+        assert_eq!(cavc_plinelist_push(list, inner), 0);
+
+        let mut shape = ptr::null_mut();
+        assert_eq!(cavc_shape_create(list, &mut shape), 0);
+        cavc_plinelist_f(list);
+
+        let payload = [101_u64, 202_u64];
+        let mut ccw_count = 0_u32;
+        assert_eq!(cavc_shape_get_ccw_count(shape, &mut ccw_count), 0);
+        assert_eq!(ccw_count, 1);
+
+        assert_eq!(
+            cavc_shape_set_ccw_pline_userdata_values(ptr::null_mut(), 0, payload.as_ptr(), 2),
+            1
+        );
+        assert_eq!(
+            cavc_shape_set_ccw_pline_userdata_values(shape, 99, payload.as_ptr(), 2),
+            2
+        );
+
+        assert_eq!(
+            cavc_shape_set_ccw_pline_userdata_values(shape, 0, payload.as_ptr(), 2),
+            0
+        );
+        let mut count = 0_u32;
+        assert_eq!(
+            cavc_shape_get_ccw_pline_userdata_count(shape, 0, &mut count),
+            0
+        );
+        assert_eq!(count, 2);
+
+        let mut out = [0_u64; 2];
+        assert_eq!(
+            cavc_shape_get_ccw_pline_userdata_values(shape, 0, out.as_mut_ptr()),
+            0
+        );
+        assert_eq!(out, payload);
+
+        assert_eq!(
+            cavc_shape_set_ccw_pline_userdata_values(shape, 0, ptr::null(), 5),
+            0
+        );
+        assert_eq!(
+            cavc_shape_get_ccw_pline_userdata_count(shape, 0, &mut count),
+            0
+        );
+        assert_eq!(count, 0);
+
+        cavc_shape_f(shape);
+    }
+}

@@ -281,6 +281,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-199**: FFI parity tests cover create/init/free lifecycle behavior for previously untested option exports in scope (`cavc_pline_parallel_offset_o_create/f`, `cavc_pline_boolean_o_create/f`, `cavc_pline_self_intersect_o_init`, `cavc_pline_contains_o_init`, `cavc_shape_offset_o_init`).
 - **PAR-200**: FFI parity tests cover `cavc_shape_set_cw_pline_userdata_values` for success-path set/get, null-shape error, out-of-bounds error, and clear-path semantics.
 - **PAR-201**: C-API option lifecycle and CW userdata coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-202**: FFI parity tests cover `cavc_shape_set_ccw_pline_userdata_values` for success-path set/get, null-shape error, out-of-bounds error, and clear-path semantics.
+- **PAR-203**: CCW userdata setter behavior is explicitly validated as contract-symmetric with the covered CW setter behavior for count/value roundtrip and clear semantics.
+- **PAR-204**: C-API CCW userdata setter symmetry coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -526,13 +529,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-199 | Phase 75 | Complete |
 | PAR-200 | Phase 75 | Complete |
 | PAR-201 | Phase 75 | Complete |
+| PAR-202 | Phase 76 | Complete |
+| PAR-203 | Phase 76 | Complete |
+| PAR-204 | Phase 76 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 201 (`PAR-01..PAR-201`), mapped to Phases 9-75
+- additional tracked post-v1 requirements: 204 (`PAR-01..PAR-204`), mapped to Phases 9-76
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 75 completion*
+*Last updated: 2026-05-15 after Phase 76 completion*
