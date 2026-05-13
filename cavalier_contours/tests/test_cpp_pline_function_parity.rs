@@ -268,23 +268,27 @@ fn circle_case_label(case: CircleCaseKey) -> String {
 }
 
 fn build_circle_case(case: CircleCaseKey) -> Polyline<f64> {
+    build_circle_case_with_radius(case, CIRCLE_RADIUS)
+}
+
+fn build_circle_case_with_radius(case: CircleCaseKey, radius: f64) -> Polyline<f64> {
     let (mut p0, mut p1) = match case.alignment {
         CircleAlignment::XAxis => (
-            Vector2::new(case.center_x - CIRCLE_RADIUS, case.center_y),
-            Vector2::new(case.center_x + CIRCLE_RADIUS, case.center_y),
+            Vector2::new(case.center_x - radius, case.center_y),
+            Vector2::new(case.center_x + radius, case.center_y),
         ),
         CircleAlignment::YAxis => (
-            Vector2::new(case.center_x, case.center_y - CIRCLE_RADIUS),
-            Vector2::new(case.center_x, case.center_y + CIRCLE_RADIUS),
+            Vector2::new(case.center_x, case.center_y - radius),
+            Vector2::new(case.center_x, case.center_y + radius),
         ),
         CircleAlignment::Diagonal => (
             Vector2::new(
-                case.center_x + CIRCLE_RADIUS * (std::f64::consts::PI / 4.0).cos(),
-                case.center_y + CIRCLE_RADIUS * (std::f64::consts::PI / 4.0).sin(),
+                case.center_x + radius * (std::f64::consts::PI / 4.0).cos(),
+                case.center_y + radius * (std::f64::consts::PI / 4.0).sin(),
             ),
             Vector2::new(
-                case.center_x + CIRCLE_RADIUS * (5.0 * std::f64::consts::PI / 4.0).cos(),
-                case.center_y + CIRCLE_RADIUS * (5.0 * std::f64::consts::PI / 4.0).sin(),
+                case.center_x + radius * (5.0 * std::f64::consts::PI / 4.0).cos(),
+                case.center_y + radius * (5.0 * std::f64::consts::PI / 4.0).sin(),
             ),
         ),
     };
@@ -298,6 +302,58 @@ fn build_circle_case(case: CircleCaseKey) -> Polyline<f64> {
     pline.add(p0.x, p0.y, bulge);
     pline.add(p1.x, p1.y, bulge);
     pline
+}
+
+fn vertex_matches(
+    a: cavalier_contours::polyline::PlineVertex<f64>,
+    b: cavalier_contours::polyline::PlineVertex<f64>,
+) -> bool {
+    (a.x - b.x).abs() <= EPS && (a.y - b.y).abs() <= EPS && (a.bulge - b.bulge).abs() <= EPS
+}
+
+fn closed_vertices_match_with_rotation(actual: &Polyline<f64>, expected: &Polyline<f64>) -> bool {
+    if actual.vertex_count() != expected.vertex_count()
+        || !actual.is_closed()
+        || !expected.is_closed()
+    {
+        return false;
+    }
+
+    let n = expected.vertex_count();
+    for shift in 0..n {
+        let mut all_match = true;
+        for i in 0..n {
+            let actual_i = (i + shift) % n;
+            if !vertex_matches(actual.at(actual_i), expected.at(i)) {
+                all_match = false;
+                break;
+            }
+        }
+        if all_match {
+            return true;
+        }
+    }
+    false
+}
+
+fn assert_single_offset_match(actual: &[Polyline<f64>], expected: &Polyline<f64>, context: &str) {
+    assert_eq!(
+        actual.len(),
+        1,
+        "{context}: expected exactly one offset polyline, got {}",
+        actual.len()
+    );
+    let actual = &actual[0];
+    let actual_props = create_property_set([actual], false);
+    let expected_props = create_property_set([expected], false);
+    assert!(
+        property_sets_match(&actual_props, &expected_props),
+        "{context}: offset property mismatch"
+    );
+    assert!(
+        closed_vertices_match_with_rotation(actual, expected),
+        "{context}: offset vertex mismatch (allowing closed-curve start rotation)"
+    );
 }
 
 fn circle_matrix_cases() -> Vec<CircleCaseKey> {
@@ -776,6 +832,58 @@ fn cpp_generated_circle_full_matrix_closest_point_parity() {
                     "{context}: closest index mismatch at case #{idx} query={query:?}"
                 );
             }
+        }
+    }
+}
+
+#[test]
+fn cpp_generated_circle_full_matrix_parallel_offset_parity() {
+    for case in circle_matrix_cases() {
+        let context = circle_case_label(case);
+        let input = build_circle_case(case);
+
+        let outward_delta = -(case.direction as f64) * 0.25 * CIRCLE_RADIUS;
+        let inward_delta = (case.direction as f64) * 0.5 * CIRCLE_RADIUS;
+
+        let outward_expected =
+            build_circle_case_with_radius(case, CIRCLE_RADIUS + outward_delta.abs());
+        let inward_expected =
+            build_circle_case_with_radius(case, CIRCLE_RADIUS - inward_delta.abs());
+
+        let outward_actual = input.parallel_offset(outward_delta);
+        assert_single_offset_match(
+            &outward_actual,
+            &outward_expected,
+            &format!("{context}: parallel_offset outward"),
+        );
+
+        let inward_actual = input.parallel_offset(inward_delta);
+        assert_single_offset_match(
+            &inward_actual,
+            &inward_expected,
+            &format!("{context}: parallel_offset inward"),
+        );
+    }
+}
+
+#[test]
+fn cpp_generated_circle_full_matrix_collapsed_offset_parity() {
+    for case in circle_matrix_cases() {
+        let context = circle_case_label(case);
+        let input = build_circle_case(case);
+
+        let collapse_deltas = [
+            (case.direction as f64) * CIRCLE_RADIUS,
+            (case.direction as f64) * 1.5 * CIRCLE_RADIUS,
+            (case.direction as f64) * 2.0 * CIRCLE_RADIUS,
+        ];
+        for (i, delta) in collapse_deltas.iter().enumerate() {
+            let result = input.parallel_offset(*delta);
+            assert!(
+                result.is_empty(),
+                "{context}: collapsed offset case #{i} expected empty, got {} result(s)",
+                result.len()
+            );
         }
     }
 }
