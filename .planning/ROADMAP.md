@@ -997,6 +997,21 @@ Plans:
 - [x] 63-02: Publish post-expansion alignment map for next bounded targets.
 - [x] 63-03: Close verification gates and sync planning state.
 
+### Phase 64: C-API Specific-Edge Matrix Closed-Rectangle-Inward Expansion (No Clipper)
+**Goal**: Further expand helper-driven specific-edge options-path matrix coverage with additional source-backed old C++ closed-rectangle-inward case inputs while preserving diagnostics and no-modify invariants.
+**Depends on**: Phase 63
+**Requirements**: [PAR-166, PAR-167, PAR-168]
+**Success Criteria** (what must be TRUE):
+  1. Specific-edge matrix execution includes an additional old C++ closed-rectangle-inward case beyond Phase 63 coverage.
+  2. Shared helper path keeps reversed/default matrix parity and no-modify diagnostics stable with explicit provenance labels for all covered edge cases.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 64-01: Add source-backed closed-rectangle-inward specific-edge matrix expansion in FFI parity tests.
+- [x] 64-02: Publish post-expansion alignment map for next bounded targets.
+- [x] 64-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1067,3 +1082,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 61. C-API Specific-Edge Matrix Open-Diamond-Outward Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 62. C-API Specific-Edge Matrix Closed-Diamond-Inward Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 63. C-API Specific-Edge Matrix Closed-Rectangle-Outward Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 64. C-API Specific-Edge Matrix Closed-Rectangle-Inward Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |

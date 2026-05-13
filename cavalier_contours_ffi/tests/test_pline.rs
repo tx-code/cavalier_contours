@@ -730,6 +730,7 @@ fn cpp_offset_specific_edge_matrix_cases() -> Vec<OffsetCase> {
     let mut cases = cpp_offset_specific_cases();
     let mut simple_cases = cpp_offset_simple_cases();
     for case_name in [
+        "closed_rectangle_inward",
         "closed_rectangle_coincident",
         "closed_rectangle_outward",
         "open_rectangle_outward",
@@ -4603,6 +4604,7 @@ fn cpp_specific_edge_attribution(case_name: &str) -> &'static str {
             "old C++ specific case: first vertex ontop of second-segment intersection"
         }
         "collapsed_rectangle" => "old C++ specific case: collapsed rectangle expects empty result",
+        "closed_rectangle_inward" => "old C++ simple case: closed rectangle offset inward",
         "closed_rectangle_coincident" => {
             "old C++ simple edge case: closed rectangle offset inward into coincident line"
         }
