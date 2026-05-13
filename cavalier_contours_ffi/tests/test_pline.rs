@@ -2565,6 +2565,74 @@ fn pline_eval_failure_path_output_stability_ffi() {
 }
 
 #[test]
+fn pline_core_output_stability_ffi() {
+    let pline = create_pline(
+        &[(10.0, 20.0, 0.0), (30.0, 40.0, 1.0), (50.0, 60.0, 0.0)],
+        true,
+    );
+
+    unsafe {
+        assert_eq!(
+            cavc_pline_set_userdata_values(pline, [7_u64, 8_u64].as_ptr(), 2),
+            0
+        );
+
+        let pline_sentinel =
+            std::ptr::NonNull::<cavc_pline>::dangling().as_ptr() as *const cavc_pline;
+        let mut cloned = pline_sentinel;
+        assert_eq!(cavc_pline_clone(ptr::null(), &mut cloned), 1);
+        assert_eq!(cloned, pline_sentinel);
+
+        let mut is_closed = 9_u8;
+        assert_eq!(cavc_pline_get_is_closed(ptr::null(), &mut is_closed), 1);
+        assert_eq!(is_closed, 9);
+
+        let mut vertex_count = 314_u32;
+        assert_eq!(
+            cavc_pline_get_vertex_count(ptr::null(), &mut vertex_count),
+            1
+        );
+        assert_eq!(vertex_count, 314);
+
+        let mut vertex_data = [cavc_vertex::new(-1.0, -2.0, -3.0); 3];
+        assert_eq!(
+            cavc_pline_get_vertex_data(ptr::null(), vertex_data.as_mut_ptr()),
+            1
+        );
+        assert_fuzzy_eq!(vertex_data[0].x, -1.0);
+        assert_fuzzy_eq!(vertex_data[0].y, -2.0);
+        assert_fuzzy_eq!(vertex_data[0].bulge, -3.0);
+
+        let mut vertex = cavc_vertex::new(1.25, 2.5, 3.75);
+        assert_eq!(cavc_pline_get_vertex(ptr::null(), 0, &mut vertex), 1);
+        assert_fuzzy_eq!(vertex.x, 1.25);
+        assert_fuzzy_eq!(vertex.y, 2.5);
+        assert_fuzzy_eq!(vertex.bulge, 3.75);
+
+        assert_eq!(cavc_pline_get_vertex(pline, 99, &mut vertex), 2);
+        assert_fuzzy_eq!(vertex.x, 1.25);
+        assert_fuzzy_eq!(vertex.y, 2.5);
+        assert_fuzzy_eq!(vertex.bulge, 3.75);
+
+        let mut userdata_count = 271_u32;
+        assert_eq!(
+            cavc_pline_get_userdata_count(ptr::null(), &mut userdata_count),
+            1
+        );
+        assert_eq!(userdata_count, 271);
+
+        let mut userdata_value = 0xABCD_EF01_u64;
+        assert_eq!(
+            cavc_pline_get_userdata_values(ptr::null(), &mut userdata_value),
+            1
+        );
+        assert_eq!(userdata_value, 0xABCD_EF01);
+
+        cavc_pline_f(pline);
+    }
+}
+
+#[test]
 fn pline_invert_direction() {
     let pline = create_pline(&[(0.0, 0.0, 1.0), (2.0, 0.0, 1.0)], true);
     unsafe {

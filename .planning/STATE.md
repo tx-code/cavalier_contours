@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 84 verification complete
-last_updated: "2026-05-15T08:55:00.000Z"
-last_activity: 2026-05-15 -- Phase 84 completed
+stopped_at: Phase 85 verification complete
+last_updated: "2026-05-15T09:25:00.000Z"
+last_activity: 2026-05-15 -- Phase 85 completed
 progress:
-  total_phases: 84
-  completed_phases: 84
-  total_plans: 256
-  completed_plans: 256
+  total_phases: 85
+  completed_phases: 85
+  total_plans: 259
+  completed_plans: 259
   percent: 100
 ---
 
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-05-12)
 
 ## Current Position
 
-Phase: 84 — COMPLETE
+Phase: 85 — COMPLETE
 Plan: 3 of 3
-Status: Phase 84 complete
-Last activity: 2026-05-15 -- Phase 84 completed
+Status: Phase 85 complete
+Last activity: 2026-05-15 -- Phase 85 completed
 
 Progress: 100%
 
@@ -36,7 +36,7 @@ Progress: 100%
 
 **Velocity:**
 
-- Total plans completed: 256
+- Total plans completed: 259
 - Average duration: n/a
 - Total execution time: 0.0 hours
 
@@ -128,10 +128,11 @@ Progress: 100%
 | 82 | 3 | - | - |
 | 83 | 3 | - | - |
 | 84 | 3 | - | - |
+| 85 | 3 | - | - |
 
 **Recent Trend:**
 
-- Last 5 plans: 84-01, 84-02, 84-03, 83-03, 83-02
+- Last 5 plans: 85-01, 85-02, 85-03, 84-03, 84-02
 - Trend: stable
 
 ## Accumulated Context
@@ -167,6 +168,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-15T08:55:00.000Z
-Stopped at: Phase 84 verification complete
-Resume file: .planning/phases/84-capi-pline-eval-failure-path-output-stability-coverage/84-03-SUMMARY.md
+Last session: 2026-05-15T09:25:00.000Z
+Stopped at: Phase 85 verification complete
+Resume file: .planning/phases/85-capi-pline-core-accessor-output-stability-coverage/85-03-SUMMARY.md

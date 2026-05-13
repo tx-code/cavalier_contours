@@ -1312,6 +1312,21 @@ Plans:
 - [x] 84-02: Publish post-contract alignment map for next bounded targets.
 - [x] 84-03: Close verification gates and sync planning state.
 
+### Phase 85: C-API Pline Core Accessor Output Stability Coverage (No Clipper)
+**Goal**: Deepen pline core accessor C-API contract reliability by adding direct null/OOB assertions and out-parameter stability checks for core read/clone surfaces.
+**Depends on**: Phase 84
+**Requirements**: [PAR-229, PAR-230, PAR-231]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly verify pline core accessor null/OOB contracts across clone/is_closed/vertex_count/vertex_data/vertex/userdata_count/userdata_values surfaces.
+  2. FFI tests explicitly verify failure-path output sentinel stability for pointer, scalar, and vertex outputs on covered pline core accessor APIs.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 85-01: Add direct pline core accessor failure-path output stability parity tests.
+- [x] 85-02: Publish post-contract alignment map for next bounded targets.
+- [x] 85-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1403,3 +1418,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 82. C-API Plinelist Failure-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 83. C-API AABBIndex Null-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 84. C-API Pline-Eval Failure-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 85. C-API Pline Core Accessor Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
