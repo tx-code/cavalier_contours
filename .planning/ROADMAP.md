@@ -757,6 +757,21 @@ Plans:
 - [x] 47-02: Publish post-deepening alignment map for mode no-modify follow-up.
 - [x] 47-03: Close verification gates and sync planning state.
 
+### Phase 48: C-API Options-Path Self-Intersects Stress Matrix (No Clipper)
+**Goal**: Deepen options-path self-intersects parity with a bounded stress matrix across source-backed simple/specific offset cases (`mode x tolerance scale`).
+**Depends on**: Phase 47
+**Requirements**: [PAR-118, PAR-119, PAR-120]
+**Success Criteria** (what must be TRUE):
+  1. Options-path `parallel_offset` output remains equivalent to default-path output across self-intersects include mode matrix (`ALL`, `LOCAL`, `GLOBAL`) and bounded tolerance scales (`0.5x`, `1.0x`, `2.0x`) for source-backed simple and specific cases.
+  2. Stress-matrix checks validate both property-level and vertex-level output equivalence with explicit mode/scale attribution in assertions.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 48-01: Add self-intersects stress-matrix parity test for options-path offset flow.
+- [x] 48-02: Publish post-deepening alignment map for stress-matrix follow-up.
+- [x] 48-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -811,3 +826,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 45. C-API Options-Path Tolerance-Matrix Deepening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 46. C-API Options-Path Self-Intersects Mode Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 47. C-API Self-Intersects Mode No-Modify Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 48. C-API Options-Path Self-Intersects Stress Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |

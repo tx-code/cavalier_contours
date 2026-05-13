@@ -197,6 +197,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-115**: Options-path self-intersects include mode matrix (`ALL`, `LOCAL`, `GLOBAL`) preserves input vertex data across source-backed simple and specific offset cases.
 - **PAR-116**: Self-intersects mode no-modify matrix explicitly validates input stability per mode with source-backed case attribution.
 - **PAR-117**: Self-intersects mode no-modify matrix phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-118**: Options-path `parallel_offset` output remains equivalent to default-path output across self-intersects include mode matrix (`ALL`, `LOCAL`, `GLOBAL`) and bounded tolerance scales (`0.5x`, `1.0x`, `2.0x`) for source-backed simple and specific cases.
+- **PAR-119**: Self-intersects stress-matrix parity explicitly validates both property-level and vertex-level output equivalence with mode/scale attribution.
+- **PAR-120**: Self-intersects stress-matrix phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -358,13 +361,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-115 | Phase 47 | Complete |
 | PAR-116 | Phase 47 | Complete |
 | PAR-117 | Phase 47 | Complete |
+| PAR-118 | Phase 48 | Complete |
+| PAR-119 | Phase 48 | Complete |
+| PAR-120 | Phase 48 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 117 (`PAR-01..PAR-117`), mapped to Phases 9-47
+- additional tracked post-v1 requirements: 120 (`PAR-01..PAR-120`), mapped to Phases 9-48
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 47 completion*
+*Last updated: 2026-05-14 after Phase 48 completion*
