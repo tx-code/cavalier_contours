@@ -4335,6 +4335,90 @@ fn pline_parallel_offset_options_path_self_intersects_mode_does_not_modify_input
 }
 
 #[test]
+fn pline_parallel_offset_options_path_reversed_self_intersects_stress_matrix_cpp_parity() {
+    for case in cpp_offset_simple_cases()
+        .into_iter()
+        .chain(cpp_offset_specific_cases())
+    {
+        let pline = create_pline(&case.input, case.is_closed);
+        unsafe {
+            assert_eq!(cavc_pline_invert_direction(pline), 0);
+        }
+        let delta = -case.delta;
+        let default_props = run_parallel_offset_props(pline, delta);
+        let default_vertexes = run_parallel_offset_vertexes(pline, delta);
+
+        let mut default_options = cavc_pline_parallel_offset_o {
+            aabb_index: std::ptr::null(),
+            pos_equal_eps: f64::NAN,
+            slice_join_eps: f64::NAN,
+            offset_dist_eps: f64::NAN,
+            handle_self_intersects: 0,
+        };
+
+        unsafe {
+            assert_eq!(cavc_pline_parallel_offset_o_init(&mut default_options), 0);
+
+            let mut aabb_index = ptr::null();
+            assert_eq!(
+                cavc_pline_create_approx_aabbindex(pline, &mut aabb_index),
+                0
+            );
+
+            for mode in [
+                CAVC_SELF_INTERSECTS_INCLUDE_ALL,
+                CAVC_SELF_INTERSECTS_INCLUDE_LOCAL,
+                CAVC_SELF_INTERSECTS_INCLUDE_GLOBAL,
+            ] {
+                for scale in [0.5_f64, 1.0_f64, 2.0_f64] {
+                    let options = cavc_pline_parallel_offset_o {
+                        aabb_index,
+                        pos_equal_eps: default_options.pos_equal_eps * scale,
+                        slice_join_eps: default_options.slice_join_eps * scale,
+                        offset_dist_eps: default_options.offset_dist_eps * scale,
+                        handle_self_intersects: mode as u8,
+                    };
+
+                    let option_props =
+                        run_parallel_offset_props_with_options(pline, delta, &options);
+                    assert!(
+                        props_set_match_ignore_area_sign(&option_props, &default_props, 1e-4)
+                            && props_set_match_ignore_area_sign(
+                                &default_props,
+                                &option_props,
+                                1e-4
+                            ),
+                        "parallel offset reversed self-intersects stress props mismatch for {} mode={} scale={scale}\ndefault={default_props:?}\noptions={option_props:?}",
+                        case.name,
+                        mode
+                    );
+
+                    let option_vertexes =
+                        run_parallel_offset_vertexes_with_options(pline, delta, &options);
+                    assert!(
+                        vertex_lists_match_unordered(
+                            &option_vertexes,
+                            &default_vertexes,
+                            case.is_closed
+                        ) && vertex_lists_match_unordered(
+                            &default_vertexes,
+                            &option_vertexes,
+                            case.is_closed
+                        ),
+                        "parallel offset reversed self-intersects stress vertex mismatch for {} mode={} scale={scale}\ndefault={default_vertexes:?}\noptions={option_vertexes:?}",
+                        case.name,
+                        mode
+                    );
+                }
+            }
+
+            cavc_aabbindex_f(aabb_index as *mut _);
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
 fn pline_parallel_offset_options_path_does_not_modify_input_cpp_parity() {
     for case in cpp_offset_simple_cases()
         .into_iter()
