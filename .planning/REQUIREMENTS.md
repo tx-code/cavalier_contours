@@ -254,6 +254,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-172**: Specific-edge matrix construction asserts that all source-backed old C++ simple cases targeted by this matrix path are consumed, and fails with omitted-case diagnostics when any remain.
 - **PAR-173**: Source-coverage guard hardening preserves existing reversed/default parity and no-modify behavior while improving omission diagnostics.
 - **PAR-174**: Specific-edge matrix source-coverage guard phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-175**: Coincident case1/case2 exclude metadata labels in C-API boolean matrix suites use old C++ canonical identifiers (`excludeAFromB`, `excludeBFromA`).
+- **PAR-176**: Coincident exclude naming canonicalization preserves behavior of default/options/no-modify matrix assertions and expected outputs.
+- **PAR-177**: Coincident exclude naming canonicalization phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -472,13 +475,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-172 | Phase 66 | Complete |
 | PAR-173 | Phase 66 | Complete |
 | PAR-174 | Phase 66 | Complete |
+| PAR-175 | Phase 67 | Complete |
+| PAR-176 | Phase 67 | Complete |
+| PAR-177 | Phase 67 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 174 (`PAR-01..PAR-174`), mapped to Phases 9-66
+- additional tracked post-v1 requirements: 177 (`PAR-01..PAR-177`), mapped to Phases 9-67
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 66 completion*
+*Last updated: 2026-05-14 after Phase 67 completion*

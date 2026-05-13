@@ -1042,6 +1042,21 @@ Plans:
 - [x] 66-02: Publish post-guard alignment map for next bounded targets.
 - [x] 66-03: Close verification gates and sync planning state.
 
+### Phase 67: C-API Coincident Exclude Name Canonicalization (No Clipper)
+**Goal**: Align C-API coincident exclude case metadata names with old C++ canonical identifiers while preserving behavior and diagnostics.
+**Depends on**: Phase 66
+**Requirements**: [PAR-175, PAR-176, PAR-177]
+**Success Criteria** (what must be TRUE):
+  1. Coincident case1/case2 exclude labels use old C++ canonical names (`excludeAFromB`, `excludeBFromA`) across default/options/no-modify matrix suites.
+  2. Naming canonicalization does not alter operation mapping, expected outputs, or no-modify assertions.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 67-01: Canonicalize coincident exclude case labels in FFI matrix metadata.
+- [x] 67-02: Publish post-canonicalization alignment map for next bounded targets.
+- [x] 67-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1115,3 +1130,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 64. C-API Specific-Edge Matrix Closed-Rectangle-Inward Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 65. C-API Specific-Edge Matrix Open-Rectangle-Inward Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 66. C-API Specific-Edge Matrix Source-Coverage Guard (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 67. C-API Coincident Exclude Name Canonicalization (No Clipper) | 3/3 | Complete   | 2026-05-14 |
