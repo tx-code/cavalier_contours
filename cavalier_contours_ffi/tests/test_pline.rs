@@ -2492,6 +2492,79 @@ fn pline_eval_closest_point() {
 }
 
 #[test]
+fn pline_eval_failure_path_output_stability_ffi() {
+    let pline = create_pline(&[(0.0, 0.0, 1.0), (2.0, 0.0, 1.0)], true);
+    let empty_pline = create_pline(&[], true);
+
+    unsafe {
+        let mut path_length = -11.0_f64;
+        assert_eq!(
+            cavc_pline_eval_path_length(ptr::null(), &mut path_length),
+            1
+        );
+        assert_fuzzy_eq!(path_length, -11.0);
+
+        let mut area = -22.0_f64;
+        assert_eq!(cavc_pline_eval_area(ptr::null(), &mut area), 1);
+        assert_fuzzy_eq!(area, -22.0);
+
+        let mut wn = 123_i32;
+        assert_eq!(cavc_pline_eval_wn(ptr::null(), 0.0, 0.0, &mut wn), 1);
+        assert_eq!(wn, 123);
+
+        let (mut min_x, mut min_y, mut max_x, mut max_y) = (1.0_f64, 2.0_f64, 3.0_f64, 4.0_f64);
+        assert_eq!(
+            cavc_pline_eval_extents(ptr::null(), &mut min_x, &mut min_y, &mut max_x, &mut max_y),
+            1
+        );
+        assert_fuzzy_eq!(min_x, 1.0);
+        assert_fuzzy_eq!(min_y, 2.0);
+        assert_fuzzy_eq!(max_x, 3.0);
+        assert_fuzzy_eq!(max_y, 4.0);
+
+        let mut seg_start_index = 77_u32;
+        let mut closest_point = cavc_point::new(8.0, 9.0);
+        let mut distance = 10.0_f64;
+        assert_eq!(
+            cavc_pline_eval_closest_point(
+                ptr::null(),
+                0.0,
+                0.0,
+                1e-5,
+                &mut seg_start_index,
+                &mut closest_point,
+                &mut distance
+            ),
+            1
+        );
+        assert_eq!(seg_start_index, 77);
+        assert_fuzzy_eq!(closest_point.x, 8.0);
+        assert_fuzzy_eq!(closest_point.y, 9.0);
+        assert_fuzzy_eq!(distance, 10.0);
+
+        assert_eq!(
+            cavc_pline_eval_closest_point(
+                empty_pline,
+                0.0,
+                0.0,
+                1e-5,
+                &mut seg_start_index,
+                &mut closest_point,
+                &mut distance
+            ),
+            2
+        );
+        assert_eq!(seg_start_index, 77);
+        assert_fuzzy_eq!(closest_point.x, 8.0);
+        assert_fuzzy_eq!(closest_point.y, 9.0);
+        assert_fuzzy_eq!(distance, 10.0);
+
+        cavc_pline_f(pline);
+        cavc_pline_f(empty_pline);
+    }
+}
+
+#[test]
 fn pline_invert_direction() {
     let pline = create_pline(&[(0.0, 0.0, 1.0), (2.0, 0.0, 1.0)], true);
     unsafe {
