@@ -152,6 +152,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-70**: The FFI surface executes source-backed circle and closed half-circle function-surface matrix self-boolean invariants through `cavc_pline_boolean`.
 - **PAR-71**: Function-surface self-boolean parity validates output vertex invariants (union/intersect keep self; exclude/xor empty) and input no-modify behavior.
 - **PAR-72**: Function-surface combine-self matrix parity work records next parity target scope and closes with full verification gates.
+- **PAR-73**: The FFI surface executes source-backed explicit closest-point index probes across an epsilon matrix through `cavc_pline_eval_closest_point`.
+- **PAR-74**: Closest-point epsilon/tie-break parity validates circle shared-vertex and half-circle explicit-index stability for index/point/distance under epsilon variation.
+- **PAR-75**: Closest-point epsilon/tie-break parity work records next parity target scope and closes with full verification gates.
 
 ## Out of Scope
 
@@ -268,13 +271,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-70 | Phase 32 | Complete |
 | PAR-71 | Phase 32 | Complete |
 | PAR-72 | Phase 32 | Complete |
+| PAR-73 | Phase 33 | Complete |
+| PAR-74 | Phase 33 | Complete |
+| PAR-75 | Phase 33 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 72 (`PAR-01..PAR-72`), mapped to Phases 9-32
+- additional tracked post-v1 requirements: 75 (`PAR-01..PAR-75`), mapped to Phases 9-33
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 32 completion*
+*Last updated: 2026-05-14 after Phase 33 completion*

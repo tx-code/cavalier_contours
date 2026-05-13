@@ -532,6 +532,21 @@ Plans:
 - [x] 32-02: Publish combine-self parity report and next-scope map.
 - [x] 32-03: Close verification gates and sync planning state.
 
+### Phase 33: C-API Closest-Point Epsilon/Tie-Break Parity (No Clipper)
+**Goal**: Close source-backed closest-point epsilon/tie-break sensitivity parity for explicit index expectations at C-API boundary.
+**Depends on**: Phase 32
+**Requirements**: [PAR-73, PAR-74, PAR-75]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests execute source-backed explicit closest-point index probes across an epsilon matrix through `cavc_pline_eval_closest_point`.
+  2. Circle shared-vertex and half-circle explicit-index closest-point behaviors remain stable for index/point/distance under epsilon variation.
+  3. Full workspace and planning health gates are green, and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 33-01: Add closest-point epsilon/tie-break matrix parity tests.
+- [x] 33-02: Publish closest-point epsilon/tie-break parity report and next-scope map.
+- [x] 33-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -571,3 +586,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 30. C-API Closest-Point Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 31. C-API Half-Circle Closest-Point Strict Index Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 32. C-API Function-Surface Combine-Self Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 33. C-API Closest-Point Epsilon/Tie-Break Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |

@@ -604,6 +604,7 @@ const CPP_PROBE_DELTA: f64 = 0.01;
 const CPP_CIRCLE_RADIUS: f64 = 5.0;
 const CPP_CIRCLE_INSIDE_DIST_FACTOR: f64 = 0.33;
 const CPP_CIRCLE_OUTSIDE_DIST_FACTOR: f64 = 1.5;
+const CPP_CLOSEST_EPS_MATRIX: [f64; 4] = [1e-9, 1e-7, 1e-5, 1e-4];
 
 #[derive(Copy, Clone)]
 enum CircleAlignment {
@@ -1201,6 +1202,77 @@ fn pline_function_surface_half_circle_closest_point_strict_index_cpp_matrix_pari
                 "half-circle closest distance",
             );
         }
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_function_surface_circle_closest_point_eps_tie_break_cpp_parity() {
+    for case in cpp_circle_matrix_cases() {
+        let pline = create_pline(&cpp_circle_case_vertices(case), true);
+        let vertices = read_vertices(pline);
+
+        for pos_equal_eps in CPP_CLOSEST_EPS_MATRIX {
+            let (i0, p0, d0) =
+                eval_closest_point_result(pline, vertices[0].x, vertices[0].y, pos_equal_eps);
+            assert_eq!(i0, 0);
+            assert_near_ctx(p0.x, vertices[0].x, "circle eps tie-break vertex0 x");
+            assert_near_ctx(p0.y, vertices[0].y, "circle eps tie-break vertex0 y");
+            assert_near_ctx(d0, 0.0, "circle eps tie-break vertex0 distance");
+
+            let (i1, p1, d1) =
+                eval_closest_point_result(pline, vertices[1].x, vertices[1].y, pos_equal_eps);
+            assert_eq!(i1, 1);
+            assert_near_ctx(p1.x, vertices[1].x, "circle eps tie-break vertex1 x");
+            assert_near_ctx(p1.y, vertices[1].y, "circle eps tie-break vertex1 y");
+            assert_near_ctx(d1, 0.0, "circle eps tie-break vertex1 distance");
+        }
+
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_function_surface_half_circle_closest_point_eps_tie_break_cpp_parity() {
+    for case in cpp_half_circle_matrix_cases() {
+        let pline = create_pline(&cpp_half_circle_case_vertices(case), case.is_closed);
+        let closest_cases = build_half_circle_closest_cases(case);
+
+        for (case_idx, expected) in closest_cases.iter().enumerate() {
+            for pos_equal_eps in CPP_CLOSEST_EPS_MATRIX {
+                let (seg_index, p, d) = eval_closest_point_result(
+                    pline,
+                    expected.query.0,
+                    expected.query.1,
+                    pos_equal_eps,
+                );
+                assert_eq!(
+                    seg_index, expected.expected_index,
+                    "half-circle eps tie-break index mismatch at case #{case_idx} query={:?} eps={pos_equal_eps}",
+                    expected.query
+                );
+                assert_near_ctx(
+                    p.x,
+                    expected.expected_point.0,
+                    "half-circle eps tie-break point x",
+                );
+                assert_near_ctx(
+                    p.y,
+                    expected.expected_point.1,
+                    "half-circle eps tie-break point y",
+                );
+                assert_near_ctx(
+                    d,
+                    expected.expected_distance,
+                    "half-circle eps tie-break distance",
+                );
+            }
+        }
+
         unsafe {
             cavc_pline_f(pline);
         }
