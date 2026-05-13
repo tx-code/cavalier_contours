@@ -2258,6 +2258,159 @@ fn pline_boolean_options_path_circle_rectangle_cpp_parity() {
 }
 
 #[test]
+fn pline_boolean_options_coincident_case1_intersect_collapsed_filter_cpp_parity() {
+    let (subject, clip) = cpp_coincident_case1_inputs();
+    let pline_a = create_pline(&subject, true);
+    let pline_b = create_pline(&clip, true);
+    let mut options = cavc_pline_boolean_o {
+        pline1_aabb_index: std::ptr::null(),
+        pos_equal_eps: f64::NAN,
+        collapsed_area_eps: f64::NAN,
+    };
+
+    unsafe {
+        assert_eq!(cavc_pline_boolean_o_init(&mut options), 0);
+        let mut aabb_index = ptr::null();
+        assert_eq!(
+            cavc_pline_create_approx_aabbindex(pline_a, &mut aabb_index),
+            0
+        );
+        options.pline1_aabb_index = aabb_index;
+        options.collapsed_area_eps = 1e-4;
+
+        let (remaining, subtracted) = run_boolean_props_with_options(pline_a, pline_b, 1, &options);
+        assert!(
+            remaining.is_empty() && subtracted.is_empty(),
+            "expected empty intersect with collapsed-area filter\nremaining={remaining:?}\nsubtracted={subtracted:?}"
+        );
+
+        cavc_aabbindex_f(aabb_index as *mut _);
+        cavc_pline_f(pline_a);
+        cavc_pline_f(pline_b);
+    }
+}
+
+#[test]
+fn pline_boolean_options_coincident_matrices_do_not_modify_input_cpp_parity() {
+    struct NoModifyCase {
+        name: &'static str,
+        operation: u32,
+        subject: PlineInput,
+        clip: PlineInput,
+    }
+
+    let (case1_a, case1_b) = cpp_coincident_case1_inputs();
+    let (case2_a, case2_b) = cpp_coincident_case2_inputs();
+    let cases = vec![
+        NoModifyCase {
+            name: "coincident_case1_union",
+            operation: 0,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case1_exclude_a_from_b",
+            operation: 2,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case1_exclude_b_from_a",
+            operation: 2,
+            subject: case1_b.clone(),
+            clip: case1_a.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case1_intersect",
+            operation: 1,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case1_xor",
+            operation: 3,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case2_union",
+            operation: 0,
+            subject: case2_a.clone(),
+            clip: case2_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case2_exclude_a_from_b",
+            operation: 2,
+            subject: case2_a.clone(),
+            clip: case2_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case2_exclude_b_from_a",
+            operation: 2,
+            subject: case2_b.clone(),
+            clip: case2_a.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case2_intersect",
+            operation: 1,
+            subject: case2_a.clone(),
+            clip: case2_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case2_xor",
+            operation: 3,
+            subject: case2_a,
+            clip: case2_b,
+        },
+    ];
+
+    for case in cases {
+        let pline_a = create_pline(&case.subject, true);
+        let pline_b = create_pline(&case.clip, true);
+        let before_a = read_vertices(pline_a);
+        let before_b = read_vertices(pline_b);
+
+        let mut options = cavc_pline_boolean_o {
+            pline1_aabb_index: std::ptr::null(),
+            pos_equal_eps: f64::NAN,
+            collapsed_area_eps: f64::NAN,
+        };
+
+        unsafe {
+            assert_eq!(cavc_pline_boolean_o_init(&mut options), 0);
+            let mut aabb_index = ptr::null();
+            assert_eq!(
+                cavc_pline_create_approx_aabbindex(pline_a, &mut aabb_index),
+                0
+            );
+            options.pline1_aabb_index = aabb_index;
+            let _ = run_boolean_props_with_options(pline_a, pline_b, case.operation, &options);
+
+            let after_a = read_vertices(pline_a);
+            let after_b = read_vertices(pline_b);
+            assert_eq!(
+                before_a.len(),
+                after_a.len(),
+                "subject vertex count changed for case={}",
+                case.name
+            );
+            assert_eq!(
+                before_b.len(),
+                after_b.len(),
+                "clip vertex count changed for case={}",
+                case.name
+            );
+            compare_vertexes(&after_a, &before_a);
+            compare_vertexes(&after_b, &before_b);
+
+            cavc_aabbindex_f(aabb_index as *mut _);
+            cavc_pline_f(pline_a);
+            cavc_pline_f(pline_b);
+        }
+    }
+}
+
+#[test]
 fn pline_parallel_offset_options_path_cpp_matrix_parity() {
     for case in cpp_offset_simple_cases()
         .into_iter()

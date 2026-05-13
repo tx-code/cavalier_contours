@@ -457,6 +457,21 @@ Plans:
 - [x] 27-02: Publish coincident no-modify expansion report and next-scope map.
 - [x] 27-03: Close verification gates and sync planning state.
 
+### Phase 28: C-API Optioned Coincident Edge Parity (No Clipper)
+**Goal**: Validate optioned coincident edge behavior through C-API collapsed-area filter and options-path no-modify invariants.
+**Depends on**: Phase 27
+**Requirements**: [PAR-58, PAR-59, PAR-60]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests execute coincident case1 intersect with `collapsed_area_eps` through `cavc_pline_boolean_o` and return source-backed empty-result parity.
+  2. FFI tests execute coincident case1/case2 operation matrices through options-path and validate subject/clip no-modify invariants.
+  3. Full workspace and planning health gates are green, and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 28-01: Add C-API optioned coincident collapsed-edge and no-modify parity tests.
+- [x] 28-02: Publish optioned coincident parity report and next-scope map.
+- [x] 28-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -491,3 +506,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 25. C-API Function-Surface Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 26. C-API Options-Path Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 27. C-API Coincident No-Modify Matrix Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 28. C-API Optioned Coincident Edge Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
