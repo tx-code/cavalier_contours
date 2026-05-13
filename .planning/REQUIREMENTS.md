@@ -296,6 +296,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-214**: FFI tests explicitly validate ccw/cw shape polyline accessors (`count`, `is_closed`, `vertex_data`) return `1` for null shape inputs and `2` for out-of-bounds `polyline_index`.
 - **PAR-215**: FFI tests explicitly validate shape polyline accessor failure paths preserve caller-provided output sentinels for count/is_closed/vertex buffers when null/OOB contracts fail early.
 - **PAR-216**: C-API shape polyline accessor invalid-input contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-217**: FFI tests explicitly validate `cavc_shape_create`, `cavc_shape_parallel_offset`, and `cavc_shape_get_{ccw,cw}_count` null-input contracts with direct return-code assertions.
+- **PAR-218**: FFI tests explicitly validate shape-root null-input failure paths preserve caller-provided output sentinels for shape pointers and count outputs.
+- **PAR-219**: C-API shape-root invalid-input contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -556,13 +559,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-214 | Phase 80 | Complete |
 | PAR-215 | Phase 80 | Complete |
 | PAR-216 | Phase 80 | Complete |
+| PAR-217 | Phase 81 | Complete |
+| PAR-218 | Phase 81 | Complete |
+| PAR-219 | Phase 81 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 216 (`PAR-01..PAR-216`), mapped to Phases 9-80
+- additional tracked post-v1 requirements: 219 (`PAR-01..PAR-219`), mapped to Phases 9-81
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 80 completion*
+*Last updated: 2026-05-15 after Phase 81 completion*

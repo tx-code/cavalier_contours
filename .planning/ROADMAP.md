@@ -1252,6 +1252,21 @@ Plans:
 - [x] 80-02: Publish post-contract alignment map for next bounded targets.
 - [x] 80-03: Close verification gates and sync planning state.
 
+### Phase 81: C-API Shape-Root Invalid-Input Contract Coverage (No Clipper)
+**Goal**: Deepen shape-root C-API contract reliability by adding direct null-input and failure-path output-stability assertions for shape creation/offset/count surfaces.
+**Depends on**: Phase 80
+**Requirements**: [PAR-217, PAR-218, PAR-219]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly verify `cavc_shape_create`, `cavc_shape_parallel_offset`, and `cavc_shape_get_{ccw,cw}_count` return error code `1` for null shape/plinelist inputs.
+  2. FFI tests explicitly verify failure-path output sentinel stability for shape pointer and count outputs under null-input contracts.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 81-01: Add direct shape-root invalid-input contract parity tests and doc alignment.
+- [x] 81-02: Publish post-contract alignment map for next bounded targets.
+- [x] 81-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1339,3 +1354,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 78. C-API Boolean/Self-Intersect Error Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 79. C-API Contains/Extents Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 80. C-API Shape Polyline Accessor Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 81. C-API Shape-Root Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |

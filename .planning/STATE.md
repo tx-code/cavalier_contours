@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 80 verification complete
-last_updated: "2026-05-15T06:55:00.000Z"
-last_activity: 2026-05-15 -- Phase 80 completed
+stopped_at: Phase 81 verification complete
+last_updated: "2026-05-15T07:25:00.000Z"
+last_activity: 2026-05-15 -- Phase 81 completed
 progress:
-  total_phases: 80
-  completed_phases: 80
-  total_plans: 244
-  completed_plans: 244
+  total_phases: 81
+  completed_phases: 81
+  total_plans: 247
+  completed_plans: 247
   percent: 100
 ---
 
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-05-12)
 
 ## Current Position
 
-Phase: 80 — COMPLETE
+Phase: 81 — COMPLETE
 Plan: 3 of 3
-Status: Phase 80 complete
-Last activity: 2026-05-15 -- Phase 80 completed
+Status: Phase 81 complete
+Last activity: 2026-05-15 -- Phase 81 completed
 
 Progress: 100%
 
@@ -36,7 +36,7 @@ Progress: 100%
 
 **Velocity:**
 
-- Total plans completed: 244
+- Total plans completed: 247
 - Average duration: n/a
 - Total execution time: 0.0 hours
 
@@ -124,10 +124,11 @@ Progress: 100%
 | 78 | 3 | - | - |
 | 79 | 3 | - | - |
 | 80 | 3 | - | - |
+| 81 | 3 | - | - |
 
 **Recent Trend:**
 
-- Last 5 plans: 80-01, 80-02, 80-03, 79-03, 79-02
+- Last 5 plans: 81-01, 81-02, 81-03, 80-03, 80-02
 - Trend: stable
 
 ## Accumulated Context
@@ -163,6 +164,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-15T06:55:00.000Z
-Stopped at: Phase 80 verification complete
-Resume file: .planning/phases/80-capi-shape-polyline-accessor-invalid-input-contract-coverage/80-03-SUMMARY.md
+Last session: 2026-05-15T07:25:00.000Z
+Stopped at: Phase 81 verification complete
+Resume file: .planning/phases/81-capi-shape-root-invalid-input-contract-coverage/81-03-SUMMARY.md

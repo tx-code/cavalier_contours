@@ -903,7 +903,7 @@ int32_t cavc_shape_parallel_offset(const cavc_shape *shape,
 ///
 /// # Safety
 ///
-/// `shape` must be null or a valid cavc_shape object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `count` must point to a valid place in memory to be written.
 int32_t cavc_shape_get_ccw_count(const cavc_shape *shape, uint32_t *count);
@@ -918,7 +918,7 @@ int32_t cavc_shape_get_ccw_count(const cavc_shape *shape, uint32_t *count);
 ///
 /// # Safety
 ///
-/// `shape` must be null or a valid cavc_shape object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `count` must point to a valid place in memory to be written.
 int32_t cavc_shape_get_ccw_polyline_count(const cavc_shape *shape,
@@ -936,7 +936,7 @@ int32_t cavc_shape_get_ccw_polyline_count(const cavc_shape *shape,
 ///
 /// # Safety
 ///
-/// `shape` must be null or a valid cavc_shape object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `is_closed` must point to a valid place in memory to be written.
 int32_t cavc_shape_get_ccw_polyline_is_closed(const cavc_shape *shape,
@@ -1026,7 +1026,7 @@ int32_t cavc_shape_get_ccw_pline_userdata_values(const cavc_shape *shape,
 ///
 /// # Safety
 ///
-/// `shape` must be null or a valid cavc_shape object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `count` must point to a valid place in memory to be written.
 int32_t cavc_shape_get_cw_count(const cavc_shape *shape, uint32_t *count);
@@ -1041,7 +1041,7 @@ int32_t cavc_shape_get_cw_count(const cavc_shape *shape, uint32_t *count);
 ///
 /// # Safety
 ///
-/// `shape` must be null or a valid cavc_shape object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `count` must point to a valid place in memory to be written.
 int32_t cavc_shape_get_cw_polyline_count(const cavc_shape *shape,
@@ -1059,7 +1059,7 @@ int32_t cavc_shape_get_cw_polyline_count(const cavc_shape *shape,
 ///
 /// # Safety
 ///
-/// `shape` must be null or a valid cavc_shape object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `is_closed` must point to a valid place in memory to be written.
 int32_t cavc_shape_get_cw_polyline_is_closed(const cavc_shape *shape,

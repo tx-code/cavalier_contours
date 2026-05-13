@@ -1408,7 +1408,7 @@ pub unsafe extern "C" fn cavc_pline_eval_extents(
 ///
 /// # Safety
 ///
-/// `pline` must be null or a valid cavc_pline object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `result` must point to a valid place in memory to be written.
 #[unsafe(no_mangle)]
@@ -2133,7 +2133,7 @@ pub unsafe extern "C" fn cavc_shape_parallel_offset(
 ///
 /// # Safety
 ///
-/// `shape` must be null or a valid cavc_shape object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `count` must point to a valid place in memory to be written.
 #[unsafe(no_mangle)]
@@ -2166,7 +2166,7 @@ pub unsafe extern "C" fn cavc_shape_get_ccw_count(
 ///
 /// # Safety
 ///
-/// `shape` must be null or a valid cavc_shape object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `count` must point to a valid place in memory to be written.
 #[unsafe(no_mangle)]
@@ -2207,7 +2207,7 @@ pub unsafe extern "C" fn cavc_shape_get_ccw_polyline_count(
 ///
 /// # Safety
 ///
-/// `shape` must be null or a valid cavc_shape object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `is_closed` must point to a valid place in memory to be written.
 #[unsafe(no_mangle)]
@@ -2419,7 +2419,7 @@ pub unsafe extern "C" fn cavc_shape_get_ccw_pline_userdata_values(
 ///
 /// # Safety
 ///
-/// `shape` must be null or a valid cavc_shape object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `count` must point to a valid place in memory to be written.
 #[unsafe(no_mangle)]
@@ -2449,7 +2449,7 @@ pub unsafe extern "C" fn cavc_shape_get_cw_count(shape: *const cavc_shape, count
 ///
 /// # Safety
 ///
-/// `shape` must be null or a valid cavc_shape object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `count` must point to a valid place in memory to be written.
 #[unsafe(no_mangle)]
@@ -2490,7 +2490,7 @@ pub unsafe extern "C" fn cavc_shape_get_cw_polyline_count(
 ///
 /// # Safety
 ///
-/// `shape` must be null or a valid cavc_shape object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `is_closed` must point to a valid place in memory to be written.
 #[unsafe(no_mangle)]

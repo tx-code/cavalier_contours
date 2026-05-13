@@ -6359,3 +6359,29 @@ fn shape_polyline_access_error_contracts_ffi() {
         cavc_shape_f(shape);
     }
 }
+
+#[test]
+fn shape_root_invalid_input_contracts_ffi() {
+    unsafe {
+        let shape_sentinel = std::ptr::NonNull::<cavc_shape>::dangling().as_ptr();
+
+        let mut created_shape = shape_sentinel;
+        assert_eq!(cavc_shape_create(ptr::null(), &mut created_shape), 1);
+        assert_eq!(created_shape, shape_sentinel);
+
+        let mut offset_shape = shape_sentinel;
+        assert_eq!(
+            cavc_shape_parallel_offset(ptr::null(), 12.0, ptr::null(), &mut offset_shape),
+            1
+        );
+        assert_eq!(offset_shape, shape_sentinel);
+
+        let mut ccw_count = 101_u32;
+        assert_eq!(cavc_shape_get_ccw_count(ptr::null(), &mut ccw_count), 1);
+        assert_eq!(ccw_count, 101);
+
+        let mut cw_count = 202_u32;
+        assert_eq!(cavc_shape_get_cw_count(ptr::null(), &mut cw_count), 1);
+        assert_eq!(cw_count, 202);
+    }
+}
