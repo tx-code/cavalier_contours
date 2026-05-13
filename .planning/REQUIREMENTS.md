@@ -233,6 +233,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-151**: Helper-driven specific-edge options-path matrix coverage includes additional source-backed old C++ diamond case inputs beyond Phase 58 coverage.
 - **PAR-152**: Diamond specific-edge matrix expansion preserves reversed/default parity and no-modify diagnostics with explicit provenance labels per covered edge case.
 - **PAR-153**: Specific-edge matrix diamond expansion phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-154**: Helper-driven specific-edge options-path matrix coverage includes additional source-backed old C++ open-diamond case inputs beyond Phase 59 coverage.
+- **PAR-155**: Open-diamond specific-edge matrix expansion preserves reversed/default parity and no-modify diagnostics with explicit provenance labels per covered edge case.
+- **PAR-156**: Specific-edge matrix open-diamond expansion phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -430,13 +433,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-151 | Phase 59 | Complete |
 | PAR-152 | Phase 59 | Complete |
 | PAR-153 | Phase 59 | Complete |
+| PAR-154 | Phase 60 | Complete |
+| PAR-155 | Phase 60 | Complete |
+| PAR-156 | Phase 60 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 153 (`PAR-01..PAR-153`), mapped to Phases 9-59
+- additional tracked post-v1 requirements: 156 (`PAR-01..PAR-156`), mapped to Phases 9-60
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 59 completion*
+*Last updated: 2026-05-14 after Phase 60 completion*
