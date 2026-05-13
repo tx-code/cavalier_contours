@@ -287,6 +287,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-205**: C-API userdata getter functions (`cavc_shape_get_ccw_pline_userdata_values`, `cavc_shape_get_cw_pline_userdata_values`) enforce explicit out-of-bounds error code `2` rather than implicit unwind/panic behavior.
 - **PAR-206**: FFI tests and public header docs align on userdata getter error semantics: null shape returns `1`, out-of-bounds `polyline_index` returns `2`.
 - **PAR-207**: C-API userdata getter bounds-contract hardening phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-208**: FFI tests explicitly validate `cavc_pline_boolean` error-contract behavior for invalid operation values (`2`) and null pline inputs (`1`).
+- **PAR-209**: FFI tests explicitly validate `cavc_pline_scan_for_self_intersect` error-contract behavior for invalid options (`2`) and null pline inputs (`1`), with API docs using correct `pline` naming.
+- **PAR-210**: C-API boolean/self-intersect error-contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -538,13 +541,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-205 | Phase 77 | Complete |
 | PAR-206 | Phase 77 | Complete |
 | PAR-207 | Phase 77 | Complete |
+| PAR-208 | Phase 78 | Complete |
+| PAR-209 | Phase 78 | Complete |
+| PAR-210 | Phase 78 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 207 (`PAR-01..PAR-207`), mapped to Phases 9-77
+- additional tracked post-v1 requirements: 210 (`PAR-01..PAR-210`), mapped to Phases 9-78
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 77 completion*
+*Last updated: 2026-05-15 after Phase 78 completion*

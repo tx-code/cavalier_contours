@@ -651,7 +651,7 @@ int32_t cavc_pline_boolean(const cavc_pline *pline1,
 /// `options` is allowed to be null (default options will be used).
 ///
 /// ## Specific Error Codes
-/// * 1 = `pline1` is null.
+/// * 1 = `pline` is null.
 /// * 2 = `options` is invalid.
 ///
 /// # Safety

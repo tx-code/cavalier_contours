@@ -5611,6 +5611,88 @@ fn self_intersect_scan_ffi() {
 }
 
 #[test]
+fn pline_scan_for_self_intersect_invalid_options_error_ffi() {
+    let hourglass = create_pline(
+        &[
+            (0.0, 2.0, 0.0),
+            (1.0, 1.0, 0.0),
+            (0.0, 1.0, 0.0),
+            (1.0, 2.0, 0.0),
+        ],
+        true,
+    );
+
+    unsafe {
+        let mut is_self_intersecting: u8 = 0;
+        let mut options = cavc_pline_self_intersect_o {
+            pline_aabb_index: ptr::null(),
+            pos_equal_eps: f64::NAN,
+            include: u32::MAX,
+        };
+        assert_eq!(cavc_pline_self_intersect_o_init(&mut options), 0);
+        options.include = u32::MAX;
+
+        assert_eq!(
+            cavc_pline_scan_for_self_intersect(hourglass, &options, &mut is_self_intersecting),
+            2
+        );
+        assert_eq!(
+            cavc_pline_scan_for_self_intersect(ptr::null(), &options, &mut is_self_intersecting),
+            1
+        );
+
+        cavc_pline_f(hourglass);
+    }
+}
+
+#[test]
+fn pline_boolean_invalid_operation_error_ffi() {
+    let pline_a = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
+    let pline_b = create_pline(
+        &[
+            (3.0, -10.0, 0.0),
+            (6.0, -10.0, 0.0),
+            (6.0, 10.0, 0.0),
+            (3.0, 10.0, 0.0),
+        ],
+        true,
+    );
+
+    unsafe {
+        let mut pos_plines = ptr::null();
+        let mut neg_plines = ptr::null();
+        assert_eq!(
+            cavc_pline_boolean(
+                pline_a,
+                pline_b,
+                u32::MAX,
+                ptr::null(),
+                &mut pos_plines,
+                &mut neg_plines
+            ),
+            2
+        );
+        assert!(pos_plines.is_null());
+        assert!(neg_plines.is_null());
+
+        assert_eq!(
+            cavc_pline_boolean(
+                ptr::null(),
+                pline_b,
+                0,
+                ptr::null(),
+                &mut pos_plines,
+                &mut neg_plines
+            ),
+            1
+        );
+
+        cavc_pline_f(pline_a);
+        cavc_pline_f(pline_b);
+    }
+}
+
+#[test]
 fn pline_contains_ffi() {
     let rectangle = create_pline(
         &[

@@ -1510,7 +1510,7 @@ pub unsafe extern "C" fn cavc_pline_boolean(
 /// `options` is allowed to be null (default options will be used).
 ///
 /// ## Specific Error Codes
-/// * 1 = `pline1` is null.
+/// * 1 = `pline` is null.
 /// * 2 = `options` is invalid.
 ///
 /// # Safety

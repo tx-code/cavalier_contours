@@ -1207,6 +1207,21 @@ Plans:
 - [x] 77-02: Publish post-hardening alignment map for next bounded targets.
 - [x] 77-03: Close verification gates and sync planning state.
 
+### Phase 78: C-API Boolean/Self-Intersect Error Contract Coverage (No Clipper)
+**Goal**: Harden C-API error-contract reliability by adding direct invalid-input error-code coverage for boolean operation dispatch and self-intersect options validation.
+**Depends on**: Phase 77
+**Requirements**: [PAR-208, PAR-209, PAR-210]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly verify `cavc_pline_boolean` returns `2` for unrecognized operation values and `1` for null pline inputs.
+  2. FFI tests explicitly verify `cavc_pline_scan_for_self_intersect` returns `2` for invalid options and `1` for null pline inputs, with docs aligned on parameter naming.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 78-01: Add direct invalid-operation and invalid-options error contract parity tests.
+- [x] 78-02: Publish post-contract alignment map for next bounded targets.
+- [x] 78-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1291,3 +1306,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 75. C-API Option Lifecycle & CW Userdata Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 76. C-API CCW Userdata Setter Symmetry Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 77. C-API Userdata Getter Bounds Contract Hardening (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 78. C-API Boolean/Self-Intersect Error Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
