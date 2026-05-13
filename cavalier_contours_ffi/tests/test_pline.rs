@@ -2176,6 +2176,32 @@ fn pline_data_manipulation() {
 }
 
 #[test]
+fn pline_mutator_invalid_input_contracts_ffi() {
+    let pline = create_pline(&[(1.0, 2.0, 0.0), (3.0, 4.0, 1.0)], false);
+
+    unsafe {
+        let vertices = [cavc_vertex::new(8.0, 9.0, 0.25)];
+        assert_eq!(
+            cavc_pline_set_vertex_data(ptr::null_mut(), vertices.as_ptr(), 1),
+            1
+        );
+        assert_eq!(cavc_pline_set_is_closed(ptr::null_mut(), 1), 1);
+        assert_eq!(cavc_pline_clear(ptr::null_mut()), 1);
+        assert_eq!(
+            cavc_pline_set_vertex(ptr::null_mut(), 0, cavc_vertex::new(0.0, 0.0, 0.0)),
+            1
+        );
+        assert_eq!(
+            cavc_pline_set_vertex(pline, 99, cavc_vertex::new(0.0, 0.0, 0.0)),
+            2
+        );
+        assert_eq!(cavc_pline_remove(ptr::null_mut(), 0), 1);
+        assert_eq!(cavc_pline_remove(pline, 99), 2);
+        cavc_pline_f(pline);
+    }
+}
+
+#[test]
 fn pline_core_suite_cpp_parity() {
     // old C++ source: TEST_cavc_pline.cpp -> cavc_pline_new, cavc_pline_set_capacity,
     // cavc_pline_set_vertex_data, cavc_pline_add_vertex, cavc_pline_remove_range,

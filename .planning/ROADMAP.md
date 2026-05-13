@@ -1432,6 +1432,21 @@ Plans:
 - [x] 92-02: Publish post-contract alignment map for next bounded targets.
 - [x] 92-03: Close verification gates and sync planning state.
 
+### Phase 93: C-API Pline Mutator Invalid-Input Contract Coverage (No Clipper)
+**Goal**: Deepen pline mutator contract reliability by adding direct null/OOB invalid-input assertions for core mutator surfaces.
+**Depends on**: Phase 92
+**Requirements**: [PAR-253, PAR-254, PAR-255]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly verify null-input contracts for `cavc_pline_set_vertex_data`, `cavc_pline_set_is_closed`, `cavc_pline_clear`, `cavc_pline_set_vertex`, and `cavc_pline_remove`.
+  2. FFI tests explicitly verify OOB contracts for `cavc_pline_set_vertex` and `cavc_pline_remove` via direct return-code assertions.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 93-01: Add pline mutator invalid-input contract parity tests.
+- [x] 93-02: Publish post-contract alignment map for next bounded targets.
+- [x] 93-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1531,3 +1546,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 90. C-API Options-Path Invalid-Input Contract Invariance (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 91. C-API Boolean Invalid-Operation Options-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 92. C-API Self-Intersect/Contains Null-Result Contract Symmetry (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 93. C-API Pline Mutator Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
