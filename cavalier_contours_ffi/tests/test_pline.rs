@@ -4663,6 +4663,91 @@ fn pline_parallel_offset_options_path_reversed_specific_edge_attribution_matrix_
 }
 
 #[test]
+fn pline_parallel_offset_options_path_specific_edge_attribution_matrix_cpp_parity() {
+    for case in cpp_offset_specific_cases() {
+        let attribution = match case.name {
+            "offset_arc_just_past_line1" => {
+                "old C++ specific case: offset arc just past line (float epsilon thresholding)"
+            }
+            "intersect_ontop_first_vertex" => {
+                "old C++ specific case: first vertex ontop of second-segment intersection"
+            }
+            "collapsed_rectangle" => {
+                "old C++ specific case: collapsed rectangle expects empty result"
+            }
+            other => panic!("unexpected specific case without attribution: {other}"),
+        };
+
+        let pline = create_pline(&case.input, case.is_closed);
+        let before = read_vertices(pline);
+        let default_props = run_parallel_offset_props(pline, case.delta);
+        let default_vertexes = run_parallel_offset_vertexes(pline, case.delta);
+
+        let mut default_options = init_parallel_offset_options();
+
+        unsafe {
+            assert_eq!(cavc_pline_parallel_offset_o_init(&mut default_options), 0);
+            let mut aabb_index = ptr::null();
+            assert_eq!(
+                cavc_pline_create_approx_aabbindex(pline, &mut aabb_index),
+                0
+            );
+
+            for mode in CPP_SELF_INTERSECTS_INCLUDE_MODES {
+                for scale in CPP_TOLERANCE_SCALE_MATRIX {
+                    let options = cavc_pline_parallel_offset_o {
+                        aabb_index,
+                        pos_equal_eps: default_options.pos_equal_eps * scale,
+                        slice_join_eps: default_options.slice_join_eps * scale,
+                        offset_dist_eps: default_options.offset_dist_eps * scale,
+                        handle_self_intersects: mode as u8,
+                    };
+
+                    let option_props =
+                        run_parallel_offset_props_with_options(pline, case.delta, &options);
+                    assert!(
+                        props_set_match_ignore_area_sign(&option_props, &default_props, 1e-4)
+                            && props_set_match_ignore_area_sign(
+                                &default_props,
+                                &option_props,
+                                1e-4
+                            ),
+                        "parallel offset specific-edge props mismatch [{}] case={} mode={} scale={scale}\ndefault={default_props:?}\noptions={option_props:?}",
+                        attribution,
+                        case.name,
+                        mode
+                    );
+
+                    let option_vertexes =
+                        run_parallel_offset_vertexes_with_options(pline, case.delta, &options);
+                    assert!(
+                        vertex_lists_match_unordered(
+                            &option_vertexes,
+                            &default_vertexes,
+                            case.is_closed
+                        ) && vertex_lists_match_unordered(
+                            &default_vertexes,
+                            &option_vertexes,
+                            case.is_closed
+                        ),
+                        "parallel offset specific-edge vertex mismatch [{}] case={} mode={} scale={scale}\ndefault={default_vertexes:?}\noptions={option_vertexes:?}",
+                        attribution,
+                        case.name,
+                        mode
+                    );
+
+                    let after = read_vertices(pline);
+                    compare_vertexes(&after, &before);
+                }
+            }
+
+            cavc_aabbindex_f(aabb_index as *mut _);
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
 fn pline_parallel_offset_options_path_does_not_modify_input_cpp_parity() {
     for case in cpp_offset_simple_cases()
         .into_iter()

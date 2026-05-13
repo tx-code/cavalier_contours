@@ -862,6 +862,21 @@ Plans:
 - [x] 54-02: Publish post-deepening alignment map for next bounded targets.
 - [x] 54-03: Close verification gates and sync planning state.
 
+### Phase 55: C-API Default Specific-Edge Attribution Matrix (No Clipper)
+**Goal**: Deepen default-input options-path confidence by adding source-backed specific-edge attributions to merged parity/no-modify stress checks.
+**Depends on**: Phase 54
+**Requirements**: [PAR-139, PAR-140, PAR-141]
+**Success Criteria** (what must be TRUE):
+  1. Default-input source-backed specific-case matrix validates output parity and input no-modify invariants across self-intersects include modes (`ALL`, `LOCAL`, `GLOBAL`) and bounded tolerance scales (`0.5x`, `1.0x`, `2.0x`).
+  2. Each source-backed specific case has explicit legacy provenance attribution in failure diagnostics.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 55-01: Add default specific-edge attribution matrix test for options-path offset flow.
+- [x] 55-02: Publish post-deepening alignment map for next bounded targets.
+- [x] 55-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -923,3 +938,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 52. C-API Reversed Output/No-Modify Merge Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 53. C-API Reversed Specific-Edge Attribution Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 54. C-API Default Output/No-Modify Merge Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 55. C-API Default Specific-Edge Attribution Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
