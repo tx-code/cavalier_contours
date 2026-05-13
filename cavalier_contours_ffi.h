@@ -951,12 +951,12 @@ int32_t cavc_shape_get_ccw_polyline_is_closed(const cavc_shape *shape,
 /// `vertex_data` must point to a buffer that can be filled with all `pline` vertexes.
 ///
 /// ## Specific Error Codes
-/// * 1 = `pline` is null.
+/// * 1 = `shape` is null.
 /// * 2 = `polyline_index` is beyond the bounds of the count of the shape's ccw polylines
 ///
 /// # Safety
 ///
-/// `pline` must be null or a valid cavc_pline object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `vertex_data` must point to a buffer that is large enough to hold all the vertexes or a buffer
 /// overrun will happen.
@@ -970,7 +970,7 @@ int32_t cavc_shape_get_ccw_polyline_vertex_data(const cavc_shape *shape,
 ///
 /// ## Specific Error Codes
 /// * 1 = `shape` is null.
-/// * 2 = `polyline_index` is beyond the bounds of the count of the shape's ccw polylines
+/// * 2 = `polyline_index` is beyond the bounds of the count of the shape's cw polylines
 ///
 /// # Safety
 ///
@@ -1074,12 +1074,12 @@ int32_t cavc_shape_get_cw_polyline_is_closed(const cavc_shape *shape,
 /// `vertex_data` must point to a buffer that can be filled with all `pline` vertexes.
 ///
 /// ## Specific Error Codes
-/// * 1 = `pline` is null.
+/// * 1 = `shape` is null.
 /// * 2 = `polyline_index` is beyond the bounds of the count of the shape's cw polylines
 ///
 /// # Safety
 ///
-/// `pline` must be null or a valid cavc_pline object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `vertex_data` must point to a buffer that is large enough to hold all the vertexes or a buffer
 /// overrun will happen.

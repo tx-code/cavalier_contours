@@ -6250,3 +6250,112 @@ fn shape_set_ccw_pline_userdata_values_ffi() {
         cavc_shape_f(shape);
     }
 }
+
+#[test]
+fn shape_polyline_access_error_contracts_ffi() {
+    let outer = create_pline(
+        &[
+            (-200.0, 200.0, 0.0),
+            (-200.0, -200.0, 0.0),
+            (200.0, -200.0, 0.0),
+            (200.0, 200.0, 0.0),
+        ],
+        true,
+    );
+    let inner = create_pline(
+        &[
+            (-100.0, 0.0, 0.0),
+            (0.0, 100.0, 0.0),
+            (100.0, 0.0, 0.0),
+            (0.0, -100.0, 0.0),
+        ],
+        true,
+    );
+
+    unsafe {
+        let mut list = ptr::null_mut();
+        assert_eq!(cavc_plinelist_create(0, &mut list), 0);
+        assert_eq!(cavc_plinelist_push(list, outer), 0);
+        assert_eq!(cavc_plinelist_push(list, inner), 0);
+
+        let mut shape = ptr::null_mut();
+        assert_eq!(cavc_shape_create(list, &mut shape), 0);
+        cavc_plinelist_f(list);
+
+        let mut count = 123_u32;
+        assert_eq!(
+            cavc_shape_get_ccw_polyline_count(ptr::null(), 0, &mut count),
+            1
+        );
+        assert_eq!(count, 123);
+        assert_eq!(cavc_shape_get_ccw_polyline_count(shape, 99, &mut count), 2);
+        assert_eq!(count, 123);
+
+        count = 456;
+        assert_eq!(
+            cavc_shape_get_cw_polyline_count(ptr::null(), 0, &mut count),
+            1
+        );
+        assert_eq!(count, 456);
+        assert_eq!(cavc_shape_get_cw_polyline_count(shape, 99, &mut count), 2);
+        assert_eq!(count, 456);
+
+        let mut is_closed = 7_u8;
+        assert_eq!(
+            cavc_shape_get_ccw_polyline_is_closed(ptr::null(), 0, &mut is_closed),
+            1
+        );
+        assert_eq!(is_closed, 7);
+        assert_eq!(
+            cavc_shape_get_ccw_polyline_is_closed(shape, 99, &mut is_closed),
+            2
+        );
+        assert_eq!(is_closed, 7);
+
+        is_closed = 9;
+        assert_eq!(
+            cavc_shape_get_cw_polyline_is_closed(ptr::null(), 0, &mut is_closed),
+            1
+        );
+        assert_eq!(is_closed, 9);
+        assert_eq!(
+            cavc_shape_get_cw_polyline_is_closed(shape, 99, &mut is_closed),
+            2
+        );
+        assert_eq!(is_closed, 9);
+
+        let mut ccw_vertex_data = [cavc_vertex::new(11.0, 22.0, 33.0); 2];
+        assert_eq!(
+            cavc_shape_get_ccw_polyline_vertex_data(ptr::null(), 0, ccw_vertex_data.as_mut_ptr()),
+            1
+        );
+        assert_fuzzy_eq!(ccw_vertex_data[0].x, 11.0);
+        assert_fuzzy_eq!(ccw_vertex_data[0].y, 22.0);
+        assert_fuzzy_eq!(ccw_vertex_data[0].bulge, 33.0);
+        assert_eq!(
+            cavc_shape_get_ccw_polyline_vertex_data(shape, 99, ccw_vertex_data.as_mut_ptr()),
+            2
+        );
+        assert_fuzzy_eq!(ccw_vertex_data[0].x, 11.0);
+        assert_fuzzy_eq!(ccw_vertex_data[0].y, 22.0);
+        assert_fuzzy_eq!(ccw_vertex_data[0].bulge, 33.0);
+
+        let mut cw_vertex_data = [cavc_vertex::new(44.0, 55.0, 66.0); 2];
+        assert_eq!(
+            cavc_shape_get_cw_polyline_vertex_data(ptr::null(), 0, cw_vertex_data.as_mut_ptr()),
+            1
+        );
+        assert_fuzzy_eq!(cw_vertex_data[0].x, 44.0);
+        assert_fuzzy_eq!(cw_vertex_data[0].y, 55.0);
+        assert_fuzzy_eq!(cw_vertex_data[0].bulge, 66.0);
+        assert_eq!(
+            cavc_shape_get_cw_polyline_vertex_data(shape, 99, cw_vertex_data.as_mut_ptr()),
+            2
+        );
+        assert_fuzzy_eq!(cw_vertex_data[0].x, 44.0);
+        assert_fuzzy_eq!(cw_vertex_data[0].y, 55.0);
+        assert_fuzzy_eq!(cw_vertex_data[0].bulge, 66.0);
+
+        cavc_shape_f(shape);
+    }
+}

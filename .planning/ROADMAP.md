@@ -1237,6 +1237,21 @@ Plans:
 - [x] 79-02: Publish post-contract alignment map for next bounded targets.
 - [x] 79-03: Close verification gates and sync planning state.
 
+### Phase 80: C-API Shape Polyline Accessor Invalid-Input Contract Coverage (No Clipper)
+**Goal**: Deepen shape-surface C-API contract reliability by adding direct invalid-input and failure-path output-stability assertions for ccw/cw polyline accessor functions.
+**Depends on**: Phase 79
+**Requirements**: [PAR-214, PAR-215, PAR-216]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly verify ccw/cw shape polyline accessor functions return `1` for null shape inputs and `2` for out-of-bounds `polyline_index`.
+  2. FFI tests explicitly verify failure-path output sentinel stability for count/is_closed/vertex buffer outputs under null/OOB contracts.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 80-01: Add direct shape polyline accessor invalid-input contract parity tests.
+- [x] 80-02: Publish post-contract alignment map for next bounded targets.
+- [x] 80-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1323,3 +1338,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 77. C-API Userdata Getter Bounds Contract Hardening (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 78. C-API Boolean/Self-Intersect Error Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 79. C-API Contains/Extents Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 80. C-API Shape Polyline Accessor Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
