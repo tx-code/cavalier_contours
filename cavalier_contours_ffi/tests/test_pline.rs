@@ -726,6 +726,16 @@ fn cpp_offset_specific_cases() -> Vec<OffsetCase> {
     ]
 }
 
+fn cpp_offset_specific_edge_matrix_cases() -> Vec<OffsetCase> {
+    let mut cases = cpp_offset_specific_cases();
+    let coincident_edge_case = cpp_offset_simple_cases()
+        .into_iter()
+        .find(|case| case.name == "closed_rectangle_coincident")
+        .unwrap_or_else(|| panic!("missing source-backed edge case: closed_rectangle_coincident"));
+    cases.push(coincident_edge_case);
+    cases
+}
+
 fn cpp_coincident_case1_inputs() -> (PlineInput, PlineInput) {
     (
         vec![
@@ -4582,6 +4592,9 @@ fn cpp_specific_edge_attribution(case_name: &str) -> &'static str {
             "old C++ specific case: first vertex ontop of second-segment intersection"
         }
         "collapsed_rectangle" => "old C++ specific case: collapsed rectangle expects empty result",
+        "closed_rectangle_coincident" => {
+            "old C++ simple edge case: closed rectangle offset inward into coincident line"
+        }
         other => panic!("unexpected specific case without attribution: {other}"),
     }
 }
@@ -4667,14 +4680,14 @@ fn run_parallel_offset_options_specific_edge_attribution_matrix(
 
 #[test]
 fn pline_parallel_offset_options_path_reversed_specific_edge_attribution_matrix_cpp_parity() {
-    for case in cpp_offset_specific_cases() {
+    for case in cpp_offset_specific_edge_matrix_cases() {
         run_parallel_offset_options_specific_edge_attribution_matrix(&case, true);
     }
 }
 
 #[test]
 fn pline_parallel_offset_options_path_specific_edge_attribution_matrix_cpp_parity() {
-    for case in cpp_offset_specific_cases() {
+    for case in cpp_offset_specific_edge_matrix_cases() {
         run_parallel_offset_options_specific_edge_attribution_matrix(&case, false);
     }
 }

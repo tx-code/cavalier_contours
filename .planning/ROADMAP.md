@@ -892,6 +892,21 @@ Plans:
 - [x] 56-02: Publish post-extraction alignment map for next bounded targets.
 - [x] 56-03: Close verification gates and sync planning state.
 
+### Phase 57: C-API Specific-Edge Matrix Coverage Expansion (No Clipper)
+**Goal**: Expand helper-driven specific-edge options-path matrix coverage with additional source-backed old C++ edge cases while preserving diagnostics and no-modify invariants.
+**Depends on**: Phase 56
+**Requirements**: [PAR-145, PAR-146, PAR-147]
+**Success Criteria** (what must be TRUE):
+  1. Specific-edge matrix execution includes at least one additional source-backed old C++ edge case beyond the original specific-case trio.
+  2. Shared helper path keeps reversed/default matrix parity and no-modify diagnostics stable with explicit provenance labels for each covered edge case.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 57-01: Add source-backed specific-edge matrix coverage expansion in FFI parity tests.
+- [x] 57-02: Publish post-expansion alignment map for next bounded targets.
+- [x] 57-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -955,3 +970,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 54. C-API Default Output/No-Modify Merge Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 55. C-API Default Specific-Edge Attribution Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 56. C-API Specific-Edge Runner Helper Extraction (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 57. C-API Specific-Edge Matrix Coverage Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
