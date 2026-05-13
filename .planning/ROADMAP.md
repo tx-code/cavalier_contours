@@ -1372,6 +1372,21 @@ Plans:
 - [x] 88-02: Publish post-contract alignment map for next bounded targets.
 - [x] 88-03: Close verification gates and sync planning state.
 
+### Phase 89: C-API Shape-Offset Null-Path Output Stability Coverage (No Clipper)
+**Goal**: Deepen shape-offset C-API contract reliability by adding direct null-path assertions and output stability checks for result shape outputs.
+**Depends on**: Phase 88
+**Requirements**: [PAR-241, PAR-242, PAR-243]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly verify null-input contracts for `cavc_shape_parallel_offset` across default-options and explicit-options calls via direct return-code assertions.
+  2. FFI tests explicitly verify failure-path output sentinel stability for `result` shape outputs under covered null-input contracts.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 89-01: Add direct shape-offset null-path output stability parity tests.
+- [x] 89-02: Publish post-contract alignment map for next bounded targets.
+- [x] 89-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1467,3 +1482,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 86. C-API Shape Userdata Getter Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 87. C-API Boolean/Self-Intersect Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 88. C-API Parallel-Offset Null-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 89. C-API Shape-Offset Null-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |

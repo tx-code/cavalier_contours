@@ -6749,6 +6749,33 @@ fn shape_root_invalid_input_contracts_ffi() {
 }
 
 #[test]
+fn shape_parallel_offset_failure_path_output_stability_ffi() {
+    unsafe {
+        let shape_sentinel = std::ptr::NonNull::<cavc_shape>::dangling().as_ptr();
+        let mut offset_shape = shape_sentinel;
+
+        assert_eq!(
+            cavc_shape_parallel_offset(ptr::null(), 12.0, ptr::null(), &mut offset_shape),
+            1
+        );
+        assert_eq!(offset_shape, shape_sentinel);
+
+        let mut options = cavc_shape_offset_o {
+            pos_equal_eps: f64::NAN,
+            offset_dist_eps: f64::NAN,
+            slice_join_eps: f64::NAN,
+        };
+        assert_eq!(cavc_shape_offset_o_init(&mut options), 0);
+
+        assert_eq!(
+            cavc_shape_parallel_offset(ptr::null(), -8.0, &options, &mut offset_shape),
+            1
+        );
+        assert_eq!(offset_shape, shape_sentinel);
+    }
+}
+
+#[test]
 fn plinelist_failure_path_output_stability_ffi() {
     unsafe {
         let mut count = 313_u32;

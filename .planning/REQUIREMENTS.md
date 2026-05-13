@@ -320,6 +320,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-238**: FFI tests explicitly validate `cavc_pline_parallel_offset` null-input contracts for both default-options and explicit-options calls via direct return-code assertions.
 - **PAR-239**: FFI tests explicitly validate `cavc_pline_parallel_offset` failure paths preserve caller-provided `result` plinelist output sentinels under covered null-input contracts.
 - **PAR-240**: C-API parallel-offset null-path output-stability contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-241**: FFI tests explicitly validate `cavc_shape_parallel_offset` null-input contracts for both default-options and explicit-options calls via direct return-code assertions.
+- **PAR-242**: FFI tests explicitly validate `cavc_shape_parallel_offset` failure paths preserve caller-provided `result` shape output sentinels under covered null-input contracts.
+- **PAR-243**: C-API shape-offset null-path output-stability contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -604,13 +607,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-238 | Phase 88 | Complete |
 | PAR-239 | Phase 88 | Complete |
 | PAR-240 | Phase 88 | Complete |
+| PAR-241 | Phase 89 | Complete |
+| PAR-242 | Phase 89 | Complete |
+| PAR-243 | Phase 89 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 240 (`PAR-01..PAR-240`), mapped to Phases 9-88
+- additional tracked post-v1 requirements: 243 (`PAR-01..PAR-243`), mapped to Phases 9-89
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 88 completion*
+*Last updated: 2026-05-15 after Phase 89 completion*
