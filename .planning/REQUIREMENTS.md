@@ -188,6 +188,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-106**: Options-path coincident case1/case2 output matrices are vertex-level equivalent to default-path outputs across union/exclude/intersect/xor operations.
 - **PAR-107**: Coincident options-path vertex-level parity explicitly validates both remaining and subtracted output sets.
 - **PAR-108**: Coincident options-path vertex-output deepening closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-109**: Options-path boolean circle/rectangle matrix output remains equivalent to default-path output across bounded `pos_equal_eps` scale matrix.
+- **PAR-110**: Options-path parallel-offset simple/specific matrix output remains equivalent to default-path output across bounded tolerance scale matrix (`pos_equal_eps`, `slice_join_eps`, `offset_dist_eps`).
+- **PAR-111**: Options-path tolerance-matrix deepening closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -340,13 +343,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-106 | Phase 44 | Complete |
 | PAR-107 | Phase 44 | Complete |
 | PAR-108 | Phase 44 | Complete |
+| PAR-109 | Phase 45 | Complete |
+| PAR-110 | Phase 45 | Complete |
+| PAR-111 | Phase 45 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 108 (`PAR-01..PAR-108`), mapped to Phases 9-44
+- additional tracked post-v1 requirements: 111 (`PAR-01..PAR-111`), mapped to Phases 9-45
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 44 completion*
+*Last updated: 2026-05-14 after Phase 45 completion*

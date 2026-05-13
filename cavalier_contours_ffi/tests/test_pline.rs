@@ -3494,6 +3494,102 @@ fn pline_boolean_options_path_circle_rectangle_vertex_output_cpp_parity() {
 }
 
 #[test]
+fn pline_boolean_options_path_circle_rectangle_pos_equal_eps_matrix_cpp_parity() {
+    let pline_a = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
+    let pline_b = create_pline(
+        &[
+            (3.0, -10.0, 0.0),
+            (6.0, -10.0, 0.0),
+            (6.0, 10.0, 0.0),
+            (3.0, 10.0, 0.0),
+        ],
+        true,
+    );
+
+    let mut default_options = cavc_pline_boolean_o {
+        pline1_aabb_index: std::ptr::null(),
+        pos_equal_eps: f64::NAN,
+        collapsed_area_eps: f64::NAN,
+    };
+
+    unsafe {
+        assert_eq!(cavc_pline_boolean_o_init(&mut default_options), 0);
+        let base_pos_equal_eps = default_options.pos_equal_eps;
+
+        let mut aabb1 = ptr::null();
+        assert_eq!(cavc_pline_create_approx_aabbindex(pline_a, &mut aabb1), 0);
+
+        for scale in [0.5_f64, 1.0_f64, 2.0_f64] {
+            let options = cavc_pline_boolean_o {
+                pline1_aabb_index: aabb1,
+                pos_equal_eps: base_pos_equal_eps * scale,
+                collapsed_area_eps: f64::NAN,
+            };
+
+            for operation in [0_u32, 2_u32, 1_u32, 3_u32] {
+                let (default_remaining_props, default_subtracted_props) =
+                    run_boolean_props(pline_a, pline_b, operation);
+                let (opt_remaining_props, opt_subtracted_props) =
+                    run_boolean_props_with_options(pline_a, pline_b, operation, &options);
+
+                assert!(
+                    props_set_match_ignore_area_sign(
+                        &opt_remaining_props,
+                        &default_remaining_props,
+                        1e-4
+                    ) && props_set_match_ignore_area_sign(
+                        &default_remaining_props,
+                        &opt_remaining_props,
+                        1e-4
+                    ),
+                    "boolean pos_equal_eps matrix remaining props mismatch for scale={scale} op={operation}\ndefault={default_remaining_props:?}\noptions={opt_remaining_props:?}"
+                );
+                assert!(
+                    props_set_match_ignore_area_sign(
+                        &opt_subtracted_props,
+                        &default_subtracted_props,
+                        1e-4
+                    ) && props_set_match_ignore_area_sign(
+                        &default_subtracted_props,
+                        &opt_subtracted_props,
+                        1e-4
+                    ),
+                    "boolean pos_equal_eps matrix subtracted props mismatch for scale={scale} op={operation}\ndefault={default_subtracted_props:?}\noptions={opt_subtracted_props:?}"
+                );
+
+                let (default_remaining_v, default_subtracted_v) =
+                    run_boolean_vertexes(pline_a, pline_b, operation);
+                let (opt_remaining_v, opt_subtracted_v) =
+                    run_boolean_vertexes_with_options(pline_a, pline_b, operation, &options);
+
+                assert!(
+                    vertex_lists_match_unordered(&opt_remaining_v, &default_remaining_v, true)
+                        && vertex_lists_match_unordered(
+                            &default_remaining_v,
+                            &opt_remaining_v,
+                            true
+                        ),
+                    "boolean pos_equal_eps matrix remaining vertex mismatch for scale={scale} op={operation}\ndefault={default_remaining_v:?}\noptions={opt_remaining_v:?}"
+                );
+                assert!(
+                    vertex_lists_match_unordered(&opt_subtracted_v, &default_subtracted_v, true)
+                        && vertex_lists_match_unordered(
+                            &default_subtracted_v,
+                            &opt_subtracted_v,
+                            true
+                        ),
+                    "boolean pos_equal_eps matrix subtracted vertex mismatch for scale={scale} op={operation}\ndefault={default_subtracted_v:?}\noptions={opt_subtracted_v:?}"
+                );
+            }
+        }
+
+        cavc_aabbindex_f(aabb1 as *mut _);
+        cavc_pline_f(pline_a);
+        cavc_pline_f(pline_b);
+    }
+}
+
+#[test]
 fn pline_boolean_options_coincident_case1_intersect_collapsed_filter_cpp_parity() {
     let (subject, clip) = cpp_coincident_case1_inputs();
     let pline_a = create_pline(&subject, true);
@@ -3967,6 +4063,77 @@ fn pline_parallel_offset_options_path_vertex_output_cpp_matrix_parity() {
                 "parallel offset options reverse vertex mismatch for {}\ndefault={default_vertexes:?}\noptions={option_vertexes:?}",
                 case.name
             );
+
+            cavc_aabbindex_f(aabb_index as *mut _);
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_parallel_offset_options_path_tolerance_matrix_cpp_parity() {
+    for case in cpp_offset_simple_cases()
+        .into_iter()
+        .chain(cpp_offset_specific_cases())
+    {
+        let pline = create_pline(&case.input, case.is_closed);
+        let default_props = run_parallel_offset_props(pline, case.delta);
+        let default_vertexes = run_parallel_offset_vertexes(pline, case.delta);
+
+        let mut default_options = cavc_pline_parallel_offset_o {
+            aabb_index: std::ptr::null(),
+            pos_equal_eps: f64::NAN,
+            slice_join_eps: f64::NAN,
+            offset_dist_eps: f64::NAN,
+            handle_self_intersects: 0,
+        };
+
+        unsafe {
+            assert_eq!(cavc_pline_parallel_offset_o_init(&mut default_options), 0);
+            let base_pos_equal_eps = default_options.pos_equal_eps;
+            let base_slice_join_eps = default_options.slice_join_eps;
+            let base_offset_dist_eps = default_options.offset_dist_eps;
+
+            let mut aabb_index = ptr::null();
+            assert_eq!(
+                cavc_pline_create_approx_aabbindex(pline, &mut aabb_index),
+                0
+            );
+
+            for scale in [0.5_f64, 1.0_f64, 2.0_f64] {
+                let options = cavc_pline_parallel_offset_o {
+                    aabb_index,
+                    pos_equal_eps: base_pos_equal_eps * scale,
+                    slice_join_eps: base_slice_join_eps * scale,
+                    offset_dist_eps: base_offset_dist_eps * scale,
+                    handle_self_intersects: default_options.handle_self_intersects,
+                };
+
+                let option_props =
+                    run_parallel_offset_props_with_options(pline, case.delta, &options);
+                assert!(
+                    props_set_match_ignore_area_sign(&option_props, &default_props, 1e-4)
+                        && props_set_match_ignore_area_sign(&default_props, &option_props, 1e-4),
+                    "parallel offset tolerance matrix props mismatch for {} scale={scale}\ndefault={default_props:?}\noptions={option_props:?}",
+                    case.name
+                );
+
+                let option_vertexes =
+                    run_parallel_offset_vertexes_with_options(pline, case.delta, &options);
+                assert!(
+                    vertex_lists_match_unordered(
+                        &option_vertexes,
+                        &default_vertexes,
+                        case.is_closed
+                    ) && vertex_lists_match_unordered(
+                        &default_vertexes,
+                        &option_vertexes,
+                        case.is_closed
+                    ),
+                    "parallel offset tolerance matrix vertex mismatch for {} scale={scale}\ndefault={default_vertexes:?}\noptions={option_vertexes:?}",
+                    case.name
+                );
+            }
 
             cavc_aabbindex_f(aabb_index as *mut _);
             cavc_pline_f(pline);

@@ -712,6 +712,21 @@ Plans:
 - [x] 44-02: Publish post-deepening alignment map for coincident options-path follow-up.
 - [x] 44-03: Close verification gates and sync planning state.
 
+### Phase 45: C-API Options-Path Tolerance-Matrix Deepening (No Clipper)
+**Goal**: Deepen options-path parity by validating tolerance/epsilon matrix stability against default-path outputs on source-backed boolean and offset matrix surfaces.
+**Depends on**: Phase 44
+**Requirements**: [PAR-109, PAR-110, PAR-111]
+**Success Criteria** (what must be TRUE):
+  1. Options-path boolean circle/rectangle matrix remains equivalent to default-path output across a bounded `pos_equal_eps` scale matrix.
+  2. Options-path parallel-offset simple/specific matrices remain equivalent to default-path output across bounded tolerance scale matrix (`pos_equal_eps`, `slice_join_eps`, `offset_dist_eps`).
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 45-01: Add options-path tolerance-matrix deepening tests for boolean and offset matrix flows.
+- [x] 45-02: Publish post-deepening alignment map for tolerance-matrix follow-up.
+- [x] 45-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -763,3 +778,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 42. C-API Options-Path Vertex-Output Deepening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 43. C-API Drift-Failure Triage Template (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 44. C-API Options-Path Coincident Vertex-Output Deepening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 45. C-API Options-Path Tolerance-Matrix Deepening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
