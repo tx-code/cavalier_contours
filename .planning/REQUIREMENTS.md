@@ -170,6 +170,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-88**: A cross-suite checklist maps old C++ C-API suite blocks (`pline`, `pline_function`, `parallel_offset`, `combine_plines`) to current FFI executable evidence.
 - **PAR-89**: Cross-suite coverage audit explicitly classifies source-explicit uncovered or API-evolved equivalence zones with concrete notes.
 - **PAR-90**: Cross-suite coverage audit closes with a post-audit alignment map and full verification/planning health gate closure.
+- **PAR-91**: Reserve API-evolution equivalence remains guarded by regression tests covering shrink-noop/grow reserve calls with preserved existing vertex-prefix data.
+- **PAR-92**: Remove-sequence range-equivalence regression includes final empty-state `cavc_pline_get_vertex_data` no-write buffer behavior in the same source-backed flow.
+- **PAR-93**: Equivalence-zone hardening closes with full verification/planning health gates and explicit next-step alignment boundary.
 
 ## Out of Scope
 
@@ -304,13 +307,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-88 | Phase 38 | Complete |
 | PAR-89 | Phase 38 | Complete |
 | PAR-90 | Phase 38 | Complete |
+| PAR-91 | Phase 39 | Complete |
+| PAR-92 | Phase 39 | Complete |
+| PAR-93 | Phase 39 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 90 (`PAR-01..PAR-90`), mapped to Phases 9-38
+- additional tracked post-v1 requirements: 93 (`PAR-01..PAR-93`), mapped to Phases 9-39
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 38 completion*
+*Last updated: 2026-05-14 after Phase 39 completion*

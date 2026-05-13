@@ -622,6 +622,21 @@ Plans:
 - [x] 38-02: Publish post-audit alignment map.
 - [x] 38-03: Close verification gates and sync planning state.
 
+### Phase 39: C-API Equivalence-Zone Regression Hardening (No Clipper)
+**Goal**: Harden source-backed API-evolution equivalence zones with tighter executable regressions for `reserve` and remove-sequence semantics.
+**Depends on**: Phase 38
+**Requirements**: [PAR-91, PAR-92, PAR-93]
+**Success Criteria** (what must be TRUE):
+  1. Reserve-equivalence zone has a regression test that preserves prefix data through shrink-noop/grow calls and append operations.
+  2. Remove-sequence range-equivalence scenario validates final empty-buffer no-write behavior in the same executable flow.
+  3. Full workspace and planning health gates are green, with explicit next-step map for post-hardening continuity.
+**Plans**: 3 plans
+
+Plans:
+- [x] 39-01: Add reserve/remove equivalence-zone regression hardening tests.
+- [x] 39-02: Publish post-hardening alignment map and follow-up boundary.
+- [x] 39-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -667,3 +682,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 36. C-API Pline-Suite Buffer/Reserve Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 37. C-API Pline Remove-Sequence Range-Equivalence Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 38. C-API Cross-Suite Coverage Audit (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 39. C-API Equivalence-Zone Regression Hardening (No Clipper) | 3/3 | Complete   | 2026-05-14 |

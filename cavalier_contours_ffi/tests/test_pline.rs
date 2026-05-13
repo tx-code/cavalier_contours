@@ -1877,6 +1877,35 @@ fn pline_reserve_does_not_modify_existing_vertex_data_cpp_parity() {
 }
 
 #[test]
+fn pline_reserve_equivalence_preserves_prefix_across_growth_and_append_cpp_parity() {
+    let source_vertices = vec![
+        (1.0, 2.0, 0.1),
+        (33.0, 3.0, 0.2),
+        (34.0, 35.0, 0.3),
+        (2.0, 36.0, 0.4),
+    ];
+    let pline = create_pline(&source_vertices, false);
+    let before = read_vertices(pline);
+
+    unsafe {
+        // old set_capacity equivalence zone: shrink no-op, then grow
+        assert_eq!(cavc_pline_reserve(pline, 1), 0);
+        assert_eq!(cavc_pline_reserve(pline, 11), 0);
+        assert_eq!(cavc_pline_add(pline, 555.0, 666.0, 0.777), 0);
+        assert_eq!(cavc_pline_add(pline, -9.0, -8.0, -0.25), 0);
+    }
+
+    let mut expected = before;
+    expected.push(cavc_vertex::new(555.0, 666.0, 0.777));
+    expected.push(cavc_vertex::new(-9.0, -8.0, -0.25));
+    compare_vertexes(&read_vertices(pline), &expected);
+
+    unsafe {
+        cavc_pline_f(pline);
+    }
+}
+
+#[test]
 fn pline_remove_sequence_equivalent_to_cpp_remove_range_parity() {
     let source = vec![
         (1.0, 2.0, 0.1),
@@ -1910,11 +1939,15 @@ fn pline_remove_sequence_equivalent_to_cpp_remove_range_parity() {
         assert_eq!(cavc_pline_remove(pline, 0), 0);
     }
     let mut count = u32::MAX;
+    let mut out = [cavc_vertex::new(-1.0, -2.0, -3.0); 10];
+    let out_before = out;
     unsafe {
         assert_eq!(cavc_pline_get_vertex_count(pline, &mut count), 0);
+        assert_eq!(cavc_pline_get_vertex_data(pline, out.as_mut_ptr()), 0);
         cavc_pline_f(pline);
     }
     assert_eq!(count, 0);
+    compare_vertexes(&out, &out_before);
 }
 
 #[test]
