@@ -185,6 +185,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-103**: A reusable drift-failure triage template exists with mandatory sections for drift evidence, old-suite block mapping, covered/equivalent/gap classification, and action decision.
 - **PAR-104**: Drift-failure handling flow explicitly links drift-check command failure to deterministic triage and re-audit steps.
 - **PAR-105**: Drift-failure triage-template phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-106**: Options-path coincident case1/case2 output matrices are vertex-level equivalent to default-path outputs across union/exclude/intersect/xor operations.
+- **PAR-107**: Coincident options-path vertex-level parity explicitly validates both remaining and subtracted output sets.
+- **PAR-108**: Coincident options-path vertex-output deepening closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -334,13 +337,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-103 | Phase 43 | Complete |
 | PAR-104 | Phase 43 | Complete |
 | PAR-105 | Phase 43 | Complete |
+| PAR-106 | Phase 44 | Complete |
+| PAR-107 | Phase 44 | Complete |
+| PAR-108 | Phase 44 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 105 (`PAR-01..PAR-105`), mapped to Phases 9-43
+- additional tracked post-v1 requirements: 108 (`PAR-01..PAR-108`), mapped to Phases 9-44
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 43 completion*
+*Last updated: 2026-05-14 after Phase 44 completion*

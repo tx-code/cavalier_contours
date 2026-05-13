@@ -3765,6 +3765,131 @@ fn pline_boolean_options_coincident_matrices_output_cpp_parity() {
 }
 
 #[test]
+fn pline_boolean_options_coincident_matrices_vertex_output_cpp_parity() {
+    struct OutputCase {
+        name: &'static str,
+        operation: u32,
+        subject: PlineInput,
+        clip: PlineInput,
+    }
+
+    let (case1_a, case1_b) = cpp_coincident_case1_inputs();
+    let (case2_a, case2_b) = cpp_coincident_case2_inputs();
+    let cases = vec![
+        OutputCase {
+            name: "coincident_case1_union",
+            operation: 0,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        OutputCase {
+            name: "coincident_case1_exclude_a_from_b",
+            operation: 2,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        OutputCase {
+            name: "coincident_case1_exclude_b_from_a",
+            operation: 2,
+            subject: case1_b.clone(),
+            clip: case1_a.clone(),
+        },
+        OutputCase {
+            name: "coincident_case1_intersect",
+            operation: 1,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        OutputCase {
+            name: "coincident_case1_xor",
+            operation: 3,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        OutputCase {
+            name: "coincident_case2_union",
+            operation: 0,
+            subject: case2_a.clone(),
+            clip: case2_b.clone(),
+        },
+        OutputCase {
+            name: "coincident_case2_exclude_a_from_b",
+            operation: 2,
+            subject: case2_a.clone(),
+            clip: case2_b.clone(),
+        },
+        OutputCase {
+            name: "coincident_case2_exclude_b_from_a",
+            operation: 2,
+            subject: case2_b.clone(),
+            clip: case2_a.clone(),
+        },
+        OutputCase {
+            name: "coincident_case2_intersect",
+            operation: 1,
+            subject: case2_a.clone(),
+            clip: case2_b.clone(),
+        },
+        OutputCase {
+            name: "coincident_case2_xor",
+            operation: 3,
+            subject: case2_a,
+            clip: case2_b,
+        },
+    ];
+
+    for case in cases {
+        let pline_a = create_pline(&case.subject, true);
+        let pline_b = create_pline(&case.clip, true);
+        let (default_remaining, default_subtracted) =
+            run_boolean_vertexes(pline_a, pline_b, case.operation);
+
+        let mut options = cavc_pline_boolean_o {
+            pline1_aabb_index: std::ptr::null(),
+            pos_equal_eps: f64::NAN,
+            collapsed_area_eps: f64::NAN,
+        };
+
+        unsafe {
+            assert_eq!(cavc_pline_boolean_o_init(&mut options), 0);
+            let mut aabb_index = ptr::null();
+            assert_eq!(
+                cavc_pline_create_approx_aabbindex(pline_a, &mut aabb_index),
+                0
+            );
+            options.pline1_aabb_index = aabb_index;
+
+            let (opt_remaining, opt_subtracted) =
+                run_boolean_vertexes_with_options(pline_a, pline_b, case.operation, &options);
+            assert!(
+                vertex_lists_match_unordered(&opt_remaining, &default_remaining, true),
+                "coincident options output remaining vertex mismatch for {}\ndefault={default_remaining:?}\noptions={opt_remaining:?}",
+                case.name
+            );
+            assert!(
+                vertex_lists_match_unordered(&default_remaining, &opt_remaining, true),
+                "coincident options output remaining reverse vertex mismatch for {}\ndefault={default_remaining:?}\noptions={opt_remaining:?}",
+                case.name
+            );
+            assert!(
+                vertex_lists_match_unordered(&opt_subtracted, &default_subtracted, true),
+                "coincident options output subtracted vertex mismatch for {}\ndefault={default_subtracted:?}\noptions={opt_subtracted:?}",
+                case.name
+            );
+            assert!(
+                vertex_lists_match_unordered(&default_subtracted, &opt_subtracted, true),
+                "coincident options output subtracted reverse vertex mismatch for {}\ndefault={default_subtracted:?}\noptions={opt_subtracted:?}",
+                case.name
+            );
+
+            cavc_aabbindex_f(aabb_index as *mut _);
+            cavc_pline_f(pline_a);
+            cavc_pline_f(pline_b);
+        }
+    }
+}
+
+#[test]
 fn pline_parallel_offset_options_path_cpp_matrix_parity() {
     for case in cpp_offset_simple_cases()
         .into_iter()

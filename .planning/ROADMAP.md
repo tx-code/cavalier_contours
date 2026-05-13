@@ -697,6 +697,21 @@ Plans:
 - [x] 43-02: Publish triage flow notes and post-phase alignment map.
 - [x] 43-03: Close verification gates and sync planning state.
 
+### Phase 44: C-API Options-Path Coincident Vertex-Output Deepening (No Clipper)
+**Goal**: Deepen coincident options-path parity by validating vertex-level output equivalence between default and options-path boolean execution on source-backed coincident matrices.
+**Depends on**: Phase 43
+**Requirements**: [PAR-106, PAR-107, PAR-108]
+**Success Criteria** (what must be TRUE):
+  1. Options-path coincident case1/case2 output matches default-path output at vertex level for union/exclude/intersect/xor operations (unordered closed polyline set with rotation tolerance).
+  2. Vertex-level comparison covers both remaining and subtracted output sets for coincident options-path matrix cases.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 44-01: Add coincident options-path vertex-output deepening test.
+- [x] 44-02: Publish post-deepening alignment map for coincident options-path follow-up.
+- [x] 44-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -747,3 +762,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 41. C-API Options-Path No-Modify Hardening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 42. C-API Options-Path Vertex-Output Deepening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 43. C-API Drift-Failure Triage Template (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 44. C-API Options-Path Coincident Vertex-Output Deepening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
