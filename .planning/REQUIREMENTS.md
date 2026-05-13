@@ -338,6 +338,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-256**: Rust C++ parity tests explicitly validate the full circle/rectangle basic-intersect expected table (segment index pairs plus point coordinates) for the historical C++ geometry.
 - **PAR-257**: Circle/rectangle intersection parity asserts exact basic-intersect cardinality and confirms no overlapping-intersect output for the same C++ geometry.
 - **PAR-258**: C++ circle/rectangle intersection expected-table parity phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-259**: Rust C++ parity tests explicitly validate swapped-operand circle/rectangle intersection expected-table assertions with index-pair and coordinate checks.
+- **PAR-260**: A bounded circle/rectangle operand-order and direction-variant matrix explicitly asserts expected point-set parity, exact cardinality, and empty overlapping-intersect output.
+- **PAR-261**: C++ circle/rectangle intersection variant-matrix parity phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -640,13 +643,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-256 | Phase 94 | Complete |
 | PAR-257 | Phase 94 | Complete |
 | PAR-258 | Phase 94 | Complete |
+| PAR-259 | Phase 95 | Complete |
+| PAR-260 | Phase 95 | Complete |
+| PAR-261 | Phase 95 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 258 (`PAR-01..PAR-258`), mapped to Phases 9-94
+- additional tracked post-v1 requirements: 261 (`PAR-01..PAR-261`), mapped to Phases 9-95
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 94 completion*
+*Last updated: 2026-05-15 after Phase 95 completion*

@@ -1462,6 +1462,21 @@ Plans:
 - [x] 94-02: Publish post-intersection-table alignment map for next bounded targets.
 - [x] 94-03: Close verification gates and sync planning state.
 
+### Phase 95: C++ Circle-Rectangle Intersection Variant Matrix Parity (No Clipper)
+**Goal**: Deepen circle/rectangle intersection parity by asserting operand-order and direction-variant matrix invariants for the same historical C++ geometry.
+**Depends on**: Phase 94
+**Requirements**: [PAR-259, PAR-260, PAR-261]
+**Success Criteria** (what must be TRUE):
+  1. Rust parity tests explicitly validate swapped-operand circle/rectangle intersection expected-table assertions with index-pair and coordinate checks.
+  2. Rust parity tests explicitly validate a bounded operand-order and direction-variant matrix preserves expected intersection point set, exact cardinality, and empty overlapping output.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 95-01: Add swapped-operand and variant-matrix circle/rectangle intersection parity assertions.
+- [x] 95-02: Publish post-variant-matrix alignment map for next bounded targets.
+- [x] 95-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1563,3 +1578,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 92. C-API Self-Intersect/Contains Null-Result Contract Symmetry (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 93. C-API Pline Mutator Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 94. C++ Circle-Rectangle Intersection Expected-Table Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 95. C++ Circle-Rectangle Intersection Variant Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |

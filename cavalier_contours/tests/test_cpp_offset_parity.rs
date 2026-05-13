@@ -366,6 +366,52 @@ fn cpp_collapsed_rectangle_parallel_offset_parity() {
 
 #[test]
 fn cpp_circle_rectangle_intersection_snapshot() {
+    fn assert_intersects(
+        intersects: &cavalier_contours::polyline::PlineIntersectsCollection<f64>,
+        expected: &[(usize, usize, f64, f64)],
+    ) {
+        assert_eq!(intersects.basic_intersects.len(), expected.len());
+        for &(start_index1, start_index2, x, y) in expected {
+            let matched = intersects.basic_intersects.iter().any(|intr| {
+                intr.start_index1 == start_index1
+                    && intr.start_index2 == start_index2
+                    && (intr.point.x - x).abs() <= EPS
+                    && (intr.point.y - y).abs() <= EPS
+            });
+            assert!(
+                matched,
+                "missing expected circle/rectangle intersect (start_index1={start_index1}, start_index2={start_index2}, point=({x}, {y})), actual={:?}",
+                intersects.basic_intersects
+            );
+        }
+        assert!(
+            intersects.overlapping_intersects.is_empty(),
+            "circle/rectangle parity snapshot expected no overlapping intersections"
+        );
+    }
+
+    fn assert_points_only(
+        intersects: &cavalier_contours::polyline::PlineIntersectsCollection<f64>,
+        expected_points: &[(f64, f64)],
+    ) {
+        assert_eq!(intersects.basic_intersects.len(), expected_points.len());
+        for &(x, y) in expected_points {
+            let matched = intersects
+                .basic_intersects
+                .iter()
+                .any(|intr| (intr.point.x - x).abs() <= EPS && (intr.point.y - y).abs() <= EPS);
+            assert!(
+                matched,
+                "missing expected point ({x}, {y}), actual={:?}",
+                intersects.basic_intersects
+            );
+        }
+        assert!(
+            intersects.overlapping_intersects.is_empty(),
+            "circle/rectangle parity snapshot expected no overlapping intersections"
+        );
+    }
+
     let subject = pline_closed![(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)];
     let clip = pline_closed![
         (3.0, -10.0, 0.0),
@@ -374,31 +420,91 @@ fn cpp_circle_rectangle_intersection_snapshot() {
         (3.0, 10.0, 0.0)
     ];
 
-    let intersects = subject.find_intersects(&clip);
-    let expected: [(usize, usize, f64, f64); 4] = [
+    let expected_base: [(usize, usize, f64, f64); 4] = [
         (0usize, 1usize, 6.0, -3.898979485566356),
         (1usize, 1usize, 6.0, 5.898979485566356),
         (0usize, 3usize, 3.0, -3.58257569495584),
         (1usize, 3usize, 3.0, 5.58257569495584),
     ];
+    let expected_swapped: [(usize, usize, f64, f64); 4] = [
+        (1usize, 0usize, 6.0, -3.898979485566356),
+        (1usize, 1usize, 6.0, 5.898979485566356),
+        (3usize, 0usize, 3.0, -3.58257569495584),
+        (3usize, 1usize, 3.0, 5.58257569495584),
+    ];
+    let expected_points: [(f64, f64); 4] = [
+        (6.0, -3.898979485566356),
+        (6.0, 5.898979485566356),
+        (3.0, -3.58257569495584),
+        (3.0, 5.58257569495584),
+    ];
 
-    assert_eq!(intersects.basic_intersects.len(), expected.len());
-    for (start_index1, start_index2, x, y) in expected {
-        let matched = intersects.basic_intersects.iter().any(|intr| {
-            intr.start_index1 == start_index1
-                && intr.start_index2 == start_index2
-                && (intr.point.x - x).abs() <= EPS
-                && (intr.point.y - y).abs() <= EPS
-        });
+    let intersects = subject.find_intersects(&clip);
+    assert_intersects(&intersects, &expected_base);
+
+    let intersects_swapped = clip.find_intersects(&subject);
+    assert_intersects(&intersects_swapped, &expected_swapped);
+
+    let mut subject_reversed = subject.clone();
+    subject_reversed.invert_direction_mut();
+    let mut clip_reversed = clip.clone();
+    clip_reversed.invert_direction_mut();
+    let intersects_reversed = subject_reversed.find_intersects(&clip_reversed);
+    assert_points_only(&intersects_reversed, &expected_points);
+
+    let intersects_swapped_reversed = clip_reversed.find_intersects(&subject_reversed);
+    assert_points_only(&intersects_swapped_reversed, &expected_points);
+}
+
+#[test]
+fn cpp_circle_rectangle_intersection_matrix_parity() {
+    let subject = pline_closed![(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)];
+    let clip = pline_closed![
+        (3.0, -10.0, 0.0),
+        (6.0, -10.0, 0.0),
+        (6.0, 10.0, 0.0),
+        (3.0, 10.0, 0.0)
+    ];
+    let expected_points: [(f64, f64); 4] = [
+        (6.0, -3.898979485566356),
+        (6.0, 5.898979485566356),
+        (3.0, -3.58257569495584),
+        (3.0, 5.58257569495584),
+    ];
+
+    let mut subject_reversed = subject.clone();
+    subject_reversed.invert_direction_mut();
+    let mut clip_reversed = clip.clone();
+    clip_reversed.invert_direction_mut();
+
+    let variants = [
+        subject.find_intersects(&clip),
+        subject.find_intersects(&clip_reversed),
+        subject_reversed.find_intersects(&clip),
+        subject_reversed.find_intersects(&clip_reversed),
+        clip.find_intersects(&subject),
+        clip.find_intersects(&subject_reversed),
+        clip_reversed.find_intersects(&subject),
+        clip_reversed.find_intersects(&subject_reversed),
+    ];
+
+    for intersects in variants {
+        assert_eq!(intersects.basic_intersects.len(), expected_points.len());
+        for (x, y) in expected_points {
+            let matched = intersects
+                .basic_intersects
+                .iter()
+                .any(|intr| (intr.point.x - x).abs() <= EPS && (intr.point.y - y).abs() <= EPS);
+            assert!(
+                matched,
+                "missing expected point ({x}, {y}), actual={:?}",
+                intersects.basic_intersects
+            );
+        }
         assert!(
-            matched,
-            "missing expected circle/rectangle intersect (start_index1={start_index1}, start_index2={start_index2}, point=({x}, {y})), actual={:?}",
-            intersects.basic_intersects
+            intersects.overlapping_intersects.is_empty(),
+            "expected no overlapping intersections, actual={:?}",
+            intersects.overlapping_intersects
         );
     }
-
-    assert!(
-        intersects.overlapping_intersects.is_empty(),
-        "circle/rectangle parity snapshot expected no overlapping intersections"
-    );
 }
