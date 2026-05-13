@@ -1282,6 +1282,21 @@ Plans:
 - [x] 82-02: Publish post-contract alignment map for next bounded targets.
 - [x] 82-03: Close verification gates and sync planning state.
 
+### Phase 83: C-API AABBIndex Null-Path Output Stability Coverage (No Clipper)
+**Goal**: Deepen aabbindex C-API contract reliability by adding direct null-path assertions and out-parameter stability checks for index creation/extents surfaces.
+**Depends on**: Phase 82
+**Requirements**: [PAR-223, PAR-224, PAR-225]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly verify `cavc_pline_create_approx_aabbindex`, `cavc_pline_create_aabbindex`, and `cavc_aabbindex_get_extents` return `1` on null-input contracts.
+  2. FFI tests explicitly verify null-path output sentinel stability for aabbindex pointer outputs and extents scalar outputs.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 83-01: Add direct aabbindex null-path output stability parity tests.
+- [x] 83-02: Publish post-contract alignment map for next bounded targets.
+- [x] 83-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1371,3 +1386,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 80. C-API Shape Polyline Accessor Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 81. C-API Shape-Root Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 82. C-API Plinelist Failure-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 83. C-API AABBIndex Null-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |

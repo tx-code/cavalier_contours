@@ -5979,6 +5979,38 @@ fn aabbindex_extents_empty_index_nan_ffi() {
 }
 
 #[test]
+fn aabbindex_failure_path_output_stability_ffi() {
+    unsafe {
+        let aabb_sentinel =
+            std::ptr::NonNull::<cavc_aabbindex>::dangling().as_ptr() as *const cavc_aabbindex;
+
+        let mut approx_index = aabb_sentinel;
+        assert_eq!(
+            cavc_pline_create_approx_aabbindex(ptr::null(), &mut approx_index),
+            1
+        );
+        assert_eq!(approx_index, aabb_sentinel);
+
+        let mut exact_index = aabb_sentinel;
+        assert_eq!(
+            cavc_pline_create_aabbindex(ptr::null(), &mut exact_index),
+            1
+        );
+        assert_eq!(exact_index, aabb_sentinel);
+
+        let (mut min_x, mut min_y, mut max_x, mut max_y) = (1.0_f64, 2.0_f64, 3.0_f64, 4.0_f64);
+        assert_eq!(
+            cavc_aabbindex_get_extents(ptr::null(), &mut min_x, &mut min_y, &mut max_x, &mut max_y),
+            1
+        );
+        assert_fuzzy_eq!(min_x, 1.0);
+        assert_fuzzy_eq!(min_y, 2.0);
+        assert_fuzzy_eq!(max_x, 3.0);
+        assert_fuzzy_eq!(max_y, 4.0);
+    }
+}
+
+#[test]
 fn ffi_options_create_init_lifecycle_parity() {
     unsafe {
         // parallel_offset options: create/free parity with init defaults

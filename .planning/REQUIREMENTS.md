@@ -302,6 +302,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-220**: FFI tests explicitly validate `cavc_plinelist_get_count`, `cavc_plinelist_get_pline`, `cavc_plinelist_pop`, and `cavc_plinelist_take` null/OOB/empty-path contracts with direct return-code assertions.
 - **PAR-221**: FFI tests explicitly validate plinelist failure paths preserve caller-provided count and pline-pointer output sentinels under null/OOB/empty contracts.
 - **PAR-222**: C-API plinelist failure-path output-stability contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-223**: FFI tests explicitly validate `cavc_pline_create_approx_aabbindex`, `cavc_pline_create_aabbindex`, and `cavc_aabbindex_get_extents` null-input contracts with direct return-code assertions.
+- **PAR-224**: FFI tests explicitly validate aabbindex-related null-input failure paths preserve caller-provided out-parameter sentinels for aabbindex pointers and extents scalars.
+- **PAR-225**: C-API aabbindex null-path output-stability contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -568,13 +571,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-220 | Phase 82 | Complete |
 | PAR-221 | Phase 82 | Complete |
 | PAR-222 | Phase 82 | Complete |
+| PAR-223 | Phase 83 | Complete |
+| PAR-224 | Phase 83 | Complete |
+| PAR-225 | Phase 83 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 222 (`PAR-01..PAR-222`), mapped to Phases 9-82
+- additional tracked post-v1 requirements: 225 (`PAR-01..PAR-225`), mapped to Phases 9-83
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 82 completion*
+*Last updated: 2026-05-15 after Phase 83 completion*
