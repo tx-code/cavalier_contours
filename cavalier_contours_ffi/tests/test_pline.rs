@@ -6385,3 +6385,48 @@ fn shape_root_invalid_input_contracts_ffi() {
         assert_eq!(cw_count, 202);
     }
 }
+
+#[test]
+fn plinelist_failure_path_output_stability_ffi() {
+    unsafe {
+        let mut count = 313_u32;
+        assert_eq!(cavc_plinelist_get_count(ptr::null(), &mut count), 1);
+        assert_eq!(count, 313);
+
+        let pline_sentinel =
+            std::ptr::NonNull::<cavc_pline>::dangling().as_ptr() as *const cavc_pline;
+        let mut out_pline = pline_sentinel;
+
+        assert_eq!(cavc_plinelist_get_pline(ptr::null(), 0, &mut out_pline), 1);
+        assert_eq!(out_pline, pline_sentinel);
+
+        assert_eq!(cavc_plinelist_pop(ptr::null_mut(), &mut out_pline), 1);
+        assert_eq!(out_pline, pline_sentinel);
+
+        assert_eq!(cavc_plinelist_take(ptr::null_mut(), 0, &mut out_pline), 1);
+        assert_eq!(out_pline, pline_sentinel);
+
+        let mut empty_list = ptr::null_mut();
+        assert_eq!(cavc_plinelist_create(0, &mut empty_list), 0);
+        assert_eq!(cavc_plinelist_get_pline(empty_list, 0, &mut out_pline), 2);
+        assert_eq!(out_pline, pline_sentinel);
+        assert_eq!(cavc_plinelist_pop(empty_list as *mut _, &mut out_pline), 2);
+        assert_eq!(out_pline, pline_sentinel);
+        assert_eq!(
+            cavc_plinelist_take(empty_list as *mut _, 0, &mut out_pline),
+            2
+        );
+        assert_eq!(out_pline, pline_sentinel);
+        cavc_plinelist_f(empty_list);
+
+        let mut list = ptr::null_mut();
+        assert_eq!(cavc_plinelist_create(0, &mut list), 0);
+        let pline = create_pline(&[(0.0, 0.0, 0.0), (2.0, 0.0, 0.0)], false);
+        assert_eq!(cavc_plinelist_push(list, pline), 0);
+        assert_eq!(cavc_plinelist_get_pline(list, 99, &mut out_pline), 2);
+        assert_eq!(out_pline, pline_sentinel);
+        assert_eq!(cavc_plinelist_take(list as *mut _, 99, &mut out_pline), 2);
+        assert_eq!(out_pline, pline_sentinel);
+        cavc_plinelist_f(list);
+    }
+}

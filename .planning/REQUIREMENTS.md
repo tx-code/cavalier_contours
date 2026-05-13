@@ -299,6 +299,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-217**: FFI tests explicitly validate `cavc_shape_create`, `cavc_shape_parallel_offset`, and `cavc_shape_get_{ccw,cw}_count` null-input contracts with direct return-code assertions.
 - **PAR-218**: FFI tests explicitly validate shape-root null-input failure paths preserve caller-provided output sentinels for shape pointers and count outputs.
 - **PAR-219**: C-API shape-root invalid-input contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-220**: FFI tests explicitly validate `cavc_plinelist_get_count`, `cavc_plinelist_get_pline`, `cavc_plinelist_pop`, and `cavc_plinelist_take` null/OOB/empty-path contracts with direct return-code assertions.
+- **PAR-221**: FFI tests explicitly validate plinelist failure paths preserve caller-provided count and pline-pointer output sentinels under null/OOB/empty contracts.
+- **PAR-222**: C-API plinelist failure-path output-stability contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -562,13 +565,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-217 | Phase 81 | Complete |
 | PAR-218 | Phase 81 | Complete |
 | PAR-219 | Phase 81 | Complete |
+| PAR-220 | Phase 82 | Complete |
+| PAR-221 | Phase 82 | Complete |
+| PAR-222 | Phase 82 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 219 (`PAR-01..PAR-219`), mapped to Phases 9-81
+- additional tracked post-v1 requirements: 222 (`PAR-01..PAR-222`), mapped to Phases 9-82
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 81 completion*
+*Last updated: 2026-05-15 after Phase 82 completion*

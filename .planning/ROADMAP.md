@@ -1267,6 +1267,21 @@ Plans:
 - [x] 81-02: Publish post-contract alignment map for next bounded targets.
 - [x] 81-03: Close verification gates and sync planning state.
 
+### Phase 82: C-API Plinelist Failure-Path Output Stability Coverage (No Clipper)
+**Goal**: Deepen plinelist C-API contract reliability by adding direct null/OOB/empty failure-path assertions and out-parameter stability checks.
+**Depends on**: Phase 81
+**Requirements**: [PAR-220, PAR-221, PAR-222]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly verify `cavc_plinelist_get_count`, `cavc_plinelist_get_pline`, `cavc_plinelist_pop`, and `cavc_plinelist_take` null/OOB/empty contracts via direct return-code assertions.
+  2. FFI tests explicitly verify failure-path output sentinel stability for count and pline out parameters under null/OOB/empty paths.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 82-01: Add direct plinelist failure-path output stability parity tests.
+- [x] 82-02: Publish post-contract alignment map for next bounded targets.
+- [x] 82-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1355,3 +1370,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 79. C-API Contains/Extents Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 80. C-API Shape Polyline Accessor Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 81. C-API Shape-Root Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 82. C-API Plinelist Failure-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
