@@ -3661,6 +3661,83 @@ fn pline_parallel_offset_options_path_cpp_matrix_parity() {
 }
 
 #[test]
+fn pline_parallel_offset_options_path_does_not_modify_input_cpp_parity() {
+    for case in cpp_offset_simple_cases()
+        .into_iter()
+        .chain(cpp_offset_specific_cases())
+    {
+        let pline = create_pline(&case.input, case.is_closed);
+        let before = read_vertices(pline);
+
+        let mut options = cavc_pline_parallel_offset_o {
+            aabb_index: std::ptr::null(),
+            pos_equal_eps: f64::NAN,
+            slice_join_eps: f64::NAN,
+            offset_dist_eps: f64::NAN,
+            handle_self_intersects: 0,
+        };
+
+        unsafe {
+            assert_eq!(cavc_pline_parallel_offset_o_init(&mut options), 0);
+            let mut aabb_index = ptr::null();
+            assert_eq!(
+                cavc_pline_create_approx_aabbindex(pline, &mut aabb_index),
+                0
+            );
+            options.aabb_index = aabb_index;
+
+            let _ = run_parallel_offset_props_with_options(pline, case.delta, &options);
+            let after = read_vertices(pline);
+            compare_vertexes(&after, &before);
+
+            cavc_aabbindex_f(aabb_index as *mut _);
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_boolean_options_path_circle_rectangle_does_not_modify_input_cpp_parity() {
+    let pline_a = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
+    let pline_b = create_pline(
+        &[
+            (3.0, -10.0, 0.0),
+            (6.0, -10.0, 0.0),
+            (6.0, 10.0, 0.0),
+            (3.0, 10.0, 0.0),
+        ],
+        true,
+    );
+    let before_a = read_vertices(pline_a);
+    let before_b = read_vertices(pline_b);
+
+    let mut options = cavc_pline_boolean_o {
+        pline1_aabb_index: std::ptr::null(),
+        pos_equal_eps: f64::NAN,
+        collapsed_area_eps: f64::NAN,
+    };
+
+    unsafe {
+        assert_eq!(cavc_pline_boolean_o_init(&mut options), 0);
+        let mut aabb1 = ptr::null();
+        assert_eq!(cavc_pline_create_approx_aabbindex(pline_a, &mut aabb1), 0);
+        options.pline1_aabb_index = aabb1;
+
+        for operation in [0_u32, 2_u32, 1_u32, 3_u32] {
+            let _ = run_boolean_props_with_options(pline_a, pline_b, operation, &options);
+            let after_a = read_vertices(pline_a);
+            let after_b = read_vertices(pline_b);
+            compare_vertexes(&after_a, &before_a);
+            compare_vertexes(&after_b, &before_b);
+        }
+
+        cavc_aabbindex_f(aabb1 as *mut _);
+        cavc_pline_f(pline_a);
+        cavc_pline_f(pline_b);
+    }
+}
+
+#[test]
 fn shape_eval_ffi() {
     let outer_pline = create_pline(
         &[

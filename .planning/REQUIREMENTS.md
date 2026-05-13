@@ -176,6 +176,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-94**: A drift baseline artifact tracks canonical old C++ suite files (pline, pline_function, parallel_offset, combine_plines) with source-root path, file hash, and test-block list.
 - **PAR-95**: A deterministic executable hook command validates old-suite drift against baseline and fails on hash or test-block change.
 - **PAR-96**: Drift-hook phase closes with full verification/planning health gates and an explicit post-hook alignment map.
+- **PAR-97**: Options-path parallel-offset execution preserves input vertex data across source-backed simple/specific case matrices.
+- **PAR-98**: Options-path boolean circle/rectangle matrix execution preserves both subject and clip input vertex data across union/exclude/intersect/xor operations.
+- **PAR-99**: Options-path no-modify hardening closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -316,13 +319,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-94 | Phase 40 | Complete |
 | PAR-95 | Phase 40 | Complete |
 | PAR-96 | Phase 40 | Complete |
+| PAR-97 | Phase 41 | Complete |
+| PAR-98 | Phase 41 | Complete |
+| PAR-99 | Phase 41 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 96 (`PAR-01..PAR-96`), mapped to Phases 9-40
+- additional tracked post-v1 requirements: 99 (`PAR-01..PAR-99`), mapped to Phases 9-41
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 40 completion*
+*Last updated: 2026-05-14 after Phase 41 completion*

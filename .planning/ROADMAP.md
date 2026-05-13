@@ -652,6 +652,21 @@ Plans:
 - [x] 40-02: Publish drift-hook operation notes and post-hook alignment map.
 - [x] 40-03: Close verification gates and sync planning state.
 
+### Phase 41: C-API Options-Path No-Modify Hardening (No Clipper)
+**Goal**: Strengthen C-API options-path invariants by extending source-backed no-modify behavior checks to boolean circle/rectangle and parallel-offset matrix paths.
+**Depends on**: Phase 40
+**Requirements**: [PAR-97, PAR-98, PAR-99]
+**Success Criteria** (what must be TRUE):
+  1. Options-path parallel-offset execution keeps input polyline vertex data unchanged across source-backed simple/specific case matrices.
+  2. Options-path boolean circle/rectangle operation matrix keeps subject and clip inputs unchanged across union/exclude/intersect/xor.
+  3. Full workspace and planning health gates are green, with updated post-phase alignment map.
+**Plans**: 3 plans
+
+Plans:
+- [x] 41-01: Add options-path no-modify hardening tests for offset and boolean matrix flows.
+- [x] 41-02: Publish post-hardening alignment map for options-path follow-up.
+- [x] 41-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -699,3 +714,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 38. C-API Cross-Suite Coverage Audit (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 39. C-API Equivalence-Zone Regression Hardening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 40. C-API Old-Suite Drift-Detection Hook (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 41. C-API Options-Path No-Modify Hardening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
