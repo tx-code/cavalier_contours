@@ -341,6 +341,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-259**: Rust C++ parity tests explicitly validate swapped-operand circle/rectangle intersection expected-table assertions with index-pair and coordinate checks.
 - **PAR-260**: A bounded circle/rectangle operand-order and direction-variant matrix explicitly asserts expected point-set parity, exact cardinality, and empty overlapping-intersect output.
 - **PAR-261**: C++ circle/rectangle intersection variant-matrix parity phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-262**: Rust C++ parity tests explicitly validate a bounded line-line primitive expected-table matrix that covers old C++ `intrLineSeg2LineSeg2` branch families (`True`, `False`, `None`, `Coincident`) including degenerate point paths.
+- **PAR-263**: Line-line primitive parity assertions explicitly validate expected parametric outputs (`seg1_t`, `seg2_t`, `seg2_t0`, `seg2_t1`) for covered branch-matrix cases.
+- **PAR-264**: C++ line-line primitive branch-matrix parity phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -646,13 +649,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-259 | Phase 95 | Complete |
 | PAR-260 | Phase 95 | Complete |
 | PAR-261 | Phase 95 | Complete |
+| PAR-262 | Phase 96 | Complete |
+| PAR-263 | Phase 96 | Complete |
+| PAR-264 | Phase 96 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 261 (`PAR-01..PAR-261`), mapped to Phases 9-95
+- additional tracked post-v1 requirements: 264 (`PAR-01..PAR-264`), mapped to Phases 9-96
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 95 completion*
+*Last updated: 2026-05-15 after Phase 96 completion*

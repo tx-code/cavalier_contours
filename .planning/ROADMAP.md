@@ -1477,6 +1477,21 @@ Plans:
 - [x] 95-02: Publish post-variant-matrix alignment map for next bounded targets.
 - [x] 95-03: Close verification gates and sync planning state.
 
+### Phase 96: C++ Line-Line Primitive Branch Matrix Parity (No Clipper)
+**Goal**: Deepen standalone primitive parity by asserting source-traceable line-line branch matrix expectations against old C++ `intrLineSeg2LineSeg2` behavior.
+**Depends on**: Phase 95
+**Requirements**: [PAR-262, PAR-263, PAR-264]
+**Success Criteria** (what must be TRUE):
+  1. Rust parity tests explicitly validate a bounded expected-table matrix covering `True`, `False`, `None`, and `Coincident` line-line branch families plus degenerate point paths.
+  2. Parity assertions explicitly check expected parametric outputs (`seg1_t`, `seg2_t`, `seg2_t0`, `seg2_t1`) for covered cases.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 96-01: Add line-line primitive branch matrix parity expected-table tests.
+- [x] 96-02: Publish post-line-line parity alignment map for next bounded targets.
+- [x] 96-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1579,3 +1594,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 93. C-API Pline Mutator Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 94. C++ Circle-Rectangle Intersection Expected-Table Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 95. C++ Circle-Rectangle Intersection Variant Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 96. C++ Line-Line Primitive Branch Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
