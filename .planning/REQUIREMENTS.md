@@ -242,6 +242,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-160**: Helper-driven specific-edge options-path matrix coverage includes additional source-backed old C++ closed-diamond-inward case inputs beyond Phase 61 coverage.
 - **PAR-161**: Closed-diamond-inward specific-edge matrix expansion preserves reversed/default parity and no-modify diagnostics with explicit provenance labels per covered edge case.
 - **PAR-162**: Specific-edge matrix closed-diamond-inward expansion phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-163**: Helper-driven specific-edge options-path matrix coverage includes additional source-backed old C++ closed-rectangle-outward case inputs beyond Phase 62 coverage.
+- **PAR-164**: Closed-rectangle-outward specific-edge matrix expansion preserves reversed/default parity and no-modify diagnostics with explicit provenance labels per covered edge case.
+- **PAR-165**: Specific-edge matrix closed-rectangle-outward expansion phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -448,13 +451,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-160 | Phase 62 | Complete |
 | PAR-161 | Phase 62 | Complete |
 | PAR-162 | Phase 62 | Complete |
+| PAR-163 | Phase 63 | Complete |
+| PAR-164 | Phase 63 | Complete |
+| PAR-165 | Phase 63 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 162 (`PAR-01..PAR-162`), mapped to Phases 9-62
+- additional tracked post-v1 requirements: 165 (`PAR-01..PAR-165`), mapped to Phases 9-63
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 62 completion*
+*Last updated: 2026-05-14 after Phase 63 completion*
