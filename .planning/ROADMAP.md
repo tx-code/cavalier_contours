@@ -31,6 +31,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 13: Full Circle Generated Matrix Parity (No Clipper)** - Execute full generated circle matrix parity across centers, alignments, reverse variants, and closest-point expectations. (completed 2026-05-13)
 - [x] **Phase 14: Circle Offset and Collapse Matrix Parity (No Clipper)** - Execute full generated circle offset and collapsed-offset matrix parity with vertex-level output checks. (completed 2026-05-13)
 - [x] **Phase 15: Half-Circle Offset and Collapse Matrix Parity (No Clipper)** - Execute full generated half-circle offset and collapsed-offset matrix parity with vertex-level output checks and updated next-target alignment map. (completed 2026-05-13)
+- [x] **Phase 16: C++ Offset Matrix Expansion and Reversed Parity (No Clipper)** - Execute broader old C++ `parallel_offset` simple/specific case matrices with reversed-input parity and input-immutability checks. (completed 2026-05-13)
 
 ## Phase Details
 
@@ -268,6 +269,21 @@ Plans:
 - [x] 15-02: Classify outcomes and publish next-step alignment map.
 - [x] 15-03: Close verification gates and sync planning state.
 
+### Phase 16: C++ Offset Matrix Expansion and Reversed Parity (No Clipper)
+**Goal**: Expand C++ deep parity beyond generated circle/half-circle matrices by importing broader `TEST_cavc_parallel_offset.cpp` simple/specific cases and reversed-input invariants.
+**Depends on**: Phase 15
+**Requirements**: [PAR-22, PAR-23, PAR-24]
+**Success Criteria** (what must be TRUE):
+  1. Old C++ `parallel_offset` simple and specific case matrices execute as Rust parity tests with source-traceable expected property sets.
+  2. Reversed-input parity behavior (reverse + negate delta) is executable with sign-adjusted area expectations and matching geometry properties.
+  3. Collapsed behavior and input-immutability checks are executable and next deep-alignment scope is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 16-01: Import and execute expanded C++ offset case matrices.
+- [x] 16-02: Classify outcomes and publish next-step alignment map.
+- [x] 16-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -290,3 +306,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 13. Full Circle Generated Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 14. Circle Offset and Collapse Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 15. Half-Circle Offset and Collapse Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
+| 16. C++ Offset Matrix Expansion and Reversed Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |

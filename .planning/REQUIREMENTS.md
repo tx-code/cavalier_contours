@@ -101,6 +101,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-19**: Full old C++ generated half-circle offset matrix expectations execute as Rust parity tests for outward and inward deltas across all generated variants.
 - **PAR-20**: Generated half-circle collapsed-offset deltas from old C++ execute as Rust parity checks and remain empty where expected.
 - **PAR-21**: Half-circle offset parity validates both geometry properties and vertex-level output (open exact-order and closed-curve start rotation tolerance) and publishes next-step alignment scope.
+- **PAR-22**: Old C++ `TEST_cavc_parallel_offset.cpp` simple and specific `parallel_offset` matrices execute as Rust parity tests with source-traceable expected property sets.
+- **PAR-23**: Reversed-input parity (`invert_direction` + negated delta) executes across imported offset matrices with sign-adjusted area and matching geometric properties.
+- **PAR-24**: Imported offset parity includes collapsed-result and input-immutability checks and publishes next deep-alignment scope.
 
 ## Out of Scope
 
@@ -166,13 +169,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-19 | Phase 15 | Complete |
 | PAR-20 | Phase 15 | Complete |
 | PAR-21 | Phase 15 | Complete |
+| PAR-22 | Phase 16 | Complete |
+| PAR-23 | Phase 16 | Complete |
+| PAR-24 | Phase 16 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 21 (`PAR-01..PAR-21`), mapped to Phases 9-15
+- additional tracked post-v1 requirements: 24 (`PAR-01..PAR-24`), mapped to Phases 9-16
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-13 after Phase 15 completion*
+*Last updated: 2026-05-13 after Phase 16 completion*
