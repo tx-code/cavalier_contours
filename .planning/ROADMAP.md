@@ -727,6 +727,21 @@ Plans:
 - [x] 45-02: Publish post-deepening alignment map for tolerance-matrix follow-up.
 - [x] 45-03: Close verification gates and sync planning state.
 
+### Phase 46: C-API Options-Path Self-Intersects Mode Matrix (No Clipper)
+**Goal**: Validate options-path stability across self-intersects include modes on source-backed non-self-intersecting offset matrices.
+**Depends on**: Phase 45
+**Requirements**: [PAR-112, PAR-113, PAR-114]
+**Success Criteria** (what must be TRUE):
+  1. Options-path `parallel_offset` output remains equivalent to default-path output across `handle_self_intersects` mode matrix (`ALL`, `LOCAL`, `GLOBAL`) for source-backed simple cases.
+  2. Mode-matrix checks validate both property-level and vertex-level output equivalence.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 46-01: Add self-intersects mode matrix parity test for options-path offset flow.
+- [x] 46-02: Publish post-deepening alignment map for self-intersects mode follow-up.
+- [x] 46-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -779,3 +794,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 43. C-API Drift-Failure Triage Template (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 44. C-API Options-Path Coincident Vertex-Output Deepening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 45. C-API Options-Path Tolerance-Matrix Deepening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 46. C-API Options-Path Self-Intersects Mode Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |

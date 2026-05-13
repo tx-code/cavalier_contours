@@ -191,6 +191,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-109**: Options-path boolean circle/rectangle matrix output remains equivalent to default-path output across bounded `pos_equal_eps` scale matrix.
 - **PAR-110**: Options-path parallel-offset simple/specific matrix output remains equivalent to default-path output across bounded tolerance scale matrix (`pos_equal_eps`, `slice_join_eps`, `offset_dist_eps`).
 - **PAR-111**: Options-path tolerance-matrix deepening closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-112**: Options-path `parallel_offset` output remains equivalent to default-path output across self-intersects include mode matrix (`ALL`, `LOCAL`, `GLOBAL`) for source-backed simple non-self-intersecting cases.
+- **PAR-113**: Self-intersects mode matrix parity explicitly validates both property-level and vertex-level output equivalence.
+- **PAR-114**: Self-intersects mode-matrix deepening closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -346,13 +349,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-109 | Phase 45 | Complete |
 | PAR-110 | Phase 45 | Complete |
 | PAR-111 | Phase 45 | Complete |
+| PAR-112 | Phase 46 | Complete |
+| PAR-113 | Phase 46 | Complete |
+| PAR-114 | Phase 46 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 111 (`PAR-01..PAR-111`), mapped to Phases 9-45
+- additional tracked post-v1 requirements: 114 (`PAR-01..PAR-114`), mapped to Phases 9-46
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 45 completion*
+*Last updated: 2026-05-14 after Phase 46 completion*
