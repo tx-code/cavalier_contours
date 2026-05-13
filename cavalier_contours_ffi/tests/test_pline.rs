@@ -1838,6 +1838,45 @@ fn pline_data_manipulation() {
 }
 
 #[test]
+fn pline_get_vertex_data_empty_does_not_modify_buffer_cpp_parity() {
+    let pline = create_pline(&[], true);
+    let mut out = [
+        cavc_vertex::new(-1.0, -2.0, -3.0),
+        cavc_vertex::new(-4.0, -5.0, -6.0),
+    ];
+    let before = out;
+    unsafe {
+        assert_eq!(cavc_pline_get_vertex_data(pline, out.as_mut_ptr()), 0);
+        cavc_pline_f(pline);
+    }
+    compare_vertexes(&out, &before);
+}
+
+#[test]
+fn pline_reserve_does_not_modify_existing_vertex_data_cpp_parity() {
+    let source_vertices = vec![
+        (1.0, 2.0, 0.1),
+        (33.0, 3.0, 0.2),
+        (34.0, 35.0, 0.3),
+        (2.0, 36.0, 0.4),
+    ];
+    let pline = create_pline(&source_vertices, false);
+    let before = read_vertices(pline);
+
+    unsafe {
+        assert_eq!(cavc_pline_reserve(pline, 1), 0);
+        assert_eq!(cavc_pline_reserve(pline, 11), 0);
+    }
+
+    let after = read_vertices(pline);
+    compare_vertexes(&after, &before);
+
+    unsafe {
+        cavc_pline_f(pline);
+    }
+}
+
+#[test]
 fn pline_eval_path_length() {
     let pline = create_pline(&[(0.0, 0.0, 1.0), (2.0, 0.0, 1.0)], true);
     let mut l = f64::NAN;

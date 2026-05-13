@@ -577,6 +577,21 @@ Plans:
 - [x] 35-02: Publish combine-self vertex-exact parity report and next-scope map.
 - [x] 35-03: Close verification gates and sync planning state.
 
+### Phase 36: C-API Pline-Suite Buffer/Reserve Parity (No Clipper)
+**Goal**: Close remaining source-backed pline-suite edge semantics for empty-buffer read safety and reserve non-modification behavior at C-API boundary.
+**Depends on**: Phase 35
+**Requirements**: [PAR-82, PAR-83, PAR-84]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests assert empty `cavc_pline_get_vertex_data` calls do not modify caller buffers.
+  2. FFI tests assert `cavc_pline_reserve` does not modify existing populated vertex data.
+  3. Full workspace and planning health gates are green, and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 36-01: Add pline-suite buffer/reserve parity tests.
+- [x] 36-02: Publish pline-suite buffer/reserve parity report and next-scope map.
+- [x] 36-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -619,3 +634,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 33. C-API Closest-Point Epsilon/Tie-Break Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 34. C-API Function-Surface Parallel-Offset Full Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 35. C-API Combine-Self Vertex-Exact Reversed Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 36. C-API Pline-Suite Buffer/Reserve Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
