@@ -55,12 +55,16 @@ endpoint-stickiness branch closure.
 - Added bounded mixed line/arc wrap-around-adjacency endpoint-dedup probes:
   - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_closed_pline1`
   - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_closed_pline2`
+- Added bounded non-circle arc/arc wrap-around-adjacency endpoint-dedup probes
+  for same and reversed endpoint ordering:
+  - `wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline1`
+  - `wrap_around_non_circle_arc_overlap_deduplication_reversed_order_closed_pline1`
 
 ## Next Alignment Targets (No Clipper)
 
 | Priority | Target | Rust file/module | Decision Boundary |
 |----------|--------|------------------|-------------------|
-| P1 | Extend wrap-around-adjacency endpoint-dedup probes to non-circle arc/arc overlap cases (same and reversed endpoint ordering) | `cavalier_contours/src/polyline/internal/pline_intersects.rs` | Keep source-traceable cases and isolate wrap-around dedup from independent closure crossings. |
+| P1 | Add complementary non-circle arc/arc wrap-around endpoint-dedup probes where `pline2` is closed (same and reversed endpoint ordering) | `cavalier_contours/src/polyline/internal/pline_intersects.rs` | Keep source-traceable cases and isolate wrap-around dedup from independent closure crossings. |
 | P2 | Extend collection-level parity to mixed arc/arc-overlap adjacency in non-circle closed shapes where direct old C++ mapping is available | `cavalier_contours/src/polyline/internal/pline_intersects.rs`, `cavalier_contours/tests/test_pline_seg_intersect.rs` | Keep source mapping explicit and bounded. |
 | P2 | Extend combine/offset-derived intersection fixture parity only when direct C++ source mapping exists | `cavalier_contours/tests/test_cpp_combine_parity.rs`, `cavalier_contours/tests/test_cpp_offset_parity.rs` | Keep provenance explicit and no-Clipper. |
 
