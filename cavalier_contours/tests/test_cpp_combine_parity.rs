@@ -452,17 +452,6 @@ fn cpp_coincident_matrix_geometry_parity_holds() {
                 .map(|r| &r.pline),
             false,
         );
-        if case.name == "coincident_case1_intersect" {
-            // C++ expected empty; Rust currently preserves a tiny coincident sliver segment.
-            assert_eq!(actual.len(), 1, "expected one known sliver result");
-            let sliver = &actual[0];
-            assert!(sliver.area.abs() <= EPS, "known sliver should have ~0 area");
-            assert!(
-                (sliver.path_length - 0.02).abs() <= EPS,
-                "known sliver path-length mismatch"
-            );
-            continue;
-        }
         assert!(
             geometry_sets_match_ignore_vertex_count(&actual, &case.expected),
             "coincident geometry parity mismatch for case={} op={:?}\nactual={actual:?}\nexpected={:?}",

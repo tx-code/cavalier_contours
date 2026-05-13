@@ -110,6 +110,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-28**: Coincident intersect sliver behavior is covered by an explicit parity test path using `PlineBooleanOptions.collapsed_area_eps` that matches old C++ empty-output expectation.
 - **PAR-29**: Default-path versus collapsed-filter-path behavior is explicitly classified and documented for the coincident intersect case.
 - **PAR-30**: The project records the follow-up decision boundary for adopting or deferring a default collapsed-area threshold in boolean operations.
+- **PAR-31**: Boolean stitching removes only degenerate line-only two-vertex closed loops while preserving valid two-vertex arc loops.
+- **PAR-32**: `coincident_case1_intersect` default-path behavior matches old C++ empty-output parity through executable Rust tests.
+- **PAR-33**: The project records the post-fix no-Clipper deep-alignment map and closes with full verification gates.
 
 ## Out of Scope
 
@@ -184,13 +187,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-28 | Phase 18 | Complete |
 | PAR-29 | Phase 18 | Complete |
 | PAR-30 | Phase 18 | Complete |
+| PAR-31 | Phase 19 | Complete |
+| PAR-32 | Phase 19 | Complete |
+| PAR-33 | Phase 19 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 30 (`PAR-01..PAR-30`), mapped to Phases 9-18
+- additional tracked post-v1 requirements: 33 (`PAR-01..PAR-33`), mapped to Phases 9-19
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-13 after Phase 18 completion*
+*Last updated: 2026-05-13 after Phase 19 completion*

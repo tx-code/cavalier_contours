@@ -723,6 +723,14 @@ where
         }
         pline.remove_last();
         pline.set_is_closed(true);
+        if pline.vertex_count() == 2 {
+            let v0 = pline.at(0);
+            let v1 = pline.at(1);
+            if v0.bulge_is_zero() && v1.bulge_is_zero() {
+                // degenerate line-only loop (same segment traversed in opposite directions)
+                return;
+            }
+        }
         if let Some(collapsed_area) = collapsed_area_eps
             && pline.area().abs() < collapsed_area
         {

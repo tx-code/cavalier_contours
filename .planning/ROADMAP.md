@@ -34,6 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 16: C++ Offset Matrix Expansion and Reversed Parity (No Clipper)** - Execute broader old C++ `parallel_offset` simple/specific case matrices with reversed-input parity and input-immutability checks. (completed 2026-05-13)
 - [x] **Phase 17: C++ Coincident Combine Matrix Parity Expansion (No Clipper)** - Import and execute old C++ coincident combine case matrices, classifying confirmed parity and explicit divergence behavior. (completed 2026-05-13)
 - [x] **Phase 18: Coincident Intersect Collapsed-Filter Parity Path (No Clipper)** - Validate and lock a source-traceable `collapsed_area_eps` parity path for coincident intersect sliver suppression. (completed 2026-05-13)
+- [x] **Phase 19: Coincident Intersect Default-Path Line-Loop Parity Closure (No Clipper)** - Remove degenerate line-only 2-vertex loops during boolean stitching so default coincident intersect behavior matches old C++ empty-output parity. (completed 2026-05-13)
 
 ## Phase Details
 
@@ -316,6 +317,21 @@ Plans:
 - [x] 18-02: Classify outcomes and publish next-step alignment map.
 - [x] 18-03: Close verification gates and sync planning state.
 
+### Phase 19: Coincident Intersect Default-Path Line-Loop Parity Closure (No Clipper)
+**Goal**: Close the remaining default-path coincident intersect gap by removing only degenerate line-only two-vertex loops during boolean slice stitching.
+**Depends on**: Phase 18
+**Requirements**: [PAR-31, PAR-32, PAR-33]
+**Success Criteria** (what must be TRUE):
+  1. Boolean stitching skips only 2-vertex closed loops whose two segments are both line segments, without removing valid 2-vertex arc loops.
+  2. `coincident_case1_intersect` default behavior matches old C++ empty-output parity in executable Rust tests.
+  3. Workspace verification gates are green and next deep no-Clipper alignment scope is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 19-01: Add line-only two-vertex loop guard in boolean stitching and validate local regressions.
+- [x] 19-02: Reclassify coincident default-path parity and publish next alignment map.
+- [x] 19-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -341,3 +357,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 16. C++ Offset Matrix Expansion and Reversed Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 17. C++ Coincident Combine Matrix Parity Expansion (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 18. Coincident Intersect Collapsed-Filter Parity Path (No Clipper) | 3/3 | Complete   | 2026-05-13 |
+| 19. Coincident Intersect Default-Path Line-Loop Parity Closure (No Clipper) | 3/3 | Complete   | 2026-05-13 |
