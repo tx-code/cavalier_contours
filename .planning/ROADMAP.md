@@ -1507,6 +1507,21 @@ Plans:
 - [x] 97-02: Publish post-line-circle parity alignment map for next bounded targets.
 - [x] 97-03: Close verification gates and sync planning state.
 
+### Phase 98: C++ Circle-Circle Primitive Branch Matrix Parity (No Clipper)
+**Goal**: Deepen standalone primitive parity by asserting source-traceable circle-circle branch matrix expectations against old C++ `intrCircle2Circle2` behavior.
+**Depends on**: Phase 97
+**Requirements**: [PAR-268, PAR-269, PAR-270]
+**Success Criteria** (what must be TRUE):
+  1. Rust parity tests explicitly validate a bounded expected-table matrix covering circle-circle branch families: coincident, no-intersect (outside/inside), tangent, and two-intersects.
+  2. Parity assertions explicitly validate expected intersect point outputs for covered branch-matrix cases, including near-tangent midpoint behavior.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 98-01: Add circle-circle primitive branch matrix parity expected-table tests.
+- [x] 98-02: Publish post-circle-circle parity alignment map for next bounded targets.
+- [x] 98-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1611,3 +1626,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 95. C++ Circle-Rectangle Intersection Variant Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 96. C++ Line-Line Primitive Branch Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 97. C++ Line-Circle Primitive Branch Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 98. C++ Circle-Circle Primitive Branch Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
