@@ -1912,6 +1912,64 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline2() {
+        // Complementary non-circle arc/arc same-order wrap-around probe with closed `pline2`.
+        let mut pline1 = Polyline::new();
+        pline1.add(1.0, 1.0, 1.0);
+        pline1.add(3.0, 1.0, 0.0);
+        pline1.add(4.0, 1.0, 0.0);
+
+        let mut pline2 = Polyline::new_closed();
+        pline2.add(3.0, 1.0, 0.0);
+        pline2.add(4.0, 3.0, 0.0);
+        pline2.add(2.0, 0.0, bulge_from_angle(FRAC_PI_2));
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 1);
+        assert!(
+            intrs.basic_intersects.is_empty(),
+            "unexpected basic intersects: {:?}",
+            intrs.basic_intersects
+        );
+
+        let overlap = intrs.overlapping_intersects[0];
+        assert_eq!(overlap.start_index1, 0);
+        assert_eq!(overlap.start_index2, 2);
+        assert_fuzzy_eq!(overlap.point1, Vector2::new(2.0, 0.0));
+        assert_fuzzy_eq!(overlap.point2, Vector2::new(3.0, 1.0));
+    }
+
+    #[test]
+    fn wrap_around_non_circle_arc_overlap_deduplication_reversed_order_closed_pline2() {
+        // Complementary non-circle arc/arc reversed-order wrap-around probe with closed `pline2`.
+        let mut pline1 = Polyline::new();
+        pline1.add(1.0, 1.0, 1.0);
+        pline1.add(3.0, 1.0, 0.0);
+        pline1.add(4.0, 1.0, 0.0);
+
+        let mut pline2 = Polyline::new_closed();
+        pline2.add(2.0, 0.0, 0.0);
+        pline2.add(6.0, -3.0, 0.0);
+        pline2.add(3.0, 1.0, bulge_from_angle(-FRAC_PI_2));
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 1);
+        assert!(
+            intrs.basic_intersects.is_empty(),
+            "unexpected basic intersects: {:?}",
+            intrs.basic_intersects
+        );
+
+        let overlap = intrs.overlapping_intersects[0];
+        assert_eq!(overlap.start_index1, 0);
+        assert_eq!(overlap.start_index2, 2);
+        assert_fuzzy_eq!(overlap.point1, Vector2::new(3.0, 1.0));
+        assert_fuzzy_eq!(overlap.point2, Vector2::new(2.0, 0.0));
+    }
+
+    #[test]
     fn uses_pos_equal_eps() {
         // test that pos_equal_eps passed in options is used
         let eps = 1e-5;
