@@ -1147,6 +1147,21 @@ Plans:
 - [x] 73-02: Publish post-suite alignment map for next bounded targets.
 - [x] 73-03: Close verification gates and sync planning state.
 
+### Phase 74: C-API AABBIndex Extents Source Parity (No Clipper)
+**Goal**: Harden C-API aabbindex parity by adding source-backed extents checks aligned to old `TEST_staticspatialindex.cpp` extents assertions and covering exact/approx/extents-edge behavior.
+**Depends on**: Phase 73
+**Requirements**: [PAR-196, PAR-197, PAR-198]
+**Success Criteria** (what must be TRUE):
+  1. C-API `cavc_pline_create_approx_aabbindex` and `cavc_pline_create_aabbindex` extents agree with source-backed extents parity cases derived from old `StaticSpatialIndexTests.index` and `skip_sorting_small_index`.
+  2. C-API aabbindex extents flow is hardened with null-path and empty-index NaN checks, while keeping source-case coverage guard diagnostics explicit.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 74-01: Add source-backed aabbindex extents parity tests and coverage guard.
+- [x] 74-02: Publish post-extents alignment map for next bounded targets.
+- [x] 74-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1227,3 +1242,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 71. C-API Coincident Default Matrix Source-Map Guard (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 72. C-API Circle-Rectangle Source Matrix Guard Reuse (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 73. C-API Pline Core Suite Source-Coverage Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 74. C-API AABBIndex Extents Source Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |

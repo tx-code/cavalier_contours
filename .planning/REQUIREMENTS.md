@@ -275,6 +275,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-193**: C-API pline core parity explicitly executes source-backed old `TEST_cavc_pline.cpp` core cases for `cavc_pline_new`, `set_capacity`-equivalent reserve behavior, `cavc_pline_set_vertex_data`, `cavc_pline_add_vertex`, `remove_range`-equivalent remove sequence, and `cavc_pline_clear`.
 - **PAR-194**: Pline core source-case coverage guard fails fast on source-case count drift, missing source cases, and duplicate source-case coverage entries.
 - **PAR-195**: C-API pline core source-coverage parity phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-196**: C-API aabbindex parity executes source-backed extents cases aligned to old `TEST_staticspatialindex.cpp` extents assertions (`index` and `skip_sorting_small_index`) for both approximate and exact index constructors.
+- **PAR-197**: Aabbindex extents parity hardening includes explicit null-path and empty-index NaN behavior checks and source-case coverage guard diagnostics.
+- **PAR-198**: C-API aabbindex extents source-parity phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -514,13 +517,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-193 | Phase 73 | Complete |
 | PAR-194 | Phase 73 | Complete |
 | PAR-195 | Phase 73 | Complete |
+| PAR-196 | Phase 74 | Complete |
+| PAR-197 | Phase 74 | Complete |
+| PAR-198 | Phase 74 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 195 (`PAR-01..PAR-195`), mapped to Phases 9-73
+- additional tracked post-v1 requirements: 198 (`PAR-01..PAR-198`), mapped to Phases 9-74
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 73 completion*
+*Last updated: 2026-05-15 after Phase 74 completion*

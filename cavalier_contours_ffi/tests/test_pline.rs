@@ -846,6 +846,11 @@ const CPP_PLINE_CORE_SOURCE_CASES: [&str; 6] = [
     "cavc_pline_clear",
 ];
 
+const CPP_AABBINDEX_EXTENTS_SOURCE_CASES: [&str; 2] = [
+    "StaticSpatialIndexTests.index",
+    "StaticSpatialIndexTests.skip_sorting_small_index",
+];
+
 const CPP_COINCIDENT_SOURCE_MATRIX: [(&str, u32); 10] = [
     ("coincident_case1_union", 0),
     ("coincident_case1_excludeAFromB", 2),
@@ -906,6 +911,20 @@ fn assert_source_case_coverage(actual: &[&str], expected: &[&str], context: &str
             "{context} missing source-backed case: {expected_name}"
         );
     }
+}
+
+fn read_aabbindex_extents(aabbindex: *const cavc_aabbindex) -> (f64, f64, f64, f64) {
+    let mut min_x = f64::NAN;
+    let mut min_y = f64::NAN;
+    let mut max_x = f64::NAN;
+    let mut max_y = f64::NAN;
+    unsafe {
+        assert_eq!(
+            cavc_aabbindex_get_extents(aabbindex, &mut min_x, &mut min_y, &mut max_x, &mut max_y),
+            0
+        );
+    }
+    (min_x, min_y, max_x, max_y)
 }
 
 fn cpp_coincident_boolean_matrix_cases() -> Vec<CoincidentMatrixCase> {
@@ -5688,5 +5707,137 @@ fn pline_contains_ffi() {
         cavc_pline_f(rectangle);
         cavc_pline_f(circle);
         cavc_pline_f(triangle);
+    }
+}
+
+#[test]
+fn aabbindex_extents_cpp_parity() {
+    // old C++ source: TEST_staticspatialindex.cpp -> StaticSpatialIndexTests.index,
+    // StaticSpatialIndexTests.skip_sorting_small_index (extents assertions)
+    struct AabbExtentsCase {
+        source_case: &'static str,
+        input: Vec<(f64, f64, f64)>,
+        expected: (f64, f64, f64, f64),
+    }
+
+    let cases = vec![
+        AabbExtentsCase {
+            source_case: "StaticSpatialIndexTests.index",
+            input: vec![
+                (0.0, 1.0, 0.0),
+                (96.0, 1.0, 0.0),
+                (96.0, 95.0, 0.0),
+                (0.0, 95.0, 0.0),
+            ],
+            expected: (0.0, 1.0, 96.0, 95.0),
+        },
+        AabbExtentsCase {
+            source_case: "StaticSpatialIndexTests.skip_sorting_small_index",
+            input: vec![
+                (0.0, 2.0, 0.0),
+                (96.0, 2.0, 0.0),
+                (96.0, 93.0, 0.0),
+                (0.0, 93.0, 0.0),
+            ],
+            expected: (0.0, 2.0, 96.0, 93.0),
+        },
+    ];
+
+    let mut covered_source_cases = Vec::new();
+    for case in cases {
+        let pline = create_pline(&case.input, true);
+        let mut approx_index = ptr::null();
+        let mut exact_index = ptr::null();
+
+        unsafe {
+            assert_eq!(
+                cavc_pline_create_approx_aabbindex(pline, &mut approx_index),
+                0
+            );
+            assert_eq!(cavc_pline_create_aabbindex(pline, &mut exact_index), 0);
+        }
+
+        let approx_extents = read_aabbindex_extents(approx_index);
+        let exact_extents = read_aabbindex_extents(exact_index);
+
+        assert_fuzzy_eq!(approx_extents.0, case.expected.0);
+        assert_fuzzy_eq!(approx_extents.1, case.expected.1);
+        assert_fuzzy_eq!(approx_extents.2, case.expected.2);
+        assert_fuzzy_eq!(approx_extents.3, case.expected.3);
+
+        assert_fuzzy_eq!(exact_extents.0, case.expected.0);
+        assert_fuzzy_eq!(exact_extents.1, case.expected.1);
+        assert_fuzzy_eq!(exact_extents.2, case.expected.2);
+        assert_fuzzy_eq!(exact_extents.3, case.expected.3);
+
+        assert_fuzzy_eq!(approx_extents.0, exact_extents.0);
+        assert_fuzzy_eq!(approx_extents.1, exact_extents.1);
+        assert_fuzzy_eq!(approx_extents.2, exact_extents.2);
+        assert_fuzzy_eq!(approx_extents.3, exact_extents.3);
+
+        unsafe {
+            cavc_aabbindex_f(approx_index as *mut _);
+            cavc_aabbindex_f(exact_index as *mut _);
+            cavc_pline_f(pline);
+        }
+
+        covered_source_cases.push(case.source_case);
+    }
+
+    let mut min_x = f64::NAN;
+    let mut min_y = f64::NAN;
+    let mut max_x = f64::NAN;
+    let mut max_y = f64::NAN;
+    unsafe {
+        assert_eq!(
+            cavc_aabbindex_get_extents(ptr::null(), &mut min_x, &mut min_y, &mut max_x, &mut max_y),
+            1
+        );
+
+        let mut null_index = ptr::null();
+        assert_eq!(cavc_pline_create_aabbindex(ptr::null(), &mut null_index), 1);
+        assert!(null_index.is_null());
+    }
+
+    assert_source_case_coverage(
+        &covered_source_cases,
+        &CPP_AABBINDEX_EXTENTS_SOURCE_CASES,
+        "aabbindex extents cpp parity",
+    );
+}
+
+#[test]
+fn aabbindex_extents_empty_index_nan_ffi() {
+    let empty_pline = create_pline(&[], true);
+    let mut approx_index = ptr::null();
+    let mut exact_index = ptr::null();
+
+    unsafe {
+        assert_eq!(
+            cavc_pline_create_approx_aabbindex(empty_pline, &mut approx_index),
+            0
+        );
+        assert_eq!(
+            cavc_pline_create_aabbindex(empty_pline, &mut exact_index),
+            0
+        );
+    }
+
+    let approx_extents = read_aabbindex_extents(approx_index);
+    let exact_extents = read_aabbindex_extents(exact_index);
+
+    assert!(approx_extents.0.is_nan());
+    assert!(approx_extents.1.is_nan());
+    assert!(approx_extents.2.is_nan());
+    assert!(approx_extents.3.is_nan());
+    assert!(exact_extents.0.is_nan());
+    assert!(exact_extents.1.is_nan());
+    assert!(exact_extents.2.is_nan());
+    assert!(exact_extents.3.is_nan());
+
+    unsafe {
+        cavc_aabbindex_f(approx_index as *mut _);
+        cavc_aabbindex_f(exact_index as *mut _);
+        cavc_pline_f(empty_pline);
     }
 }
