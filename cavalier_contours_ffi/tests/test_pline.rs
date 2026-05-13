@@ -6425,6 +6425,100 @@ fn shape_set_ccw_pline_userdata_values_ffi() {
 }
 
 #[test]
+fn shape_userdata_getter_failure_path_output_stability_ffi() {
+    let outer = create_pline(
+        &[
+            (-200.0, 200.0, 0.0),
+            (-200.0, -200.0, 0.0),
+            (200.0, -200.0, 0.0),
+            (200.0, 200.0, 0.0),
+        ],
+        true,
+    );
+    let inner = create_pline(
+        &[
+            (-100.0, 0.0, 0.0),
+            (0.0, 100.0, 0.0),
+            (100.0, 0.0, 0.0),
+            (0.0, -100.0, 0.0),
+        ],
+        true,
+    );
+
+    unsafe {
+        let mut list = ptr::null_mut();
+        assert_eq!(cavc_plinelist_create(0, &mut list), 0);
+        assert_eq!(cavc_plinelist_push(list, outer), 0);
+        assert_eq!(cavc_plinelist_push(list, inner), 0);
+
+        let mut shape = ptr::null_mut();
+        assert_eq!(cavc_shape_create(list, &mut shape), 0);
+        cavc_plinelist_f(list);
+
+        let ccw_payload = [101_u64, 202_u64];
+        let cw_payload = [11_u64, 22_u64, 33_u64];
+        assert_eq!(
+            cavc_shape_set_ccw_pline_userdata_values(shape, 0, ccw_payload.as_ptr(), 2),
+            0
+        );
+        assert_eq!(
+            cavc_shape_set_cw_pline_userdata_values(shape, 0, cw_payload.as_ptr(), 3),
+            0
+        );
+
+        let mut ccw_count = 777_u32;
+        assert_eq!(
+            cavc_shape_get_ccw_pline_userdata_count(ptr::null(), 0, &mut ccw_count),
+            1
+        );
+        assert_eq!(ccw_count, 777);
+        assert_eq!(
+            cavc_shape_get_ccw_pline_userdata_count(shape, 99, &mut ccw_count),
+            2
+        );
+        assert_eq!(ccw_count, 777);
+
+        let mut cw_count = 888_u32;
+        assert_eq!(
+            cavc_shape_get_cw_pline_userdata_count(ptr::null(), 0, &mut cw_count),
+            1
+        );
+        assert_eq!(cw_count, 888);
+        assert_eq!(
+            cavc_shape_get_cw_pline_userdata_count(shape, 99, &mut cw_count),
+            2
+        );
+        assert_eq!(cw_count, 888);
+
+        let mut ccw_userdata = [501_u64, 502_u64];
+        assert_eq!(
+            cavc_shape_get_ccw_pline_userdata_values(ptr::null(), 0, ccw_userdata.as_mut_ptr()),
+            1
+        );
+        assert_eq!(ccw_userdata, [501, 502]);
+        assert_eq!(
+            cavc_shape_get_ccw_pline_userdata_values(shape, 99, ccw_userdata.as_mut_ptr()),
+            2
+        );
+        assert_eq!(ccw_userdata, [501, 502]);
+
+        let mut cw_userdata = [601_u64, 602_u64, 603_u64];
+        assert_eq!(
+            cavc_shape_get_cw_pline_userdata_values(ptr::null(), 0, cw_userdata.as_mut_ptr()),
+            1
+        );
+        assert_eq!(cw_userdata, [601, 602, 603]);
+        assert_eq!(
+            cavc_shape_get_cw_pline_userdata_values(shape, 99, cw_userdata.as_mut_ptr()),
+            2
+        );
+        assert_eq!(cw_userdata, [601, 602, 603]);
+
+        cavc_shape_f(shape);
+    }
+}
+
+#[test]
 fn shape_polyline_access_error_contracts_ffi() {
     let outer = create_pline(
         &[

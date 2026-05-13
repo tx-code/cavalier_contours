@@ -311,6 +311,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-229**: FFI tests explicitly validate pline core accessor null/OOB contracts for `cavc_pline_clone`, `cavc_pline_get_is_closed`, `cavc_pline_get_vertex_count`, `cavc_pline_get_vertex_data`, `cavc_pline_get_vertex`, `cavc_pline_get_userdata_count`, and `cavc_pline_get_userdata_values`.
 - **PAR-230**: FFI tests explicitly validate pline core accessor failure paths preserve caller-provided out-parameter sentinels for pointer, scalar, and vertex outputs under null/OOB contracts.
 - **PAR-231**: C-API pline core accessor output-stability contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-232**: FFI tests explicitly validate shape userdata getter null/OOB contracts for `cavc_shape_get_ccw_pline_userdata_count`, `cavc_shape_get_ccw_pline_userdata_values`, `cavc_shape_get_cw_pline_userdata_count`, and `cavc_shape_get_cw_pline_userdata_values`.
+- **PAR-233**: FFI tests explicitly validate shape userdata getter failure paths preserve caller-provided out-parameter sentinels for scalar count and userdata-buffer outputs under null/OOB contracts.
+- **PAR-234**: C-API shape userdata getter output-stability contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -586,13 +589,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-229 | Phase 85 | Complete |
 | PAR-230 | Phase 85 | Complete |
 | PAR-231 | Phase 85 | Complete |
+| PAR-232 | Phase 86 | Complete |
+| PAR-233 | Phase 86 | Complete |
+| PAR-234 | Phase 86 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 231 (`PAR-01..PAR-231`), mapped to Phases 9-85
+- additional tracked post-v1 requirements: 234 (`PAR-01..PAR-234`), mapped to Phases 9-86
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 85 completion*
+*Last updated: 2026-05-15 after Phase 86 completion*

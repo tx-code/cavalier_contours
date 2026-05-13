@@ -1327,6 +1327,21 @@ Plans:
 - [x] 85-02: Publish post-contract alignment map for next bounded targets.
 - [x] 85-03: Close verification gates and sync planning state.
 
+### Phase 86: C-API Shape Userdata Getter Output Stability Coverage (No Clipper)
+**Goal**: Deepen shape userdata getter C-API contract reliability by adding direct null/OOB assertions and out-parameter stability checks for ccw/cw userdata count/value getters.
+**Depends on**: Phase 85
+**Requirements**: [PAR-232, PAR-233, PAR-234]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly verify shape userdata getter null/OOB contracts across `cavc_shape_get_ccw_pline_userdata_count`, `cavc_shape_get_ccw_pline_userdata_values`, `cavc_shape_get_cw_pline_userdata_count`, and `cavc_shape_get_cw_pline_userdata_values`.
+  2. FFI tests explicitly verify failure-path output sentinel stability for scalar and userdata-buffer outputs on covered shape userdata getter APIs.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 86-01: Add direct shape userdata getter failure-path output stability parity tests.
+- [x] 86-02: Publish post-contract alignment map for next bounded targets.
+- [x] 86-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1419,3 +1434,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 83. C-API AABBIndex Null-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 84. C-API Pline-Eval Failure-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 85. C-API Pline Core Accessor Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 86. C-API Shape Userdata Getter Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
