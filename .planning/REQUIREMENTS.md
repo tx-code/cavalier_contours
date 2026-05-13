@@ -92,6 +92,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-10**: Full old C++ generated half-circle case matrices (open/closed, x/y-aligned, cw/ccw, multi-center) execute as Rust parity tests with reusable tolerance helpers.
 - **PAR-11**: Closest-point expectations with explicit index results in generated half-circle cases are validated in strict mode and any tie-break mismatches are fixed or explicitly classified.
 - **PAR-12**: Deep parity continuation includes a file/module alignment map that names next high-value C++ targets and Rust implementation surfaces.
+- **PAR-13**: Full old C++ generated circle case matrices (all centers, alignments, reverse variants, and direction variants) execute as Rust parity tests with source-traceable expectations.
+- **PAR-14**: Closest-point expectations from generated circle cases validate explicit index expectations in strict mode and keep non-explicit index cases as point/distance parity checks.
+- **PAR-15**: After full circle matrix closure, a file/module alignment map names the next deep-parity targets for offset and collapsed-offset matrices.
 
 ## Out of Scope
 
@@ -148,13 +151,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-10 | Phase 12 | Complete |
 | PAR-11 | Phase 12 | Complete |
 | PAR-12 | Phase 12 | Complete |
+| PAR-13 | Phase 13 | Complete |
+| PAR-14 | Phase 13 | Complete |
+| PAR-15 | Phase 13 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 12 (`PAR-01..PAR-12`), mapped to Phases 9-12
+- additional tracked post-v1 requirements: 15 (`PAR-01..PAR-15`), mapped to Phases 9-13
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-13 after Phase 12 completion*
+*Last updated: 2026-05-13 after Phase 13 completion*

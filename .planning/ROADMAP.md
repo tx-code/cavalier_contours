@@ -28,6 +28,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 10: C++ Function-Level Parity Deepening (No Clipper)** - Extend parity from operation-level cases into function-level C++ `pline_function` behavior and classify any newly surfaced logic gaps. (completed 2026-05-13)
 - [x] **Phase 11: Closest-Point and Generated Matrix Parity Expansion (No Clipper)** - Expand C++ `pline_function` parity coverage into closest-point and broader generated function-case matrices, with explicit tie-break and comparability classification. (completed 2026-05-13)
 - [x] **Phase 12: Strict-Index and Full Half-Circle Matrix Parity (No Clipper)** - Execute full generated half-circle matrix parity with strict closest-point index checks and resolve confirmed tie-break gaps. (completed 2026-05-13)
+- [x] **Phase 13: Full Circle Generated Matrix Parity (No Clipper)** - Execute full generated circle matrix parity across centers, alignments, reverse variants, and closest-point expectations. (completed 2026-05-13)
 
 ## Phase Details
 
@@ -220,6 +221,21 @@ Plans:
 - [x] 12-02: Classify outcomes and publish file/module alignment map for next deep parity slice.
 - [x] 12-03: Close verification gates and sync planning state.
 
+### Phase 13: Full Circle Generated Matrix Parity (No Clipper)
+**Goal**: Complete C++ function-level generated circle matrix parity execution (all centers, alignments, reverse variants) with explicit closest-point index policy.
+**Depends on**: Phase 12
+**Requirements**: [PAR-13, PAR-14, PAR-15]
+**Success Criteria** (what must be TRUE):
+  1. Full generated circle matrix coverage from old C++ `addCircleCases` runs as executable Rust parity tests.
+  2. Closest-point explicit index expectations are validated where old C++ provides strict expected indices.
+  3. Resulting classification and next deep-alignment map explicitly identify the offset/collapse matrix follow-up.
+**Plans**: 3 plans
+
+Plans:
+- [x] 13-01: Expand to full generated circle matrix parity tests.
+- [x] 13-02: Classify outcomes and publish next-step alignment map.
+- [x] 13-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -239,3 +255,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 10. C++ Function-Level Parity Deepening (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 11. Closest-Point and Generated Matrix Parity Expansion (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 12. Strict-Index and Full Half-Circle Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
+| 13. Full Circle Generated Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |

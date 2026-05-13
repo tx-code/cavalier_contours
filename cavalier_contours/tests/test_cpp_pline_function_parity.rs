@@ -8,7 +8,10 @@ use test_utils::{PlineProperties, create_property_set, property_sets_match};
 const EPS: f64 = PlineProperties::PROP_CMP_EPS;
 const CLOSEST_QUERY_EPS: f64 = PlineProperties::POS_EQ_EPS;
 const HALF_CIRCLE_RADIUS: f64 = 5.0;
+const CIRCLE_RADIUS: f64 = 5.0;
 const PROBE_DELTA: f64 = 0.01;
+const CIRCLE_INSIDE_DIST_FACTOR: f64 = 0.33;
+const CIRCLE_OUTSIDE_DIST_FACTOR: f64 = 1.5;
 
 #[derive(Clone, Copy, Debug)]
 struct HalfCircleCaseKey {
@@ -26,6 +29,24 @@ struct ClosestCase {
     expected_distance: f64,
     expected_index: usize,
 }
+
+#[derive(Clone, Copy, Debug)]
+enum CircleAlignment {
+    XAxis,
+    YAxis,
+    Diagonal,
+}
+
+#[derive(Clone, Copy, Debug)]
+struct CircleCaseKey {
+    center_x: f64,
+    center_y: f64,
+    direction: i32,
+    alignment: CircleAlignment,
+    reverse: bool,
+}
+
+type CircleClosestCase = (Vector2<f64>, Vector2<f64>, f64, Option<usize>);
 
 fn assert_near(actual: f64, expected: f64, context: &str) {
     assert!(
@@ -227,6 +248,143 @@ fn half_circle_matrix_cases() -> Vec<HalfCircleCaseKey> {
                 });
             }
         }
+    }
+
+    result
+}
+
+fn circle_case_label(case: CircleCaseKey) -> String {
+    let alignment = match case.alignment {
+        CircleAlignment::XAxis => "x_aligned",
+        CircleAlignment::YAxis => "y_aligned",
+        CircleAlignment::Diagonal => "not_axis_aligned",
+    };
+    let reverse = if case.reverse { "rev" } else { "fwd" };
+    let direction = if case.direction > 0 { "ccw" } else { "cw" };
+    format!(
+        "{direction}/{alignment}/{reverse}/center=({:.1},{:.1})",
+        case.center_x, case.center_y
+    )
+}
+
+fn build_circle_case(case: CircleCaseKey) -> Polyline<f64> {
+    let (mut p0, mut p1) = match case.alignment {
+        CircleAlignment::XAxis => (
+            Vector2::new(case.center_x - CIRCLE_RADIUS, case.center_y),
+            Vector2::new(case.center_x + CIRCLE_RADIUS, case.center_y),
+        ),
+        CircleAlignment::YAxis => (
+            Vector2::new(case.center_x, case.center_y - CIRCLE_RADIUS),
+            Vector2::new(case.center_x, case.center_y + CIRCLE_RADIUS),
+        ),
+        CircleAlignment::Diagonal => (
+            Vector2::new(
+                case.center_x + CIRCLE_RADIUS * (std::f64::consts::PI / 4.0).cos(),
+                case.center_y + CIRCLE_RADIUS * (std::f64::consts::PI / 4.0).sin(),
+            ),
+            Vector2::new(
+                case.center_x + CIRCLE_RADIUS * (5.0 * std::f64::consts::PI / 4.0).cos(),
+                case.center_y + CIRCLE_RADIUS * (5.0 * std::f64::consts::PI / 4.0).sin(),
+            ),
+        ),
+    };
+
+    if case.reverse {
+        std::mem::swap(&mut p0, &mut p1);
+    }
+
+    let bulge = if case.direction > 0 { 1.0 } else { -1.0 };
+    let mut pline = Polyline::new_closed();
+    pline.add(p0.x, p0.y, bulge);
+    pline.add(p1.x, p1.y, bulge);
+    pline
+}
+
+fn circle_matrix_cases() -> Vec<CircleCaseKey> {
+    let centers = [(1.0, 1.0), (-1.0, 1.0), (-1.0, -1.0), (1.0, -1.0)];
+    let mut result = Vec::new();
+
+    for reverse in [false, true] {
+        for (center_x, center_y) in centers {
+            for alignment in [
+                CircleAlignment::XAxis,
+                CircleAlignment::YAxis,
+                CircleAlignment::Diagonal,
+            ] {
+                for direction in [1, -1] {
+                    result.push(CircleCaseKey {
+                        center_x,
+                        center_y,
+                        direction,
+                        alignment,
+                        reverse,
+                    });
+                }
+            }
+        }
+    }
+
+    result
+}
+
+fn build_circle_closest_cases(
+    pline: &Polyline<f64>,
+    case: CircleCaseKey,
+) -> Vec<CircleClosestCase> {
+    let mut result = Vec::new();
+    let v0 = pline.at(0).pos();
+    let v1 = pline.at(1).pos();
+
+    // addClosestPointOnVertexes in old C++ source.
+    result.push((v0, v0, 0.0, Some(0)));
+    result.push((v1, v1, 0.0, Some(1)));
+
+    // Axis-aligned probes around center in old C++ source.
+    result.push((
+        Vector2::new(case.center_x - 0.1, case.center_y),
+        Vector2::new(case.center_x - CIRCLE_RADIUS, case.center_y),
+        CIRCLE_RADIUS - 0.1,
+        None,
+    ));
+    result.push((
+        Vector2::new(case.center_x + 0.1, case.center_y),
+        Vector2::new(case.center_x + CIRCLE_RADIUS, case.center_y),
+        CIRCLE_RADIUS - 0.1,
+        None,
+    ));
+    result.push((
+        Vector2::new(case.center_x, case.center_y - 0.1),
+        Vector2::new(case.center_x, case.center_y - CIRCLE_RADIUS),
+        CIRCLE_RADIUS - 0.1,
+        None,
+    ));
+    result.push((
+        Vector2::new(case.center_x, case.center_y + 0.1),
+        Vector2::new(case.center_x, case.center_y + CIRCLE_RADIUS),
+        CIRCLE_RADIUS - 0.1,
+        None,
+    ));
+
+    // 45-degree inside/outside probes in old C++ source.
+    let inside_dist = CIRCLE_INSIDE_DIST_FACTOR * CIRCLE_RADIUS;
+    let outside_dist = CIRCLE_OUTSIDE_DIST_FACTOR * CIRCLE_RADIUS;
+    for i in 0..4 {
+        let theta = std::f64::consts::PI / 4.0 + (i as f64) * std::f64::consts::PI / 2.0;
+        let unit = Vector2::new(theta.cos(), theta.sin());
+        let inside = Vector2::new(
+            case.center_x + inside_dist * unit.x,
+            case.center_y + inside_dist * unit.y,
+        );
+        let outside = Vector2::new(
+            case.center_x + outside_dist * unit.x,
+            case.center_y + outside_dist * unit.y,
+        );
+        let on_circle = Vector2::new(
+            case.center_x + CIRCLE_RADIUS * unit.x,
+            case.center_y + CIRCLE_RADIUS * unit.y,
+        );
+        result.push((inside, on_circle, CIRCLE_RADIUS - inside_dist, None));
+        result.push((outside, on_circle, outside_dist - CIRCLE_RADIUS, None));
     }
 
     result
@@ -494,6 +652,130 @@ fn cpp_generated_half_circle_full_matrix_closest_point_strict_index_parity() {
                 "{context}: closest index mismatch at case #{idx} query={:?}",
                 expected.query
             );
+        }
+    }
+}
+
+#[test]
+fn cpp_generated_circle_full_matrix_metrics_winding_parity() {
+    for case in circle_matrix_cases() {
+        let context = circle_case_label(case);
+        let pline = build_circle_case(case);
+
+        let expected_area =
+            (case.direction as f64) * std::f64::consts::PI * CIRCLE_RADIUS * CIRCLE_RADIUS;
+        let expected_path_length = 2.0 * std::f64::consts::PI * CIRCLE_RADIUS;
+        assert_near(pline.area(), expected_area, &format!("{context}: area"));
+        assert_near(
+            pline.path_length(),
+            expected_path_length,
+            &format!("{context}: path_length"),
+        );
+
+        let ext = pline.extents().unwrap();
+        assert_near(
+            ext.min_x,
+            case.center_x - CIRCLE_RADIUS,
+            &format!("{context}: extents.min_x"),
+        );
+        assert_near(
+            ext.min_y,
+            case.center_y - CIRCLE_RADIUS,
+            &format!("{context}: extents.min_y"),
+        );
+        assert_near(
+            ext.max_x,
+            case.center_x + CIRCLE_RADIUS,
+            &format!("{context}: extents.max_x"),
+        );
+        assert_near(
+            ext.max_y,
+            case.center_y + CIRCLE_RADIUS,
+            &format!("{context}: extents.max_y"),
+        );
+
+        let outside = [
+            Vector2::new(case.center_x - CIRCLE_RADIUS - PROBE_DELTA, case.center_y),
+            Vector2::new(case.center_x + CIRCLE_RADIUS + PROBE_DELTA, case.center_y),
+            Vector2::new(case.center_x, case.center_y - CIRCLE_RADIUS - PROBE_DELTA),
+            Vector2::new(case.center_x, case.center_y + CIRCLE_RADIUS + PROBE_DELTA),
+        ];
+        for query in outside {
+            assert_eq!(
+                pline.winding_number(query),
+                0,
+                "{context}: winding_number outside mismatch for query={query:?}"
+            );
+        }
+
+        let inside_axis = [
+            Vector2::new(case.center_x, case.center_y),
+            Vector2::new(case.center_x - CIRCLE_RADIUS + PROBE_DELTA, case.center_y),
+            Vector2::new(case.center_x + CIRCLE_RADIUS - PROBE_DELTA, case.center_y),
+            Vector2::new(case.center_x, case.center_y - CIRCLE_RADIUS + PROBE_DELTA),
+            Vector2::new(case.center_x, case.center_y + CIRCLE_RADIUS - PROBE_DELTA),
+        ];
+        for query in inside_axis {
+            assert_eq!(
+                pline.winding_number(query),
+                case.direction,
+                "{context}: winding_number inside-axis mismatch for query={query:?}"
+            );
+        }
+
+        let inside_dist = CIRCLE_INSIDE_DIST_FACTOR * CIRCLE_RADIUS;
+        let outside_dist = CIRCLE_OUTSIDE_DIST_FACTOR * CIRCLE_RADIUS;
+        for i in 0..4 {
+            let theta = std::f64::consts::PI / 4.0 + (i as f64) * std::f64::consts::PI / 2.0;
+            let unit = Vector2::new(theta.cos(), theta.sin());
+            let inside = Vector2::new(
+                case.center_x + inside_dist * unit.x,
+                case.center_y + inside_dist * unit.y,
+            );
+            let outside = Vector2::new(
+                case.center_x + outside_dist * unit.x,
+                case.center_y + outside_dist * unit.y,
+            );
+
+            assert_eq!(
+                pline.winding_number(inside),
+                case.direction,
+                "{context}: winding_number inside-45 mismatch for query={inside:?}"
+            );
+            assert_eq!(
+                pline.winding_number(outside),
+                0,
+                "{context}: winding_number outside-45 mismatch for query={outside:?}"
+            );
+        }
+    }
+}
+
+#[test]
+fn cpp_generated_circle_full_matrix_closest_point_parity() {
+    for case in circle_matrix_cases() {
+        let context = circle_case_label(case);
+        let pline = build_circle_case(case);
+        let closest_cases = build_circle_closest_cases(&pline, case);
+        for (idx, (query, expected_point, expected_distance, expected_index)) in
+            closest_cases.iter().enumerate()
+        {
+            let result = pline.closest_point(*query, CLOSEST_QUERY_EPS).unwrap();
+            assert!(
+                result.seg_point.fuzzy_eq_eps(*expected_point, EPS),
+                "{context}: closest point mismatch at case #{idx} query={query:?}"
+            );
+            assert_near(
+                result.distance,
+                *expected_distance,
+                &format!("{context}: closest distance case #{idx}"),
+            );
+            if let Some(expected_idx) = expected_index {
+                assert_eq!(
+                    result.seg_start_index, *expected_idx,
+                    "{context}: closest index mismatch at case #{idx} query={query:?}"
+                );
+            }
         }
     }
 }
