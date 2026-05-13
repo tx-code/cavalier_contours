@@ -179,6 +179,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-97**: Options-path parallel-offset execution preserves input vertex data across source-backed simple/specific case matrices.
 - **PAR-98**: Options-path boolean circle/rectangle matrix execution preserves both subject and clip input vertex data across union/exclude/intersect/xor operations.
 - **PAR-99**: Options-path no-modify hardening closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-100**: Options-path boolean circle/rectangle matrix outputs are vertex-level equivalent to default-path outputs across union/exclude/intersect/xor (unordered polyline set, closed-rotation tolerant).
+- **PAR-101**: Options-path parallel-offset simple/specific matrix outputs are vertex-level equivalent to default-path outputs (unordered set, closed/open-aware matching).
+- **PAR-102**: Options-path vertex-output deepening closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -322,13 +325,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-97 | Phase 41 | Complete |
 | PAR-98 | Phase 41 | Complete |
 | PAR-99 | Phase 41 | Complete |
+| PAR-100 | Phase 42 | Complete |
+| PAR-101 | Phase 42 | Complete |
+| PAR-102 | Phase 42 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 99 (`PAR-01..PAR-99`), mapped to Phases 9-41
+- additional tracked post-v1 requirements: 102 (`PAR-01..PAR-102`), mapped to Phases 9-42
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 41 completion*
+*Last updated: 2026-05-14 after Phase 42 completion*

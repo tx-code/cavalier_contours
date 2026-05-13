@@ -667,6 +667,21 @@ Plans:
 - [x] 41-02: Publish post-hardening alignment map for options-path follow-up.
 - [x] 41-03: Close verification gates and sync planning state.
 
+### Phase 42: C-API Options-Path Vertex-Output Deepening (No Clipper)
+**Goal**: Deepen options-path parity by validating vertex-level output equivalence between default and options-path executions on source-backed boolean and offset matrices.
+**Depends on**: Phase 41
+**Requirements**: [PAR-100, PAR-101, PAR-102]
+**Success Criteria** (what must be TRUE):
+  1. Options-path boolean circle/rectangle operation matrix output matches default-path output at vertex level (unordered polyline set with closed rotation tolerance).
+  2. Options-path parallel-offset simple/specific matrix output matches default-path output at vertex level (unordered output set with closed/open matching rules).
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 42-01: Add options-path vertex-output deepening tests for boolean and offset matrix flows.
+- [x] 42-02: Publish post-deepening alignment map for options-path follow-up.
+- [x] 42-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -715,3 +730,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 39. C-API Equivalence-Zone Regression Hardening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 40. C-API Old-Suite Drift-Detection Hook (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 41. C-API Options-Path No-Modify Hardening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 42. C-API Options-Path Vertex-Output Deepening (No Clipper) | 3/3 | Complete   | 2026-05-14 |

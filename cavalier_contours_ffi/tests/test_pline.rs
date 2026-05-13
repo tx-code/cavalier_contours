@@ -239,6 +239,36 @@ fn run_boolean_props_with_options(
     }
 }
 
+fn run_boolean_vertexes_with_options(
+    pline1: *const cavc_pline,
+    pline2: *const cavc_pline,
+    operation: u32,
+    options: *const cavc_pline_boolean_o,
+) -> (Vec<Vec<cavc_vertex>>, Vec<Vec<cavc_vertex>>) {
+    let mut pos_plines = ptr::null();
+    let mut neg_plines = ptr::null();
+
+    unsafe {
+        assert_eq!(
+            cavc_pline_boolean(
+                pline1,
+                pline2,
+                operation,
+                options,
+                &mut pos_plines,
+                &mut neg_plines
+            ),
+            0
+        );
+
+        let pos = plinelist_vertexes(pos_plines);
+        let neg = plinelist_vertexes(neg_plines);
+        cavc_plinelist_f(pos_plines as *mut _);
+        cavc_plinelist_f(neg_plines as *mut _);
+        (pos, neg)
+    }
+}
+
 struct BooleanCase {
     name: &'static str,
     operation: u32,
@@ -300,6 +330,30 @@ fn run_parallel_offset_vertexes(pline: *const cavc_pline, delta: f64) -> Vec<Vec
     unsafe {
         assert_eq!(
             cavc_pline_parallel_offset(pline, delta, ptr::null(), &mut results),
+            0
+        );
+        let mut count = u32::MAX;
+        assert_eq!(cavc_plinelist_get_count(results, &mut count), 0);
+        let mut out = Vec::with_capacity(count as usize);
+        for i in 0..count {
+            let mut pline_out = ptr::null();
+            assert_eq!(cavc_plinelist_get_pline(results, i, &mut pline_out), 0);
+            out.push(read_vertices(pline_out));
+        }
+        cavc_plinelist_f(results as *mut _);
+        out
+    }
+}
+
+fn run_parallel_offset_vertexes_with_options(
+    pline: *const cavc_pline,
+    delta: f64,
+    options: *const cavc_pline_parallel_offset_o,
+) -> Vec<Vec<cavc_vertex>> {
+    let mut results = ptr::null();
+    unsafe {
+        assert_eq!(
+            cavc_pline_parallel_offset(pline, delta, options, &mut results),
             0
         );
         let mut count = u32::MAX;
@@ -384,6 +438,41 @@ fn assert_single_offset_vertex_match(
         open_vertexes_match_exact(&actual[0], expected)
     };
     assert!(matches, "{context}: offset vertex mismatch");
+}
+
+fn vertex_lists_match_unordered(
+    actual: &[Vec<cavc_vertex>],
+    expected: &[Vec<cavc_vertex>],
+    is_closed: bool,
+) -> bool {
+    if actual.len() != expected.len() {
+        return false;
+    }
+
+    let mut used = vec![false; actual.len()];
+    for expected_pline in expected {
+        let mut found = false;
+        for (i, actual_pline) in actual.iter().enumerate() {
+            if used[i] {
+                continue;
+            }
+            let matches = if is_closed {
+                closed_vertexes_match_with_rotation(actual_pline, expected_pline)
+            } else {
+                open_vertexes_match_exact(actual_pline, expected_pline)
+            };
+            if matches {
+                used[i] = true;
+                found = true;
+                break;
+            }
+        }
+        if !found {
+            return false;
+        }
+    }
+
+    true
 }
 
 fn cpp_offset_simple_cases() -> Vec<OffsetCase> {
@@ -3350,6 +3439,61 @@ fn pline_boolean_options_path_circle_rectangle_cpp_parity() {
 }
 
 #[test]
+fn pline_boolean_options_path_circle_rectangle_vertex_output_cpp_parity() {
+    let pline_a = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
+    let pline_b = create_pline(
+        &[
+            (3.0, -10.0, 0.0),
+            (6.0, -10.0, 0.0),
+            (6.0, 10.0, 0.0),
+            (3.0, 10.0, 0.0),
+        ],
+        true,
+    );
+
+    let mut options = cavc_pline_boolean_o {
+        pline1_aabb_index: std::ptr::null(),
+        pos_equal_eps: f64::NAN,
+        collapsed_area_eps: f64::NAN,
+    };
+
+    unsafe {
+        assert_eq!(cavc_pline_boolean_o_init(&mut options), 0);
+        let mut aabb1 = ptr::null();
+        assert_eq!(cavc_pline_create_approx_aabbindex(pline_a, &mut aabb1), 0);
+        options.pline1_aabb_index = aabb1;
+
+        for operation in [0_u32, 2_u32, 1_u32, 3_u32] {
+            let (default_remaining, default_subtracted) =
+                run_boolean_vertexes(pline_a, pline_b, operation);
+            let (opt_remaining, opt_subtracted) =
+                run_boolean_vertexes_with_options(pline_a, pline_b, operation, &options);
+
+            assert!(
+                vertex_lists_match_unordered(&opt_remaining, &default_remaining, true),
+                "boolean options remaining vertex mismatch for op={operation}\ndefault={default_remaining:?}\noptions={opt_remaining:?}"
+            );
+            assert!(
+                vertex_lists_match_unordered(&default_remaining, &opt_remaining, true),
+                "boolean options remaining reverse vertex mismatch for op={operation}\ndefault={default_remaining:?}\noptions={opt_remaining:?}"
+            );
+            assert!(
+                vertex_lists_match_unordered(&opt_subtracted, &default_subtracted, true),
+                "boolean options subtracted vertex mismatch for op={operation}\ndefault={default_subtracted:?}\noptions={opt_subtracted:?}"
+            );
+            assert!(
+                vertex_lists_match_unordered(&default_subtracted, &opt_subtracted, true),
+                "boolean options subtracted reverse vertex mismatch for op={operation}\ndefault={default_subtracted:?}\noptions={opt_subtracted:?}"
+            );
+        }
+
+        cavc_aabbindex_f(aabb1 as *mut _);
+        cavc_pline_f(pline_a);
+        cavc_pline_f(pline_b);
+    }
+}
+
+#[test]
 fn pline_boolean_options_coincident_case1_intersect_collapsed_filter_cpp_parity() {
     let (subject, clip) = cpp_coincident_case1_inputs();
     let pline_a = create_pline(&subject, true);
@@ -3651,6 +3795,51 @@ fn pline_parallel_offset_options_path_cpp_matrix_parity() {
                 props_set_match_ignore_area_sign(&option_props, &default_props, 1e-4)
                     && props_set_match_ignore_area_sign(&default_props, &option_props, 1e-4),
                 "parallel offset options mismatch for {}\ndefault={default_props:?}\noptions={option_props:?}",
+                case.name
+            );
+
+            cavc_aabbindex_f(aabb_index as *mut _);
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_parallel_offset_options_path_vertex_output_cpp_matrix_parity() {
+    for case in cpp_offset_simple_cases()
+        .into_iter()
+        .chain(cpp_offset_specific_cases())
+    {
+        let pline = create_pline(&case.input, case.is_closed);
+        let default_vertexes = run_parallel_offset_vertexes(pline, case.delta);
+
+        let mut options = cavc_pline_parallel_offset_o {
+            aabb_index: std::ptr::null(),
+            pos_equal_eps: f64::NAN,
+            slice_join_eps: f64::NAN,
+            offset_dist_eps: f64::NAN,
+            handle_self_intersects: 0,
+        };
+
+        unsafe {
+            assert_eq!(cavc_pline_parallel_offset_o_init(&mut options), 0);
+            let mut aabb_index = ptr::null();
+            assert_eq!(
+                cavc_pline_create_approx_aabbindex(pline, &mut aabb_index),
+                0
+            );
+            options.aabb_index = aabb_index;
+
+            let option_vertexes =
+                run_parallel_offset_vertexes_with_options(pline, case.delta, &options);
+            assert!(
+                vertex_lists_match_unordered(&option_vertexes, &default_vertexes, case.is_closed),
+                "parallel offset options vertex mismatch for {}\ndefault={default_vertexes:?}\noptions={option_vertexes:?}",
+                case.name
+            );
+            assert!(
+                vertex_lists_match_unordered(&default_vertexes, &option_vertexes, case.is_closed),
+                "parallel offset options reverse vertex mismatch for {}\ndefault={default_vertexes:?}\noptions={option_vertexes:?}",
                 case.name
             );
 
