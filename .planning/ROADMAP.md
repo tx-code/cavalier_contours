@@ -802,6 +802,21 @@ Plans:
 - [x] 50-02: Publish post-deepening alignment map for reversed no-modify stress-matrix follow-up.
 - [x] 50-03: Close verification gates and sync planning state.
 
+### Phase 51: C-API FFI Parity Helper Extraction (No Clipper)
+**Goal**: Reduce FFI parity test duplication by extracting shared mode/scale constants and options-init helper while preserving all existing parity/no-modify test behavior.
+**Depends on**: Phase 50
+**Requirements**: [PAR-127, PAR-128, PAR-129]
+**Success Criteria** (what must be TRUE):
+  1. Shared helper constructs for mode/scale matrix and options initialization are extracted into `test_pline.rs` and reused by relevant options-path parity tests.
+  2. Refactor does not change parity/no-modify test semantics; existing assertions remain behaviorally equivalent.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 51-01: Extract and apply shared helper constructs in FFI parity tests.
+- [x] 51-02: Publish post-extraction alignment map for next bounded targets.
+- [x] 51-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -859,3 +874,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 48. C-API Options-Path Self-Intersects Stress Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 49. C-API Options-Path Reversed Self-Intersects Stress Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 50. C-API Options-Path Reversed Self-Intersects No-Modify Stress Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 51. C-API FFI Parity Helper Extraction (No Clipper) | 3/3 | Complete   | 2026-05-14 |

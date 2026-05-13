@@ -206,6 +206,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-124**: Reversed-input options-path `parallel_offset` execution preserves input vertex data across self-intersects include mode matrix (`ALL`, `LOCAL`, `GLOBAL`) and bounded tolerance scales (`0.5x`, `1.0x`, `2.0x`) for source-backed simple and specific cases.
 - **PAR-125**: Reversed self-intersects no-modify stress-matrix parity explicitly validates input stability with mode/scale attribution.
 - **PAR-126**: Reversed self-intersects no-modify stress-matrix phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-127**: FFI parity tests extract shared helper constructs for self-intersects include mode matrix and tolerance scale matrix setup in `test_pline.rs`.
+- **PAR-128**: FFI parity helper extraction preserves behavior of existing options-path parity/no-modify assertions and keeps semantic outputs unchanged.
+- **PAR-129**: FFI parity helper-extraction phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -376,13 +379,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-124 | Phase 50 | Complete |
 | PAR-125 | Phase 50 | Complete |
 | PAR-126 | Phase 50 | Complete |
+| PAR-127 | Phase 51 | Complete |
+| PAR-128 | Phase 51 | Complete |
+| PAR-129 | Phase 51 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 126 (`PAR-01..PAR-126`), mapped to Phases 9-50
+- additional tracked post-v1 requirements: 129 (`PAR-01..PAR-129`), mapped to Phases 9-51
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 50 completion*
+*Last updated: 2026-05-14 after Phase 51 completion*

@@ -369,6 +369,16 @@ fn run_parallel_offset_vertexes_with_options(
     }
 }
 
+fn init_parallel_offset_options() -> cavc_pline_parallel_offset_o {
+    cavc_pline_parallel_offset_o {
+        aabb_index: std::ptr::null(),
+        pos_equal_eps: f64::NAN,
+        slice_join_eps: f64::NAN,
+        offset_dist_eps: f64::NAN,
+        handle_self_intersects: 0,
+    }
+}
+
 fn read_vertices(pline: *const cavc_pline) -> Vec<cavc_vertex> {
     let mut count = u32::MAX;
     unsafe {
@@ -769,6 +779,12 @@ const CPP_CIRCLE_RADIUS: f64 = 5.0;
 const CPP_CIRCLE_INSIDE_DIST_FACTOR: f64 = 0.33;
 const CPP_CIRCLE_OUTSIDE_DIST_FACTOR: f64 = 1.5;
 const CPP_CLOSEST_EPS_MATRIX: [f64; 4] = [1e-9, 1e-7, 1e-5, 1e-4];
+const CPP_TOLERANCE_SCALE_MATRIX: [f64; 3] = [0.5_f64, 1.0_f64, 2.0_f64];
+const CPP_SELF_INTERSECTS_INCLUDE_MODES: [u32; 3] = [
+    CAVC_SELF_INTERSECTS_INCLUDE_ALL,
+    CAVC_SELF_INTERSECTS_INCLUDE_LOCAL,
+    CAVC_SELF_INTERSECTS_INCLUDE_GLOBAL,
+];
 
 #[derive(Copy, Clone)]
 enum CircleAlignment {
@@ -2355,13 +2371,7 @@ fn pline_eval_parallel_offset() {
     {
         let pline = create_pline(&[(0.0, 0.0, 1.0), (2.0, 0.0, 1.0)], true);
         let offset = -1.0;
-        let mut options = cavc_pline_parallel_offset_o {
-            aabb_index: std::ptr::null(),
-            pos_equal_eps: f64::NAN,
-            slice_join_eps: f64::NAN,
-            offset_dist_eps: f64::NAN,
-            handle_self_intersects: 0,
-        };
+        let mut options = init_parallel_offset_options();
 
         let mut results = ptr::null();
         unsafe {
@@ -3994,13 +4004,7 @@ fn pline_parallel_offset_options_path_cpp_matrix_parity() {
         let pline = create_pline(&case.input, case.is_closed);
         let default_props = run_parallel_offset_props(pline, case.delta);
 
-        let mut options = cavc_pline_parallel_offset_o {
-            aabb_index: std::ptr::null(),
-            pos_equal_eps: f64::NAN,
-            slice_join_eps: f64::NAN,
-            offset_dist_eps: f64::NAN,
-            handle_self_intersects: 0,
-        };
+        let mut options = init_parallel_offset_options();
 
         unsafe {
             assert_eq!(cavc_pline_parallel_offset_o_init(&mut options), 0);
@@ -4080,13 +4084,7 @@ fn pline_parallel_offset_options_path_tolerance_matrix_cpp_parity() {
         let default_props = run_parallel_offset_props(pline, case.delta);
         let default_vertexes = run_parallel_offset_vertexes(pline, case.delta);
 
-        let mut default_options = cavc_pline_parallel_offset_o {
-            aabb_index: std::ptr::null(),
-            pos_equal_eps: f64::NAN,
-            slice_join_eps: f64::NAN,
-            offset_dist_eps: f64::NAN,
-            handle_self_intersects: 0,
-        };
+        let mut default_options = init_parallel_offset_options();
 
         unsafe {
             assert_eq!(cavc_pline_parallel_offset_o_init(&mut default_options), 0);
@@ -4100,7 +4098,7 @@ fn pline_parallel_offset_options_path_tolerance_matrix_cpp_parity() {
                 0
             );
 
-            for scale in [0.5_f64, 1.0_f64, 2.0_f64] {
+            for scale in CPP_TOLERANCE_SCALE_MATRIX {
                 let options = cavc_pline_parallel_offset_o {
                     aabb_index,
                     pos_equal_eps: base_pos_equal_eps * scale,
@@ -4148,13 +4146,7 @@ fn pline_parallel_offset_options_path_self_intersects_mode_matrix_cpp_parity() {
         let default_props = run_parallel_offset_props(pline, case.delta);
         let default_vertexes = run_parallel_offset_vertexes(pline, case.delta);
 
-        let mut default_options = cavc_pline_parallel_offset_o {
-            aabb_index: std::ptr::null(),
-            pos_equal_eps: f64::NAN,
-            slice_join_eps: f64::NAN,
-            offset_dist_eps: f64::NAN,
-            handle_self_intersects: 0,
-        };
+        let mut default_options = init_parallel_offset_options();
 
         unsafe {
             assert_eq!(cavc_pline_parallel_offset_o_init(&mut default_options), 0);
@@ -4165,11 +4157,7 @@ fn pline_parallel_offset_options_path_self_intersects_mode_matrix_cpp_parity() {
                 0
             );
 
-            for mode in [
-                CAVC_SELF_INTERSECTS_INCLUDE_ALL,
-                CAVC_SELF_INTERSECTS_INCLUDE_LOCAL,
-                CAVC_SELF_INTERSECTS_INCLUDE_GLOBAL,
-            ] {
+            for mode in CPP_SELF_INTERSECTS_INCLUDE_MODES {
                 let options = cavc_pline_parallel_offset_o {
                     aabb_index,
                     pos_equal_eps: default_options.pos_equal_eps,
@@ -4220,13 +4208,7 @@ fn pline_parallel_offset_options_path_self_intersects_mode_stress_matrix_cpp_par
         let default_props = run_parallel_offset_props(pline, case.delta);
         let default_vertexes = run_parallel_offset_vertexes(pline, case.delta);
 
-        let mut default_options = cavc_pline_parallel_offset_o {
-            aabb_index: std::ptr::null(),
-            pos_equal_eps: f64::NAN,
-            slice_join_eps: f64::NAN,
-            offset_dist_eps: f64::NAN,
-            handle_self_intersects: 0,
-        };
+        let mut default_options = init_parallel_offset_options();
 
         unsafe {
             assert_eq!(cavc_pline_parallel_offset_o_init(&mut default_options), 0);
@@ -4237,12 +4219,8 @@ fn pline_parallel_offset_options_path_self_intersects_mode_stress_matrix_cpp_par
                 0
             );
 
-            for mode in [
-                CAVC_SELF_INTERSECTS_INCLUDE_ALL,
-                CAVC_SELF_INTERSECTS_INCLUDE_LOCAL,
-                CAVC_SELF_INTERSECTS_INCLUDE_GLOBAL,
-            ] {
-                for scale in [0.5_f64, 1.0_f64, 2.0_f64] {
+            for mode in CPP_SELF_INTERSECTS_INCLUDE_MODES {
+                for scale in CPP_TOLERANCE_SCALE_MATRIX {
                     let options = cavc_pline_parallel_offset_o {
                         aabb_index,
                         pos_equal_eps: default_options.pos_equal_eps * scale,
@@ -4296,20 +4274,10 @@ fn pline_parallel_offset_options_path_self_intersects_mode_does_not_modify_input
         .into_iter()
         .chain(cpp_offset_specific_cases())
     {
-        for mode in [
-            CAVC_SELF_INTERSECTS_INCLUDE_ALL,
-            CAVC_SELF_INTERSECTS_INCLUDE_LOCAL,
-            CAVC_SELF_INTERSECTS_INCLUDE_GLOBAL,
-        ] {
+        for mode in CPP_SELF_INTERSECTS_INCLUDE_MODES {
             let pline = create_pline(&case.input, case.is_closed);
             let before = read_vertices(pline);
-            let mut options = cavc_pline_parallel_offset_o {
-                aabb_index: std::ptr::null(),
-                pos_equal_eps: f64::NAN,
-                slice_join_eps: f64::NAN,
-                offset_dist_eps: f64::NAN,
-                handle_self_intersects: 0,
-            };
+            let mut options = init_parallel_offset_options();
 
             unsafe {
                 assert_eq!(cavc_pline_parallel_offset_o_init(&mut options), 0);
@@ -4348,13 +4316,7 @@ fn pline_parallel_offset_options_path_reversed_self_intersects_stress_matrix_cpp
         let default_props = run_parallel_offset_props(pline, delta);
         let default_vertexes = run_parallel_offset_vertexes(pline, delta);
 
-        let mut default_options = cavc_pline_parallel_offset_o {
-            aabb_index: std::ptr::null(),
-            pos_equal_eps: f64::NAN,
-            slice_join_eps: f64::NAN,
-            offset_dist_eps: f64::NAN,
-            handle_self_intersects: 0,
-        };
+        let mut default_options = init_parallel_offset_options();
 
         unsafe {
             assert_eq!(cavc_pline_parallel_offset_o_init(&mut default_options), 0);
@@ -4365,12 +4327,8 @@ fn pline_parallel_offset_options_path_reversed_self_intersects_stress_matrix_cpp
                 0
             );
 
-            for mode in [
-                CAVC_SELF_INTERSECTS_INCLUDE_ALL,
-                CAVC_SELF_INTERSECTS_INCLUDE_LOCAL,
-                CAVC_SELF_INTERSECTS_INCLUDE_GLOBAL,
-            ] {
-                for scale in [0.5_f64, 1.0_f64, 2.0_f64] {
+            for mode in CPP_SELF_INTERSECTS_INCLUDE_MODES {
+                for scale in CPP_TOLERANCE_SCALE_MATRIX {
                     let options = cavc_pline_parallel_offset_o {
                         aabb_index,
                         pos_equal_eps: default_options.pos_equal_eps * scale,
@@ -4432,13 +4390,7 @@ fn pline_parallel_offset_options_path_reversed_self_intersects_stress_does_not_m
         let delta = -case.delta;
         let before = read_vertices(pline);
 
-        let mut default_options = cavc_pline_parallel_offset_o {
-            aabb_index: std::ptr::null(),
-            pos_equal_eps: f64::NAN,
-            slice_join_eps: f64::NAN,
-            offset_dist_eps: f64::NAN,
-            handle_self_intersects: 0,
-        };
+        let mut default_options = init_parallel_offset_options();
 
         unsafe {
             assert_eq!(cavc_pline_parallel_offset_o_init(&mut default_options), 0);
@@ -4448,12 +4400,8 @@ fn pline_parallel_offset_options_path_reversed_self_intersects_stress_does_not_m
                 0
             );
 
-            for mode in [
-                CAVC_SELF_INTERSECTS_INCLUDE_ALL,
-                CAVC_SELF_INTERSECTS_INCLUDE_LOCAL,
-                CAVC_SELF_INTERSECTS_INCLUDE_GLOBAL,
-            ] {
-                for scale in [0.5_f64, 1.0_f64, 2.0_f64] {
+            for mode in CPP_SELF_INTERSECTS_INCLUDE_MODES {
+                for scale in CPP_TOLERANCE_SCALE_MATRIX {
                     let options = cavc_pline_parallel_offset_o {
                         aabb_index,
                         pos_equal_eps: default_options.pos_equal_eps * scale,
@@ -4483,13 +4431,7 @@ fn pline_parallel_offset_options_path_does_not_modify_input_cpp_parity() {
         let pline = create_pline(&case.input, case.is_closed);
         let before = read_vertices(pline);
 
-        let mut options = cavc_pline_parallel_offset_o {
-            aabb_index: std::ptr::null(),
-            pos_equal_eps: f64::NAN,
-            slice_join_eps: f64::NAN,
-            offset_dist_eps: f64::NAN,
-            handle_self_intersects: 0,
-        };
+        let mut options = init_parallel_offset_options();
 
         unsafe {
             assert_eq!(cavc_pline_parallel_offset_o_init(&mut options), 0);
