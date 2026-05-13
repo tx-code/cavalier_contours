@@ -1057,6 +1057,21 @@ Plans:
 - [x] 67-02: Publish post-canonicalization alignment map for next bounded targets.
 - [x] 67-03: Close verification gates and sync planning state.
 
+### Phase 68: C-API Coincident Matrix Helper Extraction (No Clipper)
+**Goal**: Reduce C-API coincident matrix drift risk by reusing one shared source-backed case helper across matrix suites while preserving behavior.
+**Depends on**: Phase 67
+**Requirements**: [PAR-178, PAR-179, PAR-180]
+**Success Criteria** (what must be TRUE):
+  1. Default/options/no-modify/output coincident matrix suites consume a shared source-backed case helper.
+  2. Helper extraction preserves canonical names, operation mapping, and existing behavior/assertion outcomes.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 68-01: Extract and apply shared coincident matrix case helper in FFI tests.
+- [x] 68-02: Publish post-extraction alignment map for next bounded targets.
+- [x] 68-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1131,3 +1146,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 65. C-API Specific-Edge Matrix Open-Rectangle-Inward Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 66. C-API Specific-Edge Matrix Source-Coverage Guard (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 67. C-API Coincident Exclude Name Canonicalization (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 68. C-API Coincident Matrix Helper Extraction (No Clipper) | 3/3 | Complete   | 2026-05-14 |

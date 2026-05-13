@@ -805,6 +805,80 @@ fn cpp_coincident_case2_inputs() -> (PlineInput, PlineInput) {
     )
 }
 
+struct CoincidentMatrixCase {
+    name: &'static str,
+    operation: u32,
+    subject: PlineInput,
+    clip: PlineInput,
+}
+
+fn cpp_coincident_boolean_matrix_cases() -> Vec<CoincidentMatrixCase> {
+    let (case1_a, case1_b) = cpp_coincident_case1_inputs();
+    let (case2_a, case2_b) = cpp_coincident_case2_inputs();
+    vec![
+        CoincidentMatrixCase {
+            name: "coincident_case1_union",
+            operation: 0,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        CoincidentMatrixCase {
+            name: "coincident_case1_excludeAFromB",
+            operation: 2,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        CoincidentMatrixCase {
+            name: "coincident_case1_excludeBFromA",
+            operation: 2,
+            subject: case1_b.clone(),
+            clip: case1_a.clone(),
+        },
+        CoincidentMatrixCase {
+            name: "coincident_case1_intersect",
+            operation: 1,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        CoincidentMatrixCase {
+            name: "coincident_case1_xor",
+            operation: 3,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        CoincidentMatrixCase {
+            name: "coincident_case2_union",
+            operation: 0,
+            subject: case2_a.clone(),
+            clip: case2_b.clone(),
+        },
+        CoincidentMatrixCase {
+            name: "coincident_case2_excludeAFromB",
+            operation: 2,
+            subject: case2_a.clone(),
+            clip: case2_b.clone(),
+        },
+        CoincidentMatrixCase {
+            name: "coincident_case2_excludeBFromA",
+            operation: 2,
+            subject: case2_b.clone(),
+            clip: case2_a.clone(),
+        },
+        CoincidentMatrixCase {
+            name: "coincident_case2_intersect",
+            operation: 1,
+            subject: case2_a.clone(),
+            clip: case2_b.clone(),
+        },
+        CoincidentMatrixCase {
+            name: "coincident_case2_xor",
+            operation: 3,
+            subject: case2_a,
+            clip: case2_b,
+        },
+    ]
+}
+
 const CPP_MATRIX_EPS: f64 = 1e-4;
 const CPP_PROBE_DELTA: f64 = 0.01;
 const CPP_CIRCLE_RADIUS: f64 = 5.0;
@@ -3048,79 +3122,7 @@ fn pline_boolean_does_not_modify_input_cpp_parity() {
 
 #[test]
 fn pline_boolean_coincident_matrices_do_not_modify_input_cpp_parity() {
-    struct NoModifyCase {
-        name: &'static str,
-        operation: u32,
-        subject: Vec<(f64, f64, f64)>,
-        clip: Vec<(f64, f64, f64)>,
-    }
-
-    // FFI operation mapping:
-    // 0 = Or, 1 = And, 2 = Not, 3 = Xor
-    let (case1_a, case1_b) = cpp_coincident_case1_inputs();
-    let (case2_a, case2_b) = cpp_coincident_case2_inputs();
-    let cases = vec![
-        NoModifyCase {
-            name: "coincident_case1_union",
-            operation: 0,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case1_excludeAFromB",
-            operation: 2,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case1_excludeBFromA",
-            operation: 2,
-            subject: case1_b.clone(),
-            clip: case1_a.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case1_intersect",
-            operation: 1,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case1_xor",
-            operation: 3,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case2_union",
-            operation: 0,
-            subject: case2_a.clone(),
-            clip: case2_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case2_excludeAFromB",
-            operation: 2,
-            subject: case2_a.clone(),
-            clip: case2_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case2_excludeBFromA",
-            operation: 2,
-            subject: case2_b.clone(),
-            clip: case2_a.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case2_intersect",
-            operation: 1,
-            subject: case2_a.clone(),
-            clip: case2_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case2_xor",
-            operation: 3,
-            subject: case2_a,
-            clip: case2_b,
-        },
-    ];
+    let cases = cpp_coincident_boolean_matrix_cases();
 
     for case in cases {
         let pline_a = create_pline(&case.subject, true);
@@ -3666,77 +3668,7 @@ fn pline_boolean_options_coincident_case1_intersect_collapsed_filter_cpp_parity(
 
 #[test]
 fn pline_boolean_options_coincident_matrices_do_not_modify_input_cpp_parity() {
-    struct NoModifyCase {
-        name: &'static str,
-        operation: u32,
-        subject: PlineInput,
-        clip: PlineInput,
-    }
-
-    let (case1_a, case1_b) = cpp_coincident_case1_inputs();
-    let (case2_a, case2_b) = cpp_coincident_case2_inputs();
-    let cases = vec![
-        NoModifyCase {
-            name: "coincident_case1_union",
-            operation: 0,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case1_excludeAFromB",
-            operation: 2,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case1_excludeBFromA",
-            operation: 2,
-            subject: case1_b.clone(),
-            clip: case1_a.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case1_intersect",
-            operation: 1,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case1_xor",
-            operation: 3,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case2_union",
-            operation: 0,
-            subject: case2_a.clone(),
-            clip: case2_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case2_excludeAFromB",
-            operation: 2,
-            subject: case2_a.clone(),
-            clip: case2_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case2_excludeBFromA",
-            operation: 2,
-            subject: case2_b.clone(),
-            clip: case2_a.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case2_intersect",
-            operation: 1,
-            subject: case2_a.clone(),
-            clip: case2_b.clone(),
-        },
-        NoModifyCase {
-            name: "coincident_case2_xor",
-            operation: 3,
-            subject: case2_a,
-            clip: case2_b,
-        },
-    ];
+    let cases = cpp_coincident_boolean_matrix_cases();
 
     for case in cases {
         let pline_a = create_pline(&case.subject, true);
@@ -3786,77 +3718,7 @@ fn pline_boolean_options_coincident_matrices_do_not_modify_input_cpp_parity() {
 
 #[test]
 fn pline_boolean_options_coincident_matrices_output_cpp_parity() {
-    struct OutputParityCase {
-        name: &'static str,
-        operation: u32,
-        subject: PlineInput,
-        clip: PlineInput,
-    }
-
-    let (case1_a, case1_b) = cpp_coincident_case1_inputs();
-    let (case2_a, case2_b) = cpp_coincident_case2_inputs();
-    let cases = vec![
-        OutputParityCase {
-            name: "coincident_case1_union",
-            operation: 0,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        OutputParityCase {
-            name: "coincident_case1_excludeAFromB",
-            operation: 2,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        OutputParityCase {
-            name: "coincident_case1_excludeBFromA",
-            operation: 2,
-            subject: case1_b.clone(),
-            clip: case1_a.clone(),
-        },
-        OutputParityCase {
-            name: "coincident_case1_intersect",
-            operation: 1,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        OutputParityCase {
-            name: "coincident_case1_xor",
-            operation: 3,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        OutputParityCase {
-            name: "coincident_case2_union",
-            operation: 0,
-            subject: case2_a.clone(),
-            clip: case2_b.clone(),
-        },
-        OutputParityCase {
-            name: "coincident_case2_excludeAFromB",
-            operation: 2,
-            subject: case2_a.clone(),
-            clip: case2_b.clone(),
-        },
-        OutputParityCase {
-            name: "coincident_case2_excludeBFromA",
-            operation: 2,
-            subject: case2_b.clone(),
-            clip: case2_a.clone(),
-        },
-        OutputParityCase {
-            name: "coincident_case2_intersect",
-            operation: 1,
-            subject: case2_a.clone(),
-            clip: case2_b.clone(),
-        },
-        OutputParityCase {
-            name: "coincident_case2_xor",
-            operation: 3,
-            subject: case2_a,
-            clip: case2_b,
-        },
-    ];
+    let cases = cpp_coincident_boolean_matrix_cases();
 
     for case in cases {
         let pline_a = create_pline(&case.subject, true);
@@ -3904,77 +3766,7 @@ fn pline_boolean_options_coincident_matrices_output_cpp_parity() {
 
 #[test]
 fn pline_boolean_options_coincident_matrices_vertex_output_cpp_parity() {
-    struct OutputCase {
-        name: &'static str,
-        operation: u32,
-        subject: PlineInput,
-        clip: PlineInput,
-    }
-
-    let (case1_a, case1_b) = cpp_coincident_case1_inputs();
-    let (case2_a, case2_b) = cpp_coincident_case2_inputs();
-    let cases = vec![
-        OutputCase {
-            name: "coincident_case1_union",
-            operation: 0,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        OutputCase {
-            name: "coincident_case1_excludeAFromB",
-            operation: 2,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        OutputCase {
-            name: "coincident_case1_excludeBFromA",
-            operation: 2,
-            subject: case1_b.clone(),
-            clip: case1_a.clone(),
-        },
-        OutputCase {
-            name: "coincident_case1_intersect",
-            operation: 1,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        OutputCase {
-            name: "coincident_case1_xor",
-            operation: 3,
-            subject: case1_a.clone(),
-            clip: case1_b.clone(),
-        },
-        OutputCase {
-            name: "coincident_case2_union",
-            operation: 0,
-            subject: case2_a.clone(),
-            clip: case2_b.clone(),
-        },
-        OutputCase {
-            name: "coincident_case2_excludeAFromB",
-            operation: 2,
-            subject: case2_a.clone(),
-            clip: case2_b.clone(),
-        },
-        OutputCase {
-            name: "coincident_case2_excludeBFromA",
-            operation: 2,
-            subject: case2_b.clone(),
-            clip: case2_a.clone(),
-        },
-        OutputCase {
-            name: "coincident_case2_intersect",
-            operation: 1,
-            subject: case2_a.clone(),
-            clip: case2_b.clone(),
-        },
-        OutputCase {
-            name: "coincident_case2_xor",
-            operation: 3,
-            subject: case2_a,
-            clip: case2_b,
-        },
-    ];
+    let cases = cpp_coincident_boolean_matrix_cases();
 
     for case in cases {
         let pline_a = create_pline(&case.subject, true);

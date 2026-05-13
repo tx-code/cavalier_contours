@@ -257,6 +257,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-175**: Coincident case1/case2 exclude metadata labels in C-API boolean matrix suites use old C++ canonical identifiers (`excludeAFromB`, `excludeBFromA`).
 - **PAR-176**: Coincident exclude naming canonicalization preserves behavior of default/options/no-modify matrix assertions and expected outputs.
 - **PAR-177**: Coincident exclude naming canonicalization phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-178**: C-API coincident matrix suites reuse one shared source-backed case helper for `name`, `operation`, `subject`, and `clip` metadata.
+- **PAR-179**: Shared helper extraction preserves canonical naming, operation mapping, and behavioral assertions across default/options/no-modify/output matrix suites.
+- **PAR-180**: C-API coincident matrix helper extraction phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -478,13 +481,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-175 | Phase 67 | Complete |
 | PAR-176 | Phase 67 | Complete |
 | PAR-177 | Phase 67 | Complete |
+| PAR-178 | Phase 68 | Complete |
+| PAR-179 | Phase 68 | Complete |
+| PAR-180 | Phase 68 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 177 (`PAR-01..PAR-177`), mapped to Phases 9-67
+- additional tracked post-v1 requirements: 180 (`PAR-01..PAR-180`), mapped to Phases 9-68
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 67 completion*
+*Last updated: 2026-05-14 after Phase 68 completion*
