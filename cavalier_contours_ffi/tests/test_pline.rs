@@ -178,6 +178,284 @@ struct BooleanCaseWithInputs {
     expected_subtracted: Vec<PlineProps>,
 }
 
+struct OffsetCase {
+    name: &'static str,
+    delta: f64,
+    is_closed: bool,
+    input: Vec<(f64, f64, f64)>,
+    expected: Vec<PlineProps>,
+}
+
+fn run_parallel_offset_props(pline: *const cavc_pline, delta: f64) -> Vec<PlineProps> {
+    let mut results = ptr::null();
+    unsafe {
+        assert_eq!(
+            cavc_pline_parallel_offset(pline, delta, ptr::null(), &mut results),
+            0
+        );
+        let props = plinelist_props(results);
+        cavc_plinelist_f(results as *mut _);
+        props
+    }
+}
+
+fn read_vertices(pline: *const cavc_pline) -> Vec<cavc_vertex> {
+    let mut count = u32::MAX;
+    unsafe {
+        assert_eq!(cavc_pline_get_vertex_count(pline, &mut count), 0);
+    }
+    let mut result = Vec::with_capacity(count as usize);
+    for i in 0..count {
+        let mut v = cavc_vertex::new(0.0, 0.0, 0.0);
+        unsafe {
+            assert_eq!(cavc_pline_get_vertex(pline, i, &mut v), 0);
+        }
+        result.push(v);
+    }
+    result
+}
+
+fn cpp_offset_simple_cases() -> Vec<OffsetCase> {
+    vec![
+        OffsetCase {
+            name: "closed_rectangle_inward",
+            delta: 2.0,
+            is_closed: true,
+            input: vec![
+                (0.0, 0.0, 0.0),
+                (20.0, 0.0, 0.0),
+                (20.0, 10.0, 0.0),
+                (0.0, 10.0, 0.0),
+            ],
+            expected: vec![PlineProps::new(4, 96.0, 44.0, 2.0, 2.0, 18.0, 8.0)],
+        },
+        OffsetCase {
+            name: "open_rectangle_inward",
+            delta: 2.0,
+            is_closed: false,
+            input: vec![
+                (0.0, 0.0, 0.0),
+                (20.0, 0.0, 0.0),
+                (20.0, 10.0, 0.0),
+                (0.0, 10.0, 0.0),
+                (0.0, 0.0, 0.0),
+            ],
+            expected: vec![PlineProps::new(5, 0.0, 44.0, 2.0, 2.0, 18.0, 8.0)],
+        },
+        OffsetCase {
+            name: "closed_rectangle_outward",
+            delta: -2.0,
+            is_closed: true,
+            input: vec![
+                (0.0, 0.0, 0.0),
+                (20.0, 0.0, 0.0),
+                (20.0, 10.0, 0.0),
+                (0.0, 10.0, 0.0),
+            ],
+            expected: vec![PlineProps::new(
+                8,
+                332.56637061436,
+                72.566370614359,
+                -2.0,
+                -2.0,
+                22.0,
+                12.0,
+            )],
+        },
+        OffsetCase {
+            name: "open_rectangle_outward",
+            delta: -2.0,
+            is_closed: false,
+            input: vec![
+                (0.0, 0.0, 0.0),
+                (20.0, 0.0, 0.0),
+                (20.0, 10.0, 0.0),
+                (0.0, 10.0, 0.0),
+                (0.0, 0.0, 0.0),
+            ],
+            expected: vec![PlineProps::new(
+                8,
+                0.0,
+                69.424777960769,
+                -2.0,
+                -2.0,
+                22.0,
+                12.0,
+            )],
+        },
+        OffsetCase {
+            name: "closed_rectangle_coincident",
+            delta: 5.0,
+            is_closed: true,
+            input: vec![
+                (0.0, 0.0, 0.0),
+                (20.0, 0.0, 0.0),
+                (20.0, 10.0, 0.0),
+                (0.0, 10.0, 0.0),
+            ],
+            expected: vec![PlineProps::new(2, 0.0, 20.0, 5.0, 5.0, 15.0, 5.0)],
+        },
+        OffsetCase {
+            name: "closed_diamond_inward",
+            delta: -5.0,
+            is_closed: true,
+            input: vec![
+                (-10.0, 0.0, 0.0),
+                (0.0, 10.0, 0.0),
+                (10.0, 0.0, 0.0),
+                (0.0, -10.0, 0.0),
+            ],
+            expected: vec![PlineProps::new(
+                4,
+                -17.157287525381,
+                16.568542494924,
+                -2.9289321881345,
+                -2.9289321881345,
+                2.9289321881345,
+                2.9289321881345,
+            )],
+        },
+        OffsetCase {
+            name: "open_diamond_inward",
+            delta: -5.0,
+            is_closed: false,
+            input: vec![
+                (-10.0, 0.0, 0.0),
+                (0.0, 10.0, 0.0),
+                (10.0, 0.0, 0.0),
+                (0.0, -10.0, 0.0),
+                (-10.0, 0.0, 0.0),
+            ],
+            expected: vec![PlineProps::new(
+                5,
+                0.0,
+                16.568542494924,
+                -2.9289321881345,
+                -2.9289321881345,
+                2.9289321881345,
+                2.9289321881345,
+            )],
+        },
+        OffsetCase {
+            name: "closed_diamond_outward",
+            delta: 5.0,
+            is_closed: true,
+            input: vec![
+                (-10.0, 0.0, 0.0),
+                (0.0, 10.0, 0.0),
+                (10.0, 0.0, 0.0),
+                (0.0, -10.0, 0.0),
+            ],
+            expected: vec![PlineProps::new(
+                8,
+                -561.38252881436,
+                87.984469030822,
+                -15.0,
+                -15.0,
+                15.0,
+                15.0,
+            )],
+        },
+        OffsetCase {
+            name: "open_diamond_outward",
+            delta: 5.0,
+            is_closed: false,
+            input: vec![
+                (-10.0, 0.0, 0.0),
+                (0.0, 10.0, 0.0),
+                (10.0, 0.0, 0.0),
+                (0.0, -10.0, 0.0),
+                (-10.0, 0.0, 0.0),
+            ],
+            expected: vec![PlineProps::new(
+                8,
+                0.0,
+                80.130487396847,
+                -13.535533905933,
+                -15.0,
+                15.0,
+                15.0,
+            )],
+        },
+    ]
+}
+
+fn cpp_offset_specific_cases() -> Vec<OffsetCase> {
+    vec![
+        OffsetCase {
+            name: "offset_arc_just_past_line1",
+            delta: 0.1,
+            is_closed: true,
+            input: vec![
+                (27.804688, 1.0, 0.0),
+                (28.46842055794889, 0.3429054695163245, 0.0),
+                (32.34577133994935, 0.9269762697003898, 0.0),
+                (32.38116957207762, 1.451312562563487, 0.0),
+                (31.5, 1.0, -0.31783751349740424),
+                (30.79289310940682, 1.5, 0.0),
+                (29.20710689059337, 1.5, -0.31783754777018053),
+                (28.49999981323106, 1.00000000000007, 0.0),
+            ],
+            expected: vec![
+                PlineProps::new(
+                    4,
+                    0.094833810726263,
+                    1.8213211761499,
+                    31.533345690439,
+                    0.90572346564886,
+                    32.26949555256,
+                    1.2817628453883,
+                ),
+                PlineProps::new(
+                    6,
+                    1.7197931450343,
+                    7.5140262005179,
+                    28.047835685678,
+                    0.44926177903859,
+                    31.495431966272,
+                    1.4,
+                ),
+            ],
+        },
+        OffsetCase {
+            name: "intersect_ontop_first_vertex",
+            delta: 0.25,
+            is_closed: true,
+            input: vec![
+                (27.804688, 1.0, 0.0),
+                (27.804688, 0.75, 0.0),
+                (32.195313, 0.75, 0.0),
+                (32.195313, 1.0, 0.0),
+                (31.5, 1.0, -0.3178375134974),
+                (30.792893109407, 1.5, 0.0),
+                (29.207106890593, 1.5, -0.31783754777018),
+                (28.499999813231, 1.0000000000001, 0.0),
+            ],
+            expected: vec![PlineProps::new(
+                4,
+                0.36247092523069,
+                3.593999211522,
+                29.16143806012,
+                1.0,
+                30.838561906052,
+                1.25,
+            )],
+        },
+        OffsetCase {
+            name: "collapsed_rectangle",
+            delta: 30.0,
+            is_closed: true,
+            input: vec![
+                (0.0, 0.0, 0.0),
+                (120.0, 0.0, 0.0),
+                (120.0, 40.0, 0.0),
+                (0.0, 40.0, 0.0),
+            ],
+            expected: vec![],
+        },
+    ]
+}
+
 #[test]
 fn pline_data_manipulation() {
     let pline = create_pline(&[], true);
@@ -1277,6 +1555,91 @@ fn pline_boolean_combine_with_self_invariants_cpp_parity() {
     unsafe {
         cavc_pline_f(pline);
         cavc_pline_f(rev_pline as *mut _);
+    }
+}
+
+#[test]
+fn pline_parallel_offset_cpp_simple_matrix_parity() {
+    for case in cpp_offset_simple_cases() {
+        let pline = create_pline(&case.input, case.is_closed);
+        let actual = run_parallel_offset_props(pline, case.delta);
+        assert!(
+            props_set_match_ignore_area_sign(&actual, &case.expected, 1e-4),
+            "parallel offset simple-case mismatch for {}\nactual={actual:?}\nexpected={:?}",
+            case.name,
+            case.expected
+        );
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_parallel_offset_cpp_specific_matrix_parity() {
+    for case in cpp_offset_specific_cases() {
+        let pline = create_pline(&case.input, case.is_closed);
+        let actual = run_parallel_offset_props(pline, case.delta);
+        assert!(
+            props_set_match_ignore_area_sign(&actual, &case.expected, 1e-4),
+            "parallel offset specific-case mismatch for {}\nactual={actual:?}\nexpected={:?}",
+            case.name,
+            case.expected
+        );
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_parallel_offset_cpp_reversed_matrix_parity() {
+    for case in cpp_offset_simple_cases()
+        .into_iter()
+        .chain(cpp_offset_specific_cases())
+    {
+        let pline = create_pline(&case.input, case.is_closed);
+        unsafe {
+            assert_eq!(cavc_pline_invert_direction(pline), 0);
+        }
+        let delta = -case.delta;
+        let expected: Vec<PlineProps> = case
+            .expected
+            .into_iter()
+            .map(|p| {
+                PlineProps::new(
+                    p.vertex_count,
+                    -p.area,
+                    p.path_length,
+                    p.min_x,
+                    p.min_y,
+                    p.max_x,
+                    p.max_y,
+                )
+            })
+            .collect();
+        let actual = run_parallel_offset_props(pline, delta);
+        assert!(
+            props_set_match_ignore_area_sign(&actual, &expected, 1e-4),
+            "parallel offset reversed-case mismatch for {}\nactual={actual:?}\nexpected={expected:?}",
+            case.name
+        );
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_parallel_offset_does_not_modify_input_cpp_parity() {
+    let case = &cpp_offset_simple_cases()[0];
+    let pline = create_pline(&case.input, case.is_closed);
+    let before = read_vertices(pline);
+    let _ = run_parallel_offset_props(pline, case.delta);
+    let after = read_vertices(pline);
+    compare_vertexes(&after, &before);
+    unsafe {
+        cavc_pline_f(pline);
     }
 }
 

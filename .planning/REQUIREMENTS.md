@@ -122,6 +122,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-40**: The FFI surface executes old C++ combine-with-self invariants for union/intersect/self-empty modes through `cavc_pline_boolean`.
 - **PAR-41**: Reversed and mixed-orientation self-invariant empty-result cases are explicitly executed and verified at the C-API boundary.
 - **PAR-42**: C-API self-invariants bridge work records next C-API parity scope and closes with full verification gates.
+- **PAR-43**: The FFI surface executes old C++ `parallel_offset` simple and specific matrices through `cavc_pline_parallel_offset` with source-traceable expected properties.
+- **PAR-44**: C-API `parallel_offset` reversed-input parity and no-modify input invariants are explicitly executed and verified.
+- **PAR-45**: C-API parallel-offset bridge work records next C-API parity scope and closes with full verification gates.
 
 ## Out of Scope
 
@@ -208,13 +211,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-40 | Phase 22 | Complete |
 | PAR-41 | Phase 22 | Complete |
 | PAR-42 | Phase 22 | Complete |
+| PAR-43 | Phase 23 | Complete |
+| PAR-44 | Phase 23 | Complete |
+| PAR-45 | Phase 23 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 42 (`PAR-01..PAR-42`), mapped to Phases 9-22
+- additional tracked post-v1 requirements: 45 (`PAR-01..PAR-45`), mapped to Phases 9-23
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-13 after Phase 22 completion*
+*Last updated: 2026-05-13 after Phase 23 completion*

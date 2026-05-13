@@ -38,6 +38,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 20: C-API Coincident Intersect Parity Bridge (No Clipper)** - Extend parity closure to the FFI boundary with an executable `cavc_pline_boolean` coincident intersect case matching old C++ empty-output expectation. (completed 2026-05-13)
 - [x] **Phase 21: C-API Combine Matrix Expansion (No Clipper)** - Expand FFI parity coverage with executable `cavc_pline_boolean` matrix cases for `circle_rectangle` and `coincident_case2` sourced from old C++ combine fixtures. (completed 2026-05-13)
 - [x] **Phase 22: C-API Combine Self-Invariants Parity Bridge (No Clipper)** - Bridge old C++ combine-with-self invariants through `cavc_pline_boolean`, including reversed-orientation and mixed-orientation empty-result invariants. (completed 2026-05-13)
+- [x] **Phase 23: C-API Parallel-Offset Matrix Parity Bridge (No Clipper)** - Bridge old C++ `parallel_offset` simple/specific/reversed/no-modify parity through `cavc_pline_parallel_offset` at the FFI boundary. (completed 2026-05-13)
 
 ## Phase Details
 
@@ -380,6 +381,21 @@ Plans:
 - [x] 22-02: Publish invariants bridge report and next-scope map.
 - [x] 22-03: Close verification gates and sync planning state.
 
+### Phase 23: C-API Parallel-Offset Matrix Parity Bridge (No Clipper)
+**Goal**: Prove old C++ `parallel_offset` matrix behavior through Rust FFI `cavc_pline_parallel_offset` with source-traceable simple/specific/reversed/no-modify coverage.
+**Depends on**: Phase 22
+**Requirements**: [PAR-43, PAR-44, PAR-45]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests execute old C++ `parallel_offset` simple and specific case matrices with source-traceable expected property sets.
+  2. Reversed-input parity (`invert_direction` + negated delta with sign-adjusted area expectations) and input-immutability behavior are explicitly executed and green at C-API boundary.
+  3. Full workspace and planning health gates are green and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 23-01: Add C-API parallel-offset matrix, reversed, and no-modify parity tests.
+- [x] 23-02: Publish parallel-offset bridge report and next-scope map.
+- [x] 23-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -409,3 +425,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 20. C-API Coincident Intersect Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 21. C-API Combine Matrix Expansion (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 22. C-API Combine Self-Invariants Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-13 |
+| 23. C-API Parallel-Offset Matrix Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-13 |
