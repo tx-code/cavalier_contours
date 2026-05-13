@@ -562,6 +562,21 @@ Plans:
 - [x] 34-02: Publish function-surface full-matrix offset parity report and next-scope map.
 - [x] 34-03: Close verification gates and sync planning state.
 
+### Phase 35: C-API Combine-Self Vertex-Exact Reversed Parity (No Clipper)
+**Goal**: Strengthen source-backed combine-with-self invariants to vertex-exact parity for nontrivial sample polyline, including reversed combinations.
+**Depends on**: Phase 34
+**Requirements**: [PAR-79, PAR-80, PAR-81]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests verify union/intersect self-combine outputs at vertex-exact level for forward and reversed sample polylines.
+  2. Exclude/xor emptiness invariants are explicitly checked across forward/reversed and reversed-forward combinations.
+  3. Full workspace and planning health gates are green, and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 35-01: Add combine-self vertex-exact reversed parity test.
+- [x] 35-02: Publish combine-self vertex-exact parity report and next-scope map.
+- [x] 35-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -603,3 +618,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 32. C-API Function-Surface Combine-Self Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 33. C-API Closest-Point Epsilon/Tie-Break Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 34. C-API Function-Surface Parallel-Offset Full Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 35. C-API Combine-Self Vertex-Exact Reversed Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |

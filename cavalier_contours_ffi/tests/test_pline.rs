@@ -3015,6 +3015,94 @@ fn pline_boolean_combine_with_self_invariants_cpp_parity() {
 }
 
 #[test]
+fn pline_boolean_combine_with_self_invariants_vertex_exact_cpp_parity() {
+    let source_vertices = vec![
+        (27.554688, 1.0, 0.0),
+        (27.554688, 0.75, 0.414214),
+        (27.804688, 0.5, 0.0),
+        (32.195313, 0.5, 0.414214),
+        (32.445313, 0.75, 0.0),
+        (32.445313, 1.0, 0.414214),
+        (32.195313, 1.25, 0.0),
+        (31.5, 1.25, -0.414214),
+        (31.0, 1.75, 0.0),
+        (29.0, 1.75, -0.414214),
+        (28.5, 1.25, 0.0),
+        (27.804688, 1.25, 0.414214),
+    ];
+    let expected_forward = tuple_vertices_to_cavc(&source_vertices);
+    let pline = create_pline(&source_vertices, true);
+
+    let mut rev_pline = ptr::null();
+    unsafe {
+        assert_eq!(cavc_pline_clone(pline, &mut rev_pline), 0);
+        assert_eq!(cavc_pline_invert_direction(rev_pline as *mut _), 0);
+    }
+    let expected_reverse = read_vertices(rev_pline);
+
+    // Union with self is self (forward + reversed).
+    let (remaining, subtracted) = run_boolean_vertexes(pline, pline, 0);
+    assert_eq!(remaining.len(), 1);
+    assert!(subtracted.is_empty());
+    compare_vertexes(&remaining[0], &expected_forward);
+
+    let (remaining, subtracted) = run_boolean_vertexes(rev_pline, rev_pline, 0);
+    assert_eq!(remaining.len(), 1);
+    assert!(subtracted.is_empty());
+    compare_vertexes(&remaining[0], &expected_reverse);
+
+    // Exclude with self is empty (forward/reverse combinations).
+    let (remaining, subtracted) = run_boolean_vertexes(pline, pline, 2);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_vertexes(rev_pline, rev_pline, 2);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_vertexes(rev_pline, pline, 2);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_vertexes(pline, rev_pline, 2);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    // Intersect with self is self (forward + reversed).
+    let (remaining, subtracted) = run_boolean_vertexes(pline, pline, 1);
+    assert_eq!(remaining.len(), 1);
+    assert!(subtracted.is_empty());
+    compare_vertexes(&remaining[0], &expected_forward);
+
+    let (remaining, subtracted) = run_boolean_vertexes(rev_pline, rev_pline, 1);
+    assert_eq!(remaining.len(), 1);
+    assert!(subtracted.is_empty());
+    compare_vertexes(&remaining[0], &expected_reverse);
+
+    // XOR with self is empty (forward/reverse combinations).
+    let (remaining, subtracted) = run_boolean_vertexes(pline, pline, 3);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_vertexes(rev_pline, rev_pline, 3);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_vertexes(rev_pline, pline, 3);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_vertexes(pline, rev_pline, 3);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    unsafe {
+        cavc_pline_f(pline);
+        cavc_pline_f(rev_pline as *mut _);
+    }
+}
+
+#[test]
 fn pline_parallel_offset_cpp_simple_matrix_parity() {
     for case in cpp_offset_simple_cases() {
         let pline = create_pline(&case.input, case.is_closed);
