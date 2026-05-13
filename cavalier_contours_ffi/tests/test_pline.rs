@@ -295,6 +295,26 @@ fn run_parallel_offset_props_with_options(
     }
 }
 
+fn run_parallel_offset_vertexes(pline: *const cavc_pline, delta: f64) -> Vec<Vec<cavc_vertex>> {
+    let mut results = ptr::null();
+    unsafe {
+        assert_eq!(
+            cavc_pline_parallel_offset(pline, delta, ptr::null(), &mut results),
+            0
+        );
+        let mut count = u32::MAX;
+        assert_eq!(cavc_plinelist_get_count(results, &mut count), 0);
+        let mut out = Vec::with_capacity(count as usize);
+        for i in 0..count {
+            let mut pline_out = ptr::null();
+            assert_eq!(cavc_plinelist_get_pline(results, i, &mut pline_out), 0);
+            out.push(read_vertices(pline_out));
+        }
+        cavc_plinelist_f(results as *mut _);
+        out
+    }
+}
+
 fn read_vertices(pline: *const cavc_pline) -> Vec<cavc_vertex> {
     let mut count = u32::MAX;
     unsafe {
@@ -309,6 +329,61 @@ fn read_vertices(pline: *const cavc_pline) -> Vec<cavc_vertex> {
         result.push(v);
     }
     result
+}
+
+fn vertex_fuzzy_eq(a: cavc_vertex, b: cavc_vertex) -> bool {
+    (a.x - b.x).abs() <= CPP_MATRIX_EPS
+        && (a.y - b.y).abs() <= CPP_MATRIX_EPS
+        && (a.bulge - b.bulge).abs() <= CPP_MATRIX_EPS
+}
+
+fn open_vertexes_match_exact(actual: &[cavc_vertex], expected: &[cavc_vertex]) -> bool {
+    actual.len() == expected.len()
+        && actual
+            .iter()
+            .zip(expected.iter())
+            .all(|(a, e)| vertex_fuzzy_eq(*a, *e))
+}
+
+fn closed_vertexes_match_with_rotation(actual: &[cavc_vertex], expected: &[cavc_vertex]) -> bool {
+    if actual.len() != expected.len() {
+        return false;
+    }
+    let n = expected.len();
+    for shift in 0..n {
+        let mut all_match = true;
+        for (i, e) in expected.iter().enumerate() {
+            let actual_i = (i + shift) % n;
+            if !vertex_fuzzy_eq(actual[actual_i], *e) {
+                all_match = false;
+                break;
+            }
+        }
+        if all_match {
+            return true;
+        }
+    }
+    false
+}
+
+fn assert_single_offset_vertex_match(
+    actual: &[Vec<cavc_vertex>],
+    expected: &[cavc_vertex],
+    is_closed: bool,
+    context: &str,
+) {
+    assert_eq!(
+        actual.len(),
+        1,
+        "{context}: expected one offset polyline, got {}",
+        actual.len()
+    );
+    let matches = if is_closed {
+        closed_vertexes_match_with_rotation(&actual[0], expected)
+    } else {
+        open_vertexes_match_exact(&actual[0], expected)
+    };
+    assert!(matches, "{context}: offset vertex mismatch");
 }
 
 fn cpp_offset_simple_cases() -> Vec<OffsetCase> {
@@ -708,20 +783,24 @@ fn cpp_circle_matrix_cases() -> Vec<CircleCaseKey> {
 }
 
 fn cpp_circle_case_vertices(case: CircleCaseKey) -> Vec<(f64, f64, f64)> {
+    cpp_circle_case_vertices_with_radius(case, CPP_CIRCLE_RADIUS)
+}
+
+fn cpp_circle_case_vertices_with_radius(case: CircleCaseKey, radius: f64) -> Vec<(f64, f64, f64)> {
     let mut p0 = match case.alignment {
-        CircleAlignment::XAxis => (case.center_x - CPP_CIRCLE_RADIUS, case.center_y),
-        CircleAlignment::YAxis => (case.center_x, case.center_y - CPP_CIRCLE_RADIUS),
+        CircleAlignment::XAxis => (case.center_x - radius, case.center_y),
+        CircleAlignment::YAxis => (case.center_x, case.center_y - radius),
         CircleAlignment::Diagonal => (
-            case.center_x + CPP_CIRCLE_RADIUS * (std::f64::consts::PI / 4.0).cos(),
-            case.center_y + CPP_CIRCLE_RADIUS * (std::f64::consts::PI / 4.0).sin(),
+            case.center_x + radius * (std::f64::consts::PI / 4.0).cos(),
+            case.center_y + radius * (std::f64::consts::PI / 4.0).sin(),
         ),
     };
     let mut p1 = match case.alignment {
-        CircleAlignment::XAxis => (case.center_x + CPP_CIRCLE_RADIUS, case.center_y),
-        CircleAlignment::YAxis => (case.center_x, case.center_y + CPP_CIRCLE_RADIUS),
+        CircleAlignment::XAxis => (case.center_x + radius, case.center_y),
+        CircleAlignment::YAxis => (case.center_x, case.center_y + radius),
         CircleAlignment::Diagonal => (
-            case.center_x + CPP_CIRCLE_RADIUS * (5.0 * std::f64::consts::PI / 4.0).cos(),
-            case.center_y + CPP_CIRCLE_RADIUS * (5.0 * std::f64::consts::PI / 4.0).sin(),
+            case.center_x + radius * (5.0 * std::f64::consts::PI / 4.0).cos(),
+            case.center_y + radius * (5.0 * std::f64::consts::PI / 4.0).sin(),
         ),
     };
 
@@ -731,6 +810,13 @@ fn cpp_circle_case_vertices(case: CircleCaseKey) -> Vec<(f64, f64, f64)> {
 
     let bulge = if case.direction > 0 { 1.0 } else { -1.0 };
     vec![(p0.0, p0.1, bulge), (p1.0, p1.1, bulge)]
+}
+
+fn tuple_vertices_to_cavc(vertices: &[(f64, f64, f64)]) -> Vec<cavc_vertex> {
+    vertices
+        .iter()
+        .map(|(x, y, bulge)| cavc_vertex::new(*x, *y, *bulge))
+        .collect()
 }
 
 fn cpp_half_circle_matrix_cases() -> Vec<HalfCircleCaseKey> {
@@ -788,6 +874,181 @@ fn cpp_expected_half_circle_extents(case: HalfCircleCaseKey) -> (f64, f64, f64, 
     }
 
     (min_x, min_y, max_x, max_y)
+}
+
+fn scale_vertex_from_center(
+    vertex: cavc_vertex,
+    center_x: f64,
+    center_y: f64,
+    magnitude: f64,
+) -> cavc_vertex {
+    let dir_x = vertex.x - center_x;
+    let dir_y = vertex.y - center_y;
+    let dir_len = (dir_x * dir_x + dir_y * dir_y).sqrt();
+    cavc_vertex::new(
+        magnitude * dir_x / dir_len + center_x,
+        magnitude * dir_y / dir_len + center_y,
+        vertex.bulge,
+    )
+}
+
+fn intersects_at_y(center_x: f64, center_y: f64, radius: f64, y: f64) -> ((f64, f64), (f64, f64)) {
+    let y_term = y - center_y;
+    let root = (radius * radius - y_term * y_term).sqrt();
+    ((center_x + root, y), (center_x - root, y))
+}
+
+fn intersects_at_x(center_x: f64, center_y: f64, radius: f64, x: f64) -> ((f64, f64), (f64, f64)) {
+    let x_term = x - center_x;
+    let root = (radius * radius - x_term * x_term).sqrt();
+    ((x, center_y + root), (x, center_y - root))
+}
+
+fn abs_bulge_between_points(center_x: f64, center_y: f64, p1: (f64, f64), p2: (f64, f64)) -> f64 {
+    let a1 = (p1.1 - center_y).atan2(p1.0 - center_x);
+    let a2 = (p2.1 - center_y).atan2(p2.0 - center_x);
+    let mut a_diff = a1 - a2;
+    a_diff = (a_diff + std::f64::consts::PI).rem_euclid(2.0 * std::f64::consts::PI)
+        - std::f64::consts::PI;
+    (a_diff / 4.0).tan().abs()
+}
+
+fn build_half_circle_offset_expectations(
+    case: HalfCircleCaseKey,
+) -> (f64, Vec<cavc_vertex>, f64, Vec<cavc_vertex>) {
+    let input_vertices = tuple_vertices_to_cavc(&cpp_half_circle_case_vertices(case));
+    let (min_x, min_y, max_x, max_y) = cpp_expected_half_circle_extents(case);
+
+    let outward_delta = -(case.direction as f64) * 0.25 * CPP_CIRCLE_RADIUS;
+    let inward_delta = (case.direction as f64) * 0.4 * CPP_CIRCLE_RADIUS;
+
+    let abs_outward_delta = outward_delta.abs();
+    let abs_inward_delta = inward_delta.abs();
+    let outward_magnitude = CPP_CIRCLE_RADIUS + abs_outward_delta;
+    let inward_magnitude = CPP_CIRCLE_RADIUS - abs_inward_delta;
+
+    let mut outward_vertices: Vec<_> = input_vertices
+        .iter()
+        .map(|v| scale_vertex_from_center(*v, case.center_x, case.center_y, outward_magnitude))
+        .collect();
+    let mut inward_vertices: Vec<_> = input_vertices
+        .iter()
+        .map(|v| scale_vertex_from_center(*v, case.center_x, case.center_y, inward_magnitude))
+        .collect();
+
+    if case.is_closed {
+        let right_angle_bulge = (std::f64::consts::PI / 8.0).tan();
+        if case.is_x_aligned {
+            if case.direction > 0 {
+                if let Some(last) = outward_vertices.last_mut() {
+                    last.bulge = right_angle_bulge;
+                }
+                outward_vertices.push(cavc_vertex::new(
+                    max_x,
+                    case.center_y + abs_outward_delta,
+                    0.0,
+                ));
+                outward_vertices.push(cavc_vertex::new(
+                    min_x,
+                    case.center_y + abs_outward_delta,
+                    right_angle_bulge,
+                ));
+
+                let y_intr = case.center_y - abs_inward_delta;
+                let (intr1, intr2) =
+                    intersects_at_y(case.center_x, case.center_y, inward_magnitude, y_intr);
+                let abs_bulge =
+                    abs_bulge_between_points(case.center_x, case.center_y, intr1, intr2);
+                inward_vertices[0] = cavc_vertex::new(intr1.0, intr1.1, 0.0);
+                inward_vertices[1] = cavc_vertex::new(intr2.0, intr2.1, abs_bulge);
+            } else {
+                if let Some(last) = outward_vertices.last_mut() {
+                    last.bulge = -right_angle_bulge;
+                }
+                outward_vertices.push(cavc_vertex::new(
+                    max_x,
+                    case.center_y - abs_outward_delta,
+                    0.0,
+                ));
+                outward_vertices.push(cavc_vertex::new(
+                    min_x,
+                    case.center_y - abs_outward_delta,
+                    -right_angle_bulge,
+                ));
+
+                let y_intr = case.center_y + abs_inward_delta;
+                let (intr1, intr2) =
+                    intersects_at_y(case.center_x, case.center_y, inward_magnitude, y_intr);
+                let abs_bulge =
+                    abs_bulge_between_points(case.center_x, case.center_y, intr1, intr2);
+                inward_vertices[0] = cavc_vertex::new(intr1.0, intr1.1, 0.0);
+                inward_vertices[1] = cavc_vertex::new(intr2.0, intr2.1, -abs_bulge);
+            }
+        } else if case.direction > 0 {
+            if let Some(last) = outward_vertices.last_mut() {
+                last.bulge = right_angle_bulge;
+            }
+            outward_vertices.push(cavc_vertex::new(
+                case.center_x - abs_outward_delta,
+                max_y,
+                0.0,
+            ));
+            outward_vertices.push(cavc_vertex::new(
+                case.center_x - abs_outward_delta,
+                min_y,
+                right_angle_bulge,
+            ));
+
+            let x_intr = case.center_x + abs_inward_delta;
+            let (intr1, intr2) =
+                intersects_at_x(case.center_x, case.center_y, inward_magnitude, x_intr);
+            let abs_bulge = abs_bulge_between_points(case.center_x, case.center_y, intr1, intr2);
+            inward_vertices[0] = cavc_vertex::new(intr1.0, intr1.1, 0.0);
+            inward_vertices[1] = cavc_vertex::new(intr2.0, intr2.1, abs_bulge);
+        } else {
+            if let Some(last) = outward_vertices.last_mut() {
+                last.bulge = -right_angle_bulge;
+            }
+            outward_vertices.push(cavc_vertex::new(
+                case.center_x + abs_outward_delta,
+                max_y,
+                0.0,
+            ));
+            outward_vertices.push(cavc_vertex::new(
+                case.center_x + abs_outward_delta,
+                min_y,
+                -right_angle_bulge,
+            ));
+
+            let x_intr = case.center_x - abs_inward_delta;
+            let (intr1, intr2) =
+                intersects_at_x(case.center_x, case.center_y, inward_magnitude, x_intr);
+            let abs_bulge = abs_bulge_between_points(case.center_x, case.center_y, intr1, intr2);
+            inward_vertices[0] = cavc_vertex::new(intr1.0, intr1.1, 0.0);
+            inward_vertices[1] = cavc_vertex::new(intr2.0, intr2.1, -abs_bulge);
+        }
+    }
+
+    (
+        outward_delta,
+        outward_vertices,
+        inward_delta,
+        inward_vertices,
+    )
+}
+
+fn half_circle_collapse_deltas(case: HalfCircleCaseKey) -> [f64; 3] {
+    let direction = case.direction as f64;
+    let first = if case.is_closed {
+        direction * 0.5 * CPP_CIRCLE_RADIUS
+    } else {
+        direction * CPP_CIRCLE_RADIUS
+    };
+    [
+        first,
+        direction * 1.5 * CPP_CIRCLE_RADIUS,
+        direction * 2.0 * CPP_CIRCLE_RADIUS,
+    ]
 }
 
 fn build_half_circle_closest_cases(case: HalfCircleCaseKey) -> Vec<HalfClosestCase> {
@@ -1271,6 +1532,118 @@ fn pline_function_surface_half_circle_closest_point_eps_tie_break_cpp_parity() {
                     "half-circle eps tie-break distance",
                 );
             }
+        }
+
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_function_surface_circle_parallel_offset_cpp_matrix_parity() {
+    for (case_idx, case) in cpp_circle_matrix_cases().into_iter().enumerate() {
+        let pline = create_pline(&cpp_circle_case_vertices(case), true);
+
+        let outward_delta = -(case.direction as f64) * 0.25 * CPP_CIRCLE_RADIUS;
+        let inward_delta = (case.direction as f64) * 0.5 * CPP_CIRCLE_RADIUS;
+
+        let outward_expected = tuple_vertices_to_cavc(&cpp_circle_case_vertices_with_radius(
+            case,
+            CPP_CIRCLE_RADIUS + outward_delta.abs(),
+        ));
+        let inward_expected = tuple_vertices_to_cavc(&cpp_circle_case_vertices_with_radius(
+            case,
+            CPP_CIRCLE_RADIUS - inward_delta.abs(),
+        ));
+
+        let outward_actual = run_parallel_offset_vertexes(pline, outward_delta);
+        assert_single_offset_vertex_match(
+            &outward_actual,
+            &outward_expected,
+            true,
+            &format!("circle offset outward case #{case_idx}"),
+        );
+
+        let inward_actual = run_parallel_offset_vertexes(pline, inward_delta);
+        assert_single_offset_vertex_match(
+            &inward_actual,
+            &inward_expected,
+            true,
+            &format!("circle offset inward case #{case_idx}"),
+        );
+
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_function_surface_circle_collapsed_offset_cpp_matrix_parity() {
+    for (case_idx, case) in cpp_circle_matrix_cases().into_iter().enumerate() {
+        let pline = create_pline(&cpp_circle_case_vertices(case), true);
+        let collapse_deltas = [
+            (case.direction as f64) * CPP_CIRCLE_RADIUS,
+            (case.direction as f64) * 1.5 * CPP_CIRCLE_RADIUS,
+            (case.direction as f64) * 2.0 * CPP_CIRCLE_RADIUS,
+        ];
+        for (delta_idx, delta) in collapse_deltas.iter().enumerate() {
+            let result = run_parallel_offset_vertexes(pline, *delta);
+            assert!(
+                result.is_empty(),
+                "circle collapsed offset expected empty at case #{case_idx} delta#{delta_idx} (delta={delta}), got {} result(s)",
+                result.len()
+            );
+        }
+
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_function_surface_half_circle_parallel_offset_cpp_matrix_parity() {
+    for (case_idx, case) in cpp_half_circle_matrix_cases().into_iter().enumerate() {
+        let pline = create_pline(&cpp_half_circle_case_vertices(case), case.is_closed);
+        let (outward_delta, outward_expected, inward_delta, inward_expected) =
+            build_half_circle_offset_expectations(case);
+
+        let outward_actual = run_parallel_offset_vertexes(pline, outward_delta);
+        assert_single_offset_vertex_match(
+            &outward_actual,
+            &outward_expected,
+            case.is_closed,
+            &format!("half-circle offset outward case #{case_idx}"),
+        );
+
+        let inward_actual = run_parallel_offset_vertexes(pline, inward_delta);
+        assert_single_offset_vertex_match(
+            &inward_actual,
+            &inward_expected,
+            case.is_closed,
+            &format!("half-circle offset inward case #{case_idx}"),
+        );
+
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_function_surface_half_circle_collapsed_offset_cpp_matrix_parity() {
+    for (case_idx, case) in cpp_half_circle_matrix_cases().into_iter().enumerate() {
+        let pline = create_pline(&cpp_half_circle_case_vertices(case), case.is_closed);
+        let collapse_deltas = half_circle_collapse_deltas(case);
+        for (delta_idx, delta) in collapse_deltas.iter().enumerate() {
+            let result = run_parallel_offset_vertexes(pline, *delta);
+            assert!(
+                result.is_empty(),
+                "half-circle collapsed offset expected empty at case #{case_idx} delta#{delta_idx} (delta={delta}), got {} result(s)",
+                result.len()
+            );
         }
 
         unsafe {

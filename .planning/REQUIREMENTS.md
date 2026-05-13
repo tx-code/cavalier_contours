@@ -155,6 +155,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-73**: The FFI surface executes source-backed explicit closest-point index probes across an epsilon matrix through `cavc_pline_eval_closest_point`.
 - **PAR-74**: Closest-point epsilon/tie-break parity validates circle shared-vertex and half-circle explicit-index stability for index/point/distance under epsilon variation.
 - **PAR-75**: Closest-point epsilon/tie-break parity work records next parity target scope and closes with full verification gates.
+- **PAR-76**: The FFI surface executes source-backed generated circle and half-circle full matrix outward/inward offset probes through `cavc_pline_parallel_offset`.
+- **PAR-77**: Function-surface full-matrix offset parity validates vertex-level output semantics (closed rotational match, open exact order) and collapsed-delta empty results.
+- **PAR-78**: Function-surface full-matrix parallel-offset parity work records next parity target scope and closes with full verification gates.
 
 ## Out of Scope
 
@@ -274,13 +277,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-73 | Phase 33 | Complete |
 | PAR-74 | Phase 33 | Complete |
 | PAR-75 | Phase 33 | Complete |
+| PAR-76 | Phase 34 | Complete |
+| PAR-77 | Phase 34 | Complete |
+| PAR-78 | Phase 34 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 75 (`PAR-01..PAR-75`), mapped to Phases 9-33
+- additional tracked post-v1 requirements: 78 (`PAR-01..PAR-78`), mapped to Phases 9-34
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 33 completion*
+*Last updated: 2026-05-14 after Phase 34 completion*
