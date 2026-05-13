@@ -472,6 +472,21 @@ Plans:
 - [x] 28-02: Publish optioned coincident parity report and next-scope map.
 - [x] 28-03: Close verification gates and sync planning state.
 
+### Phase 29: C-API Optioned Coincident Output Parity (No Clipper)
+**Goal**: Validate output parity between default-path and options-path for source-backed coincident boolean matrices.
+**Depends on**: Phase 28
+**Requirements**: [PAR-61, PAR-62, PAR-63]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests execute coincident case1/case2 operation matrices through default-path and options-path and assert property-set parity for outputs.
+  2. Exclusion direction variants (`A-B`, `B-A`) are explicitly covered in options output parity checks.
+  3. Full workspace and planning health gates are green, and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 29-01: Add C-API optioned coincident output parity matrix test.
+- [x] 29-02: Publish options-output parity report and next-scope map.
+- [x] 29-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -507,3 +522,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 26. C-API Options-Path Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 27. C-API Coincident No-Modify Matrix Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 28. C-API Optioned Coincident Edge Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 29. C-API Optioned Coincident Output Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
