@@ -1117,6 +1117,21 @@ Plans:
 - [x] 71-02: Publish post-guard alignment map for next bounded targets.
 - [x] 71-03: Close verification gates and sync planning state.
 
+### Phase 72: C-API Circle-Rectangle Source Matrix Guard Reuse (No Clipper)
+**Goal**: Harden circle-rectangle source-backed boolean parity by guarding default matrix name/operation mapping and reusing one canonical operation sequence across default/options/no-modify suites.
+**Depends on**: Phase 71
+**Requirements**: [PAR-190, PAR-191, PAR-192]
+**Success Criteria** (what must be TRUE):
+  1. Explicit default-path `circle_rectangle` parity matrix fails fast when canonical source-backed case coverage or operation mapping drifts.
+  2. Circle-rectangle operation matrix order is reused via one shared canonical source-backed operation constant across default/options/no-modify parity surfaces.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 72-01: Add circle-rectangle default matrix source-mapping guard and shared operation-sequence constant reuse.
+- [x] 72-02: Publish post-guard alignment map for next bounded targets.
+- [x] 72-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1195,3 +1210,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 69. C-API Coincident Matrix Source-Coverage Guard (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 70. C-API Coincident Case1 Matrix Parity Expansion (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 71. C-API Coincident Default Matrix Source-Map Guard (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 72. C-API Circle-Rectangle Source Matrix Guard Reuse (No Clipper) | 3/3 | Complete   | 2026-05-15 |

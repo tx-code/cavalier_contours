@@ -269,6 +269,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-187**: Explicit default-path `coincident_case1` and `coincident_case2` C-API boolean matrices enforce canonical source-backed case coverage and operation mapping through a shared mapping guard.
 - **PAR-188**: Shared coincident source-mapping guard helper is reused by both helper-level matrix assembly checks and explicit default-path matrix parity tests without changing expected output assertions.
 - **PAR-189**: C-API coincident default-matrix source-map guard phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-190**: Explicit default-path `circle_rectangle` C-API boolean matrix enforces canonical source-backed case coverage and operation mapping through a source-mapping guard.
+- **PAR-191**: Circle-rectangle default/options/no-modify parity paths reuse one canonical source-backed operation-sequence constant to prevent operation-order drift.
+- **PAR-192**: C-API circle-rectangle source-matrix guard reuse phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -502,13 +505,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-187 | Phase 71 | Complete |
 | PAR-188 | Phase 71 | Complete |
 | PAR-189 | Phase 71 | Complete |
+| PAR-190 | Phase 72 | Complete |
+| PAR-191 | Phase 72 | Complete |
+| PAR-192 | Phase 72 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 189 (`PAR-01..PAR-189`), mapped to Phases 9-71
+- additional tracked post-v1 requirements: 192 (`PAR-01..PAR-192`), mapped to Phases 9-72
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 71 completion*
+*Last updated: 2026-05-15 after Phase 72 completion*

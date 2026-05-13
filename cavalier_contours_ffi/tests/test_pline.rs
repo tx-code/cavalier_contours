@@ -828,6 +828,15 @@ const CPP_COINCIDENT_CASE2_SOURCE_MATRIX: [(&str, u32); 5] = [
     ("coincident_case2_xor", 3),
 ];
 
+const CPP_CIRCLE_RECT_SOURCE_MATRIX: [(&str, u32); 4] = [
+    ("circle_rectangle_union", 0),
+    ("circle_rectangle_exclude", 2),
+    ("circle_rectangle_intersect", 1),
+    ("circle_rectangle_xor", 3),
+];
+
+const CPP_CIRCLE_RECT_SOURCE_OPS: [u32; 4] = [0_u32, 2_u32, 1_u32, 3_u32];
+
 const CPP_COINCIDENT_SOURCE_MATRIX: [(&str, u32); 10] = [
     ("coincident_case1_union", 0),
     ("coincident_case1_excludeAFromB", 2),
@@ -3005,6 +3014,16 @@ fn pline_boolean_circle_rectangle_cpp_matrix_parity() {
         },
     ];
 
+    let actual: Vec<(&str, u32)> = cases
+        .iter()
+        .map(|case| (case.name, case.operation))
+        .collect();
+    assert_boolean_case_source_mapping(
+        &actual,
+        &CPP_CIRCLE_RECT_SOURCE_MATRIX,
+        "circle_rectangle default matrix",
+    );
+
     for case in cases {
         let (remaining, subtracted) = run_boolean_props(pline_a, pline_b, case.operation);
         assert!(
@@ -3308,7 +3327,7 @@ fn pline_boolean_coincident_case2_cpp_matrix_parity() {
 fn pline_boolean_does_not_modify_input_cpp_parity() {
     // old C++ source: TEST_cavc_combine_plines.cpp -> combine_plines_does_not_modify_input
     // mirror simple circle/rectangle operation matrix
-    let ops = [0_u32, 2_u32, 1_u32, 3_u32]; // Or, Not, And, Xor
+    let ops = CPP_CIRCLE_RECT_SOURCE_OPS; // Or, Not, And, Xor
 
     for operation in ops {
         let pline_a = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
@@ -3677,7 +3696,7 @@ fn pline_boolean_options_path_circle_rectangle_cpp_parity() {
         assert_eq!(cavc_pline_create_approx_aabbindex(pline_a, &mut aabb1), 0);
         options.pline1_aabb_index = aabb1;
 
-        for operation in [0_u32, 2_u32, 1_u32, 3_u32] {
+        for operation in CPP_CIRCLE_RECT_SOURCE_OPS {
             let (default_remaining, default_subtracted) =
                 run_boolean_props(pline_a, pline_b, operation);
             let (opt_remaining, opt_subtracted) =
@@ -3726,7 +3745,7 @@ fn pline_boolean_options_path_circle_rectangle_vertex_output_cpp_parity() {
         assert_eq!(cavc_pline_create_approx_aabbindex(pline_a, &mut aabb1), 0);
         options.pline1_aabb_index = aabb1;
 
-        for operation in [0_u32, 2_u32, 1_u32, 3_u32] {
+        for operation in CPP_CIRCLE_RECT_SOURCE_OPS {
             let (default_remaining, default_subtracted) =
                 run_boolean_vertexes(pline_a, pline_b, operation);
             let (opt_remaining, opt_subtracted) =
@@ -3789,7 +3808,7 @@ fn pline_boolean_options_path_circle_rectangle_pos_equal_eps_matrix_cpp_parity()
                 collapsed_area_eps: f64::NAN,
             };
 
-            for operation in [0_u32, 2_u32, 1_u32, 3_u32] {
+            for operation in CPP_CIRCLE_RECT_SOURCE_OPS {
                 let (default_remaining_props, default_subtracted_props) =
                     run_boolean_props(pline_a, pline_b, operation);
                 let (opt_remaining_props, opt_subtracted_props) =
@@ -4790,7 +4809,7 @@ fn pline_boolean_options_path_circle_rectangle_does_not_modify_input_cpp_parity(
         assert_eq!(cavc_pline_create_approx_aabbindex(pline_a, &mut aabb1), 0);
         options.pline1_aabb_index = aabb1;
 
-        for operation in [0_u32, 2_u32, 1_u32, 3_u32] {
+        for operation in CPP_CIRCLE_RECT_SOURCE_OPS {
             let _ = run_boolean_props_with_options(pline_a, pline_b, operation, &options);
             let after_a = read_vertices(pline_a);
             let after_b = read_vertices(pline_b);
