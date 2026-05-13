@@ -344,6 +344,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-262**: Rust C++ parity tests explicitly validate a bounded line-line primitive expected-table matrix that covers old C++ `intrLineSeg2LineSeg2` branch families (`True`, `False`, `None`, `Coincident`) including degenerate point paths.
 - **PAR-263**: Line-line primitive parity assertions explicitly validate expected parametric outputs (`seg1_t`, `seg2_t`, `seg2_t0`, `seg2_t1`) for covered branch-matrix cases.
 - **PAR-264**: C++ line-line primitive branch-matrix parity phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-265**: Rust C++ parity tests explicitly validate a bounded line-circle primitive expected-table matrix that covers old C++ `intrLineSeg2Circle2` branch families (degenerate point paths, tangent, no-intersect, and two-intersect).
+- **PAR-266**: Line-circle primitive parity assertions explicitly validate expected parametric outputs (`t0`, `t1`) for covered branch-matrix cases, including outside-segment solutions where applicable.
+- **PAR-267**: C++ line-circle primitive branch-matrix parity phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -652,13 +655,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-262 | Phase 96 | Complete |
 | PAR-263 | Phase 96 | Complete |
 | PAR-264 | Phase 96 | Complete |
+| PAR-265 | Phase 97 | Complete |
+| PAR-266 | Phase 97 | Complete |
+| PAR-267 | Phase 97 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 264 (`PAR-01..PAR-264`), mapped to Phases 9-96
+- additional tracked post-v1 requirements: 267 (`PAR-01..PAR-267`), mapped to Phases 9-97
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 96 completion*
+*Last updated: 2026-05-15 after Phase 97 completion*
