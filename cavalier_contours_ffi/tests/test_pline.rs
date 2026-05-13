@@ -6005,6 +6005,15 @@ fn shape_set_cw_pline_userdata_values_ffi() {
         );
         assert_eq!(out, payload);
 
+        assert_eq!(
+            cavc_shape_get_cw_pline_userdata_values(ptr::null(), 0, out.as_mut_ptr()),
+            1
+        );
+        assert_eq!(
+            cavc_shape_get_cw_pline_userdata_values(shape, 99, out.as_mut_ptr()),
+            2
+        );
+
         // null payload with non-zero count still clears (by API implementation contract)
         assert_eq!(
             cavc_shape_set_cw_pline_userdata_values(shape, 0, ptr::null(), 9),
@@ -6082,6 +6091,15 @@ fn shape_set_ccw_pline_userdata_values_ffi() {
             0
         );
         assert_eq!(out, payload);
+
+        assert_eq!(
+            cavc_shape_get_ccw_pline_userdata_values(ptr::null(), 0, out.as_mut_ptr()),
+            1
+        );
+        assert_eq!(
+            cavc_shape_get_ccw_pline_userdata_values(shape, 99, out.as_mut_ptr()),
+            2
+        );
 
         assert_eq!(
             cavc_shape_set_ccw_pline_userdata_values(shape, 0, ptr::null(), 5),

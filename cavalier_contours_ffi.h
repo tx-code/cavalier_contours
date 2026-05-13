@@ -1004,11 +1004,12 @@ int32_t cavc_shape_get_ccw_pline_userdata_count(const cavc_shape *shape,
 /// 'userdata_values' is a user-provided C array of u64 that is stored with a pline and preserved across offset calls.
 ///
 /// ## Specific Error Codes
-/// * 1 = `pline` is null.
+/// * 1 = `shape` is null.
+/// * 2 = `polyline_index` is beyond the bounds of the count of the shape's ccw polylines
 ///
 /// # Safety
 ///
-/// `pline` must be null or a valid cavc_pline object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `userdata_values` must point to a buffer that is large enough to hold all the userdata values or a buffer
 /// overrun will happen.
@@ -1126,11 +1127,12 @@ int32_t cavc_shape_get_cw_pline_userdata_count(const cavc_shape *shape,
 /// 'userdata_values' is a user-provided C array of u64 that is stored with a pline and preserved across offset calls.
 ///
 /// ## Specific Error Codes
-/// * 1 = `pline` is null.
+/// * 1 = `shape` is null.
+/// * 2 = `polyline_index` is beyond the bounds of the count of the shape's cw polylines
 ///
 /// # Safety
 ///
-/// `pline` must be null or a valid cavc_pline object that was created with [cavc_pline_create] and
+/// `shape` must be null or a valid cavc_shape object that was created with [cavc_shape_create] and
 /// has not been freed.
 /// `userdata_values` must point to a buffer that is large enough to hold all the userdata values or a buffer
 /// overrun will happen.

@@ -1192,6 +1192,21 @@ Plans:
 - [x] 76-02: Publish post-symmetry alignment map for next bounded targets.
 - [x] 76-03: Close verification gates and sync planning state.
 
+### Phase 77: C-API Userdata Getter Bounds Contract Hardening (No Clipper)
+**Goal**: Harden C-API userdata getter correctness by enforcing explicit out-of-bounds error semantics for CCW/CW userdata getters and aligning docs/tests with implemented contract.
+**Depends on**: Phase 76
+**Requirements**: [PAR-205, PAR-206, PAR-207]
+**Success Criteria** (what must be TRUE):
+  1. `cavc_shape_get_ccw_pline_userdata_values` and `cavc_shape_get_cw_pline_userdata_values` return explicit bounds error codes (`2`) for out-of-range `polyline_index`.
+  2. FFI header/runtime docs and tests are aligned on null-shape (`1`) and out-of-bounds (`2`) semantics for both userdata getter functions.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 77-01: Add bounds checks and parity assertions for CCW/CW userdata getters.
+- [x] 77-02: Publish post-hardening alignment map for next bounded targets.
+- [x] 77-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1275,3 +1290,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 74. C-API AABBIndex Extents Source Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 75. C-API Option Lifecycle & CW Userdata Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 76. C-API CCW Userdata Setter Symmetry Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 77. C-API Userdata Getter Bounds Contract Hardening (No Clipper) | 3/3 | Complete   | 2026-05-15 |

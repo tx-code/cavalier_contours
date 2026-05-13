@@ -284,6 +284,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-202**: FFI parity tests cover `cavc_shape_set_ccw_pline_userdata_values` for success-path set/get, null-shape error, out-of-bounds error, and clear-path semantics.
 - **PAR-203**: CCW userdata setter behavior is explicitly validated as contract-symmetric with the covered CW setter behavior for count/value roundtrip and clear semantics.
 - **PAR-204**: C-API CCW userdata setter symmetry coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-205**: C-API userdata getter functions (`cavc_shape_get_ccw_pline_userdata_values`, `cavc_shape_get_cw_pline_userdata_values`) enforce explicit out-of-bounds error code `2` rather than implicit unwind/panic behavior.
+- **PAR-206**: FFI tests and public header docs align on userdata getter error semantics: null shape returns `1`, out-of-bounds `polyline_index` returns `2`.
+- **PAR-207**: C-API userdata getter bounds-contract hardening phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -532,13 +535,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-202 | Phase 76 | Complete |
 | PAR-203 | Phase 76 | Complete |
 | PAR-204 | Phase 76 | Complete |
+| PAR-205 | Phase 77 | Complete |
+| PAR-206 | Phase 77 | Complete |
+| PAR-207 | Phase 77 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 204 (`PAR-01..PAR-204`), mapped to Phases 9-76
+- additional tracked post-v1 requirements: 207 (`PAR-01..PAR-207`), mapped to Phases 9-77
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 76 completion*
+*Last updated: 2026-05-15 after Phase 77 completion*
