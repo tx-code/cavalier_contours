@@ -5852,6 +5852,26 @@ fn boolean_and_self_intersect_failure_path_output_stability_ffi() {
         assert_eq!(pos_plines, plinelist_sentinel);
         assert_eq!(neg_plines, plinelist_sentinel);
 
+        let mut boolean_options = cavc_pline_boolean_o {
+            pline1_aabb_index: ptr::dangling::<cavc_aabbindex>(),
+            pos_equal_eps: f64::NAN,
+            collapsed_area_eps: 0.0,
+        };
+        assert_eq!(cavc_pline_boolean_o_init(&mut boolean_options), 0);
+        assert_eq!(
+            cavc_pline_boolean(
+                ptr::null(),
+                pline_b,
+                0,
+                &boolean_options,
+                &mut pos_plines,
+                &mut neg_plines
+            ),
+            1
+        );
+        assert_eq!(pos_plines, plinelist_sentinel);
+        assert_eq!(neg_plines, plinelist_sentinel);
+
         let mut options = cavc_pline_self_intersect_o {
             pline_aabb_index: ptr::null(),
             pos_equal_eps: f64::NAN,
@@ -6077,6 +6097,26 @@ fn pline_contains_invalid_input_result_contract_ffi() {
             cavc_pline_contains(ptr::null(), rectangle, ptr::null(), ptr::null_mut()),
             1
         );
+
+        let mut contains_options = cavc_pline_contains_o {
+            pline1_aabb_index: ptr::dangling::<cavc_aabbindex>(),
+            pos_equal_eps: f64::NAN,
+        };
+        assert_eq!(cavc_pline_contains_o_init(&mut contains_options), 0);
+
+        result = CAVC_CONTAINS_RESULT_INTERSECTED;
+        assert_eq!(
+            cavc_pline_contains(ptr::null(), rectangle, &contains_options, &mut result),
+            1
+        );
+        assert_eq!(result, CAVC_CONTAINS_RESULT_INVALID_INPUT);
+
+        result = CAVC_CONTAINS_RESULT_INTERSECTED;
+        assert_eq!(
+            cavc_pline_contains(rectangle, ptr::null(), &contains_options, &mut result),
+            1
+        );
+        assert_eq!(result, CAVC_CONTAINS_RESULT_INVALID_INPUT);
 
         cavc_pline_f(rectangle);
     }
