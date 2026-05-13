@@ -1424,6 +1424,40 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn opposing_direction_arc_overlap_adjacent_endpoint_deduplication() {
+        // Bounded opposing-direction arc-overlap collection-level probe:
+        // arc overlap endpoints also appear as basic intersects on adjacent line segments and
+        // should be removed by duplicate filtering.
+        let mut pline1 = Polyline::new();
+        pline1.add(1.0, 1.0, 1.0);
+        pline1.add(3.0, 1.0, 0.0);
+        pline1.add(3.0, 0.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(3.0, 1.0, -1.0);
+        pline2.add(1.0, 1.0, 0.0);
+        pline2.add(1.0, 0.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 1);
+        assert_eq!(intrs.basic_intersects.len(), 0);
+
+        let overlap = intrs.overlapping_intersects[0];
+        assert_eq!(overlap.start_index1, 0);
+        assert_eq!(overlap.start_index2, 0);
+        let endpoint_set_a = overlap.point1.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)
+            && overlap.point2.fuzzy_eq_eps(Vector2::new(1.0, 1.0), 1e-5);
+        let endpoint_set_b = overlap.point1.fuzzy_eq_eps(Vector2::new(1.0, 1.0), 1e-5)
+            && overlap.point2.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5);
+        assert!(
+            endpoint_set_a || endpoint_set_b,
+            "unexpected arc-overlap endpoints: {:?}",
+            overlap
+        );
+    }
+
+    #[test]
     fn uses_pos_equal_eps() {
         // test that pos_equal_eps passed in options is used
         let eps = 1e-5;
