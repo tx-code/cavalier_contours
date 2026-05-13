@@ -32,6 +32,152 @@ fn compare_vertexes(actual: &[cavc_vertex], expected: &[cavc_vertex]) {
     }
 }
 
+#[derive(Debug, Copy, Clone)]
+struct PlineProps {
+    vertex_count: u32,
+    area: f64,
+    path_length: f64,
+    min_x: f64,
+    min_y: f64,
+    max_x: f64,
+    max_y: f64,
+}
+
+impl PlineProps {
+    fn new(
+        vertex_count: u32,
+        area: f64,
+        path_length: f64,
+        min_x: f64,
+        min_y: f64,
+        max_x: f64,
+        max_y: f64,
+    ) -> Self {
+        Self {
+            vertex_count,
+            area,
+            path_length,
+            min_x,
+            min_y,
+            max_x,
+            max_y,
+        }
+    }
+
+    fn fuzzy_eq_ignore_area_sign(&self, other: &Self, eps: f64) -> bool {
+        self.vertex_count == other.vertex_count
+            && (self.area.abs() - other.area.abs()).abs() <= eps
+            && (self.path_length - other.path_length).abs() <= eps
+            && (self.min_x - other.min_x).abs() <= eps
+            && (self.min_y - other.min_y).abs() <= eps
+            && (self.max_x - other.max_x).abs() <= eps
+            && (self.max_y - other.max_y).abs() <= eps
+    }
+}
+
+fn pline_props(pline: *const cavc_pline) -> PlineProps {
+    let mut vertex_count = u32::MAX;
+    let mut area = f64::NAN;
+    let mut path_length = f64::NAN;
+    let mut min_x = f64::NAN;
+    let mut min_y = f64::NAN;
+    let mut max_x = f64::NAN;
+    let mut max_y = f64::NAN;
+
+    unsafe {
+        assert_eq!(cavc_pline_get_vertex_count(pline, &mut vertex_count), 0);
+        assert_eq!(cavc_pline_eval_area(pline, &mut area), 0);
+        assert_eq!(cavc_pline_eval_path_length(pline, &mut path_length), 0);
+        assert_eq!(
+            cavc_pline_eval_extents(pline, &mut min_x, &mut min_y, &mut max_x, &mut max_y),
+            0
+        );
+    }
+
+    PlineProps::new(vertex_count, area, path_length, min_x, min_y, max_x, max_y)
+}
+
+fn plinelist_props(plinelist: *const cavc_plinelist) -> Vec<PlineProps> {
+    let mut count = u32::MAX;
+    unsafe {
+        assert_eq!(cavc_plinelist_get_count(plinelist, &mut count), 0);
+    }
+
+    let mut result = Vec::with_capacity(count as usize);
+    for i in 0..count {
+        let mut pline = ptr::null();
+        unsafe {
+            assert_eq!(cavc_plinelist_get_pline(plinelist, i, &mut pline), 0);
+        }
+        result.push(pline_props(pline));
+    }
+
+    result
+}
+
+fn props_set_match_ignore_area_sign(
+    actual: &[PlineProps],
+    expected: &[PlineProps],
+    eps: f64,
+) -> bool {
+    if actual.len() != expected.len() {
+        return false;
+    }
+
+    expected.iter().all(|exp| {
+        actual
+            .iter()
+            .filter(|act| act.fuzzy_eq_ignore_area_sign(exp, eps))
+            .count()
+            == 1
+    })
+}
+
+fn run_boolean_props(
+    pline1: *const cavc_pline,
+    pline2: *const cavc_pline,
+    operation: u32,
+) -> (Vec<PlineProps>, Vec<PlineProps>) {
+    let mut pos_plines = ptr::null();
+    let mut neg_plines = ptr::null();
+
+    unsafe {
+        assert_eq!(
+            cavc_pline_boolean(
+                pline1,
+                pline2,
+                operation,
+                ptr::null(),
+                &mut pos_plines,
+                &mut neg_plines
+            ),
+            0
+        );
+
+        let pos = plinelist_props(pos_plines);
+        let neg = plinelist_props(neg_plines);
+        cavc_plinelist_f(pos_plines as *mut _);
+        cavc_plinelist_f(neg_plines as *mut _);
+        (pos, neg)
+    }
+}
+
+struct BooleanCase {
+    name: &'static str,
+    operation: u32,
+    expected_remaining: Vec<PlineProps>,
+    expected_subtracted: Vec<PlineProps>,
+}
+
+struct BooleanCaseWithInputs {
+    name: &'static str,
+    subject: *const cavc_pline,
+    clip: *const cavc_pline,
+    operation: u32,
+    expected_remaining: Vec<PlineProps>,
+    expected_subtracted: Vec<PlineProps>,
+}
+
 #[test]
 fn pline_data_manipulation() {
     let pline = create_pline(&[], true);
@@ -766,6 +912,266 @@ fn pline_boolean_coincident_case1_intersect_cpp_parity() {
 
         cavc_plinelist_f(pos_plines as *mut _);
         cavc_plinelist_f(neg_plines as *mut _);
+        cavc_pline_f(pline_a);
+        cavc_pline_f(pline_b);
+    }
+}
+
+#[test]
+fn pline_boolean_circle_rectangle_cpp_matrix_parity() {
+    let pline_a = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
+    let pline_b = create_pline(
+        &[
+            (3.0, -10.0, 0.0),
+            (6.0, -10.0, 0.0),
+            (6.0, 10.0, 0.0),
+            (3.0, 10.0, 0.0),
+        ],
+        true,
+    );
+
+    // FFI operation mapping:
+    // 0 = Or, 1 = And, 2 = Not, 3 = Xor
+    let cases = [
+        BooleanCase {
+            name: "circle_rectangle_union",
+            operation: 0,
+            expected_remaining: vec![PlineProps::new(
+                10,
+                109.15381629282,
+                52.324068506275,
+                0.0,
+                -10.0,
+                10.0,
+                10.0,
+            )],
+            expected_subtracted: vec![],
+        },
+        BooleanCase {
+            name: "circle_rectangle_exclude",
+            operation: 2,
+            expected_remaining: vec![
+                PlineProps::new(
+                    3,
+                    29.336980664548,
+                    23.492343031178,
+                    6.0,
+                    -3.8989794855664,
+                    10.0,
+                    5.898979485566356,
+                ),
+                PlineProps::new(
+                    3,
+                    19.816835628274,
+                    20.757946197186,
+                    0.0,
+                    -3.582575694955841,
+                    3.0,
+                    5.5825756949558,
+                ),
+            ],
+            expected_subtracted: vec![],
+        },
+        BooleanCase {
+            name: "circle_rectangle_intersect",
+            operation: 1,
+            expected_remaining: vec![PlineProps::new(
+                4,
+                29.386000046924,
+                25.091858029623,
+                3.0,
+                -4.0,
+                6.0,
+                6.0,
+            )],
+            expected_subtracted: vec![],
+        },
+        BooleanCase {
+            name: "circle_rectangle_xor",
+            operation: 3,
+            expected_remaining: vec![
+                PlineProps::new(
+                    3,
+                    19.816835628274,
+                    20.757946197186,
+                    0.0,
+                    -3.582575694955841,
+                    3.0,
+                    5.5825756949558,
+                ),
+                PlineProps::new(
+                    4,
+                    -18.306999976538,
+                    18.582818653767,
+                    3.0,
+                    -10.0,
+                    6.0,
+                    -3.5825756949558,
+                ),
+                PlineProps::new(
+                    3,
+                    29.336980664548,
+                    23.492343031178,
+                    6.0,
+                    -3.8989794855664,
+                    10.0,
+                    5.898979485566356,
+                ),
+                PlineProps::new(
+                    4,
+                    -12.306999976538,
+                    14.582818653767,
+                    3.0,
+                    5.5825756949558,
+                    6.0,
+                    10.0,
+                ),
+            ],
+            expected_subtracted: vec![],
+        },
+    ];
+
+    for case in cases {
+        let (remaining, subtracted) = run_boolean_props(pline_a, pline_b, case.operation);
+        assert!(
+            props_set_match_ignore_area_sign(&remaining, &case.expected_remaining, 1e-4),
+            "remaining property mismatch for case={}\nremaining={remaining:?}\nexpected={:?}",
+            case.name,
+            case.expected_remaining
+        );
+        assert!(
+            props_set_match_ignore_area_sign(&subtracted, &case.expected_subtracted, 1e-4),
+            "subtracted property mismatch for case={}\nsubtracted={subtracted:?}\nexpected={:?}",
+            case.name,
+            case.expected_subtracted
+        );
+    }
+
+    unsafe {
+        cavc_pline_f(pline_a);
+        cavc_pline_f(pline_b);
+    }
+}
+
+#[test]
+fn pline_boolean_coincident_case2_cpp_matrix_parity() {
+    let pline_a = create_pline(
+        &[
+            (0.0, 0.0, 0.0),
+            (0.0, 20.0, 0.0),
+            (20.0, 20.0, 0.0),
+            (20.0, 0.0, 0.0),
+        ],
+        true,
+    );
+    let pline_b = create_pline(
+        &[
+            (-2.0, 10.0, 0.0),
+            (-2.0, 20.0, 0.0),
+            (2.0, 20.0, 0.0),
+            (2.0, 25.0, 0.0),
+            (4.0, 25.0, 0.0),
+            (4.0, 20.0, 0.0),
+            (6.0, 20.0, 0.0),
+            (6.0, 15.0, 0.0),
+            (8.0, 15.0, 0.0),
+            (8.0, 20.0, 0.0),
+            (10.0, 40.0, 0.0),
+            (30.0, 40.0, 0.0),
+            (30.0, 20.0, 0.0),
+        ],
+        true,
+    );
+
+    let cases = [
+        BooleanCaseWithInputs {
+            name: "coincident_case2_union",
+            subject: pline_a,
+            clip: pline_b,
+            operation: 0,
+            expected_remaining: vec![PlineProps::new(
+                16,
+                -865.0,
+                150.17204220292,
+                -2.0,
+                0.0,
+                30.0,
+                40.0,
+            )],
+            expected_subtracted: vec![],
+        },
+        BooleanCaseWithInputs {
+            name: "coincident_case2_excludeAFromB",
+            subject: pline_a,
+            clip: pline_b,
+            operation: 2,
+            expected_remaining: vec![
+                PlineProps::new(4, -275.0, 68.4538182678, 0.0, 0.0, 20.0, 16.875),
+                PlineProps::new(4, -10.0, 14.0, 6.0, 15.0, 8.0, 20.0),
+            ],
+            expected_subtracted: vec![],
+        },
+        BooleanCaseWithInputs {
+            name: "coincident_case2_excludeBFromA",
+            subject: pline_b,
+            clip: pline_a,
+            operation: 2,
+            expected_remaining: vec![
+                PlineProps::new(4, -19.375, 23.47038182678, -2.0, 10.0, 0.0, 20.0),
+                PlineProps::new(6, -435.625, 85.701660376142, 8.0, 16.875, 30.0, 40.0),
+                PlineProps::new(4, -10.0, 14.0, 2.0, 20.0, 4.0, 25.0),
+            ],
+            expected_subtracted: vec![],
+        },
+        BooleanCaseWithInputs {
+            name: "coincident_case2_intersect",
+            subject: pline_a,
+            clip: pline_b,
+            operation: 1,
+            expected_remaining: vec![PlineProps::new(
+                10,
+                -115.0,
+                63.4538182678,
+                0.0,
+                10.625,
+                20.0,
+                20.0,
+            )],
+            expected_subtracted: vec![],
+        },
+        BooleanCaseWithInputs {
+            name: "coincident_case2_xor",
+            subject: pline_a,
+            clip: pline_b,
+            operation: 3,
+            expected_remaining: vec![
+                PlineProps::new(4, -19.375, 23.47038182678, -2.0, 10.0, 0.0, 20.0),
+                PlineProps::new(6, -435.625, 85.701660376142, 8.0, 16.875, 30.0, 40.0),
+                PlineProps::new(4, -10.0, 14.0, 2.0, 20.0, 4.0, 25.0),
+                PlineProps::new(4, 275.0, 68.4538182678, 0.0, 0.0, 20.0, 16.875),
+                PlineProps::new(4, 10.0, 14.0, 6.0, 15.0, 8.0, 20.0),
+            ],
+            expected_subtracted: vec![],
+        },
+    ];
+
+    for case in cases {
+        let (remaining, subtracted) = run_boolean_props(case.subject, case.clip, case.operation);
+        assert!(
+            props_set_match_ignore_area_sign(&remaining, &case.expected_remaining, 1e-4),
+            "remaining property mismatch for case={}\nremaining={remaining:?}\nexpected={:?}",
+            case.name,
+            case.expected_remaining
+        );
+        assert!(
+            props_set_match_ignore_area_sign(&subtracted, &case.expected_subtracted, 1e-4),
+            "subtracted property mismatch for case={}\nsubtracted={subtracted:?}\nexpected={:?}",
+            case.name,
+            case.expected_subtracted
+        );
+    }
+
+    unsafe {
         cavc_pline_f(pline_a);
         cavc_pline_f(pline_b);
     }
