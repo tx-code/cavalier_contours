@@ -38,12 +38,14 @@ endpoint-stickiness branch closure.
 - Added non-circle arc/arc-overlap-adjacent closed/open variant probes:
   - `non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_closed_pline1`
   - `non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_closed_pline2`
+- Added non-circle reversed-overlap-endpoint-order probe with adjacent-line flip:
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip`
 
 ## Next Alignment Targets (No Clipper)
 
 | Priority | Target | Rust file/module | Decision Boundary |
 |----------|--------|------------------|-------------------|
-| P1 | Add bounded non-circle arc/arc-overlap-adjacent probes with reversed overlap endpoint ordering and adjacent-line direction flips | `cavalier_contours/src/polyline/internal/pline_intersects.rs`, `cavalier_contours/tests/test_pline_seg_intersect.rs` | Keep source-traceable cases and avoid broad refactors. |
+| P1 | Extend reversed-overlap-endpoint-order non-circle probes to closed/open variants where one side is closed | `cavalier_contours/src/polyline/internal/pline_intersects.rs` | Keep source-traceable cases and avoid broad refactors. |
 | P2 | Extend collection-level parity to mixed arc/arc-overlap adjacency in non-circle closed shapes where direct old C++ mapping is available | `cavalier_contours/src/polyline/internal/pline_intersects.rs`, `cavalier_contours/tests/test_pline_seg_intersect.rs` | Keep source mapping explicit and bounded. |
 | P2 | Extend combine/offset-derived intersection fixture parity only when direct C++ source mapping exists | `cavalier_contours/tests/test_cpp_combine_parity.rs`, `cavalier_contours/tests/test_cpp_offset_parity.rs` | Keep provenance explicit and no-Clipper. |
 
