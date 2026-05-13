@@ -203,6 +203,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-121**: Reversed-input options-path `parallel_offset` output remains equivalent to reversed-input default-path output across self-intersects include mode matrix (`ALL`, `LOCAL`, `GLOBAL`) and bounded tolerance scales (`0.5x`, `1.0x`, `2.0x`) for source-backed simple and specific cases.
 - **PAR-122**: Reversed self-intersects stress-matrix parity explicitly validates both property-level and vertex-level output equivalence with mode/scale attribution.
 - **PAR-123**: Reversed self-intersects stress-matrix phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-124**: Reversed-input options-path `parallel_offset` execution preserves input vertex data across self-intersects include mode matrix (`ALL`, `LOCAL`, `GLOBAL`) and bounded tolerance scales (`0.5x`, `1.0x`, `2.0x`) for source-backed simple and specific cases.
+- **PAR-125**: Reversed self-intersects no-modify stress-matrix parity explicitly validates input stability with mode/scale attribution.
+- **PAR-126**: Reversed self-intersects no-modify stress-matrix phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -370,13 +373,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-121 | Phase 49 | Complete |
 | PAR-122 | Phase 49 | Complete |
 | PAR-123 | Phase 49 | Complete |
+| PAR-124 | Phase 50 | Complete |
+| PAR-125 | Phase 50 | Complete |
+| PAR-126 | Phase 50 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 123 (`PAR-01..PAR-123`), mapped to Phases 9-49
+- additional tracked post-v1 requirements: 126 (`PAR-01..PAR-126`), mapped to Phases 9-50
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 49 completion*
+*Last updated: 2026-05-14 after Phase 50 completion*

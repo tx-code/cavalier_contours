@@ -787,6 +787,21 @@ Plans:
 - [x] 49-02: Publish post-deepening alignment map for reversed stress-matrix follow-up.
 - [x] 49-03: Close verification gates and sync planning state.
 
+### Phase 50: C-API Options-Path Reversed Self-Intersects No-Modify Stress Matrix (No Clipper)
+**Goal**: Deepen reversed-input options-path invariants with a bounded self-intersects no-modify stress matrix across source-backed simple/specific offset cases (`invert_direction + negated delta`, `mode x tolerance scale`).
+**Depends on**: Phase 49
+**Requirements**: [PAR-124, PAR-125, PAR-126]
+**Success Criteria** (what must be TRUE):
+  1. Reversed-input options-path `parallel_offset` execution preserves input vertex data across self-intersects include mode matrix (`ALL`, `LOCAL`, `GLOBAL`) and bounded tolerance scales (`0.5x`, `1.0x`, `2.0x`) for source-backed simple and specific cases.
+  2. Reversed no-modify stress-matrix checks validate input stability with explicit mode/scale attribution in assertions.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 50-01: Add reversed self-intersects no-modify stress-matrix test for options-path offset flow.
+- [x] 50-02: Publish post-deepening alignment map for reversed no-modify stress-matrix follow-up.
+- [x] 50-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -843,3 +858,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 47. C-API Self-Intersects Mode No-Modify Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 48. C-API Options-Path Self-Intersects Stress Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 49. C-API Options-Path Reversed Self-Intersects Stress Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 50. C-API Options-Path Reversed Self-Intersects No-Modify Stress Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
