@@ -815,7 +815,7 @@ struct CoincidentMatrixCase {
 fn cpp_coincident_boolean_matrix_cases() -> Vec<CoincidentMatrixCase> {
     let (case1_a, case1_b) = cpp_coincident_case1_inputs();
     let (case2_a, case2_b) = cpp_coincident_case2_inputs();
-    vec![
+    let cases = vec![
         CoincidentMatrixCase {
             name: "coincident_case1_union",
             operation: 0,
@@ -876,7 +876,43 @@ fn cpp_coincident_boolean_matrix_cases() -> Vec<CoincidentMatrixCase> {
             subject: case2_a,
             clip: case2_b,
         },
-    ]
+    ];
+
+    let expected_source_cases: [(&str, u32); 10] = [
+        ("coincident_case1_union", 0),
+        ("coincident_case1_excludeAFromB", 2),
+        ("coincident_case1_excludeBFromA", 2),
+        ("coincident_case1_intersect", 1),
+        ("coincident_case1_xor", 3),
+        ("coincident_case2_union", 0),
+        ("coincident_case2_excludeAFromB", 2),
+        ("coincident_case2_excludeBFromA", 2),
+        ("coincident_case2_intersect", 1),
+        ("coincident_case2_xor", 3),
+    ];
+
+    assert_eq!(
+        cases.len(),
+        expected_source_cases.len(),
+        "coincident matrix helper case count drifted: actual={}, expected={}",
+        cases.len(),
+        expected_source_cases.len()
+    );
+
+    for (expected_name, expected_operation) in expected_source_cases {
+        let case = cases
+            .iter()
+            .find(|case| case.name == expected_name)
+            .unwrap_or_else(|| {
+                panic!("coincident matrix helper missing source-backed case: {expected_name}")
+            });
+        assert_eq!(
+            case.operation, expected_operation,
+            "coincident matrix helper operation drift for case={expected_name}"
+        );
+    }
+
+    cases
 }
 
 const CPP_MATRIX_EPS: f64 = 1e-4;

@@ -1072,6 +1072,21 @@ Plans:
 - [x] 68-02: Publish post-extraction alignment map for next bounded targets.
 - [x] 68-03: Close verification gates and sync planning state.
 
+### Phase 69: C-API Coincident Matrix Source-Coverage Guard (No Clipper)
+**Goal**: Harden shared coincident matrix helper alignment with explicit source-backed case-coverage and operation-map guardrails while preserving behavior.
+**Depends on**: Phase 68
+**Requirements**: [PAR-181, PAR-182, PAR-183]
+**Success Criteria** (what must be TRUE):
+  1. Shared coincident matrix helper fails fast when canonical source-backed case coverage or helper case count drifts.
+  2. Shared coincident matrix helper fails fast when source-backed operation mapping drifts from canonical old C++ mapping.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 69-01: Add source-coverage and operation-map guards to shared coincident matrix helper.
+- [x] 69-02: Publish post-guard alignment map for next bounded targets.
+- [x] 69-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1147,3 +1162,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 66. C-API Specific-Edge Matrix Source-Coverage Guard (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 67. C-API Coincident Exclude Name Canonicalization (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 68. C-API Coincident Matrix Helper Extraction (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 69. C-API Coincident Matrix Source-Coverage Guard (No Clipper) | 3/3 | Complete   | 2026-05-15 |

@@ -260,6 +260,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-178**: C-API coincident matrix suites reuse one shared source-backed case helper for `name`, `operation`, `subject`, and `clip` metadata.
 - **PAR-179**: Shared helper extraction preserves canonical naming, operation mapping, and behavioral assertions across default/options/no-modify/output matrix suites.
 - **PAR-180**: C-API coincident matrix helper extraction phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-181**: Shared coincident matrix helper enforces canonical source-backed case coverage with explicit failure diagnostics for omitted case names and case-count drift.
+- **PAR-182**: Shared coincident matrix helper enforces canonical source-backed operation mapping with explicit failure diagnostics for operation drift.
+- **PAR-183**: C-API coincident matrix source-coverage guard phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -484,13 +487,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-178 | Phase 68 | Complete |
 | PAR-179 | Phase 68 | Complete |
 | PAR-180 | Phase 68 | Complete |
+| PAR-181 | Phase 69 | Complete |
+| PAR-182 | Phase 69 | Complete |
+| PAR-183 | Phase 69 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 180 (`PAR-01..PAR-180`), mapped to Phases 9-68
+- additional tracked post-v1 requirements: 183 (`PAR-01..PAR-183`), mapped to Phases 9-69
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 68 completion*
+*Last updated: 2026-05-15 after Phase 69 completion*
