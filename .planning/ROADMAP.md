@@ -1087,6 +1087,21 @@ Plans:
 - [x] 69-02: Publish post-guard alignment map for next bounded targets.
 - [x] 69-03: Close verification gates and sync planning state.
 
+### Phase 70: C-API Coincident Case1 Matrix Parity Expansion (No Clipper)
+**Goal**: Expand explicit source-backed default-path parity by adding full old C++ coincident_case1 matrix expectations.
+**Depends on**: Phase 69
+**Requirements**: [PAR-184, PAR-185, PAR-186]
+**Success Criteria** (what must be TRUE):
+  1. Default-path `cavc_pline_boolean` parity explicitly covers old C++ coincident_case1 `union/excludeAFromB/excludeBFromA/intersect/xor` expected properties.
+  2. Case1 exclude direction variants preserve source-backed operation mapping and expected output properties.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 70-01: Add explicit coincident_case1 default-path matrix parity test from old C++ expectations.
+- [x] 70-02: Publish post-expansion alignment map for next bounded targets.
+- [x] 70-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1163,3 +1178,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 67. C-API Coincident Exclude Name Canonicalization (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 68. C-API Coincident Matrix Helper Extraction (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 69. C-API Coincident Matrix Source-Coverage Guard (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 70. C-API Coincident Case1 Matrix Parity Expansion (No Clipper) | 3/3 | Complete   | 2026-05-15 |

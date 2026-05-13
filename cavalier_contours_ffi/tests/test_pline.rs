@@ -2998,6 +2998,139 @@ fn pline_boolean_circle_rectangle_cpp_matrix_parity() {
 }
 
 #[test]
+fn pline_boolean_coincident_case1_cpp_matrix_parity() {
+    let pline_a = create_pline(
+        &[
+            (-0.105, 0.235, 0.0),
+            (-0.095, 0.235, 0.0),
+            (-0.095, 0.0, -1.0),
+            (-0.105, 0.0, 0.0),
+        ],
+        true,
+    );
+    let pline_b = create_pline(
+        &[
+            (-0.25, 0.235, -0.414214),
+            (-0.255, 0.24, 0.0),
+            (-0.255, 0.29, -0.414214),
+            (-0.25, 0.295, 0.0),
+            (0.25, 0.295, -0.414214),
+            (0.255, 0.29, 0.0),
+            (0.255, 0.24, -0.414214),
+            (0.25, 0.235, 0.0),
+        ],
+        true,
+    );
+
+    let cases = [
+        BooleanCaseWithInputs {
+            name: "coincident_case1_union",
+            subject: pline_a,
+            clip: pline_b,
+            operation: 0,
+            expected_remaining: vec![PlineProps::new(
+                12,
+                -0.032967809756574,
+                1.6071238962168,
+                -0.255,
+                -0.005,
+                0.255,
+                0.295,
+            )],
+            expected_subtracted: vec![],
+        },
+        BooleanCaseWithInputs {
+            name: "coincident_case1_excludeAFromB",
+            subject: pline_a,
+            clip: pline_b,
+            operation: 2,
+            expected_remaining: vec![PlineProps::new(
+                4,
+                -0.0023892699081699,
+                0.49570796326795,
+                -0.105,
+                -0.005,
+                -0.095,
+                0.235,
+            )],
+            expected_subtracted: vec![],
+        },
+        BooleanCaseWithInputs {
+            name: "coincident_case1_excludeBFromA",
+            subject: pline_b,
+            clip: pline_a,
+            operation: 2,
+            expected_remaining: vec![PlineProps::new(
+                10,
+                -0.030578539848405,
+                1.1314159329489,
+                -0.255,
+                0.235,
+                0.255,
+                0.295,
+            )],
+            expected_subtracted: vec![],
+        },
+        BooleanCaseWithInputs {
+            name: "coincident_case1_intersect",
+            subject: pline_a,
+            clip: pline_b,
+            operation: 1,
+            expected_remaining: vec![],
+            expected_subtracted: vec![],
+        },
+        BooleanCaseWithInputs {
+            name: "coincident_case1_xor",
+            subject: pline_a,
+            clip: pline_b,
+            operation: 3,
+            expected_remaining: vec![
+                PlineProps::new(
+                    4,
+                    -0.0023892699081699,
+                    0.49570796326795,
+                    -0.105,
+                    -0.005,
+                    -0.095,
+                    0.235,
+                ),
+                PlineProps::new(
+                    10,
+                    0.030578539848405,
+                    1.1314159329489,
+                    -0.255,
+                    0.235,
+                    0.255,
+                    0.295,
+                ),
+            ],
+            expected_subtracted: vec![],
+        },
+    ];
+
+    for case in cases {
+        let (remaining, subtracted) = run_boolean_props(case.subject, case.clip, case.operation);
+        assert!(
+            props_set_match_ignore_area_sign(&remaining, &case.expected_remaining, 1e-4),
+            "remaining property mismatch for case={}\nremaining={remaining:?}\nexpected={:?}",
+            case.name,
+            case.expected_remaining
+        );
+        assert!(
+            props_set_match_ignore_area_sign(&subtracted, &case.expected_subtracted, 1e-4),
+            "subtracted property mismatch for case={}\nsubtracted={subtracted:?}\nexpected={:?}",
+            case.name,
+            case.expected_subtracted
+        );
+    }
+
+    unsafe {
+        cavc_pline_f(pline_a);
+        cavc_pline_f(pline_b);
+    }
+}
+
+#[test]
 fn pline_boolean_coincident_case2_cpp_matrix_parity() {
     let pline_a = create_pline(
         &[
