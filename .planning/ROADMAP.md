@@ -35,6 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 17: C++ Coincident Combine Matrix Parity Expansion (No Clipper)** - Import and execute old C++ coincident combine case matrices, classifying confirmed parity and explicit divergence behavior. (completed 2026-05-13)
 - [x] **Phase 18: Coincident Intersect Collapsed-Filter Parity Path (No Clipper)** - Validate and lock a source-traceable `collapsed_area_eps` parity path for coincident intersect sliver suppression. (completed 2026-05-13)
 - [x] **Phase 19: Coincident Intersect Default-Path Line-Loop Parity Closure (No Clipper)** - Remove degenerate line-only 2-vertex loops during boolean stitching so default coincident intersect behavior matches old C++ empty-output parity. (completed 2026-05-13)
+- [x] **Phase 20: C-API Coincident Intersect Parity Bridge (No Clipper)** - Extend parity closure to the FFI boundary with an executable `cavc_pline_boolean` coincident intersect case matching old C++ empty-output expectation. (completed 2026-05-13)
 
 ## Phase Details
 
@@ -332,6 +333,21 @@ Plans:
 - [x] 19-02: Reclassify coincident default-path parity and publish next alignment map.
 - [x] 19-03: Close verification gates and sync planning state.
 
+### Phase 20: C-API Coincident Intersect Parity Bridge (No Clipper)
+**Goal**: Prove the coincident intersect parity closure through the Rust FFI boundary with direct C-API boolean execution.
+**Depends on**: Phase 19
+**Requirements**: [PAR-34, PAR-35, PAR-36]
+**Success Criteria** (what must be TRUE):
+  1. `cavc_pline_boolean` has an executable coincident-case intersect test based on old C++ source data and operation semantics.
+  2. FFI default-path result for `coincident_case1_intersect` is empty (parity with old C++ expectation).
+  3. Full workspace and planning health gates are green and next C-API parity expansion scope is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 20-01: Add FFI coincident intersect parity test case and run FFI-focused verification.
+- [x] 20-02: Publish C-API parity bridge report and next-scope map.
+- [x] 20-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -358,3 +374,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 17. C++ Coincident Combine Matrix Parity Expansion (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 18. Coincident Intersect Collapsed-Filter Parity Path (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 19. Coincident Intersect Default-Path Line-Loop Parity Closure (No Clipper) | 3/3 | Complete   | 2026-05-13 |
+| 20. C-API Coincident Intersect Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-13 |

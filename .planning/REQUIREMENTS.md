@@ -113,6 +113,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-31**: Boolean stitching removes only degenerate line-only two-vertex closed loops while preserving valid two-vertex arc loops.
 - **PAR-32**: `coincident_case1_intersect` default-path behavior matches old C++ empty-output parity through executable Rust tests.
 - **PAR-33**: The project records the post-fix no-Clipper deep-alignment map and closes with full verification gates.
+- **PAR-34**: The FFI surface (`cavc_pline_boolean`) includes an executable coincident intersect parity case sourced from old C++ combine inputs.
+- **PAR-35**: FFI default-path `coincident_case1_intersect` behavior returns empty results for `And` operation parity with old C++ expectation.
+- **PAR-36**: C-API parity bridge work records next C-API expansion scope and closes with full verification gates.
 
 ## Out of Scope
 
@@ -190,13 +193,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-31 | Phase 19 | Complete |
 | PAR-32 | Phase 19 | Complete |
 | PAR-33 | Phase 19 | Complete |
+| PAR-34 | Phase 20 | Complete |
+| PAR-35 | Phase 20 | Complete |
+| PAR-36 | Phase 20 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 33 (`PAR-01..PAR-33`), mapped to Phases 9-19
+- additional tracked post-v1 requirements: 36 (`PAR-01..PAR-36`), mapped to Phases 9-20
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-13 after Phase 19 completion*
+*Last updated: 2026-05-13 after Phase 20 completion*

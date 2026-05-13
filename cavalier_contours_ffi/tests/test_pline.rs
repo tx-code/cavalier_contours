@@ -715,6 +715,63 @@ fn pline_eval_boolean() {
 }
 
 #[test]
+fn pline_boolean_coincident_case1_intersect_cpp_parity() {
+    // old C++ source: TEST_cavc_combine_plines.cpp -> coincident_case1_intersect
+    let pline_a = create_pline(
+        &[
+            (-0.105, 0.235, 0.0),
+            (-0.095, 0.235, 0.0),
+            (-0.095, 0.0, -1.0),
+            (-0.105, 0.0, 0.0),
+        ],
+        true,
+    );
+    let pline_b = create_pline(
+        &[
+            (-0.25, 0.235, -0.414214),
+            (-0.255, 0.24, 0.0),
+            (-0.255, 0.29, -0.414214),
+            (-0.25, 0.295, 0.0),
+            (0.25, 0.295, -0.414214),
+            (0.255, 0.29, 0.0),
+            (0.255, 0.24, -0.414214),
+            (0.25, 0.235, 0.0),
+        ],
+        true,
+    );
+
+    let mut pos_plines = ptr::null();
+    let mut neg_plines = ptr::null();
+
+    unsafe {
+        // 1 = BooleanOp::And
+        assert_eq!(
+            cavc_pline_boolean(
+                pline_a,
+                pline_b,
+                1,
+                ptr::null(),
+                &mut pos_plines,
+                &mut neg_plines
+            ),
+            0
+        );
+
+        let mut pos_count = u32::MAX;
+        let mut neg_count = u32::MAX;
+        assert_eq!(cavc_plinelist_get_count(pos_plines, &mut pos_count), 0);
+        assert_eq!(cavc_plinelist_get_count(neg_plines, &mut neg_count), 0);
+        assert_eq!(pos_count, 0);
+        assert_eq!(neg_count, 0);
+
+        cavc_plinelist_f(pos_plines as *mut _);
+        cavc_plinelist_f(neg_plines as *mut _);
+        cavc_pline_f(pline_a);
+        cavc_pline_f(pline_b);
+    }
+}
+
+#[test]
 fn shape_eval_ffi() {
     let outer_pline = create_pline(
         &[
