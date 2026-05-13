@@ -682,6 +682,21 @@ Plans:
 - [x] 42-02: Publish post-deepening alignment map for options-path follow-up.
 - [x] 42-03: Close verification gates and sync planning state.
 
+### Phase 43: C-API Drift-Failure Triage Template (No Clipper)
+**Goal**: Establish a deterministic triage template for old-suite drift-hook failures so alignment response remains consistent and source-explicit.
+**Depends on**: Phase 42
+**Requirements**: [PAR-103, PAR-104, PAR-105]
+**Success Criteria** (what must be TRUE):
+  1. A reusable triage template exists with required sections for drift evidence, coverage mapping, classification, and action selection.
+  2. Drift-failure handling command flow is documented to connect drift detection with triage execution and re-audit boundaries.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 43-01: Add deterministic drift-failure triage template artifact.
+- [x] 43-02: Publish triage flow notes and post-phase alignment map.
+- [x] 43-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -731,3 +746,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 40. C-API Old-Suite Drift-Detection Hook (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 41. C-API Options-Path No-Modify Hardening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 42. C-API Options-Path Vertex-Output Deepening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 43. C-API Drift-Failure Triage Template (No Clipper) | 3/3 | Complete   | 2026-05-14 |

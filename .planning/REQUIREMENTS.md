@@ -182,6 +182,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-100**: Options-path boolean circle/rectangle matrix outputs are vertex-level equivalent to default-path outputs across union/exclude/intersect/xor (unordered polyline set, closed-rotation tolerant).
 - **PAR-101**: Options-path parallel-offset simple/specific matrix outputs are vertex-level equivalent to default-path outputs (unordered set, closed/open-aware matching).
 - **PAR-102**: Options-path vertex-output deepening closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-103**: A reusable drift-failure triage template exists with mandatory sections for drift evidence, old-suite block mapping, covered/equivalent/gap classification, and action decision.
+- **PAR-104**: Drift-failure handling flow explicitly links drift-check command failure to deterministic triage and re-audit steps.
+- **PAR-105**: Drift-failure triage-template phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -328,13 +331,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-100 | Phase 42 | Complete |
 | PAR-101 | Phase 42 | Complete |
 | PAR-102 | Phase 42 | Complete |
+| PAR-103 | Phase 43 | Complete |
+| PAR-104 | Phase 43 | Complete |
+| PAR-105 | Phase 43 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 102 (`PAR-01..PAR-102`), mapped to Phases 9-42
+- additional tracked post-v1 requirements: 105 (`PAR-01..PAR-105`), mapped to Phases 9-43
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 42 completion*
+*Last updated: 2026-05-14 after Phase 43 completion*
