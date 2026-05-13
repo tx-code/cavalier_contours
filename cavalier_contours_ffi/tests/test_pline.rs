@@ -1456,6 +1456,41 @@ fn pline_boolean_coincident_case2_cpp_matrix_parity() {
 }
 
 #[test]
+fn pline_boolean_does_not_modify_input_cpp_parity() {
+    // old C++ source: TEST_cavc_combine_plines.cpp -> combine_plines_does_not_modify_input
+    // mirror simple circle/rectangle operation matrix
+    let ops = [0_u32, 2_u32, 1_u32, 3_u32]; // Or, Not, And, Xor
+
+    for operation in ops {
+        let pline_a = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
+        let pline_b = create_pline(
+            &[
+                (3.0, -10.0, 0.0),
+                (6.0, -10.0, 0.0),
+                (6.0, 10.0, 0.0),
+                (3.0, 10.0, 0.0),
+            ],
+            true,
+        );
+
+        let before_a = read_vertices(pline_a);
+        let before_b = read_vertices(pline_b);
+
+        let _ = run_boolean_props(pline_a, pline_b, operation);
+
+        let after_a = read_vertices(pline_a);
+        let after_b = read_vertices(pline_b);
+        compare_vertexes(&after_a, &before_a);
+        compare_vertexes(&after_b, &before_b);
+
+        unsafe {
+            cavc_pline_f(pline_a);
+            cavc_pline_f(pline_b);
+        }
+    }
+}
+
+#[test]
 fn pline_boolean_combine_with_self_invariants_cpp_parity() {
     let pline = create_pline(
         &[
