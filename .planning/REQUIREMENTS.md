@@ -164,6 +164,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-82**: The FFI surface preserves caller buffers on empty `cavc_pline_get_vertex_data` reads (source-backed pline-suite edge behavior).
 - **PAR-83**: The FFI surface preserves existing vertex data across `cavc_pline_reserve` calls on populated polylines.
 - **PAR-84**: Pline-suite buffer/reserve parity work records next parity target scope and closes with full verification gates.
+- **PAR-85**: The FFI surface reproduces source-backed remove-range scenario behavior via ordered `cavc_pline_remove` calls on current API surface.
+- **PAR-86**: Remove-sequence range-equivalence parity validates vertex-level intermediate transitions and final empty-state closure.
+- **PAR-87**: Pline remove-sequence range-equivalence parity work records next parity target scope and closes with full verification gates.
 
 ## Out of Scope
 
@@ -292,13 +295,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-82 | Phase 36 | Complete |
 | PAR-83 | Phase 36 | Complete |
 | PAR-84 | Phase 36 | Complete |
+| PAR-85 | Phase 37 | Complete |
+| PAR-86 | Phase 37 | Complete |
+| PAR-87 | Phase 37 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 84 (`PAR-01..PAR-84`), mapped to Phases 9-36
+- additional tracked post-v1 requirements: 87 (`PAR-01..PAR-87`), mapped to Phases 9-37
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 36 completion*
+*Last updated: 2026-05-14 after Phase 37 completion*

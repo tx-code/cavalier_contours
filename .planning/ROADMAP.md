@@ -592,6 +592,21 @@ Plans:
 - [x] 36-02: Publish pline-suite buffer/reserve parity report and next-scope map.
 - [x] 36-03: Close verification gates and sync planning state.
 
+### Phase 37: C-API Pline Remove-Sequence Range-Equivalence Parity (No Clipper)
+**Goal**: Close source-backed remove-range scenario parity using equivalent ordered remove sequence on current C-API surface.
+**Depends on**: Phase 36
+**Requirements**: [PAR-85, PAR-86, PAR-87]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests reproduce old remove-range scenario with ordered `cavc_pline_remove` calls and vertex-level intermediate assertions.
+  2. Final polyline empty-state closure matches source-backed expectation.
+  3. Full workspace and planning health gates are green, and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 37-01: Add remove-sequence range-equivalence parity test.
+- [x] 37-02: Publish remove-sequence range-equivalence parity report and next-scope map.
+- [x] 37-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -635,3 +650,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 34. C-API Function-Surface Parallel-Offset Full Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 35. C-API Combine-Self Vertex-Exact Reversed Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 36. C-API Pline-Suite Buffer/Reserve Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 37. C-API Pline Remove-Sequence Range-Equivalence Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |

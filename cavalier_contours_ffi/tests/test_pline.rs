@@ -1877,6 +1877,47 @@ fn pline_reserve_does_not_modify_existing_vertex_data_cpp_parity() {
 }
 
 #[test]
+fn pline_remove_sequence_equivalent_to_cpp_remove_range_parity() {
+    let source = vec![
+        (1.0, 2.0, 0.1),
+        (33.0, 3.0, 0.2),
+        (34.0, 35.0, 0.3),
+        (2.0, 36.0, 0.4),
+    ];
+    let pline = create_pline(&source, false);
+
+    // Equivalent to old remove_range(0, 1): remove first vertex.
+    unsafe {
+        assert_eq!(cavc_pline_remove(pline, 0), 0);
+    }
+    let expected_after_first = vec![
+        cavc_vertex::new(33.0, 3.0, 0.2),
+        cavc_vertex::new(34.0, 35.0, 0.3),
+        cavc_vertex::new(2.0, 36.0, 0.4),
+    ];
+    compare_vertexes(&read_vertices(pline), &expected_after_first);
+
+    // Equivalent to old remove_range(1, 2): remove 2nd and 3rd from current list.
+    unsafe {
+        assert_eq!(cavc_pline_remove(pline, 1), 0);
+        assert_eq!(cavc_pline_remove(pline, 1), 0);
+    }
+    let expected_after_second = vec![cavc_vertex::new(33.0, 3.0, 0.2)];
+    compare_vertexes(&read_vertices(pline), &expected_after_second);
+
+    // Equivalent to old final remove_range(0, 1): remove last remaining vertex.
+    unsafe {
+        assert_eq!(cavc_pline_remove(pline, 0), 0);
+    }
+    let mut count = u32::MAX;
+    unsafe {
+        assert_eq!(cavc_pline_get_vertex_count(pline, &mut count), 0);
+        cavc_pline_f(pline);
+    }
+    assert_eq!(count, 0);
+}
+
+#[test]
 fn pline_eval_path_length() {
     let pline = create_pline(&[(0.0, 0.0, 1.0), (2.0, 0.0, 1.0)], true);
     let mut l = f64::NAN;
