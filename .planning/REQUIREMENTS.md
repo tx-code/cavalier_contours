@@ -278,6 +278,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-196**: C-API aabbindex parity executes source-backed extents cases aligned to old `TEST_staticspatialindex.cpp` extents assertions (`index` and `skip_sorting_small_index`) for both approximate and exact index constructors.
 - **PAR-197**: Aabbindex extents parity hardening includes explicit null-path and empty-index NaN behavior checks and source-case coverage guard diagnostics.
 - **PAR-198**: C-API aabbindex extents source-parity phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-199**: FFI parity tests cover create/init/free lifecycle behavior for previously untested option exports in scope (`cavc_pline_parallel_offset_o_create/f`, `cavc_pline_boolean_o_create/f`, `cavc_pline_self_intersect_o_init`, `cavc_pline_contains_o_init`, `cavc_shape_offset_o_init`).
+- **PAR-200**: FFI parity tests cover `cavc_shape_set_cw_pline_userdata_values` for success-path set/get, null-shape error, out-of-bounds error, and clear-path semantics.
+- **PAR-201**: C-API option lifecycle and CW userdata coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -520,13 +523,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-196 | Phase 74 | Complete |
 | PAR-197 | Phase 74 | Complete |
 | PAR-198 | Phase 74 | Complete |
+| PAR-199 | Phase 75 | Complete |
+| PAR-200 | Phase 75 | Complete |
+| PAR-201 | Phase 75 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 198 (`PAR-01..PAR-198`), mapped to Phases 9-74
+- additional tracked post-v1 requirements: 201 (`PAR-01..PAR-201`), mapped to Phases 9-75
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 74 completion*
+*Last updated: 2026-05-15 after Phase 75 completion*

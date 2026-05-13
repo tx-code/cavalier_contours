@@ -5841,3 +5841,181 @@ fn aabbindex_extents_empty_index_nan_ffi() {
         cavc_pline_f(empty_pline);
     }
 }
+
+#[test]
+fn ffi_options_create_init_lifecycle_parity() {
+    unsafe {
+        // parallel_offset options: create/free parity with init defaults
+        let mut parallel_created_ptr: *mut cavc_pline_parallel_offset_o = ptr::null_mut();
+        assert_eq!(
+            cavc_pline_parallel_offset_o_create(&mut parallel_created_ptr),
+            0
+        );
+        assert!(!parallel_created_ptr.is_null());
+        let parallel_created = *parallel_created_ptr;
+
+        let mut parallel_inited = cavc_pline_parallel_offset_o {
+            aabb_index: ptr::dangling::<cavc_aabbindex>(),
+            pos_equal_eps: f64::NAN,
+            slice_join_eps: f64::NAN,
+            offset_dist_eps: f64::NAN,
+            handle_self_intersects: 255,
+        };
+        assert_eq!(cavc_pline_parallel_offset_o_init(&mut parallel_inited), 0);
+        assert!(parallel_created.aabb_index.is_null());
+        assert!(parallel_inited.aabb_index.is_null());
+        assert_fuzzy_eq!(
+            parallel_created.pos_equal_eps,
+            parallel_inited.pos_equal_eps
+        );
+        assert_fuzzy_eq!(
+            parallel_created.slice_join_eps,
+            parallel_inited.slice_join_eps
+        );
+        assert_fuzzy_eq!(
+            parallel_created.offset_dist_eps,
+            parallel_inited.offset_dist_eps
+        );
+        assert_eq!(
+            parallel_created.handle_self_intersects,
+            parallel_inited.handle_self_intersects
+        );
+        cavc_pline_parallel_offset_o_f(ptr::null_mut());
+        cavc_pline_parallel_offset_o_f(parallel_created_ptr);
+
+        // boolean options: create/free parity with init defaults
+        let mut boolean_created_ptr: *mut cavc_pline_boolean_o = ptr::null_mut();
+        assert_eq!(cavc_pline_boolean_o_create(&mut boolean_created_ptr), 0);
+        assert!(!boolean_created_ptr.is_null());
+        let boolean_created = *boolean_created_ptr;
+
+        let mut boolean_inited = cavc_pline_boolean_o {
+            pline1_aabb_index: ptr::dangling::<cavc_aabbindex>(),
+            pos_equal_eps: f64::NAN,
+            collapsed_area_eps: 0.0,
+        };
+        assert_eq!(cavc_pline_boolean_o_init(&mut boolean_inited), 0);
+        assert!(boolean_created.pline1_aabb_index.is_null());
+        assert!(boolean_inited.pline1_aabb_index.is_null());
+        assert_fuzzy_eq!(boolean_created.pos_equal_eps, boolean_inited.pos_equal_eps);
+        assert!(boolean_created.collapsed_area_eps.is_nan());
+        assert!(boolean_inited.collapsed_area_eps.is_nan());
+        cavc_pline_boolean_o_f(ptr::null_mut());
+        cavc_pline_boolean_o_f(boolean_created_ptr);
+
+        // self_intersect init: null error + default write
+        let mut self_intersect_inited = cavc_pline_self_intersect_o {
+            pline_aabb_index: ptr::dangling::<cavc_aabbindex>(),
+            pos_equal_eps: f64::NAN,
+            include: u32::MAX,
+        };
+        assert_eq!(cavc_pline_self_intersect_o_init(ptr::null_mut()), 1);
+        assert_eq!(
+            cavc_pline_self_intersect_o_init(&mut self_intersect_inited),
+            0
+        );
+        assert!(self_intersect_inited.pline_aabb_index.is_null());
+        assert!(self_intersect_inited.pos_equal_eps.is_finite());
+        assert!(self_intersect_inited.include <= CAVC_SELF_INTERSECTS_INCLUDE_GLOBAL);
+
+        // contains init: null error + default write
+        let mut contains_inited = cavc_pline_contains_o {
+            pline1_aabb_index: ptr::dangling::<cavc_aabbindex>(),
+            pos_equal_eps: f64::NAN,
+        };
+        assert_eq!(cavc_pline_contains_o_init(ptr::null_mut()), 1);
+        assert_eq!(cavc_pline_contains_o_init(&mut contains_inited), 0);
+        assert!(contains_inited.pline1_aabb_index.is_null());
+        assert!(contains_inited.pos_equal_eps.is_finite());
+
+        // shape offset init: null error + default write
+        let mut shape_offset_inited = cavc_shape_offset_o {
+            pos_equal_eps: f64::NAN,
+            offset_dist_eps: f64::NAN,
+            slice_join_eps: f64::NAN,
+        };
+        assert_eq!(cavc_shape_offset_o_init(ptr::null_mut()), 1);
+        assert_eq!(cavc_shape_offset_o_init(&mut shape_offset_inited), 0);
+        assert!(shape_offset_inited.pos_equal_eps.is_finite());
+        assert!(shape_offset_inited.offset_dist_eps.is_finite());
+        assert!(shape_offset_inited.slice_join_eps.is_finite());
+    }
+}
+
+#[test]
+fn shape_set_cw_pline_userdata_values_ffi() {
+    let outer = create_pline(
+        &[
+            (-200.0, 200.0, 0.0),
+            (-200.0, -200.0, 0.0),
+            (200.0, -200.0, 0.0),
+            (200.0, 200.0, 0.0),
+        ],
+        true,
+    );
+    let inner = create_pline(
+        &[
+            (-100.0, 0.0, 0.0),
+            (0.0, 100.0, 0.0),
+            (100.0, 0.0, 0.0),
+            (0.0, -100.0, 0.0),
+        ],
+        true,
+    );
+
+    unsafe {
+        let mut list = ptr::null_mut();
+        assert_eq!(cavc_plinelist_create(0, &mut list), 0);
+        assert_eq!(cavc_plinelist_push(list, outer), 0);
+        assert_eq!(cavc_plinelist_push(list, inner), 0);
+
+        let mut shape = ptr::null_mut();
+        assert_eq!(cavc_shape_create(list, &mut shape), 0);
+        cavc_plinelist_f(list);
+
+        let payload = [11_u64, 22_u64, 33_u64];
+        let mut cw_count = 0_u32;
+        assert_eq!(cavc_shape_get_cw_count(shape, &mut cw_count), 0);
+        assert_eq!(cw_count, 1);
+
+        assert_eq!(
+            cavc_shape_set_cw_pline_userdata_values(ptr::null_mut(), 0, payload.as_ptr(), 3),
+            1
+        );
+        assert_eq!(
+            cavc_shape_set_cw_pline_userdata_values(shape, 99, payload.as_ptr(), 3),
+            2
+        );
+
+        assert_eq!(
+            cavc_shape_set_cw_pline_userdata_values(shape, 0, payload.as_ptr(), 3),
+            0
+        );
+        let mut count = 0_u32;
+        assert_eq!(
+            cavc_shape_get_cw_pline_userdata_count(shape, 0, &mut count),
+            0
+        );
+        assert_eq!(count, 3);
+
+        let mut out = [0_u64; 3];
+        assert_eq!(
+            cavc_shape_get_cw_pline_userdata_values(shape, 0, out.as_mut_ptr()),
+            0
+        );
+        assert_eq!(out, payload);
+
+        // null payload with non-zero count still clears (by API implementation contract)
+        assert_eq!(
+            cavc_shape_set_cw_pline_userdata_values(shape, 0, ptr::null(), 9),
+            0
+        );
+        assert_eq!(
+            cavc_shape_get_cw_pline_userdata_count(shape, 0, &mut count),
+            0
+        );
+        assert_eq!(count, 0);
+
+        cavc_shape_f(shape);
+    }
+}

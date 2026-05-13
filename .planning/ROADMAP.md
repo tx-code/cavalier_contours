@@ -1162,6 +1162,21 @@ Plans:
 - [x] 74-02: Publish post-extents alignment map for next bounded targets.
 - [x] 74-03: Close verification gates and sync planning state.
 
+### Phase 75: C-API Option Lifecycle & CW Userdata Coverage (No Clipper)
+**Goal**: Close FFI surface coverage gaps by asserting create/init/free lifecycle behavior for option objects and validating CW userdata set/get semantics on shapes.
+**Depends on**: Phase 74
+**Requirements**: [PAR-199, PAR-200, PAR-201]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly cover create/init/free lifecycle behavior for previously untested option-surface exports in parity scope.
+  2. FFI tests explicitly cover `cavc_shape_set_cw_pline_userdata_values` behavior for success, bounds, null-shape error, and clear-path semantics.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 75-01: Add option lifecycle and CW userdata parity tests for uncovered FFI exports.
+- [x] 75-02: Publish post-coverage alignment map for next bounded targets.
+- [x] 75-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1243,3 +1258,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 72. C-API Circle-Rectangle Source Matrix Guard Reuse (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 73. C-API Pline Core Suite Source-Coverage Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 74. C-API AABBIndex Extents Source Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 75. C-API Option Lifecycle & CW Userdata Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
