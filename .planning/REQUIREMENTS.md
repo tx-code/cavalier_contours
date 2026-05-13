@@ -98,6 +98,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-16**: Full old C++ generated circle offset matrix expectations execute as Rust parity tests for outward and inward deltas across all generated variants.
 - **PAR-17**: Generated circle collapsed-offset deltas from old C++ execute as Rust parity checks and remain empty where expected.
 - **PAR-18**: Offset matrix parity validates both geometry properties and vertex-level output (with closed-curve start rotation tolerance) and publishes next-step alignment scope.
+- **PAR-19**: Full old C++ generated half-circle offset matrix expectations execute as Rust parity tests for outward and inward deltas across all generated variants.
+- **PAR-20**: Generated half-circle collapsed-offset deltas from old C++ execute as Rust parity checks and remain empty where expected.
+- **PAR-21**: Half-circle offset parity validates both geometry properties and vertex-level output (open exact-order and closed-curve start rotation tolerance) and publishes next-step alignment scope.
 
 ## Out of Scope
 
@@ -160,13 +163,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-16 | Phase 14 | Complete |
 | PAR-17 | Phase 14 | Complete |
 | PAR-18 | Phase 14 | Complete |
+| PAR-19 | Phase 15 | Complete |
+| PAR-20 | Phase 15 | Complete |
+| PAR-21 | Phase 15 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 18 (`PAR-01..PAR-18`), mapped to Phases 9-14
+- additional tracked post-v1 requirements: 21 (`PAR-01..PAR-21`), mapped to Phases 9-15
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-13 after Phase 14 completion*
+*Last updated: 2026-05-13 after Phase 15 completion*

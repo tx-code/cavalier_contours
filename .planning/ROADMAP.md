@@ -30,6 +30,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 12: Strict-Index and Full Half-Circle Matrix Parity (No Clipper)** - Execute full generated half-circle matrix parity with strict closest-point index checks and resolve confirmed tie-break gaps. (completed 2026-05-13)
 - [x] **Phase 13: Full Circle Generated Matrix Parity (No Clipper)** - Execute full generated circle matrix parity across centers, alignments, reverse variants, and closest-point expectations. (completed 2026-05-13)
 - [x] **Phase 14: Circle Offset and Collapse Matrix Parity (No Clipper)** - Execute full generated circle offset and collapsed-offset matrix parity with vertex-level output checks. (completed 2026-05-13)
+- [x] **Phase 15: Half-Circle Offset and Collapse Matrix Parity (No Clipper)** - Execute full generated half-circle offset and collapsed-offset matrix parity with vertex-level output checks and updated next-target alignment map. (completed 2026-05-13)
 
 ## Phase Details
 
@@ -252,6 +253,21 @@ Plans:
 - [x] 14-02: Classify outcomes and publish next-step alignment map.
 - [x] 14-03: Close verification gates and sync planning state.
 
+### Phase 15: Half-Circle Offset and Collapse Matrix Parity (No Clipper)
+**Goal**: Deepen generated C++ function-level parity by executing `addHalfCircleCases` offset and collapsed-offset matrices across all generated variants.
+**Depends on**: Phase 14
+**Requirements**: [PAR-19, PAR-20, PAR-21]
+**Success Criteria** (what must be TRUE):
+  1. Full generated half-circle matrix offset cases run as executable parity tests for outward and inward deltas.
+  2. Collapsed-offset generated deltas from old C++ are executable and parity-green.
+  3. Offset outputs are validated at both property level and vertex level (open exact-order and closed-curve start rotation tolerance), and next scope is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 15-01: Add generated half-circle offset and collapse matrix parity tests.
+- [x] 15-02: Classify outcomes and publish next-step alignment map.
+- [x] 15-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -273,3 +289,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 12. Strict-Index and Full Half-Circle Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 13. Full Circle Generated Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 14. Circle Offset and Collapse Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
+| 15. Half-Circle Offset and Collapse Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |

@@ -1,7 +1,7 @@
 mod test_utils;
 
 use cavalier_contours::core::math::Vector2;
-use cavalier_contours::polyline::{BooleanOp, PlineSource, PlineSourceMut, Polyline};
+use cavalier_contours::polyline::{BooleanOp, PlineSource, PlineSourceMut, PlineVertex, Polyline};
 use cavalier_contours::{pline_closed, pline_closed_userdata, pline_open};
 use test_utils::{PlineProperties, create_property_set, property_sets_match};
 
@@ -47,6 +47,7 @@ struct CircleCaseKey {
 }
 
 type CircleClosestCase = (Vector2<f64>, Vector2<f64>, f64, Option<usize>);
+type HalfOffsetExpectations = (f64, Polyline<f64>, f64, Polyline<f64>);
 
 fn assert_near(actual: f64, expected: f64, context: &str) {
     assert!(
@@ -253,6 +254,212 @@ fn half_circle_matrix_cases() -> Vec<HalfCircleCaseKey> {
     result
 }
 
+fn scale_vertex_from_center(
+    vertex: PlineVertex<f64>,
+    center_x: f64,
+    center_y: f64,
+    magnitude: f64,
+) -> PlineVertex<f64> {
+    let dir_x = vertex.x - center_x;
+    let dir_y = vertex.y - center_y;
+    let dir_len = (dir_x * dir_x + dir_y * dir_y).sqrt();
+    PlineVertex::new(
+        magnitude * dir_x / dir_len + center_x,
+        magnitude * dir_y / dir_len + center_y,
+        vertex.bulge,
+    )
+}
+
+fn polyline_from_vertices(vertices: &[PlineVertex<f64>], is_closed: bool) -> Polyline<f64> {
+    let mut result = if is_closed {
+        Polyline::new_closed()
+    } else {
+        Polyline::new()
+    };
+    for vertex in vertices {
+        result.add_vertex(*vertex);
+    }
+    result
+}
+
+fn intersects_at_y(
+    center_x: f64,
+    center_y: f64,
+    radius: f64,
+    y: f64,
+) -> (Vector2<f64>, Vector2<f64>) {
+    let y_term = y - center_y;
+    let root = (radius * radius - y_term * y_term).sqrt();
+    (
+        Vector2::new(center_x + root, y),
+        Vector2::new(center_x - root, y),
+    )
+}
+
+fn intersects_at_x(
+    center_x: f64,
+    center_y: f64,
+    radius: f64,
+    x: f64,
+) -> (Vector2<f64>, Vector2<f64>) {
+    let x_term = x - center_x;
+    let root = (radius * radius - x_term * x_term).sqrt();
+    (
+        Vector2::new(x, center_y + root),
+        Vector2::new(x, center_y - root),
+    )
+}
+
+fn abs_bulge_between_points(
+    center_x: f64,
+    center_y: f64,
+    p1: Vector2<f64>,
+    p2: Vector2<f64>,
+) -> f64 {
+    let a1 = (p1.y - center_y).atan2(p1.x - center_x);
+    let a2 = (p2.y - center_y).atan2(p2.x - center_x);
+    let mut a_diff = a1 - a2;
+    a_diff = (a_diff + std::f64::consts::PI).rem_euclid(2.0 * std::f64::consts::PI)
+        - std::f64::consts::PI;
+    (a_diff / 4.0).tan().abs()
+}
+
+fn build_half_circle_offset_expectations(case: HalfCircleCaseKey) -> HalfOffsetExpectations {
+    let input = build_half_circle_case(case);
+    let (min_x, min_y, max_x, max_y) = expected_half_circle_extents(case);
+
+    let outward_delta = -(case.direction as f64) * 0.25 * HALF_CIRCLE_RADIUS;
+    let inward_delta = (case.direction as f64) * 0.4 * HALF_CIRCLE_RADIUS;
+
+    let abs_outward_delta = outward_delta.abs();
+    let abs_inward_delta = inward_delta.abs();
+    let outward_magnitude = HALF_CIRCLE_RADIUS + abs_outward_delta;
+    let inward_magnitude = HALF_CIRCLE_RADIUS - abs_inward_delta;
+
+    let mut outward_vertices: Vec<_> = input
+        .iter_vertexes()
+        .map(|v| scale_vertex_from_center(v, case.center_x, case.center_y, outward_magnitude))
+        .collect();
+    let mut inward_vertices: Vec<_> = input
+        .iter_vertexes()
+        .map(|v| scale_vertex_from_center(v, case.center_x, case.center_y, inward_magnitude))
+        .collect();
+
+    if case.is_closed {
+        let right_angle_bulge = (std::f64::consts::PI / 8.0).tan();
+        if case.is_x_aligned {
+            if case.direction > 0 {
+                if let Some(last) = outward_vertices.last_mut() {
+                    *last = last.with_bulge(right_angle_bulge);
+                }
+                outward_vertices.push(PlineVertex::new(
+                    max_x,
+                    case.center_y + abs_outward_delta,
+                    0.0,
+                ));
+                outward_vertices.push(PlineVertex::new(
+                    min_x,
+                    case.center_y + abs_outward_delta,
+                    right_angle_bulge,
+                ));
+
+                let y_intr = case.center_y - abs_inward_delta;
+                let (intr1, intr2) =
+                    intersects_at_y(case.center_x, case.center_y, inward_magnitude, y_intr);
+                let abs_bulge =
+                    abs_bulge_between_points(case.center_x, case.center_y, intr1, intr2);
+                inward_vertices[0] = PlineVertex::new(intr1.x, intr1.y, 0.0);
+                inward_vertices[1] = PlineVertex::new(intr2.x, intr2.y, abs_bulge);
+            } else {
+                if let Some(last) = outward_vertices.last_mut() {
+                    *last = last.with_bulge(-right_angle_bulge);
+                }
+                outward_vertices.push(PlineVertex::new(
+                    max_x,
+                    case.center_y - abs_outward_delta,
+                    0.0,
+                ));
+                outward_vertices.push(PlineVertex::new(
+                    min_x,
+                    case.center_y - abs_outward_delta,
+                    -right_angle_bulge,
+                ));
+
+                let y_intr = case.center_y + abs_inward_delta;
+                let (intr1, intr2) =
+                    intersects_at_y(case.center_x, case.center_y, inward_magnitude, y_intr);
+                let abs_bulge =
+                    abs_bulge_between_points(case.center_x, case.center_y, intr1, intr2);
+                inward_vertices[0] = PlineVertex::new(intr1.x, intr1.y, 0.0);
+                inward_vertices[1] = PlineVertex::new(intr2.x, intr2.y, -abs_bulge);
+            }
+        } else if case.direction > 0 {
+            if let Some(last) = outward_vertices.last_mut() {
+                *last = last.with_bulge(right_angle_bulge);
+            }
+            outward_vertices.push(PlineVertex::new(
+                case.center_x - abs_outward_delta,
+                max_y,
+                0.0,
+            ));
+            outward_vertices.push(PlineVertex::new(
+                case.center_x - abs_outward_delta,
+                min_y,
+                right_angle_bulge,
+            ));
+
+            let x_intr = case.center_x + abs_inward_delta;
+            let (intr1, intr2) =
+                intersects_at_x(case.center_x, case.center_y, inward_magnitude, x_intr);
+            let abs_bulge = abs_bulge_between_points(case.center_x, case.center_y, intr1, intr2);
+            inward_vertices[0] = PlineVertex::new(intr1.x, intr1.y, 0.0);
+            inward_vertices[1] = PlineVertex::new(intr2.x, intr2.y, abs_bulge);
+        } else {
+            if let Some(last) = outward_vertices.last_mut() {
+                *last = last.with_bulge(-right_angle_bulge);
+            }
+            outward_vertices.push(PlineVertex::new(
+                case.center_x + abs_outward_delta,
+                max_y,
+                0.0,
+            ));
+            outward_vertices.push(PlineVertex::new(
+                case.center_x + abs_outward_delta,
+                min_y,
+                -right_angle_bulge,
+            ));
+
+            let x_intr = case.center_x - abs_inward_delta;
+            let (intr1, intr2) =
+                intersects_at_x(case.center_x, case.center_y, inward_magnitude, x_intr);
+            let abs_bulge = abs_bulge_between_points(case.center_x, case.center_y, intr1, intr2);
+            inward_vertices[0] = PlineVertex::new(intr1.x, intr1.y, 0.0);
+            inward_vertices[1] = PlineVertex::new(intr2.x, intr2.y, -abs_bulge);
+        }
+    }
+
+    (
+        outward_delta,
+        polyline_from_vertices(&outward_vertices, case.is_closed),
+        inward_delta,
+        polyline_from_vertices(&inward_vertices, case.is_closed),
+    )
+}
+
+fn half_circle_collapse_deltas(case: HalfCircleCaseKey) -> [f64; 3] {
+    let direction = case.direction as f64;
+    let first = if case.is_closed {
+        direction * 0.5 * HALF_CIRCLE_RADIUS
+    } else {
+        direction * HALF_CIRCLE_RADIUS
+    };
+    [
+        first,
+        direction * 1.5 * HALF_CIRCLE_RADIUS,
+        direction * 2.0 * HALF_CIRCLE_RADIUS,
+    ]
+}
+
 fn circle_case_label(case: CircleCaseKey) -> String {
     let alignment = match case.alignment {
         CircleAlignment::XAxis => "x_aligned",
@@ -304,11 +511,25 @@ fn build_circle_case_with_radius(case: CircleCaseKey, radius: f64) -> Polyline<f
     pline
 }
 
-fn vertex_matches(
-    a: cavalier_contours::polyline::PlineVertex<f64>,
-    b: cavalier_contours::polyline::PlineVertex<f64>,
-) -> bool {
+fn vertex_matches(a: PlineVertex<f64>, b: PlineVertex<f64>) -> bool {
     (a.x - b.x).abs() <= EPS && (a.y - b.y).abs() <= EPS && (a.bulge - b.bulge).abs() <= EPS
+}
+
+fn open_vertices_match_exact_order(actual: &Polyline<f64>, expected: &Polyline<f64>) -> bool {
+    if actual.vertex_count() != expected.vertex_count()
+        || actual.is_closed()
+        || expected.is_closed()
+    {
+        return false;
+    }
+
+    for i in 0..expected.vertex_count() {
+        if !vertex_matches(actual.at(i), expected.at(i)) {
+            return false;
+        }
+    }
+
+    true
 }
 
 fn closed_vertices_match_with_rotation(actual: &Polyline<f64>, expected: &Polyline<f64>) -> bool {
@@ -350,10 +571,12 @@ fn assert_single_offset_match(actual: &[Polyline<f64>], expected: &Polyline<f64>
         property_sets_match(&actual_props, &expected_props),
         "{context}: offset property mismatch"
     );
-    assert!(
-        closed_vertices_match_with_rotation(actual, expected),
-        "{context}: offset vertex mismatch (allowing closed-curve start rotation)"
-    );
+    let vertex_match = if expected.is_closed() {
+        closed_vertices_match_with_rotation(actual, expected)
+    } else {
+        open_vertices_match_exact_order(actual, expected)
+    };
+    assert!(vertex_match, "{context}: offset vertex mismatch");
 }
 
 fn circle_matrix_cases() -> Vec<CircleCaseKey> {
@@ -877,6 +1100,48 @@ fn cpp_generated_circle_full_matrix_collapsed_offset_parity() {
             (case.direction as f64) * 1.5 * CIRCLE_RADIUS,
             (case.direction as f64) * 2.0 * CIRCLE_RADIUS,
         ];
+        for (i, delta) in collapse_deltas.iter().enumerate() {
+            let result = input.parallel_offset(*delta);
+            assert!(
+                result.is_empty(),
+                "{context}: collapsed offset case #{i} expected empty, got {} result(s)",
+                result.len()
+            );
+        }
+    }
+}
+
+#[test]
+fn cpp_generated_half_circle_full_matrix_parallel_offset_parity() {
+    for case in half_circle_matrix_cases() {
+        let context = case_label(case);
+        let input = build_half_circle_case(case);
+        let (outward_delta, outward_expected, inward_delta, inward_expected) =
+            build_half_circle_offset_expectations(case);
+
+        let outward_actual = input.parallel_offset(outward_delta);
+        assert_single_offset_match(
+            &outward_actual,
+            &outward_expected,
+            &format!("{context}: parallel_offset outward"),
+        );
+
+        let inward_actual = input.parallel_offset(inward_delta);
+        assert_single_offset_match(
+            &inward_actual,
+            &inward_expected,
+            &format!("{context}: parallel_offset inward"),
+        );
+    }
+}
+
+#[test]
+fn cpp_generated_half_circle_full_matrix_collapsed_offset_parity() {
+    for case in half_circle_matrix_cases() {
+        let context = case_label(case);
+        let input = build_half_circle_case(case);
+        let collapse_deltas = half_circle_collapse_deltas(case);
+
         for (i, delta) in collapse_deltas.iter().enumerate() {
             let result = input.parallel_offset(*delta);
             assert!(
