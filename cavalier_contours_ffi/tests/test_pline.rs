@@ -216,6 +216,8 @@ struct OffsetCase {
     expected: Vec<PlineProps>,
 }
 
+type PlineInput = Vec<(f64, f64, f64)>;
+
 fn run_parallel_offset_props(pline: *const cavc_pline, delta: f64) -> Vec<PlineProps> {
     let mut results = ptr::null();
     unsafe {
@@ -501,6 +503,53 @@ fn cpp_offset_specific_cases() -> Vec<OffsetCase> {
             expected: vec![],
         },
     ]
+}
+
+fn cpp_coincident_case1_inputs() -> (PlineInput, PlineInput) {
+    (
+        vec![
+            (-0.105, 0.235, 0.0),
+            (-0.095, 0.235, 0.0),
+            (-0.095, 0.0, -1.0),
+            (-0.105, 0.0, 0.0),
+        ],
+        vec![
+            (-0.25, 0.235, -0.414214),
+            (-0.255, 0.24, 0.0),
+            (-0.255, 0.29, -0.414214),
+            (-0.25, 0.295, 0.0),
+            (0.25, 0.295, -0.414214),
+            (0.255, 0.29, 0.0),
+            (0.255, 0.24, -0.414214),
+            (0.25, 0.235, 0.0),
+        ],
+    )
+}
+
+fn cpp_coincident_case2_inputs() -> (PlineInput, PlineInput) {
+    (
+        vec![
+            (0.0, 0.0, 0.0),
+            (0.0, 20.0, 0.0),
+            (20.0, 20.0, 0.0),
+            (20.0, 0.0, 0.0),
+        ],
+        vec![
+            (-2.0, 10.0, 0.0),
+            (-2.0, 20.0, 0.0),
+            (2.0, 20.0, 0.0),
+            (2.0, 25.0, 0.0),
+            (4.0, 25.0, 0.0),
+            (4.0, 20.0, 0.0),
+            (6.0, 20.0, 0.0),
+            (6.0, 15.0, 0.0),
+            (8.0, 15.0, 0.0),
+            (8.0, 20.0, 0.0),
+            (10.0, 40.0, 0.0),
+            (30.0, 40.0, 0.0),
+            (30.0, 20.0, 0.0),
+        ],
+    )
 }
 
 const CPP_MATRIX_EPS: f64 = 1e-4;
@@ -1852,6 +1901,115 @@ fn pline_boolean_does_not_modify_input_cpp_parity() {
 
         let after_a = read_vertices(pline_a);
         let after_b = read_vertices(pline_b);
+        compare_vertexes(&after_a, &before_a);
+        compare_vertexes(&after_b, &before_b);
+
+        unsafe {
+            cavc_pline_f(pline_a);
+            cavc_pline_f(pline_b);
+        }
+    }
+}
+
+#[test]
+fn pline_boolean_coincident_matrices_do_not_modify_input_cpp_parity() {
+    struct NoModifyCase {
+        name: &'static str,
+        operation: u32,
+        subject: Vec<(f64, f64, f64)>,
+        clip: Vec<(f64, f64, f64)>,
+    }
+
+    // FFI operation mapping:
+    // 0 = Or, 1 = And, 2 = Not, 3 = Xor
+    let (case1_a, case1_b) = cpp_coincident_case1_inputs();
+    let (case2_a, case2_b) = cpp_coincident_case2_inputs();
+    let cases = vec![
+        NoModifyCase {
+            name: "coincident_case1_union",
+            operation: 0,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case1_exclude_a_from_b",
+            operation: 2,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case1_exclude_b_from_a",
+            operation: 2,
+            subject: case1_b.clone(),
+            clip: case1_a.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case1_intersect",
+            operation: 1,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case1_xor",
+            operation: 3,
+            subject: case1_a.clone(),
+            clip: case1_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case2_union",
+            operation: 0,
+            subject: case2_a.clone(),
+            clip: case2_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case2_exclude_a_from_b",
+            operation: 2,
+            subject: case2_a.clone(),
+            clip: case2_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case2_exclude_b_from_a",
+            operation: 2,
+            subject: case2_b.clone(),
+            clip: case2_a.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case2_intersect",
+            operation: 1,
+            subject: case2_a.clone(),
+            clip: case2_b.clone(),
+        },
+        NoModifyCase {
+            name: "coincident_case2_xor",
+            operation: 3,
+            subject: case2_a,
+            clip: case2_b,
+        },
+    ];
+
+    for case in cases {
+        let pline_a = create_pline(&case.subject, true);
+        let pline_b = create_pline(&case.clip, true);
+        let before_a = read_vertices(pline_a);
+        let before_b = read_vertices(pline_b);
+
+        let _ = run_boolean_props(pline_a, pline_b, case.operation);
+
+        let after_a = read_vertices(pline_a);
+        let after_b = read_vertices(pline_b);
+
+        assert_eq!(
+            before_a.len(),
+            after_a.len(),
+            "subject vertex count changed for case={}",
+            case.name
+        );
+        assert_eq!(
+            before_b.len(),
+            after_b.len(),
+            "clip vertex count changed for case={}",
+            case.name
+        );
         compare_vertexes(&after_a, &before_a);
         compare_vertexes(&after_b, &before_b);
 

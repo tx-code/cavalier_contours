@@ -134,6 +134,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-52**: The FFI surface executes source-backed boolean matrix cases through `cavc_pline_boolean` options-path and matches default-path property outputs.
 - **PAR-53**: The FFI surface executes source-backed offset matrix cases through `cavc_pline_parallel_offset` options-path and matches default-path property outputs.
 - **PAR-54**: C-API options-path parity bridge work records next parity target scope and closes with full verification gates.
+- **PAR-55**: The FFI surface executes source-backed coincident case1 and case2 boolean matrices through `cavc_pline_boolean` with no-modify subject/clip invariants.
+- **PAR-56**: Coincident no-modify parity explicitly covers both exclusion directions (`A-B`, `B-A`) alongside union/intersect/xor checks.
+- **PAR-57**: C-API coincident no-modify matrix expansion records next parity target scope and closes with full verification gates.
 
 ## Out of Scope
 
@@ -232,13 +235,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-52 | Phase 26 | Complete |
 | PAR-53 | Phase 26 | Complete |
 | PAR-54 | Phase 26 | Complete |
+| PAR-55 | Phase 27 | Complete |
+| PAR-56 | Phase 27 | Complete |
+| PAR-57 | Phase 27 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 54 (`PAR-01..PAR-54`), mapped to Phases 9-26
+- additional tracked post-v1 requirements: 57 (`PAR-01..PAR-57`), mapped to Phases 9-27
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 26 completion*
+*Last updated: 2026-05-14 after Phase 27 completion*

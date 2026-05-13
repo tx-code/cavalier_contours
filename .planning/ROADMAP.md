@@ -442,6 +442,21 @@ Plans:
 - [x] 26-02: Publish options-path parity report and next-scope map.
 - [x] 26-03: Close verification gates and sync planning state.
 
+### Phase 27: C-API Coincident No-Modify Matrix Expansion (No Clipper)
+**Goal**: Expand C-API boolean no-modify invariants from simple cases to source-backed coincident combine matrices.
+**Depends on**: Phase 26
+**Requirements**: [PAR-55, PAR-56, PAR-57]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests execute coincident case1 and case2 boolean operation matrices and validate subject/clip vertex buffers remain unchanged.
+  2. Exclusion direction variants (`A-B` and `B-A`) are explicitly covered in no-modify parity checks for coincident cases.
+  3. Full workspace and planning health gates are green, and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 27-01: Add C-API coincident no-modify matrix parity tests.
+- [x] 27-02: Publish coincident no-modify expansion report and next-scope map.
+- [x] 27-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -475,3 +490,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 24. C-API Combine No-Modify Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 25. C-API Function-Surface Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 26. C-API Options-Path Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 27. C-API Coincident No-Modify Matrix Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
