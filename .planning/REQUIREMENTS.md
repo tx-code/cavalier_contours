@@ -350,6 +350,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-268**: Rust C++ parity tests explicitly validate a bounded circle-circle primitive expected-table matrix that covers old C++ `intrCircle2Circle2` branch families (coincident, no-intersect, tangent, and two-intersects).
 - **PAR-269**: Circle-circle primitive parity assertions explicitly validate expected intersect point outputs for covered branch-matrix cases, including near-tangent midpoint behavior.
 - **PAR-270**: C++ circle-circle primitive branch-matrix parity phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-271**: Rust C++ parity tests explicitly validate bounded `intrPlineSegs` overlap-order branch cases for line-line overlap and line-arc/arc-line two-intersect outputs according to second-segment direction.
+- **PAR-272**: Rust C++ parity tests explicitly validate `intrPlineSegs` endpoint-stickiness behavior in line-arc and arc-line paths where line-circle solutions and arc sweep filtering overlap.
+- **PAR-273**: C++ pline-segment overlap-order and endpoint-stickiness parity phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -664,13 +667,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-268 | Phase 98 | Complete |
 | PAR-269 | Phase 98 | Complete |
 | PAR-270 | Phase 98 | Complete |
+| PAR-271 | Phase 99 | Complete |
+| PAR-272 | Phase 99 | Complete |
+| PAR-273 | Phase 99 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 270 (`PAR-01..PAR-270`), mapped to Phases 9-98
+- additional tracked post-v1 requirements: 273 (`PAR-01..PAR-273`), mapped to Phases 9-99
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 98 completion*
+*Last updated: 2026-05-15 after Phase 99 completion*

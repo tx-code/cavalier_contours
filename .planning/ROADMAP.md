@@ -1522,6 +1522,21 @@ Plans:
 - [x] 98-02: Publish post-circle-circle parity alignment map for next bounded targets.
 - [x] 98-03: Close verification gates and sync planning state.
 
+### Phase 99: C++ Pline Segment Overlap-Order and Endpoint-Stickiness Parity (No Clipper)
+**Goal**: Deepen old C++ segment-level parity by asserting source-traceable `intrPlineSegs` overlap-order and endpoint-stickiness behavior across line-line, line-arc, and arc-line branches.
+**Depends on**: Phase 98
+**Requirements**: [PAR-271, PAR-272, PAR-273]
+**Success Criteria** (what must be TRUE):
+  1. Rust parity tests explicitly validate bounded overlap-order branch cases for line-line overlap and two-intersect line-arc/arc-line outputs according to second-segment direction.
+  2. Rust parity tests explicitly validate endpoint-stickiness behavior in line-arc and arc-line branches where line-circle solutions and arc sweep filtering interact.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 99-01: Add pline segment overlap-order and endpoint-stickiness parity tests.
+- [x] 99-02: Publish post-pline-segment parity alignment map for next bounded targets.
+- [x] 99-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1627,3 +1642,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 96. C++ Line-Line Primitive Branch Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 97. C++ Line-Circle Primitive Branch Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 98. C++ Circle-Circle Primitive Branch Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 99. C++ Pline Segment Overlap-Order and Endpoint-Stickiness Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |

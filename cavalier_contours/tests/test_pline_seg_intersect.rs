@@ -411,3 +411,100 @@ fn arc_arc_opposite_direction_touch_at_ends_bug() {
         }
     );
 }
+
+#[test]
+fn cpp_pline_seg_line_line_overlap_order_parity() {
+    // Source-aligned with old C++ `intrPlineSegs` line-line overlap path:
+    // overlap points are returned in second segment direction.
+    let v1 = PlineVertex::new(0.0, 0.0, 0.0);
+    let v2 = PlineVertex::new(4.0, 0.0, 0.0);
+    let u1 = PlineVertex::new(3.0, 0.0, 0.0);
+    let u2 = PlineVertex::new(1.0, 0.0, 0.0);
+
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(
+        result,
+        OverlappingLines {
+            point1: Vector2::new(3.0, 0.0),
+            point2: Vector2::new(1.0, 0.0)
+        }
+    );
+}
+
+#[test]
+fn cpp_pline_seg_line_arc_endpoint_sticky_parity() {
+    // Source-aligned with old C++ `intrPlineSegs` line-arc path where line-circle has
+    // two solutions but only one lies on the arc sweep and the line endpoint is sticky.
+    let line_start = PlineVertex::new(3.0, 1.0, 0.0);
+    let line_end = PlineVertex::new(1.0, 1.0, 0.0);
+    let arc_bulge = bulge_from_angle(FRAC_PI_2);
+    let arc_start = PlineVertex::new(2.0, 0.0, arc_bulge);
+    let arc_end = PlineVertex::new(3.0, 1.0, 0.0);
+
+    let result = pline_seg_intr(line_start, line_end, arc_start, arc_end, 1e-5);
+    assert_case_eq!(
+        result,
+        OneIntersect {
+            point: Vector2::new(3.0, 1.0)
+        }
+    );
+}
+
+#[test]
+fn cpp_pline_seg_arc_line_endpoint_sticky_parity() {
+    // Same geometry as line-arc sticky test but with arc as first segment and line as second
+    // segment to verify the symmetric `u_is_line` path.
+    let arc_bulge = bulge_from_angle(FRAC_PI_2);
+    let arc_start = PlineVertex::new(2.0, 0.0, arc_bulge);
+    let arc_end = PlineVertex::new(3.0, 1.0, 0.0);
+    let line_start = PlineVertex::new(3.0, 1.0, 0.0);
+    let line_end = PlineVertex::new(1.0, 1.0, 0.0);
+
+    let result = pline_seg_intr(arc_start, arc_end, line_start, line_end, 1e-5);
+    assert_case_eq!(
+        result,
+        OneIntersect {
+            point: Vector2::new(3.0, 1.0)
+        }
+    );
+}
+
+#[test]
+fn cpp_pline_seg_line_arc_two_intersects_second_arc_direction_order() {
+    // Source-aligned with old C++ `intrPlineSegs` two-intersect line-arc path:
+    // output order follows second segment (arc) direction.
+    let half_sqrt_3 = 3.0_f64.sqrt() / 2.0;
+    let line_start = PlineVertex::new(0.0, 0.5, 0.0);
+    let line_end = PlineVertex::new(4.0, 0.5, 0.0);
+    let arc_start = PlineVertex::new(3.0, 1.0, -1.0);
+    let arc_end = PlineVertex::new(1.0, 1.0, 0.0);
+
+    let result = pline_seg_intr(line_start, line_end, arc_start, arc_end, 1e-5);
+    assert_case_eq!(
+        result,
+        TwoIntersects {
+            point1: Vector2::new(2.0 + half_sqrt_3, 0.5),
+            point2: Vector2::new(2.0 - half_sqrt_3, 0.5)
+        }
+    );
+}
+
+#[test]
+fn cpp_pline_seg_arc_line_two_intersects_second_line_direction_order() {
+    // Source-aligned with old C++ `intrPlineSegs` two-intersect arc-line path:
+    // output order follows second segment (line) direction.
+    let half_sqrt_3 = 3.0_f64.sqrt() / 2.0;
+    let arc_start = PlineVertex::new(1.0, 1.0, 1.0);
+    let arc_end = PlineVertex::new(3.0, 1.0, 0.0);
+    let line_start = PlineVertex::new(4.0, 0.5, 0.0);
+    let line_end = PlineVertex::new(0.0, 0.5, 0.0);
+
+    let result = pline_seg_intr(arc_start, arc_end, line_start, line_end, 1e-5);
+    assert_case_eq!(
+        result,
+        TwoIntersects {
+            point1: Vector2::new(2.0 + half_sqrt_3, 0.5),
+            point2: Vector2::new(2.0 - half_sqrt_3, 0.5)
+        }
+    );
+}
