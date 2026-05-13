@@ -5878,6 +5878,29 @@ fn boolean_and_self_intersect_failure_path_output_stability_ffi() {
 }
 
 #[test]
+fn pline_parallel_offset_failure_path_output_stability_ffi() {
+    unsafe {
+        let plinelist_sentinel =
+            std::ptr::NonNull::<cavc_plinelist>::dangling().as_ptr() as *const cavc_plinelist;
+        let mut results = plinelist_sentinel;
+
+        assert_eq!(
+            cavc_pline_parallel_offset(ptr::null(), 2.5, ptr::null(), &mut results),
+            1
+        );
+        assert_eq!(results, plinelist_sentinel);
+
+        let mut options = init_parallel_offset_options();
+        assert_eq!(cavc_pline_parallel_offset_o_init(&mut options), 0);
+        assert_eq!(
+            cavc_pline_parallel_offset(ptr::null(), -3.25, &options, &mut results),
+            1
+        );
+        assert_eq!(results, plinelist_sentinel);
+    }
+}
+
+#[test]
 fn pline_boolean_invalid_operation_error_ffi() {
     let pline_a = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
     let pline_b = create_pline(

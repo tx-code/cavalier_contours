@@ -317,6 +317,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-235**: FFI tests explicitly validate `cavc_pline_boolean` and `cavc_pline_scan_for_self_intersect` invalid-operation/invalid-options/null contracts with direct return-code assertions on bounded failure paths.
 - **PAR-236**: FFI tests explicitly validate boolean/self-intersect failure paths preserve caller-provided output sentinels for `pos_plines`, `neg_plines`, and `is_self_intersecting` under invalid-operation/invalid-options/null contracts.
 - **PAR-237**: C-API boolean/self-intersect output-stability contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-238**: FFI tests explicitly validate `cavc_pline_parallel_offset` null-input contracts for both default-options and explicit-options calls via direct return-code assertions.
+- **PAR-239**: FFI tests explicitly validate `cavc_pline_parallel_offset` failure paths preserve caller-provided `result` plinelist output sentinels under covered null-input contracts.
+- **PAR-240**: C-API parallel-offset null-path output-stability contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -598,13 +601,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-235 | Phase 87 | Complete |
 | PAR-236 | Phase 87 | Complete |
 | PAR-237 | Phase 87 | Complete |
+| PAR-238 | Phase 88 | Complete |
+| PAR-239 | Phase 88 | Complete |
+| PAR-240 | Phase 88 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 237 (`PAR-01..PAR-237`), mapped to Phases 9-87
+- additional tracked post-v1 requirements: 240 (`PAR-01..PAR-240`), mapped to Phases 9-88
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 87 completion*
+*Last updated: 2026-05-15 after Phase 88 completion*
