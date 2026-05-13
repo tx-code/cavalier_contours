@@ -290,6 +290,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-208**: FFI tests explicitly validate `cavc_pline_boolean` error-contract behavior for invalid operation values (`2`) and null pline inputs (`1`).
 - **PAR-209**: FFI tests explicitly validate `cavc_pline_scan_for_self_intersect` error-contract behavior for invalid options (`2`) and null pline inputs (`1`), with API docs using correct `pline` naming.
 - **PAR-210**: C-API boolean/self-intersect error-contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-211**: FFI tests explicitly validate `cavc_pline_contains` invalid-input behavior: null pline inputs return error code `1` and write `CAVC_CONTAINS_RESULT_INVALID_INPUT` when `result` is non-null.
+- **PAR-212**: FFI tests explicitly validate `cavc_pline_eval_extents` degenerate-input behavior: a pline with fewer than 2 vertices returns error code `2` without mutating output extents.
+- **PAR-213**: C-API contains/extents invalid-input contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -544,13 +547,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-208 | Phase 78 | Complete |
 | PAR-209 | Phase 78 | Complete |
 | PAR-210 | Phase 78 | Complete |
+| PAR-211 | Phase 79 | Complete |
+| PAR-212 | Phase 79 | Complete |
+| PAR-213 | Phase 79 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 210 (`PAR-01..PAR-210`), mapped to Phases 9-78
+- additional tracked post-v1 requirements: 213 (`PAR-01..PAR-213`), mapped to Phases 9-79
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 78 completion*
+*Last updated: 2026-05-15 after Phase 79 completion*

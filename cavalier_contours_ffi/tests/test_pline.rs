@@ -2680,6 +2680,25 @@ fn pline_eval_extents() {
 }
 
 #[test]
+fn pline_eval_extents_degenerate_error_ffi() {
+    let pline = create_pline(&[(0.0, 0.0, 0.0)], false);
+    let (mut min_x, mut min_y, mut max_x, mut max_y) = (11.0, 22.0, 33.0, 44.0);
+
+    unsafe {
+        assert_eq!(
+            cavc_pline_eval_extents(pline, &mut min_x, &mut min_y, &mut max_x, &mut max_y),
+            2
+        );
+        cavc_pline_f(pline);
+    }
+
+    assert_fuzzy_eq!(min_x, 11.0);
+    assert_fuzzy_eq!(min_y, 22.0);
+    assert_fuzzy_eq!(max_x, 33.0);
+    assert_fuzzy_eq!(max_y, 44.0);
+}
+
+#[test]
 fn pline_eval_parallel_offset() {
     // null options
     {
@@ -5789,6 +5808,41 @@ fn pline_contains_ffi() {
         cavc_pline_f(rectangle);
         cavc_pline_f(circle);
         cavc_pline_f(triangle);
+    }
+}
+
+#[test]
+fn pline_contains_invalid_input_result_contract_ffi() {
+    let rectangle = create_pline(
+        &[
+            (-10.0, -10.0, 0.0),
+            (10.0, -10.0, 0.0),
+            (10.0, 10.0, 0.0),
+            (-10.0, 10.0, 0.0),
+        ],
+        true,
+    );
+
+    unsafe {
+        let mut result = CAVC_CONTAINS_RESULT_INTERSECTED;
+        assert_eq!(
+            cavc_pline_contains(ptr::null(), rectangle, ptr::null(), &mut result),
+            1
+        );
+        assert_eq!(result, CAVC_CONTAINS_RESULT_INVALID_INPUT);
+
+        assert_eq!(
+            cavc_pline_contains(rectangle, ptr::null(), ptr::null(), &mut result),
+            1
+        );
+        assert_eq!(result, CAVC_CONTAINS_RESULT_INVALID_INPUT);
+
+        assert_eq!(
+            cavc_pline_contains(ptr::null(), rectangle, ptr::null(), ptr::null_mut()),
+            1
+        );
+
+        cavc_pline_f(rectangle);
     }
 }
 

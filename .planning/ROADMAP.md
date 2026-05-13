@@ -1222,6 +1222,21 @@ Plans:
 - [x] 78-02: Publish post-contract alignment map for next bounded targets.
 - [x] 78-03: Close verification gates and sync planning state.
 
+### Phase 79: C-API Contains/Extents Invalid-Input Contract Coverage (No Clipper)
+**Goal**: Deepen C-API invalid-input contract reliability by adding direct error-code and output-state assertions for contains and extents surfaces.
+**Depends on**: Phase 78
+**Requirements**: [PAR-211, PAR-212, PAR-213]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly verify `cavc_pline_contains` returns `1` for null pline inputs and writes `CAVC_CONTAINS_RESULT_INVALID_INPUT` when `result` is non-null.
+  2. FFI tests explicitly verify `cavc_pline_eval_extents` returns `2` for degenerate (<2 vertex) input and preserves output sentinel values on failure.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 79-01: Add direct contains/extents invalid-input contract parity tests.
+- [x] 79-02: Publish post-contract alignment map for next bounded targets.
+- [x] 79-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1307,3 +1322,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 76. C-API CCW Userdata Setter Symmetry Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 77. C-API Userdata Getter Bounds Contract Hardening (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 78. C-API Boolean/Self-Intersect Error Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 79. C-API Contains/Extents Invalid-Input Contract Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
