@@ -89,6 +89,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-07**: Closest-point expectations from old C++ `pline_function` cases are mapped into executable Rust parity checks with explicit index tie-break policy.
 - **PAR-08**: A bounded subset of old C++ generated function-case matrices is executed in Rust parity tests or explicitly marked not-comparable.
 - **PAR-09**: Closest-point and generated-matrix mismatches are classified with evidence and explicit fix/defer decisions.
+- **PAR-10**: Full old C++ generated half-circle case matrices (open/closed, x/y-aligned, cw/ccw, multi-center) execute as Rust parity tests with reusable tolerance helpers.
+- **PAR-11**: Closest-point expectations with explicit index results in generated half-circle cases are validated in strict mode and any tie-break mismatches are fixed or explicitly classified.
+- **PAR-12**: Deep parity continuation includes a file/module alignment map that names next high-value C++ targets and Rust implementation surfaces.
 
 ## Out of Scope
 
@@ -142,13 +145,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-07 | Phase 11 | Complete |
 | PAR-08 | Phase 11 | Complete |
 | PAR-09 | Phase 11 | Complete |
+| PAR-10 | Phase 12 | Complete |
+| PAR-11 | Phase 12 | Complete |
+| PAR-12 | Phase 12 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 9 (`PAR-01..PAR-09`), mapped to Phases 9-11
+- additional tracked post-v1 requirements: 12 (`PAR-01..PAR-12`), mapped to Phases 9-12
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-13 after Phase 11 completion*
+*Last updated: 2026-05-13 after Phase 12 completion*

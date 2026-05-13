@@ -1033,6 +1033,7 @@ pub trait PlineSource {
         }
 
         let mut dist_squared = Real::max_value();
+        let mut closest_is_on_seg_start = false;
 
         for (i, j) in self.iter_segment_indexes() {
             let v1 = self.at(i);
@@ -1040,10 +1041,25 @@ pub trait PlineSource {
             let cp = seg_closest_point(v1, v2, point, pos_equal_eps);
             let diff_v = point - cp;
             let dist2 = diff_v.length_squared();
+            let cp_is_on_seg_start = cp.fuzzy_eq_eps(v1.pos(), pos_equal_eps);
             if dist2 < dist_squared {
                 result.seg_start_index = i;
                 result.seg_point = cp;
                 dist_squared = dist2;
+                closest_is_on_seg_start = cp_is_on_seg_start;
+                continue;
+            }
+
+            // Deterministic tie-break for vertex hits:
+            // when two adjacent segments are equally close and one candidate lands on the
+            // current segment start point, prefer that segment start index.
+            if dist2.fuzzy_eq_eps(dist_squared, pos_equal_eps)
+                && cp_is_on_seg_start
+                && !closest_is_on_seg_start
+            {
+                result.seg_start_index = i;
+                result.seg_point = cp;
+                closest_is_on_seg_start = true;
             }
         }
 

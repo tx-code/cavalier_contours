@@ -27,6 +27,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 9: C++ Parity Deep Comparison (No Clipper)** - Deeply compare old C++ logic against Rust on boolean/offset/intersection behavior and classify true bugs versus intentional divergences. (completed 2026-05-12)
 - [x] **Phase 10: C++ Function-Level Parity Deepening (No Clipper)** - Extend parity from operation-level cases into function-level C++ `pline_function` behavior and classify any newly surfaced logic gaps. (completed 2026-05-13)
 - [x] **Phase 11: Closest-Point and Generated Matrix Parity Expansion (No Clipper)** - Expand C++ `pline_function` parity coverage into closest-point and broader generated function-case matrices, with explicit tie-break and comparability classification. (completed 2026-05-13)
+- [x] **Phase 12: Strict-Index and Full Half-Circle Matrix Parity (No Clipper)** - Execute full generated half-circle matrix parity with strict closest-point index checks and resolve confirmed tie-break gaps. (completed 2026-05-13)
 
 ## Phase Details
 
@@ -204,6 +205,21 @@ Plans:
 - [x] 11-02: Add bounded generated function-case parity subset and classification notes.
 - [x] 11-03: Close verification gates and sync planning state.
 
+### Phase 12: Strict-Index and Full Half-Circle Matrix Parity (No Clipper)
+**Goal**: Deepen C++ function-level parity by executing full generated half-circle matrices with strict closest-point index checks and fixing confirmed tie-break mismatches.
+**Depends on**: Phase 11
+**Requirements**: [PAR-10, PAR-11, PAR-12]
+**Success Criteria** (what must be TRUE):
+  1. Full generated half-circle matrix coverage (open/closed, x/y-aligned, cw/ccw, multi-center) runs as executable Rust parity tests.
+  2. Closest-point index expectations that are explicit in old C++ are validated in strict mode or fixed with code-level parity adjustments.
+  3. Resulting mismatches are classified with evidence and next alignment targets are mapped by file/module.
+**Plans**: 3 plans
+
+Plans:
+- [x] 12-01: Expand to full half-circle generated matrix parity and strict index checks.
+- [x] 12-02: Classify outcomes and publish file/module alignment map for next deep parity slice.
+- [x] 12-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -222,3 +238,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 9. C++ Parity Deep Comparison (No Clipper) | 3/3 | Complete | 2026-05-12 |
 | 10. C++ Function-Level Parity Deepening (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 11. Closest-Point and Generated Matrix Parity Expansion (No Clipper) | 3/3 | Complete   | 2026-05-13 |
+| 12. Strict-Index and Full Half-Circle Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
