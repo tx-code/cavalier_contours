@@ -143,6 +143,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-61**: The FFI surface executes source-backed coincident case1/case2 boolean matrices through default-path and options-path and validates output property-set parity.
 - **PAR-62**: Options output parity explicitly covers exclusion direction variants (`A-B`, `B-A`) for coincident case matrices.
 - **PAR-63**: C-API optioned coincident output parity work records next parity target scope and closes with full verification gates.
+- **PAR-64**: The FFI surface exposes closest-point evaluation through `cavc_pline_eval_closest_point` with explicit null and empty-polyline behavior codes.
+- **PAR-65**: Source-backed circle closest-point parity expectations execute through C-API (vertex anchors plus axis/45-degree probes) with index/point/distance checks.
+- **PAR-66**: Closest-point C-API bridge updates ABI header surface and closes with full verification gates and next-scope alignment map.
 
 ## Out of Scope
 
@@ -250,13 +253,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-61 | Phase 29 | Complete |
 | PAR-62 | Phase 29 | Complete |
 | PAR-63 | Phase 29 | Complete |
+| PAR-64 | Phase 30 | Complete |
+| PAR-65 | Phase 30 | Complete |
+| PAR-66 | Phase 30 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 63 (`PAR-01..PAR-63`), mapped to Phases 9-29
+- additional tracked post-v1 requirements: 66 (`PAR-01..PAR-66`), mapped to Phases 9-30
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 29 completion*
+*Last updated: 2026-05-14 after Phase 30 completion*

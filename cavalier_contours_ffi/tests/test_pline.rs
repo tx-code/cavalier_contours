@@ -598,6 +598,32 @@ fn eval_wn(pline: *const cavc_pline, x: f64, y: f64) -> i32 {
     wn
 }
 
+fn eval_closest_point_result(
+    pline: *const cavc_pline,
+    x: f64,
+    y: f64,
+    pos_equal_eps: f64,
+) -> (u32, cavc_point, f64) {
+    let mut seg_index = u32::MAX;
+    let mut point = cavc_point::new(f64::NAN, f64::NAN);
+    let mut distance = f64::NAN;
+    unsafe {
+        assert_eq!(
+            cavc_pline_eval_closest_point(
+                pline,
+                x,
+                y,
+                pos_equal_eps,
+                &mut seg_index,
+                &mut point,
+                &mut distance
+            ),
+            0
+        );
+    }
+    (seg_index, point, distance)
+}
+
 fn cpp_circle_matrix_cases() -> Vec<CircleCaseKey> {
     let centers = [(1.0, 1.0), (-1.0, 1.0), (-1.0, -1.0), (1.0, -1.0)];
     let mut result = Vec::new();
@@ -708,6 +734,24 @@ fn cpp_expected_half_circle_extents(case: HalfCircleCaseKey) -> (f64, f64, f64, 
     (min_x, min_y, max_x, max_y)
 }
 
+fn circle_expected_closest_point(
+    center_x: f64,
+    center_y: f64,
+    qx: f64,
+    qy: f64,
+) -> (f64, f64, f64) {
+    let vx = qx - center_x;
+    let vy = qy - center_y;
+    let len = (vx * vx + vy * vy).sqrt();
+    assert!(len > 0.0);
+    let ux = vx / len;
+    let uy = vy / len;
+    let px = center_x + CPP_CIRCLE_RADIUS * ux;
+    let py = center_y + CPP_CIRCLE_RADIUS * uy;
+    let dist = (len - CPP_CIRCLE_RADIUS).abs();
+    (px, py, dist)
+}
+
 #[test]
 fn pline_function_surface_circle_metrics_winding_cpp_matrix_parity() {
     for case in cpp_circle_matrix_cases() {
@@ -806,6 +850,82 @@ fn pline_function_surface_circle_metrics_winding_cpp_matrix_parity() {
             );
             assert_eq!(eval_wn(pline, inside.0, inside.1), case.direction);
             assert_eq!(eval_wn(pline, outside.0, outside.1), 0);
+        }
+
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_function_surface_circle_closest_point_cpp_matrix_parity() {
+    for case in cpp_circle_matrix_cases() {
+        let pline = create_pline(&cpp_circle_case_vertices(case), true);
+        let vertices = read_vertices(pline);
+
+        // addClosestPointOnVertexes parity anchors from old C++ source.
+        let (i0, p0, d0) = eval_closest_point_result(pline, vertices[0].x, vertices[0].y, 1e-5);
+        assert_eq!(i0, 0);
+        assert_near_ctx(p0.x, vertices[0].x, "circle closest vertex0 x");
+        assert_near_ctx(p0.y, vertices[0].y, "circle closest vertex0 y");
+        assert_near_ctx(d0, 0.0, "circle closest vertex0 distance");
+
+        let (i1, p1, d1) = eval_closest_point_result(pline, vertices[1].x, vertices[1].y, 1e-5);
+        assert_eq!(i1, 1);
+        assert_near_ctx(p1.x, vertices[1].x, "circle closest vertex1 x");
+        assert_near_ctx(p1.y, vertices[1].y, "circle closest vertex1 y");
+        assert_near_ctx(d1, 0.0, "circle closest vertex1 distance");
+
+        // axis probes from old C++ source.
+        let axis_queries = [
+            (case.center_x - 0.1, case.center_y),
+            (case.center_x + 0.1, case.center_y),
+            (case.center_x, case.center_y - 0.1),
+            (case.center_x, case.center_y + 0.1),
+        ];
+        for (qx, qy) in axis_queries {
+            let (_idx, p, d) = eval_closest_point_result(pline, qx, qy, 1e-5);
+            let (ex, ey, ed) = circle_expected_closest_point(case.center_x, case.center_y, qx, qy);
+            assert_near_ctx(p.x, ex, "circle closest axis x");
+            assert_near_ctx(p.y, ey, "circle closest axis y");
+            assert_near_ctx(d, ed, "circle closest axis distance");
+        }
+
+        // 45-degree inside/outside probes from old C++ source.
+        let inside_dist = CPP_CIRCLE_INSIDE_DIST_FACTOR * CPP_CIRCLE_RADIUS;
+        let outside_dist = CPP_CIRCLE_OUTSIDE_DIST_FACTOR * CPP_CIRCLE_RADIUS;
+        for i in 0..4 {
+            let theta = std::f64::consts::PI / 4.0 + (i as f64) * std::f64::consts::PI / 2.0;
+            let cos_t = theta.cos();
+            let sin_t = theta.sin();
+            let inside_q = (
+                case.center_x + inside_dist * cos_t,
+                case.center_y + inside_dist * sin_t,
+            );
+            let outside_q = (
+                case.center_x + outside_dist * cos_t,
+                case.center_y + outside_dist * sin_t,
+            );
+
+            let (_idx_i, p_i, d_i) = eval_closest_point_result(pline, inside_q.0, inside_q.1, 1e-5);
+            let (ex_i, ey_i, ed_i) =
+                circle_expected_closest_point(case.center_x, case.center_y, inside_q.0, inside_q.1);
+            assert_near_ctx(p_i.x, ex_i, "circle closest inside45 x");
+            assert_near_ctx(p_i.y, ey_i, "circle closest inside45 y");
+            assert_near_ctx(d_i, ed_i, "circle closest inside45 distance");
+
+            let (_idx_o, p_o, d_o) =
+                eval_closest_point_result(pline, outside_q.0, outside_q.1, 1e-5);
+            let (ex_o, ey_o, ed_o) = circle_expected_closest_point(
+                case.center_x,
+                case.center_y,
+                outside_q.0,
+                outside_q.1,
+            );
+            assert_near_ctx(p_o.x, ex_o, "circle closest outside45 x");
+            assert_near_ctx(p_o.y, ey_o, "circle closest outside45 y");
+            assert_near_ctx(d_o, ed_o, "circle closest outside45 distance");
         }
 
         unsafe {
@@ -1028,6 +1148,53 @@ fn pline_eval_wn() {
     }
     assert_eq!(wn, 1);
     unsafe { cavc_pline_f(pline) }
+}
+
+#[test]
+fn pline_eval_closest_point() {
+    // empty pline -> undefined closest point (error code 2)
+    let empty_pline = create_pline(&[], true);
+    let mut seg_start_index = u32::MAX;
+    let mut closest_point = cavc_point::new(f64::NAN, f64::NAN);
+    let mut distance = f64::NAN;
+    unsafe {
+        assert_eq!(
+            cavc_pline_eval_closest_point(
+                empty_pline,
+                0.0,
+                0.0,
+                1e-5,
+                &mut seg_start_index,
+                &mut closest_point,
+                &mut distance
+            ),
+            2
+        );
+        assert_eq!(
+            cavc_pline_eval_closest_point(
+                ptr::null_mut(),
+                0.0,
+                0.0,
+                1e-5,
+                &mut seg_start_index,
+                &mut closest_point,
+                &mut distance
+            ),
+            1
+        );
+        cavc_pline_f(empty_pline);
+    }
+
+    // non-empty sanity check
+    let pline = create_pline(&[(0.0, 0.0, 1.0), (2.0, 0.0, 1.0)], true);
+    let (seg_index, p, d) = eval_closest_point_result(pline, 0.0, 0.0, 1e-5);
+    assert_eq!(seg_index, 0);
+    assert_fuzzy_eq!(p.x, 0.0);
+    assert_fuzzy_eq!(p.y, 0.0);
+    assert_fuzzy_eq!(d, 0.0);
+    unsafe {
+        cavc_pline_f(pline);
+    }
 }
 
 #[test]

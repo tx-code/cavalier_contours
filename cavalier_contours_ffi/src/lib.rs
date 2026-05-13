@@ -1165,6 +1165,54 @@ pub unsafe extern "C" fn cavc_pline_eval_wn(
     })
 }
 
+/// Wraps [PlineSource::closest_point].
+///
+/// `seg_start_index`, `closest_point`, and `distance` are used as out parameters to hold the
+/// computed closest-point result.
+///
+/// ## Specific Error Codes
+/// * 1 = `pline` is null.
+/// * 2 = `pline` is empty (closest point undefined).
+///
+/// # Safety
+///
+/// `pline` must be null or a valid cavc_pline object that was created with [cavc_pline_create]
+/// and has not been freed.
+/// `seg_start_index`, `closest_point`, and `distance` must point to valid places in memory to be
+/// written.
+#[unsafe(no_mangle)]
+#[must_use]
+pub unsafe extern "C" fn cavc_pline_eval_closest_point(
+    pline: *const cavc_pline,
+    x: f64,
+    y: f64,
+    pos_equal_eps: f64,
+    seg_start_index: *mut u32,
+    closest_point: *mut cavc_point,
+    distance: *mut f64,
+) -> i32 {
+    ffi_catch_unwind!({
+        if pline.is_null() {
+            return 1;
+        }
+        let point = Vector2::new(x, y);
+        let Some(result) = (unsafe { (*pline).0.closest_point(point, pos_equal_eps) }) else {
+            return 2;
+        };
+
+        if result.seg_start_index > u32::MAX as usize {
+            return -1;
+        }
+
+        unsafe {
+            seg_start_index.write(result.seg_start_index as u32);
+            closest_point.write(cavc_point::from_internal(result.seg_point));
+            distance.write(result.distance);
+        }
+        0
+    })
+}
+
 /// Wraps [PlineSourceMut::invert_direction_mut].
 ///
 /// ## Specific Error Codes

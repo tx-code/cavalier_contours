@@ -487,6 +487,21 @@ Plans:
 - [x] 29-02: Publish options-output parity report and next-scope map.
 - [x] 29-03: Close verification gates and sync planning state.
 
+### Phase 30: C-API Closest-Point Parity Bridge (No Clipper)
+**Goal**: Introduce closest-point C-API surface and bridge source-backed closest-point parity checks through FFI.
+**Depends on**: Phase 29
+**Requirements**: [PAR-64, PAR-65, PAR-66]
+**Success Criteria** (what must be TRUE):
+  1. `cavc_pline_eval_closest_point` is exposed in Rust FFI and root header, with explicit empty/null behavior.
+  2. FFI tests execute source-backed circle closest-point matrix parity (vertex anchors + axis/45-degree probes) through C-API calls.
+  3. Full workspace and planning health gates are green, and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 30-01: Add closest-point C-API surface and parity tests.
+- [x] 30-02: Publish closest-point bridge report and next-scope map.
+- [x] 30-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -523,3 +538,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 27. C-API Coincident No-Modify Matrix Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 28. C-API Optioned Coincident Edge Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 29. C-API Optioned Coincident Output Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 30. C-API Closest-Point Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-14 |
