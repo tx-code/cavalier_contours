@@ -837,6 +837,15 @@ const CPP_CIRCLE_RECT_SOURCE_MATRIX: [(&str, u32); 4] = [
 
 const CPP_CIRCLE_RECT_SOURCE_OPS: [u32; 4] = [0_u32, 2_u32, 1_u32, 3_u32];
 
+const CPP_PLINE_CORE_SOURCE_CASES: [&str; 6] = [
+    "cavc_pline_new",
+    "cavc_pline_set_capacity",
+    "cavc_pline_set_vertex_data",
+    "cavc_pline_add_vertex",
+    "cavc_pline_remove_range",
+    "cavc_pline_clear",
+];
+
 const CPP_COINCIDENT_SOURCE_MATRIX: [(&str, u32); 10] = [
     ("coincident_case1_union", 0),
     ("coincident_case1_excludeAFromB", 2),
@@ -871,6 +880,30 @@ fn assert_boolean_case_source_mapping(
         assert_eq!(
             case.1, *expected_operation,
             "{context} operation drift for case={expected_name}"
+        );
+    }
+}
+
+fn assert_source_case_coverage(actual: &[&str], expected: &[&str], context: &str) {
+    assert_eq!(
+        actual.len(),
+        expected.len(),
+        "{context} source-case count drifted: actual={}, expected={}",
+        actual.len(),
+        expected.len()
+    );
+
+    for (index, name) in actual.iter().enumerate() {
+        assert!(
+            actual[..index].iter().all(|prior| prior != name),
+            "{context} duplicate source case coverage entry: {name}"
+        );
+    }
+
+    for expected_name in expected {
+        assert!(
+            actual.iter().any(|name| name == expected_name),
+            "{context} missing source-backed case: {expected_name}"
         );
     }
 }
@@ -2121,6 +2154,125 @@ fn pline_data_manipulation() {
 
         cavc_pline_f(pline);
     }
+}
+
+#[test]
+fn pline_core_suite_cpp_parity() {
+    // old C++ source: TEST_cavc_pline.cpp -> cavc_pline_new, cavc_pline_set_capacity,
+    // cavc_pline_set_vertex_data, cavc_pline_add_vertex, cavc_pline_remove_range,
+    // cavc_pline_clear
+    let seed = vec![
+        (1.0, 2.0, 0.1),
+        (33.0, 3.0, 0.2),
+        (34.0, 35.0, 0.3),
+        (2.0, 36.0, 0.4),
+    ];
+    let expected_seed = vec![
+        cavc_vertex::new(1.0, 2.0, 0.1),
+        cavc_vertex::new(33.0, 3.0, 0.2),
+        cavc_vertex::new(34.0, 35.0, 0.3),
+        cavc_vertex::new(2.0, 36.0, 0.4),
+    ];
+    let pline1 = create_pline(&seed, false);
+    let pline2 = create_pline(&[], true);
+    let mut covered_source_cases = Vec::new();
+
+    unsafe {
+        // cavc_pline_new
+        let mut pline1_is_closed: u8 = 1;
+        let mut pline2_is_closed: u8 = 0;
+        assert_eq!(cavc_pline_get_is_closed(pline1, &mut pline1_is_closed), 0);
+        assert_eq!(cavc_pline_get_is_closed(pline2, &mut pline2_is_closed), 0);
+        assert_eq!(pline1_is_closed, 0);
+        assert_ne!(pline2_is_closed, 0);
+
+        let mut pline1_count = u32::MAX;
+        let mut pline2_count = u32::MAX;
+        assert_eq!(cavc_pline_get_vertex_count(pline1, &mut pline1_count), 0);
+        assert_eq!(cavc_pline_get_vertex_count(pline2, &mut pline2_count), 0);
+        assert_eq!(pline1_count, 4);
+        assert_eq!(pline2_count, 0);
+        compare_vertexes(&read_vertices(pline1), &expected_seed);
+
+        let mut read_out = expected_seed.clone();
+        let read_before = read_out.clone();
+        assert_eq!(cavc_pline_get_vertex_data(pline2, read_out.as_mut_ptr()), 0);
+        compare_vertexes(&read_out, &read_before);
+        covered_source_cases.push("cavc_pline_new");
+
+        // cavc_pline_set_capacity (reserve equivalence: shrink no-op, then grow)
+        assert_eq!(cavc_pline_reserve(pline1, 1), 0);
+        assert_eq!(cavc_pline_reserve(pline1, 11), 0);
+        compare_vertexes(&read_vertices(pline1), &expected_seed);
+        covered_source_cases.push("cavc_pline_set_capacity");
+
+        // cavc_pline_set_vertex_data
+        assert_eq!(
+            cavc_pline_set_vertex_data(pline2, expected_seed.as_ptr(), expected_seed.len() as u32),
+            0
+        );
+        compare_vertexes(&read_vertices(pline2), &expected_seed);
+        covered_source_cases.push("cavc_pline_set_vertex_data");
+
+        // cavc_pline_add_vertex
+        assert_eq!(cavc_pline_add(pline1, 555.0, 666.0, 0.777), 0);
+        assert_eq!(cavc_pline_add(pline2, 555.0, 666.0, 0.777), 0);
+        let mut expected_with_added = expected_seed.clone();
+        expected_with_added.push(cavc_vertex::new(555.0, 666.0, 0.777));
+        compare_vertexes(&read_vertices(pline1), &expected_with_added);
+        compare_vertexes(&read_vertices(pline2), &expected_with_added);
+        covered_source_cases.push("cavc_pline_add_vertex");
+    }
+
+    // cavc_pline_remove_range (remove-sequence equivalence in current C-API)
+    let remove_pline = create_pline(&seed, false);
+    unsafe {
+        assert_eq!(cavc_pline_remove(remove_pline, 0), 0);
+    }
+    compare_vertexes(
+        &read_vertices(remove_pline),
+        &[
+            cavc_vertex::new(33.0, 3.0, 0.2),
+            cavc_vertex::new(34.0, 35.0, 0.3),
+            cavc_vertex::new(2.0, 36.0, 0.4),
+        ],
+    );
+
+    unsafe {
+        assert_eq!(cavc_pline_remove(remove_pline, 1), 0);
+        assert_eq!(cavc_pline_remove(remove_pline, 1), 0);
+    }
+    compare_vertexes(
+        &read_vertices(remove_pline),
+        &[cavc_vertex::new(33.0, 3.0, 0.2)],
+    );
+
+    unsafe {
+        assert_eq!(cavc_pline_remove(remove_pline, 0), 0);
+        cavc_pline_f(remove_pline);
+    }
+    covered_source_cases.push("cavc_pline_remove_range");
+
+    // cavc_pline_clear
+    unsafe {
+        assert_eq!(cavc_pline_clear(pline1), 0);
+        assert_eq!(cavc_pline_clear(pline2), 0);
+        let mut pline1_count = u32::MAX;
+        let mut pline2_count = u32::MAX;
+        assert_eq!(cavc_pline_get_vertex_count(pline1, &mut pline1_count), 0);
+        assert_eq!(cavc_pline_get_vertex_count(pline2, &mut pline2_count), 0);
+        assert_eq!(pline1_count, 0);
+        assert_eq!(pline2_count, 0);
+        cavc_pline_f(pline1);
+        cavc_pline_f(pline2);
+    }
+    covered_source_cases.push("cavc_pline_clear");
+
+    assert_source_case_coverage(
+        &covered_source_cases,
+        &CPP_PLINE_CORE_SOURCE_CASES,
+        "pline core suite cpp parity",
+    );
 }
 
 #[test]

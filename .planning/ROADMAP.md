@@ -1132,6 +1132,21 @@ Plans:
 - [x] 72-02: Publish post-guard alignment map for next bounded targets.
 - [x] 72-03: Close verification gates and sync planning state.
 
+### Phase 73: C-API Pline Core Suite Source-Coverage Parity (No Clipper)
+**Goal**: Harden C-API pline-core parity by explicitly covering old `TEST_cavc_pline.cpp` core cases (`new/set_capacity/set_vertex_data/add/remove_range/clear`) with source-backed coverage guards.
+**Depends on**: Phase 72
+**Requirements**: [PAR-193, PAR-194, PAR-195]
+**Success Criteria** (what must be TRUE):
+  1. Pline core parity suite explicitly executes source-backed old C++ cases for `new`, `set_capacity`-equivalent reserve behavior, `set_vertex_data`, `add_vertex`, `remove_range`-equivalent remove sequence, and `clear`.
+  2. Source-case coverage guard fails fast on missing/duplicate pline core source-case entries.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 73-01: Add source-backed pline core suite parity test with explicit coverage guard.
+- [x] 73-02: Publish post-suite alignment map for next bounded targets.
+- [x] 73-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1211,3 +1226,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 70. C-API Coincident Case1 Matrix Parity Expansion (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 71. C-API Coincident Default Matrix Source-Map Guard (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 72. C-API Circle-Rectangle Source Matrix Guard Reuse (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 73. C-API Pline Core Suite Source-Coverage Parity (No Clipper) | 3/3 | Complete   | 2026-05-15 |
