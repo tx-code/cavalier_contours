@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 21 verification complete
-last_updated: "2026-05-13T22:20:00.000Z"
-last_activity: 2026-05-13 -- Phase 21 completed
+stopped_at: Phase 22 verification complete
+last_updated: "2026-05-13T23:05:00.000Z"
+last_activity: 2026-05-13 -- Phase 22 completed
 progress:
-  total_phases: 21
-  completed_phases: 21
-  total_plans: 67
-  completed_plans: 67
+  total_phases: 22
+  completed_phases: 22
+  total_plans: 70
+  completed_plans: 70
   percent: 100
 ---
 
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-05-12)
 
 ## Current Position
 
-Phase: 21 — COMPLETE
+Phase: 22 — COMPLETE
 Plan: 3 of 3
-Status: Phase 21 complete
-Last activity: 2026-05-13 -- Phase 21 completed
+Status: Phase 22 complete
+Last activity: 2026-05-13 -- Phase 22 completed
 
 Progress: 100%
 
@@ -36,7 +36,7 @@ Progress: 100%
 
 **Velocity:**
 
-- Total plans completed: 67
+- Total plans completed: 70
 - Average duration: n/a
 - Total execution time: 0.0 hours
 
@@ -65,10 +65,11 @@ Progress: 100%
 | 19 | 3 | - | - |
 | 20 | 3 | - | - |
 | 21 | 3 | - | - |
+| 22 | 3 | - | - |
 
 **Recent Trend:**
 
-- Last 5 plans: 21-01, 21-02, 21-03, 20-03, 20-02
+- Last 5 plans: 22-01, 22-02, 22-03, 21-03, 21-02
 - Trend: stable
 
 ## Accumulated Context
@@ -104,6 +105,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-13T22:20:00.000Z
-Stopped at: Phase 21 verification complete
-Resume file: .planning/phases/21-capi-combine-matrix-expansion/21-03-SUMMARY.md
+Last session: 2026-05-13T23:05:00.000Z
+Stopped at: Phase 22 verification complete
+Resume file: .planning/phases/22-capi-combine-self-invariants-bridge/22-03-SUMMARY.md

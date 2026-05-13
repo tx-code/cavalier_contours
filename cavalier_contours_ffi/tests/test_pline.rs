@@ -1178,6 +1178,109 @@ fn pline_boolean_coincident_case2_cpp_matrix_parity() {
 }
 
 #[test]
+fn pline_boolean_combine_with_self_invariants_cpp_parity() {
+    let pline = create_pline(
+        &[
+            (27.554688, 1.0, 0.0),
+            (27.554688, 0.75, 0.414214),
+            (27.804688, 0.5, 0.0),
+            (32.195313, 0.5, 0.414214),
+            (32.445313, 0.75, 0.0),
+            (32.445313, 1.0, 0.414214),
+            (32.195313, 1.25, 0.0),
+            (31.5, 1.25, -0.414214),
+            (31.0, 1.75, 0.0),
+            (29.0, 1.75, -0.414214),
+            (28.5, 1.25, 0.0),
+            (27.804688, 1.25, 0.414214),
+        ],
+        true,
+    );
+
+    let mut rev_pline = ptr::null();
+    unsafe {
+        assert_eq!(cavc_pline_clone(pline, &mut rev_pline), 0);
+        assert_eq!(cavc_pline_invert_direction(rev_pline as *mut _), 0);
+    }
+
+    let pline_props_expected = pline_props(pline);
+    let rev_pline_props_expected = pline_props(rev_pline);
+
+    // Union (0) with self is self.
+    let (remaining, subtracted) = run_boolean_props(pline, pline, 0);
+    assert!(props_set_match_ignore_area_sign(
+        &remaining,
+        &[pline_props_expected],
+        1e-4
+    ));
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_props(rev_pline, rev_pline, 0);
+    assert!(props_set_match_ignore_area_sign(
+        &remaining,
+        &[rev_pline_props_expected],
+        1e-4
+    ));
+    assert!(subtracted.is_empty());
+
+    // Exclude (Not = 2) with self is empty.
+    let (remaining, subtracted) = run_boolean_props(pline, pline, 2);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_props(rev_pline, rev_pline, 2);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_props(rev_pline, pline, 2);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_props(pline, rev_pline, 2);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    // Intersect (And = 1) with self is self.
+    let (remaining, subtracted) = run_boolean_props(pline, pline, 1);
+    assert!(props_set_match_ignore_area_sign(
+        &remaining,
+        &[pline_props_expected],
+        1e-4
+    ));
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_props(rev_pline, rev_pline, 1);
+    assert!(props_set_match_ignore_area_sign(
+        &remaining,
+        &[rev_pline_props_expected],
+        1e-4
+    ));
+    assert!(subtracted.is_empty());
+
+    // XOR (3) with self is empty.
+    let (remaining, subtracted) = run_boolean_props(pline, pline, 3);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_props(rev_pline, rev_pline, 3);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_props(rev_pline, pline, 3);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    let (remaining, subtracted) = run_boolean_props(pline, rev_pline, 3);
+    assert!(remaining.is_empty());
+    assert!(subtracted.is_empty());
+
+    unsafe {
+        cavc_pline_f(pline);
+        cavc_pline_f(rev_pline as *mut _);
+    }
+}
+
+#[test]
 fn shape_eval_ffi() {
     let outer_pline = create_pline(
         &[

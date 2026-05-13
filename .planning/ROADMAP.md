@@ -37,6 +37,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 19: Coincident Intersect Default-Path Line-Loop Parity Closure (No Clipper)** - Remove degenerate line-only 2-vertex loops during boolean stitching so default coincident intersect behavior matches old C++ empty-output parity. (completed 2026-05-13)
 - [x] **Phase 20: C-API Coincident Intersect Parity Bridge (No Clipper)** - Extend parity closure to the FFI boundary with an executable `cavc_pline_boolean` coincident intersect case matching old C++ empty-output expectation. (completed 2026-05-13)
 - [x] **Phase 21: C-API Combine Matrix Expansion (No Clipper)** - Expand FFI parity coverage with executable `cavc_pline_boolean` matrix cases for `circle_rectangle` and `coincident_case2` sourced from old C++ combine fixtures. (completed 2026-05-13)
+- [x] **Phase 22: C-API Combine Self-Invariants Parity Bridge (No Clipper)** - Bridge old C++ combine-with-self invariants through `cavc_pline_boolean`, including reversed-orientation and mixed-orientation empty-result invariants. (completed 2026-05-13)
 
 ## Phase Details
 
@@ -364,6 +365,21 @@ Plans:
 - [x] 21-02: Publish matrix-expansion report and next-scope map.
 - [x] 21-03: Close verification gates and sync planning state.
 
+### Phase 22: C-API Combine Self-Invariants Parity Bridge (No Clipper)
+**Goal**: Validate that combine-with-self invariants from old C++ hold through Rust FFI boolean APIs for same and reversed orientation inputs.
+**Depends on**: Phase 21
+**Requirements**: [PAR-40, PAR-41, PAR-42]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests prove self-invariants for union/intersect returning self and not/xor returning empty through `cavc_pline_boolean`.
+  2. Reversed self and mixed-orientation invariants for empty-result modes are explicitly exercised and green.
+  3. Full workspace and planning health gates are green and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 22-01: Add C-API combine-with-self invariants parity test coverage.
+- [x] 22-02: Publish invariants bridge report and next-scope map.
+- [x] 22-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -392,3 +408,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 19. Coincident Intersect Default-Path Line-Loop Parity Closure (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 20. C-API Coincident Intersect Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 21. C-API Combine Matrix Expansion (No Clipper) | 3/3 | Complete   | 2026-05-13 |
+| 22. C-API Combine Self-Invariants Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-13 |

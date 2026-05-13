@@ -119,6 +119,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-37**: The FFI surface executes full old C++ `circle_rectangle` combine matrix parity through `cavc_pline_boolean` with source-traceable expected properties.
 - **PAR-38**: The FFI surface executes full old C++ `coincident_case2` combine matrix parity, including both exclude directions, with property-set matching.
 - **PAR-39**: C-API combine matrix expansion records next C-API parity targets and closes with full verification gates.
+- **PAR-40**: The FFI surface executes old C++ combine-with-self invariants for union/intersect/self-empty modes through `cavc_pline_boolean`.
+- **PAR-41**: Reversed and mixed-orientation self-invariant empty-result cases are explicitly executed and verified at the C-API boundary.
+- **PAR-42**: C-API self-invariants bridge work records next C-API parity scope and closes with full verification gates.
 
 ## Out of Scope
 
@@ -202,13 +205,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-37 | Phase 21 | Complete |
 | PAR-38 | Phase 21 | Complete |
 | PAR-39 | Phase 21 | Complete |
+| PAR-40 | Phase 22 | Complete |
+| PAR-41 | Phase 22 | Complete |
+| PAR-42 | Phase 22 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 39 (`PAR-01..PAR-39`), mapped to Phases 9-21
+- additional tracked post-v1 requirements: 42 (`PAR-01..PAR-42`), mapped to Phases 9-22
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-13 after Phase 21 completion*
+*Last updated: 2026-05-13 after Phase 22 completion*
