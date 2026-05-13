@@ -5891,6 +5891,11 @@ fn boolean_and_self_intersect_failure_path_output_stability_ffi() {
             1
         );
         assert_eq!(is_self_intersecting, 17);
+        assert_eq!(
+            cavc_pline_scan_for_self_intersect(ptr::null(), ptr::null(), &mut is_self_intersecting),
+            1
+        );
+        assert_eq!(is_self_intersecting, 17);
 
         cavc_pline_f(pline_a);
         cavc_pline_f(pline_b);
@@ -6143,6 +6148,10 @@ fn pline_contains_invalid_input_result_contract_ffi() {
         assert_eq!(result, CAVC_CONTAINS_RESULT_INVALID_INPUT);
         assert_eq!(
             cavc_pline_contains(ptr::null(), rectangle, &contains_options, ptr::null_mut()),
+            1
+        );
+        assert_eq!(
+            cavc_pline_contains(rectangle, ptr::null(), &contains_options, ptr::null_mut()),
             1
         );
 

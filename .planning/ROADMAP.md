@@ -1417,6 +1417,21 @@ Plans:
 - [x] 91-02: Publish post-contract alignment map for next bounded targets.
 - [x] 91-03: Close verification gates and sync planning state.
 
+### Phase 92: C-API Self-Intersect/Contains Null-Result Contract Symmetry (No Clipper)
+**Goal**: Deepen self-intersect and contains invalid-input reliability by asserting default/options null-result symmetry and output-stability behavior.
+**Depends on**: Phase 91
+**Requirements**: [PAR-250, PAR-251, PAR-252]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly verify `cavc_pline_scan_for_self_intersect` null-input contracts on both explicit-options and default-options paths with output sentinel stability.
+  2. FFI tests explicitly verify `cavc_pline_contains` null-result-pointer invalid-input behavior symmetry for both null-`pline1` and null-`pline2` on explicit-options path.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 92-01: Add self-intersect/contains null-result contract symmetry parity tests.
+- [x] 92-02: Publish post-contract alignment map for next bounded targets.
+- [x] 92-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1515,3 +1530,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 89. C-API Shape-Offset Null-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 90. C-API Options-Path Invalid-Input Contract Invariance (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 91. C-API Boolean Invalid-Operation Options-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 92. C-API Self-Intersect/Contains Null-Result Contract Symmetry (No Clipper) | 3/3 | Complete   | 2026-05-15 |
