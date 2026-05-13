@@ -167,6 +167,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-85**: The FFI surface reproduces source-backed remove-range scenario behavior via ordered `cavc_pline_remove` calls on current API surface.
 - **PAR-86**: Remove-sequence range-equivalence parity validates vertex-level intermediate transitions and final empty-state closure.
 - **PAR-87**: Pline remove-sequence range-equivalence parity work records next parity target scope and closes with full verification gates.
+- **PAR-88**: A cross-suite checklist maps old C++ C-API suite blocks (`pline`, `pline_function`, `parallel_offset`, `combine_plines`) to current FFI executable evidence.
+- **PAR-89**: Cross-suite coverage audit explicitly classifies source-explicit uncovered or API-evolved equivalence zones with concrete notes.
+- **PAR-90**: Cross-suite coverage audit closes with a post-audit alignment map and full verification/planning health gate closure.
 
 ## Out of Scope
 
@@ -298,13 +301,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-85 | Phase 37 | Complete |
 | PAR-86 | Phase 37 | Complete |
 | PAR-87 | Phase 37 | Complete |
+| PAR-88 | Phase 38 | Complete |
+| PAR-89 | Phase 38 | Complete |
+| PAR-90 | Phase 38 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 87 (`PAR-01..PAR-87`), mapped to Phases 9-37
+- additional tracked post-v1 requirements: 90 (`PAR-01..PAR-90`), mapped to Phases 9-38
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 37 completion*
+*Last updated: 2026-05-14 after Phase 38 completion*

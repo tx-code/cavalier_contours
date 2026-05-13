@@ -607,6 +607,21 @@ Plans:
 - [x] 37-02: Publish remove-sequence range-equivalence parity report and next-scope map.
 - [x] 37-03: Close verification gates and sync planning state.
 
+### Phase 38: C-API Cross-Suite Coverage Audit (No Clipper)
+**Goal**: Build explicit coverage mapping from old C++ C-API suite blocks to current FFI evidence and identify residual source-explicit gaps.
+**Depends on**: Phase 37
+**Requirements**: [PAR-88, PAR-89, PAR-90]
+**Success Criteria** (what must be TRUE):
+  1. A concrete cross-suite checklist maps each old suite block (`pline`, `pline_function`, `parallel_offset`, `combine_plines`) to current FFI evidence.
+  2. Residual uncovered source-explicit gaps are explicitly classified.
+  3. Full workspace and planning health gates are green, and post-audit next targets are explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 38-01: Build cross-suite coverage checklist.
+- [x] 38-02: Publish post-audit alignment map.
+- [x] 38-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -651,3 +666,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 35. C-API Combine-Self Vertex-Exact Reversed Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 36. C-API Pline-Suite Buffer/Reserve Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 37. C-API Pline Remove-Sequence Range-Equivalence Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 38. C-API Cross-Suite Coverage Audit (No Clipper) | 3/3 | Complete   | 2026-05-14 |
