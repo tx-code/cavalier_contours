@@ -5950,6 +5950,30 @@ fn pline_boolean_invalid_operation_error_ffi() {
         assert!(pos_plines.is_null());
         assert!(neg_plines.is_null());
 
+        let mut boolean_options = cavc_pline_boolean_o {
+            pline1_aabb_index: ptr::dangling::<cavc_aabbindex>(),
+            pos_equal_eps: f64::NAN,
+            collapsed_area_eps: 0.0,
+        };
+        assert_eq!(cavc_pline_boolean_o_init(&mut boolean_options), 0);
+        let plinelist_sentinel =
+            std::ptr::NonNull::<cavc_plinelist>::dangling().as_ptr() as *const cavc_plinelist;
+        pos_plines = plinelist_sentinel;
+        neg_plines = plinelist_sentinel;
+        assert_eq!(
+            cavc_pline_boolean(
+                pline_a,
+                pline_b,
+                u32::MAX,
+                &boolean_options,
+                &mut pos_plines,
+                &mut neg_plines
+            ),
+            2
+        );
+        assert_eq!(pos_plines, plinelist_sentinel);
+        assert_eq!(neg_plines, plinelist_sentinel);
+
         assert_eq!(
             cavc_pline_boolean(
                 ptr::null(),
@@ -6117,6 +6141,10 @@ fn pline_contains_invalid_input_result_contract_ffi() {
             1
         );
         assert_eq!(result, CAVC_CONTAINS_RESULT_INVALID_INPUT);
+        assert_eq!(
+            cavc_pline_contains(ptr::null(), rectangle, &contains_options, ptr::null_mut()),
+            1
+        );
 
         cavc_pline_f(rectangle);
     }

@@ -1402,6 +1402,21 @@ Plans:
 - [x] 90-02: Publish post-contract alignment map for next bounded targets.
 - [x] 90-03: Close verification gates and sync planning state.
 
+### Phase 91: C-API Boolean Invalid-Operation Options-Path Output Stability Coverage (No Clipper)
+**Goal**: Deepen boolean/contains options-path invalid-input reliability by hardening invalid-operation output stability and null-result-pointer contract checks.
+**Depends on**: Phase 90
+**Requirements**: [PAR-247, PAR-248, PAR-249]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly verify `cavc_pline_boolean` invalid-operation contracts on explicit-options path with direct return-code assertions and unchanged output sentinel pointers.
+  2. FFI tests explicitly verify `cavc_pline_contains` null-result-pointer invalid-input behavior on explicit-options path via direct return-code assertions.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 91-01: Add boolean invalid-operation options-path output-stability parity tests.
+- [x] 91-02: Publish post-contract alignment map for next bounded targets.
+- [x] 91-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1499,3 +1514,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 88. C-API Parallel-Offset Null-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 89. C-API Shape-Offset Null-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 90. C-API Options-Path Invalid-Input Contract Invariance (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 91. C-API Boolean Invalid-Operation Options-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
