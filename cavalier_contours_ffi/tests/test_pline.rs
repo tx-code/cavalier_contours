@@ -732,6 +732,7 @@ fn cpp_offset_specific_edge_matrix_cases() -> Vec<OffsetCase> {
     for case_name in [
         "closed_rectangle_inward",
         "closed_rectangle_coincident",
+        "open_rectangle_inward",
         "closed_rectangle_outward",
         "open_rectangle_outward",
         "closed_diamond_outward",
@@ -4608,6 +4609,7 @@ fn cpp_specific_edge_attribution(case_name: &str) -> &'static str {
         "closed_rectangle_coincident" => {
             "old C++ simple edge case: closed rectangle offset inward into coincident line"
         }
+        "open_rectangle_inward" => "old C++ simple case: open rectangle offset inward",
         "closed_rectangle_outward" => "old C++ simple case: closed rectangle offset outward",
         "open_rectangle_outward" => "old C++ simple case: open rectangle offset outward",
         "closed_diamond_outward" => "old C++ simple case: closed diamond offset outward",
