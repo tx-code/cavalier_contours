@@ -742,6 +742,21 @@ Plans:
 - [x] 46-02: Publish post-deepening alignment map for self-intersects mode follow-up.
 - [x] 46-03: Close verification gates and sync planning state.
 
+### Phase 47: C-API Self-Intersects Mode No-Modify Matrix (No Clipper)
+**Goal**: Extend self-intersects mode coverage with input no-modify invariants across source-backed simple/specific offset matrices.
+**Depends on**: Phase 46
+**Requirements**: [PAR-115, PAR-116, PAR-117]
+**Success Criteria** (what must be TRUE):
+  1. Options-path self-intersects include mode matrix (`ALL`, `LOCAL`, `GLOBAL`) preserves input vertices for source-backed simple and specific offset cases.
+  2. No-modify checks run across the same matrix with explicit mode attribution in assertions.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 47-01: Add self-intersects mode no-modify matrix parity test for options-path offset flow.
+- [x] 47-02: Publish post-deepening alignment map for mode no-modify follow-up.
+- [x] 47-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -795,3 +810,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 44. C-API Options-Path Coincident Vertex-Output Deepening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 45. C-API Options-Path Tolerance-Matrix Deepening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 46. C-API Options-Path Self-Intersects Mode Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 47. C-API Self-Intersects Mode No-Modify Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
