@@ -728,11 +728,14 @@ fn cpp_offset_specific_cases() -> Vec<OffsetCase> {
 
 fn cpp_offset_specific_edge_matrix_cases() -> Vec<OffsetCase> {
     let mut cases = cpp_offset_specific_cases();
-    let coincident_edge_case = cpp_offset_simple_cases()
-        .into_iter()
-        .find(|case| case.name == "closed_rectangle_coincident")
-        .unwrap_or_else(|| panic!("missing source-backed edge case: closed_rectangle_coincident"));
-    cases.push(coincident_edge_case);
+    let mut simple_cases = cpp_offset_simple_cases();
+    for case_name in ["closed_rectangle_coincident", "open_rectangle_outward"] {
+        let case_index = simple_cases
+            .iter()
+            .position(|case| case.name == case_name)
+            .unwrap_or_else(|| panic!("missing source-backed edge case: {case_name}"));
+        cases.push(simple_cases.remove(case_index));
+    }
     cases
 }
 
@@ -4595,6 +4598,7 @@ fn cpp_specific_edge_attribution(case_name: &str) -> &'static str {
         "closed_rectangle_coincident" => {
             "old C++ simple edge case: closed rectangle offset inward into coincident line"
         }
+        "open_rectangle_outward" => "old C++ simple case: open rectangle offset outward",
         other => panic!("unexpected specific case without attribution: {other}"),
     }
 }

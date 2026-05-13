@@ -907,6 +907,21 @@ Plans:
 - [x] 57-02: Publish post-expansion alignment map for next bounded targets.
 - [x] 57-03: Close verification gates and sync planning state.
 
+### Phase 58: C-API Specific-Edge Matrix Open-Path Expansion (No Clipper)
+**Goal**: Further expand helper-driven specific-edge options-path matrix coverage with additional source-backed old C++ open-path case inputs while preserving diagnostics and no-modify invariants.
+**Depends on**: Phase 57
+**Requirements**: [PAR-148, PAR-149, PAR-150]
+**Success Criteria** (what must be TRUE):
+  1. Specific-edge matrix execution includes an additional old C++ open-path case beyond Phase 57 coverage.
+  2. Shared helper path keeps reversed/default matrix parity and no-modify diagnostics stable with explicit provenance labels for all covered edge cases.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 58-01: Add source-backed open-path specific-edge matrix expansion in FFI parity tests.
+- [x] 58-02: Publish post-expansion alignment map for next bounded targets.
+- [x] 58-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -971,3 +986,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 55. C-API Default Specific-Edge Attribution Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 56. C-API Specific-Edge Runner Helper Extraction (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 57. C-API Specific-Edge Matrix Coverage Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 58. C-API Specific-Edge Matrix Open-Path Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
