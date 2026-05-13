@@ -1102,6 +1102,21 @@ Plans:
 - [x] 70-02: Publish post-expansion alignment map for next bounded targets.
 - [x] 70-03: Close verification gates and sync planning state.
 
+### Phase 71: C-API Coincident Default Matrix Source-Map Guard (No Clipper)
+**Goal**: Harden explicit coincident default-path matrices by enforcing source-backed `name+operation` mapping guards for case1/case2 and unifying mapping diagnostics.
+**Depends on**: Phase 70
+**Requirements**: [PAR-187, PAR-188, PAR-189]
+**Success Criteria** (what must be TRUE):
+  1. Explicit default-path `coincident_case1` and `coincident_case2` parity matrices fail fast when canonical source-backed case coverage or operation mapping drifts.
+  2. Shared mapping guard helper is reused by helper-level coincident matrix guard and explicit default-path matrix parity tests.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 71-01: Add shared source-mapping guard helper coverage for explicit case1/case2 default-path matrices.
+- [x] 71-02: Publish post-guard alignment map for next bounded targets.
+- [x] 71-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1179,3 +1194,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 68. C-API Coincident Matrix Helper Extraction (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 69. C-API Coincident Matrix Source-Coverage Guard (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 70. C-API Coincident Case1 Matrix Parity Expansion (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 71. C-API Coincident Default Matrix Source-Map Guard (No Clipper) | 3/3 | Complete   | 2026-05-15 |

@@ -266,6 +266,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-184**: Default-path C-API boolean parity executes full old C++ coincident_case1 matrix expectations (`union`, `excludeAFromB`, `excludeBFromA`, `intersect`, `xor`) with source-backed expected properties.
 - **PAR-185**: Coincident_case1 default-path matrix parity preserves source-backed exclude-direction operation mapping and output-property expectations.
 - **PAR-186**: C-API coincident_case1 matrix parity expansion phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-187**: Explicit default-path `coincident_case1` and `coincident_case2` C-API boolean matrices enforce canonical source-backed case coverage and operation mapping through a shared mapping guard.
+- **PAR-188**: Shared coincident source-mapping guard helper is reused by both helper-level matrix assembly checks and explicit default-path matrix parity tests without changing expected output assertions.
+- **PAR-189**: C-API coincident default-matrix source-map guard phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -496,13 +499,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-184 | Phase 70 | Complete |
 | PAR-185 | Phase 70 | Complete |
 | PAR-186 | Phase 70 | Complete |
+| PAR-187 | Phase 71 | Complete |
+| PAR-188 | Phase 71 | Complete |
+| PAR-189 | Phase 71 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 186 (`PAR-01..PAR-186`), mapped to Phases 9-70
+- additional tracked post-v1 requirements: 189 (`PAR-01..PAR-189`), mapped to Phases 9-71
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 70 completion*
+*Last updated: 2026-05-15 after Phase 71 completion*

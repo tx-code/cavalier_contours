@@ -812,6 +812,60 @@ struct CoincidentMatrixCase {
     clip: PlineInput,
 }
 
+const CPP_COINCIDENT_CASE1_SOURCE_MATRIX: [(&str, u32); 5] = [
+    ("coincident_case1_union", 0),
+    ("coincident_case1_excludeAFromB", 2),
+    ("coincident_case1_excludeBFromA", 2),
+    ("coincident_case1_intersect", 1),
+    ("coincident_case1_xor", 3),
+];
+
+const CPP_COINCIDENT_CASE2_SOURCE_MATRIX: [(&str, u32); 5] = [
+    ("coincident_case2_union", 0),
+    ("coincident_case2_excludeAFromB", 2),
+    ("coincident_case2_excludeBFromA", 2),
+    ("coincident_case2_intersect", 1),
+    ("coincident_case2_xor", 3),
+];
+
+const CPP_COINCIDENT_SOURCE_MATRIX: [(&str, u32); 10] = [
+    ("coincident_case1_union", 0),
+    ("coincident_case1_excludeAFromB", 2),
+    ("coincident_case1_excludeBFromA", 2),
+    ("coincident_case1_intersect", 1),
+    ("coincident_case1_xor", 3),
+    ("coincident_case2_union", 0),
+    ("coincident_case2_excludeAFromB", 2),
+    ("coincident_case2_excludeBFromA", 2),
+    ("coincident_case2_intersect", 1),
+    ("coincident_case2_xor", 3),
+];
+
+fn assert_boolean_case_source_mapping(
+    actual: &[(&str, u32)],
+    expected: &[(&str, u32)],
+    context: &str,
+) {
+    assert_eq!(
+        actual.len(),
+        expected.len(),
+        "{context} case count drifted: actual={}, expected={}",
+        actual.len(),
+        expected.len()
+    );
+
+    for (expected_name, expected_operation) in expected {
+        let case = actual
+            .iter()
+            .find(|(name, _)| *name == *expected_name)
+            .unwrap_or_else(|| panic!("{context} missing source-backed case: {expected_name}"));
+        assert_eq!(
+            case.1, *expected_operation,
+            "{context} operation drift for case={expected_name}"
+        );
+    }
+}
+
 fn cpp_coincident_boolean_matrix_cases() -> Vec<CoincidentMatrixCase> {
     let (case1_a, case1_b) = cpp_coincident_case1_inputs();
     let (case2_a, case2_b) = cpp_coincident_case2_inputs();
@@ -878,39 +932,15 @@ fn cpp_coincident_boolean_matrix_cases() -> Vec<CoincidentMatrixCase> {
         },
     ];
 
-    let expected_source_cases: [(&str, u32); 10] = [
-        ("coincident_case1_union", 0),
-        ("coincident_case1_excludeAFromB", 2),
-        ("coincident_case1_excludeBFromA", 2),
-        ("coincident_case1_intersect", 1),
-        ("coincident_case1_xor", 3),
-        ("coincident_case2_union", 0),
-        ("coincident_case2_excludeAFromB", 2),
-        ("coincident_case2_excludeBFromA", 2),
-        ("coincident_case2_intersect", 1),
-        ("coincident_case2_xor", 3),
-    ];
-
-    assert_eq!(
-        cases.len(),
-        expected_source_cases.len(),
-        "coincident matrix helper case count drifted: actual={}, expected={}",
-        cases.len(),
-        expected_source_cases.len()
+    let actual: Vec<(&str, u32)> = cases
+        .iter()
+        .map(|case| (case.name, case.operation))
+        .collect();
+    assert_boolean_case_source_mapping(
+        &actual,
+        &CPP_COINCIDENT_SOURCE_MATRIX,
+        "coincident matrix helper",
     );
-
-    for (expected_name, expected_operation) in expected_source_cases {
-        let case = cases
-            .iter()
-            .find(|case| case.name == expected_name)
-            .unwrap_or_else(|| {
-                panic!("coincident matrix helper missing source-backed case: {expected_name}")
-            });
-        assert_eq!(
-            case.operation, expected_operation,
-            "coincident matrix helper operation drift for case={expected_name}"
-        );
-    }
 
     cases
 }
@@ -3108,6 +3138,16 @@ fn pline_boolean_coincident_case1_cpp_matrix_parity() {
         },
     ];
 
+    let actual: Vec<(&str, u32)> = cases
+        .iter()
+        .map(|case| (case.name, case.operation))
+        .collect();
+    assert_boolean_case_source_mapping(
+        &actual,
+        &CPP_COINCIDENT_CASE1_SOURCE_MATRIX,
+        "coincident_case1 default matrix",
+    );
+
     for case in cases {
         let (remaining, subtracted) = run_boolean_props(case.subject, case.clip, case.operation);
         assert!(
@@ -3231,6 +3271,16 @@ fn pline_boolean_coincident_case2_cpp_matrix_parity() {
             expected_subtracted: vec![],
         },
     ];
+
+    let actual: Vec<(&str, u32)> = cases
+        .iter()
+        .map(|case| (case.name, case.operation))
+        .collect();
+    assert_boolean_case_source_mapping(
+        &actual,
+        &CPP_COINCIDENT_CASE2_SOURCE_MATRIX,
+        "coincident_case2 default matrix",
+    );
 
     for case in cases {
         let (remaining, subtracted) = run_boolean_props(case.subject, case.clip, case.operation);
