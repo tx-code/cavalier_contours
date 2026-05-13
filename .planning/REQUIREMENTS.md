@@ -221,6 +221,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-139**: Default-input source-backed specific-case matrix co-validates output parity and input no-modify invariants across self-intersects include modes and bounded tolerance scales.
 - **PAR-140**: Specific-case parity checks include explicit old C++ provenance attribution in failure diagnostics for each imported specific scenario.
 - **PAR-141**: Default specific-edge attribution matrix phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-142**: Specific-edge attribution and matrix-execution helpers are extracted in `test_pline.rs` and reused by both reversed/default specific-edge options-path parity tests.
+- **PAR-143**: Shared specific-edge helper extraction preserves existing parity/no-modify behavior and mode/scale/case-attributed diagnostics.
+- **PAR-144**: Specific-edge runner-helper extraction phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -406,13 +409,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-139 | Phase 55 | Complete |
 | PAR-140 | Phase 55 | Complete |
 | PAR-141 | Phase 55 | Complete |
+| PAR-142 | Phase 56 | Complete |
+| PAR-143 | Phase 56 | Complete |
+| PAR-144 | Phase 56 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 141 (`PAR-01..PAR-141`), mapped to Phases 9-55
+- additional tracked post-v1 requirements: 144 (`PAR-01..PAR-144`), mapped to Phases 9-56
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 55 completion*
+*Last updated: 2026-05-14 after Phase 56 completion*

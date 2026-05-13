@@ -877,6 +877,21 @@ Plans:
 - [x] 55-02: Publish post-deepening alignment map for next bounded targets.
 - [x] 55-03: Close verification gates and sync planning state.
 
+### Phase 56: C-API Specific-Edge Runner Helper Extraction (No Clipper)
+**Goal**: Reduce FFI parity test duplication by extracting shared specific-edge attribution and matrix-runner helpers while preserving reversed/default options-path parity/no-modify behavior.
+**Depends on**: Phase 55
+**Requirements**: [PAR-142, PAR-143, PAR-144]
+**Success Criteria** (what must be TRUE):
+  1. Specific-edge attribution text is centralized in a shared helper so source-backed provenance remains consistent across tests.
+  2. Reversed/default specific-edge matrix tests reuse one shared runner and preserve existing mode/scale/case diagnostics plus no-modify assertions.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 56-01: Extract and apply shared specific-edge attribution/runner helpers in FFI parity tests.
+- [x] 56-02: Publish post-extraction alignment map for next bounded targets.
+- [x] 56-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -939,3 +954,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 53. C-API Reversed Specific-Edge Attribution Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 54. C-API Default Output/No-Modify Merge Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 55. C-API Default Specific-Edge Attribution Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 56. C-API Specific-Edge Runner Helper Extraction (No Clipper) | 3/3 | Complete   | 2026-05-14 |
