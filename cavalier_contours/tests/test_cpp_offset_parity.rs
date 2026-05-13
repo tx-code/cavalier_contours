@@ -375,7 +375,28 @@ fn cpp_circle_rectangle_intersection_snapshot() {
     ];
 
     let intersects = subject.find_intersects(&clip);
-    assert_eq!(intersects.basic_intersects.len(), 4);
+    let expected: [(usize, usize, f64, f64); 4] = [
+        (0usize, 1usize, 6.0, -3.898979485566356),
+        (1usize, 1usize, 6.0, 5.898979485566356),
+        (0usize, 3usize, 3.0, -3.58257569495584),
+        (1usize, 3usize, 3.0, 5.58257569495584),
+    ];
+
+    assert_eq!(intersects.basic_intersects.len(), expected.len());
+    for (start_index1, start_index2, x, y) in expected {
+        let matched = intersects.basic_intersects.iter().any(|intr| {
+            intr.start_index1 == start_index1
+                && intr.start_index2 == start_index2
+                && (intr.point.x - x).abs() <= EPS
+                && (intr.point.y - y).abs() <= EPS
+        });
+        assert!(
+            matched,
+            "missing expected circle/rectangle intersect (start_index1={start_index1}, start_index2={start_index2}, point=({x}, {y})), actual={:?}",
+            intersects.basic_intersects
+        );
+    }
+
     assert!(
         intersects.overlapping_intersects.is_empty(),
         "circle/rectangle parity snapshot expected no overlapping intersections"

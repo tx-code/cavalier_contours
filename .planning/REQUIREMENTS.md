@@ -335,6 +335,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-253**: FFI tests explicitly validate null-input contracts for pline mutator surfaces `cavc_pline_set_vertex_data`, `cavc_pline_set_is_closed`, `cavc_pline_clear`, `cavc_pline_set_vertex`, and `cavc_pline_remove`.
 - **PAR-254**: FFI tests explicitly validate OOB contracts for pline mutator surfaces `cavc_pline_set_vertex` and `cavc_pline_remove` with direct return-code assertions.
 - **PAR-255**: C-API pline mutator invalid-input contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-256**: Rust C++ parity tests explicitly validate the full circle/rectangle basic-intersect expected table (segment index pairs plus point coordinates) for the historical C++ geometry.
+- **PAR-257**: Circle/rectangle intersection parity asserts exact basic-intersect cardinality and confirms no overlapping-intersect output for the same C++ geometry.
+- **PAR-258**: C++ circle/rectangle intersection expected-table parity phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -634,13 +637,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-253 | Phase 93 | Complete |
 | PAR-254 | Phase 93 | Complete |
 | PAR-255 | Phase 93 | Complete |
+| PAR-256 | Phase 94 | Complete |
+| PAR-257 | Phase 94 | Complete |
+| PAR-258 | Phase 94 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 255 (`PAR-01..PAR-255`), mapped to Phases 9-93
+- additional tracked post-v1 requirements: 258 (`PAR-01..PAR-258`), mapped to Phases 9-94
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 93 completion*
+*Last updated: 2026-05-15 after Phase 94 completion*
