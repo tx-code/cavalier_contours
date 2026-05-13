@@ -128,6 +128,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-46**: The FFI surface executes old C++ combine no-modify input invariants through `cavc_pline_boolean` operation matrix checks.
 - **PAR-47**: C-API combine operation matrix no-modify checks validate both subject and clip vertex buffers remain unchanged.
 - **PAR-48**: C-API combine no-modify bridge work records next C-API parity scope and closes with full verification gates.
+- **PAR-49**: The FFI surface executes old C++ generated circle and half-circle function matrices for area/path/extents/winding through direct C-API calls.
+- **PAR-50**: Closest-point expectations from old C++ function matrices are explicitly classified at C-API boundary as not-comparable until a closest-point FFI surface exists.
+- **PAR-51**: C-API function-surface matrix bridge work records next parity target scope and closes with full verification gates.
 
 ## Out of Scope
 
@@ -220,13 +223,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-46 | Phase 24 | Complete |
 | PAR-47 | Phase 24 | Complete |
 | PAR-48 | Phase 24 | Complete |
+| PAR-49 | Phase 25 | Complete |
+| PAR-50 | Phase 25 | Complete |
+| PAR-51 | Phase 25 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 48 (`PAR-01..PAR-48`), mapped to Phases 9-24
+- additional tracked post-v1 requirements: 51 (`PAR-01..PAR-51`), mapped to Phases 9-25
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-13 after Phase 24 completion*
+*Last updated: 2026-05-14 after Phase 25 completion*

@@ -456,6 +456,331 @@ fn cpp_offset_specific_cases() -> Vec<OffsetCase> {
     ]
 }
 
+const CPP_MATRIX_EPS: f64 = 1e-4;
+const CPP_PROBE_DELTA: f64 = 0.01;
+const CPP_CIRCLE_RADIUS: f64 = 5.0;
+const CPP_CIRCLE_INSIDE_DIST_FACTOR: f64 = 0.33;
+const CPP_CIRCLE_OUTSIDE_DIST_FACTOR: f64 = 1.5;
+
+#[derive(Copy, Clone)]
+enum CircleAlignment {
+    XAxis,
+    YAxis,
+    Diagonal,
+}
+
+#[derive(Copy, Clone)]
+struct CircleCaseKey {
+    center_x: f64,
+    center_y: f64,
+    direction: i32,
+    alignment: CircleAlignment,
+    reverse: bool,
+}
+
+#[derive(Copy, Clone)]
+struct HalfCircleCaseKey {
+    center_x: f64,
+    center_y: f64,
+    direction: i32,
+    is_x_aligned: bool,
+    is_closed: bool,
+}
+
+fn assert_near_ctx(actual: f64, expected: f64, context: &str) {
+    assert!(
+        (actual - expected).abs() <= CPP_MATRIX_EPS,
+        "{context}: expected {expected}, got {actual}"
+    );
+}
+
+fn eval_wn(pline: *const cavc_pline, x: f64, y: f64) -> i32 {
+    let mut wn = i32::MIN;
+    unsafe {
+        assert_eq!(cavc_pline_eval_wn(pline, x, y, &mut wn), 0);
+    }
+    wn
+}
+
+fn cpp_circle_matrix_cases() -> Vec<CircleCaseKey> {
+    let centers = [(1.0, 1.0), (-1.0, 1.0), (-1.0, -1.0), (1.0, -1.0)];
+    let mut result = Vec::new();
+
+    for reverse in [false, true] {
+        for (center_x, center_y) in centers {
+            for alignment in [
+                CircleAlignment::XAxis,
+                CircleAlignment::YAxis,
+                CircleAlignment::Diagonal,
+            ] {
+                for direction in [1, -1] {
+                    result.push(CircleCaseKey {
+                        center_x,
+                        center_y,
+                        direction,
+                        alignment,
+                        reverse,
+                    });
+                }
+            }
+        }
+    }
+
+    result
+}
+
+fn cpp_circle_case_vertices(case: CircleCaseKey) -> Vec<(f64, f64, f64)> {
+    let mut p0 = match case.alignment {
+        CircleAlignment::XAxis => (case.center_x - CPP_CIRCLE_RADIUS, case.center_y),
+        CircleAlignment::YAxis => (case.center_x, case.center_y - CPP_CIRCLE_RADIUS),
+        CircleAlignment::Diagonal => (
+            case.center_x + CPP_CIRCLE_RADIUS * (std::f64::consts::PI / 4.0).cos(),
+            case.center_y + CPP_CIRCLE_RADIUS * (std::f64::consts::PI / 4.0).sin(),
+        ),
+    };
+    let mut p1 = match case.alignment {
+        CircleAlignment::XAxis => (case.center_x + CPP_CIRCLE_RADIUS, case.center_y),
+        CircleAlignment::YAxis => (case.center_x, case.center_y + CPP_CIRCLE_RADIUS),
+        CircleAlignment::Diagonal => (
+            case.center_x + CPP_CIRCLE_RADIUS * (5.0 * std::f64::consts::PI / 4.0).cos(),
+            case.center_y + CPP_CIRCLE_RADIUS * (5.0 * std::f64::consts::PI / 4.0).sin(),
+        ),
+    };
+
+    if case.reverse {
+        std::mem::swap(&mut p0, &mut p1);
+    }
+
+    let bulge = if case.direction > 0 { 1.0 } else { -1.0 };
+    vec![(p0.0, p0.1, bulge), (p1.0, p1.1, bulge)]
+}
+
+fn cpp_half_circle_matrix_cases() -> Vec<HalfCircleCaseKey> {
+    let centers = [(1.0, 1.0), (-1.0, 1.0), (-1.0, -1.0), (1.0, -1.0)];
+    let mut result = Vec::new();
+
+    for is_closed in [false, true] {
+        for (center_x, center_y) in centers {
+            for (is_x_aligned, direction) in [(true, 1), (true, -1), (false, 1), (false, -1)] {
+                result.push(HalfCircleCaseKey {
+                    center_x,
+                    center_y,
+                    direction,
+                    is_x_aligned,
+                    is_closed,
+                });
+            }
+        }
+    }
+
+    result
+}
+
+fn cpp_half_circle_case_vertices(case: HalfCircleCaseKey) -> Vec<(f64, f64, f64)> {
+    let bulge = if case.direction > 0 { 1.0 } else { -1.0 };
+    if case.is_x_aligned {
+        vec![
+            (case.center_x - CPP_CIRCLE_RADIUS, case.center_y, bulge),
+            (case.center_x + CPP_CIRCLE_RADIUS, case.center_y, 0.0),
+        ]
+    } else {
+        vec![
+            (case.center_x, case.center_y - CPP_CIRCLE_RADIUS, bulge),
+            (case.center_x, case.center_y + CPP_CIRCLE_RADIUS, 0.0),
+        ]
+    }
+}
+
+fn cpp_expected_half_circle_extents(case: HalfCircleCaseKey) -> (f64, f64, f64, f64) {
+    let mut min_x = case.center_x - CPP_CIRCLE_RADIUS;
+    let mut min_y = case.center_y - CPP_CIRCLE_RADIUS;
+    let mut max_x = case.center_x + CPP_CIRCLE_RADIUS;
+    let mut max_y = case.center_y + CPP_CIRCLE_RADIUS;
+
+    if case.direction > 0 {
+        if case.is_x_aligned {
+            max_y -= CPP_CIRCLE_RADIUS;
+        } else {
+            min_x += CPP_CIRCLE_RADIUS;
+        }
+    } else if case.is_x_aligned {
+        min_y += CPP_CIRCLE_RADIUS;
+    } else {
+        max_x -= CPP_CIRCLE_RADIUS;
+    }
+
+    (min_x, min_y, max_x, max_y)
+}
+
+#[test]
+fn pline_function_surface_circle_metrics_winding_cpp_matrix_parity() {
+    for case in cpp_circle_matrix_cases() {
+        let pline = create_pline(&cpp_circle_case_vertices(case), true);
+        let props = pline_props(pline);
+
+        let expected_area =
+            (case.direction as f64) * std::f64::consts::PI * CPP_CIRCLE_RADIUS * CPP_CIRCLE_RADIUS;
+        let expected_path_length = 2.0 * std::f64::consts::PI * CPP_CIRCLE_RADIUS;
+
+        assert_near_ctx(props.area, expected_area, "circle area");
+        assert_near_ctx(
+            props.path_length,
+            expected_path_length,
+            "circle path_length",
+        );
+        assert_near_ctx(
+            props.min_x,
+            case.center_x - CPP_CIRCLE_RADIUS,
+            "circle extents min_x",
+        );
+        assert_near_ctx(
+            props.min_y,
+            case.center_y - CPP_CIRCLE_RADIUS,
+            "circle extents min_y",
+        );
+        assert_near_ctx(
+            props.max_x,
+            case.center_x + CPP_CIRCLE_RADIUS,
+            "circle extents max_x",
+        );
+        assert_near_ctx(
+            props.max_y,
+            case.center_y + CPP_CIRCLE_RADIUS,
+            "circle extents max_y",
+        );
+
+        let outside = [
+            (
+                case.center_x - CPP_CIRCLE_RADIUS - CPP_PROBE_DELTA,
+                case.center_y,
+            ),
+            (
+                case.center_x + CPP_CIRCLE_RADIUS + CPP_PROBE_DELTA,
+                case.center_y,
+            ),
+            (
+                case.center_x,
+                case.center_y - CPP_CIRCLE_RADIUS - CPP_PROBE_DELTA,
+            ),
+            (
+                case.center_x,
+                case.center_y + CPP_CIRCLE_RADIUS + CPP_PROBE_DELTA,
+            ),
+        ];
+        for (x, y) in outside {
+            assert_eq!(eval_wn(pline, x, y), 0);
+        }
+
+        let inside_axis = [
+            (case.center_x, case.center_y),
+            (
+                case.center_x - CPP_CIRCLE_RADIUS + CPP_PROBE_DELTA,
+                case.center_y,
+            ),
+            (
+                case.center_x + CPP_CIRCLE_RADIUS - CPP_PROBE_DELTA,
+                case.center_y,
+            ),
+            (
+                case.center_x,
+                case.center_y - CPP_CIRCLE_RADIUS + CPP_PROBE_DELTA,
+            ),
+            (
+                case.center_x,
+                case.center_y + CPP_CIRCLE_RADIUS - CPP_PROBE_DELTA,
+            ),
+        ];
+        for (x, y) in inside_axis {
+            assert_eq!(eval_wn(pline, x, y), case.direction);
+        }
+
+        let inside_dist = CPP_CIRCLE_INSIDE_DIST_FACTOR * CPP_CIRCLE_RADIUS;
+        let outside_dist = CPP_CIRCLE_OUTSIDE_DIST_FACTOR * CPP_CIRCLE_RADIUS;
+        for i in 0..4 {
+            let theta = std::f64::consts::PI / 4.0 + (i as f64) * std::f64::consts::PI / 2.0;
+            let cos_t = theta.cos();
+            let sin_t = theta.sin();
+            let inside = (
+                case.center_x + inside_dist * cos_t,
+                case.center_y + inside_dist * sin_t,
+            );
+            let outside = (
+                case.center_x + outside_dist * cos_t,
+                case.center_y + outside_dist * sin_t,
+            );
+            assert_eq!(eval_wn(pline, inside.0, inside.1), case.direction);
+            assert_eq!(eval_wn(pline, outside.0, outside.1), 0);
+        }
+
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_function_surface_half_circle_metrics_winding_cpp_matrix_parity() {
+    for case in cpp_half_circle_matrix_cases() {
+        let pline = create_pline(&cpp_half_circle_case_vertices(case), case.is_closed);
+        let props = pline_props(pline);
+        let (min_x, min_y, max_x, max_y) = cpp_expected_half_circle_extents(case);
+
+        let expected_area = if case.is_closed {
+            (case.direction as f64) * std::f64::consts::PI * CPP_CIRCLE_RADIUS * CPP_CIRCLE_RADIUS
+                / 2.0
+        } else {
+            0.0
+        };
+        let expected_path_length = std::f64::consts::PI * CPP_CIRCLE_RADIUS
+            + if case.is_closed {
+                2.0 * CPP_CIRCLE_RADIUS
+            } else {
+                0.0
+            };
+
+        assert_near_ctx(props.area, expected_area, "half-circle area");
+        assert_near_ctx(
+            props.path_length,
+            expected_path_length,
+            "half-circle path_length",
+        );
+        assert_near_ctx(props.min_x, min_x, "half-circle extents min_x");
+        assert_near_ctx(props.min_y, min_y, "half-circle extents min_y");
+        assert_near_ctx(props.max_x, max_x, "half-circle extents max_x");
+        assert_near_ctx(props.max_y, max_y, "half-circle extents max_y");
+
+        let outside = [
+            (min_x - CPP_PROBE_DELTA, case.center_y),
+            (max_x + CPP_PROBE_DELTA, case.center_y),
+            (case.center_x, min_y - CPP_PROBE_DELTA),
+            (case.center_x, max_y + CPP_PROBE_DELTA),
+        ];
+        for (x, y) in outside {
+            assert_eq!(eval_wn(pline, x, y), 0);
+        }
+
+        let expected_inside_winding = if case.is_closed { case.direction } else { 0 };
+        let inside = if case.is_x_aligned {
+            [
+                (case.center_x, min_y + CPP_PROBE_DELTA),
+                (case.center_x, max_y - CPP_PROBE_DELTA),
+            ]
+        } else {
+            [
+                (min_x + CPP_PROBE_DELTA, case.center_y),
+                (max_x - CPP_PROBE_DELTA, case.center_y),
+            ]
+        };
+        for (x, y) in inside {
+            assert_eq!(eval_wn(pline, x, y), expected_inside_winding);
+        }
+
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
 #[test]
 fn pline_data_manipulation() {
     let pline = create_pline(&[], true);

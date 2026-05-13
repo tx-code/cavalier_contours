@@ -412,6 +412,21 @@ Plans:
 - [x] 24-02: Publish no-modify bridge report and next-scope map.
 - [x] 24-03: Close verification gates and sync planning state.
 
+### Phase 25: C-API Function-Surface Matrix Parity (No Clipper)
+**Goal**: Execute old C++ function-surface matrix parity at the Rust C-API boundary for area/path/extents/winding, and classify closest-point surface gap.
+**Depends on**: Phase 24
+**Requirements**: [PAR-49, PAR-50, PAR-51]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests execute source-traceable circle and half-circle generated matrices through `cavc_pline_eval_area`, `cavc_pline_eval_path_length`, `cavc_pline_eval_extents`, and `cavc_pline_eval_wn`.
+  2. Closest-point parity scope from old C++ `TEST_cavc_pline_function.cpp` is explicitly classified as not-comparable for C-API because no closest-point API exists in `cavalier_contours_ffi`.
+  3. Full workspace and planning health gates are green, and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 25-01: Add C-API circle/half-circle function-surface matrix parity tests.
+- [x] 25-02: Publish function-surface parity report and next-scope map.
+- [x] 25-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -443,3 +458,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 22. C-API Combine Self-Invariants Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 23. C-API Parallel-Offset Matrix Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 24. C-API Combine No-Modify Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-13 |
+| 25. C-API Function-Surface Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
