@@ -1731,6 +1731,66 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn wrap_around_overlap_endpoint_deduplication_closed_pline1() {
+        // Closed `pline1` probe for duplicate-filter wrap-around behavior:
+        // overlap occurs on the closing segment (last index) and includes vertex 0, so
+        // `next_wrapping_index(last) == 0` should deduplicate the adjacent basic intersect.
+        let mut pline1 = Polyline::new_closed();
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(2.0, 1.0, 0.0);
+        pline1.add(4.0, 0.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(3.0, 0.0, 0.0);
+        pline2.add(0.0, 0.0, 0.0);
+        pline2.add(0.0, -1.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 1);
+        assert!(
+            intrs.basic_intersects.is_empty(),
+            "unexpected basic intersects: {:?}",
+            intrs.basic_intersects
+        );
+
+        let overlap = intrs.overlapping_intersects[0];
+        assert_eq!(overlap.start_index1, 2);
+        assert_eq!(overlap.start_index2, 0);
+        assert_fuzzy_eq!(overlap.point1, Vector2::new(3.0, 0.0));
+        assert_fuzzy_eq!(overlap.point2, Vector2::new(0.0, 0.0));
+    }
+
+    #[test]
+    fn wrap_around_overlap_endpoint_deduplication_closed_pline2() {
+        // Complementary closed `pline2` probe for the same wrap-around duplicate-filter path.
+        let mut pline1 = Polyline::new();
+        pline1.add(3.0, 0.0, 0.0);
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(0.0, -1.0, 0.0);
+
+        let mut pline2 = Polyline::new_closed();
+        pline2.add(0.0, 0.0, 0.0);
+        pline2.add(2.0, 1.0, 0.0);
+        pline2.add(4.0, 0.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 1);
+        assert!(
+            intrs.basic_intersects.is_empty(),
+            "unexpected basic intersects: {:?}",
+            intrs.basic_intersects
+        );
+
+        let overlap = intrs.overlapping_intersects[0];
+        assert_eq!(overlap.start_index1, 0);
+        assert_eq!(overlap.start_index2, 2);
+        assert_fuzzy_eq!(overlap.point1, Vector2::new(3.0, 0.0));
+        assert_fuzzy_eq!(overlap.point2, Vector2::new(0.0, 0.0));
+    }
+
+    #[test]
     fn uses_pos_equal_eps() {
         // test that pos_equal_eps passed in options is used
         let eps = 1e-5;

@@ -47,12 +47,17 @@ endpoint-stickiness branch closure.
 - Clarified bounded parity behavior for these variants: closure edges can
   produce additional real basic intersections that are independent of
   overlap-adjacent duplicate filtering.
+- Added bounded wrap-around-adjacency endpoint-dedup probes that exercise
+  `next_wrapping_index(last) == 0` without introducing independent closure-edge
+  crossings:
+  - `wrap_around_overlap_endpoint_deduplication_closed_pline1`
+  - `wrap_around_overlap_endpoint_deduplication_closed_pline2`
 
 ## Next Alignment Targets (No Clipper)
 
 | Priority | Target | Rust file/module | Decision Boundary |
 |----------|--------|------------------|-------------------|
-| P1 | Add bounded wrap-around-adjacency endpoint-dedup probes where closure edges do not add independent crossings | `cavalier_contours/src/polyline/internal/pline_intersects.rs` | Keep source-traceable cases and isolate dedup behavior from unrelated geometry. |
+| P1 | Extend wrap-around-adjacency endpoint-dedup probes from line-line to mixed line/arc and arc/arc non-circle closed shapes | `cavalier_contours/src/polyline/internal/pline_intersects.rs` | Keep source-traceable cases and isolate wrap-around dedup from independent closure crossings. |
 | P2 | Extend collection-level parity to mixed arc/arc-overlap adjacency in non-circle closed shapes where direct old C++ mapping is available | `cavalier_contours/src/polyline/internal/pline_intersects.rs`, `cavalier_contours/tests/test_pline_seg_intersect.rs` | Keep source mapping explicit and bounded. |
 | P2 | Extend combine/offset-derived intersection fixture parity only when direct C++ source mapping exists | `cavalier_contours/tests/test_cpp_combine_parity.rs`, `cavalier_contours/tests/test_cpp_offset_parity.rs` | Keep provenance explicit and no-Clipper. |
 
