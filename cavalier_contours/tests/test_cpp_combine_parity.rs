@@ -1,7 +1,7 @@
 mod test_utils;
 
 use cavalier_contours::pline_closed;
-use cavalier_contours::polyline::{BooleanOp, PlineSource, Polyline};
+use cavalier_contours::polyline::{BooleanOp, PlineBooleanOptions, PlineSource, Polyline};
 use test_utils::{PlineProperties, aabb_fuzzy_eq_eps, create_property_set};
 
 const EPS: f64 = 1e-4;
@@ -471,4 +471,25 @@ fn cpp_coincident_matrix_geometry_parity_holds() {
             case.expected
         );
     }
+}
+
+#[test]
+fn cpp_coincident_case1_intersect_with_collapsed_filter_matches_cpp_empty() {
+    let (subject, clip) = coincident_case1_inputs();
+    let options = PlineBooleanOptions {
+        collapsed_area_eps: Some(EPS),
+        ..Default::default()
+    };
+    let actual = create_property_set(
+        subject
+            .boolean_opt(&clip, BooleanOp::And, &options)
+            .pos_plines
+            .iter()
+            .map(|r| &r.pline),
+        false,
+    );
+    assert!(
+        actual.is_empty(),
+        "expected empty intersect with collapsed_area_eps filter, got {actual:?}"
+    );
 }

@@ -33,6 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 15: Half-Circle Offset and Collapse Matrix Parity (No Clipper)** - Execute full generated half-circle offset and collapsed-offset matrix parity with vertex-level output checks and updated next-target alignment map. (completed 2026-05-13)
 - [x] **Phase 16: C++ Offset Matrix Expansion and Reversed Parity (No Clipper)** - Execute broader old C++ `parallel_offset` simple/specific case matrices with reversed-input parity and input-immutability checks. (completed 2026-05-13)
 - [x] **Phase 17: C++ Coincident Combine Matrix Parity Expansion (No Clipper)** - Import and execute old C++ coincident combine case matrices, classifying confirmed parity and explicit divergence behavior. (completed 2026-05-13)
+- [x] **Phase 18: Coincident Intersect Collapsed-Filter Parity Path (No Clipper)** - Validate and lock a source-traceable `collapsed_area_eps` parity path for coincident intersect sliver suppression. (completed 2026-05-13)
 
 ## Phase Details
 
@@ -300,6 +301,21 @@ Plans:
 - [x] 17-02: Classify outcomes and publish next-step alignment map.
 - [x] 17-03: Close verification gates and sync planning state.
 
+### Phase 18: Coincident Intersect Collapsed-Filter Parity Path (No Clipper)
+**Goal**: Resolve the coincident intersect sliver parity gap by validating an explicit collapsed-area filtered parity path without forcing a broad boolean default change.
+**Depends on**: Phase 17
+**Requirements**: [PAR-28, PAR-29, PAR-30]
+**Success Criteria** (what must be TRUE):
+  1. A source-traceable parity test proves `coincident_case1_intersect` matches old C++ empty output when `collapsed_area_eps` is enabled.
+  2. Default-path behavior and collapsed-filter-path behavior are both explicitly classified and documented.
+  3. Follow-up alignment scope and default-change decision boundary are explicitly mapped, and phase closes with full verification gates.
+**Plans**: 3 plans
+
+Plans:
+- [x] 18-01: Add collapsed-filter parity test for coincident intersect case.
+- [x] 18-02: Classify outcomes and publish next-step alignment map.
+- [x] 18-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -324,3 +340,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 15. Half-Circle Offset and Collapse Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 16. C++ Offset Matrix Expansion and Reversed Parity (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 17. C++ Coincident Combine Matrix Parity Expansion (No Clipper) | 3/3 | Complete   | 2026-05-13 |
+| 18. Coincident Intersect Collapsed-Filter Parity Path (No Clipper) | 3/3 | Complete   | 2026-05-13 |

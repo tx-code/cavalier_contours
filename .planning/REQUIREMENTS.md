@@ -107,6 +107,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-25**: Old C++ `TEST_cavc_combine_plines.cpp` coincident case matrices execute as Rust parity tests across `Or`, `Not`, `And`, and `Xor` combine modes.
 - **PAR-26**: Coincident combine outcomes are classified with explicit parity/divergence decisions and source-traceable evidence.
 - **PAR-27**: Coincident combine phase closes with explicit next-target alignment map and full verification gate closure.
+- **PAR-28**: Coincident intersect sliver behavior is covered by an explicit parity test path using `PlineBooleanOptions.collapsed_area_eps` that matches old C++ empty-output expectation.
+- **PAR-29**: Default-path versus collapsed-filter-path behavior is explicitly classified and documented for the coincident intersect case.
+- **PAR-30**: The project records the follow-up decision boundary for adopting or deferring a default collapsed-area threshold in boolean operations.
 
 ## Out of Scope
 
@@ -178,13 +181,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-25 | Phase 17 | Complete |
 | PAR-26 | Phase 17 | Complete |
 | PAR-27 | Phase 17 | Complete |
+| PAR-28 | Phase 18 | Complete |
+| PAR-29 | Phase 18 | Complete |
+| PAR-30 | Phase 18 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 27 (`PAR-01..PAR-27`), mapped to Phases 9-17
+- additional tracked post-v1 requirements: 30 (`PAR-01..PAR-30`), mapped to Phases 9-18
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-13 after Phase 17 completion*
+*Last updated: 2026-05-13 after Phase 18 completion*
