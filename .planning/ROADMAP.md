@@ -817,6 +817,21 @@ Plans:
 - [x] 51-02: Publish post-extraction alignment map for next bounded targets.
 - [x] 51-03: Close verification gates and sync planning state.
 
+### Phase 52: C-API Reversed Output/No-Modify Merge Matrix (No Clipper)
+**Goal**: Deepen reversed-input options-path coverage by merging output parity and no-modify checks into a single bounded stress matrix across source-backed simple/specific offset cases.
+**Depends on**: Phase 51
+**Requirements**: [PAR-130, PAR-131, PAR-132]
+**Success Criteria** (what must be TRUE):
+  1. Reversed-input options-path stress matrix validates output parity and input no-modify invariants together across self-intersects include modes (`ALL`, `LOCAL`, `GLOBAL`) and bounded tolerance scales (`0.5x`, `1.0x`, `2.0x`).
+  2. Merged checks keep explicit mode/scale-attributed failure diagnostics for both output and no-modify assertions.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 52-01: Add reversed output/no-modify merged stress-matrix test for options-path offset flow.
+- [x] 52-02: Publish post-deepening alignment map for next bounded targets.
+- [x] 52-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -875,3 +890,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 49. C-API Options-Path Reversed Self-Intersects Stress Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 50. C-API Options-Path Reversed Self-Intersects No-Modify Stress Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 51. C-API FFI Parity Helper Extraction (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 52. C-API Reversed Output/No-Modify Merge Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |

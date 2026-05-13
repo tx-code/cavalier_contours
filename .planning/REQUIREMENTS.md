@@ -209,6 +209,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-127**: FFI parity tests extract shared helper constructs for self-intersects include mode matrix and tolerance scale matrix setup in `test_pline.rs`.
 - **PAR-128**: FFI parity helper extraction preserves behavior of existing options-path parity/no-modify assertions and keeps semantic outputs unchanged.
 - **PAR-129**: FFI parity helper-extraction phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-130**: Reversed-input options-path stress matrix co-validates output parity and input no-modify invariants across self-intersects include modes and bounded tolerance scales on source-backed simple/specific offset cases.
+- **PAR-131**: Merged reversed stress checks preserve explicit mode/scale-attributed failure diagnostics for both output and input-stability assertions.
+- **PAR-132**: Reversed output/no-modify merge-matrix phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -382,13 +385,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-127 | Phase 51 | Complete |
 | PAR-128 | Phase 51 | Complete |
 | PAR-129 | Phase 51 | Complete |
+| PAR-130 | Phase 52 | Complete |
+| PAR-131 | Phase 52 | Complete |
+| PAR-132 | Phase 52 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 129 (`PAR-01..PAR-129`), mapped to Phases 9-51
+- additional tracked post-v1 requirements: 132 (`PAR-01..PAR-132`), mapped to Phases 9-52
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 51 completion*
+*Last updated: 2026-05-14 after Phase 52 completion*
