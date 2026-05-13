@@ -173,6 +173,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-91**: Reserve API-evolution equivalence remains guarded by regression tests covering shrink-noop/grow reserve calls with preserved existing vertex-prefix data.
 - **PAR-92**: Remove-sequence range-equivalence regression includes final empty-state `cavc_pline_get_vertex_data` no-write buffer behavior in the same source-backed flow.
 - **PAR-93**: Equivalence-zone hardening closes with full verification/planning health gates and explicit next-step alignment boundary.
+- **PAR-94**: A drift baseline artifact tracks canonical old C++ suite files (pline, pline_function, parallel_offset, combine_plines) with source-root path, file hash, and test-block list.
+- **PAR-95**: A deterministic executable hook command validates old-suite drift against baseline and fails on hash or test-block change.
+- **PAR-96**: Drift-hook phase closes with full verification/planning health gates and an explicit post-hook alignment map.
 
 ## Out of Scope
 
@@ -310,13 +313,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-91 | Phase 39 | Complete |
 | PAR-92 | Phase 39 | Complete |
 | PAR-93 | Phase 39 | Complete |
+| PAR-94 | Phase 40 | Complete |
+| PAR-95 | Phase 40 | Complete |
+| PAR-96 | Phase 40 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 93 (`PAR-01..PAR-93`), mapped to Phases 9-39
+- additional tracked post-v1 requirements: 96 (`PAR-01..PAR-96`), mapped to Phases 9-40
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 39 completion*
+*Last updated: 2026-05-14 after Phase 40 completion*

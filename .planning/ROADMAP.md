@@ -637,6 +637,21 @@ Plans:
 - [x] 39-02: Publish post-hardening alignment map and follow-up boundary.
 - [x] 39-03: Close verification gates and sync planning state.
 
+### Phase 40: C-API Old-Suite Drift-Detection Hook (No Clipper)
+**Goal**: Add an executable drift-detection hook that guards cross-suite alignment by checking canonical old C++ suite files for hash or test-block changes.
+**Depends on**: Phase 39
+**Requirements**: [PAR-94, PAR-95, PAR-96]
+**Success Criteria** (what must be TRUE):
+  1. A baseline artifact records source-root path, file hashes, and canonical test-block names for old C++ suite files used by parity alignment.
+  2. A repeatable hook command fails on file/test-block drift and passes on no-drift state, with explicit output.
+  3. Full workspace and planning health gates are green, and next-step map is updated after drift-hook closure.
+**Plans**: 3 plans
+
+Plans:
+- [x] 40-01: Add cpp-suite drift baseline artifact and executable check script.
+- [x] 40-02: Publish drift-hook operation notes and post-hook alignment map.
+- [x] 40-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -683,3 +698,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 37. C-API Pline Remove-Sequence Range-Equivalence Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 38. C-API Cross-Suite Coverage Audit (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 39. C-API Equivalence-Zone Regression Hardening (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 40. C-API Old-Suite Drift-Detection Hook (No Clipper) | 3/3 | Complete   | 2026-05-14 |
