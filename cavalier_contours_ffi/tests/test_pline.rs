@@ -5806,6 +5806,78 @@ fn pline_scan_for_self_intersect_invalid_options_error_ffi() {
 }
 
 #[test]
+fn boolean_and_self_intersect_failure_path_output_stability_ffi() {
+    let pline_a = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
+    let pline_b = create_pline(
+        &[
+            (3.0, -10.0, 0.0),
+            (6.0, -10.0, 0.0),
+            (6.0, 10.0, 0.0),
+            (3.0, 10.0, 0.0),
+        ],
+        true,
+    );
+
+    unsafe {
+        let plinelist_sentinel =
+            std::ptr::NonNull::<cavc_plinelist>::dangling().as_ptr() as *const cavc_plinelist;
+
+        let mut pos_plines = plinelist_sentinel;
+        let mut neg_plines = plinelist_sentinel;
+        assert_eq!(
+            cavc_pline_boolean(
+                pline_a,
+                pline_b,
+                u32::MAX,
+                ptr::null(),
+                &mut pos_plines,
+                &mut neg_plines
+            ),
+            2
+        );
+        assert_eq!(pos_plines, plinelist_sentinel);
+        assert_eq!(neg_plines, plinelist_sentinel);
+
+        assert_eq!(
+            cavc_pline_boolean(
+                ptr::null(),
+                pline_b,
+                0,
+                ptr::null(),
+                &mut pos_plines,
+                &mut neg_plines
+            ),
+            1
+        );
+        assert_eq!(pos_plines, plinelist_sentinel);
+        assert_eq!(neg_plines, plinelist_sentinel);
+
+        let mut options = cavc_pline_self_intersect_o {
+            pline_aabb_index: ptr::null(),
+            pos_equal_eps: f64::NAN,
+            include: u32::MAX,
+        };
+        assert_eq!(cavc_pline_self_intersect_o_init(&mut options), 0);
+        options.include = u32::MAX;
+
+        let mut is_self_intersecting = 17_u8;
+        assert_eq!(
+            cavc_pline_scan_for_self_intersect(pline_a, &options, &mut is_self_intersecting),
+            2
+        );
+        assert_eq!(is_self_intersecting, 17);
+        assert_eq!(
+            cavc_pline_scan_for_self_intersect(ptr::null(), &options, &mut is_self_intersecting),
+            1
+        );
+        assert_eq!(is_self_intersecting, 17);
+
+        cavc_pline_f(pline_a);
+        cavc_pline_f(pline_b);
+    }
+}
+
+#[test]
 fn pline_boolean_invalid_operation_error_ffi() {
     let pline_a = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
     let pline_b = create_pline(

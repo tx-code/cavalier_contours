@@ -314,6 +314,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-232**: FFI tests explicitly validate shape userdata getter null/OOB contracts for `cavc_shape_get_ccw_pline_userdata_count`, `cavc_shape_get_ccw_pline_userdata_values`, `cavc_shape_get_cw_pline_userdata_count`, and `cavc_shape_get_cw_pline_userdata_values`.
 - **PAR-233**: FFI tests explicitly validate shape userdata getter failure paths preserve caller-provided out-parameter sentinels for scalar count and userdata-buffer outputs under null/OOB contracts.
 - **PAR-234**: C-API shape userdata getter output-stability contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-235**: FFI tests explicitly validate `cavc_pline_boolean` and `cavc_pline_scan_for_self_intersect` invalid-operation/invalid-options/null contracts with direct return-code assertions on bounded failure paths.
+- **PAR-236**: FFI tests explicitly validate boolean/self-intersect failure paths preserve caller-provided output sentinels for `pos_plines`, `neg_plines`, and `is_self_intersecting` under invalid-operation/invalid-options/null contracts.
+- **PAR-237**: C-API boolean/self-intersect output-stability contract coverage phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -592,13 +595,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-232 | Phase 86 | Complete |
 | PAR-233 | Phase 86 | Complete |
 | PAR-234 | Phase 86 | Complete |
+| PAR-235 | Phase 87 | Complete |
+| PAR-236 | Phase 87 | Complete |
+| PAR-237 | Phase 87 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 234 (`PAR-01..PAR-234`), mapped to Phases 9-86
+- additional tracked post-v1 requirements: 237 (`PAR-01..PAR-237`), mapped to Phases 9-87
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-15 after Phase 86 completion*
+*Last updated: 2026-05-15 after Phase 87 completion*

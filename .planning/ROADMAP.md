@@ -1342,6 +1342,21 @@ Plans:
 - [x] 86-02: Publish post-contract alignment map for next bounded targets.
 - [x] 86-03: Close verification gates and sync planning state.
 
+### Phase 87: C-API Boolean/Self-Intersect Output Stability Coverage (No Clipper)
+**Goal**: Deepen boolean and self-intersect C-API contract reliability by adding direct invalid-input assertions and output stability checks for error-path list/flag outputs.
+**Depends on**: Phase 86
+**Requirements**: [PAR-235, PAR-236, PAR-237]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests explicitly verify invalid-operation/null contracts for `cavc_pline_boolean` and invalid-options/null contracts for `cavc_pline_scan_for_self_intersect`.
+  2. FFI tests explicitly verify failure-path output sentinel stability for boolean plinelist outputs and self-intersect result-flag outputs on covered APIs.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 87-01: Add direct boolean/self-intersect failure-path output stability parity tests.
+- [x] 87-02: Publish post-contract alignment map for next bounded targets.
+- [x] 87-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1435,3 +1450,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 84. C-API Pline-Eval Failure-Path Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 85. C-API Pline Core Accessor Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
 | 86. C-API Shape Userdata Getter Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
+| 87. C-API Boolean/Self-Intersect Output Stability Coverage (No Clipper) | 3/3 | Complete   | 2026-05-15 |
