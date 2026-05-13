@@ -746,6 +746,15 @@ fn cpp_offset_specific_edge_matrix_cases() -> Vec<OffsetCase> {
             .unwrap_or_else(|| panic!("missing source-backed edge case: {case_name}"));
         cases.push(simple_cases.remove(case_index));
     }
+    assert!(
+        simple_cases.is_empty(),
+        "specific-edge matrix omitted source-backed simple case(s): {}",
+        simple_cases
+            .iter()
+            .map(|case| case.name)
+            .collect::<Vec<_>>()
+            .join(", ")
+    );
     cases
 }
 

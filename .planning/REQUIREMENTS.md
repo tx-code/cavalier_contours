@@ -251,6 +251,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-169**: Helper-driven specific-edge options-path matrix coverage includes additional source-backed old C++ open-rectangle-inward case inputs beyond Phase 64 coverage.
 - **PAR-170**: Open-rectangle-inward specific-edge matrix expansion preserves reversed/default parity and no-modify diagnostics with explicit provenance labels per covered edge case.
 - **PAR-171**: Specific-edge matrix open-rectangle-inward expansion phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-172**: Specific-edge matrix construction asserts that all source-backed old C++ simple cases targeted by this matrix path are consumed, and fails with omitted-case diagnostics when any remain.
+- **PAR-173**: Source-coverage guard hardening preserves existing reversed/default parity and no-modify behavior while improving omission diagnostics.
+- **PAR-174**: Specific-edge matrix source-coverage guard phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -466,13 +469,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-169 | Phase 65 | Complete |
 | PAR-170 | Phase 65 | Complete |
 | PAR-171 | Phase 65 | Complete |
+| PAR-172 | Phase 66 | Complete |
+| PAR-173 | Phase 66 | Complete |
+| PAR-174 | Phase 66 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 171 (`PAR-01..PAR-171`), mapped to Phases 9-65
+- additional tracked post-v1 requirements: 174 (`PAR-01..PAR-174`), mapped to Phases 9-66
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 65 completion*
+*Last updated: 2026-05-14 after Phase 66 completion*

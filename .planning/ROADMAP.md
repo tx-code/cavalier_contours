@@ -1027,6 +1027,21 @@ Plans:
 - [x] 65-02: Publish post-expansion alignment map for next bounded targets.
 - [x] 65-03: Close verification gates and sync planning state.
 
+### Phase 66: C-API Specific-Edge Matrix Source-Coverage Guard (No Clipper)
+**Goal**: Harden helper-driven specific-edge options-path alignment by enforcing source-backed simple-case coverage in matrix construction with explicit omitted-case diagnostics.
+**Depends on**: Phase 65
+**Requirements**: [PAR-172, PAR-173, PAR-174]
+**Success Criteria** (what must be TRUE):
+  1. Specific-edge matrix construction fails if a source-backed old C++ simple case is omitted from selection.
+  2. Omitted-case diagnostics remain explicit while existing reversed/default parity and no-modify behavior remains unchanged.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 66-01: Add source-coverage guard assertion to specific-edge matrix construction.
+- [x] 66-02: Publish post-guard alignment map for next bounded targets.
+- [x] 66-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -1099,3 +1114,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 63. C-API Specific-Edge Matrix Closed-Rectangle-Outward Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 64. C-API Specific-Edge Matrix Closed-Rectangle-Inward Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 65. C-API Specific-Edge Matrix Open-Rectangle-Inward Expansion (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 66. C-API Specific-Edge Matrix Source-Coverage Guard (No Clipper) | 3/3 | Complete   | 2026-05-14 |
