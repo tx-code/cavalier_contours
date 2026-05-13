@@ -832,6 +832,21 @@ Plans:
 - [x] 52-02: Publish post-deepening alignment map for next bounded targets.
 - [x] 52-03: Close verification gates and sync planning state.
 
+### Phase 53: C-API Reversed Specific-Edge Attribution Matrix (No Clipper)
+**Goal**: Deepen reversed-input options-path confidence by adding source-backed specific-edge attributions to merged parity/no-modify stress checks.
+**Depends on**: Phase 52
+**Requirements**: [PAR-133, PAR-134, PAR-135]
+**Success Criteria** (what must be TRUE):
+  1. Reversed-input specific-case matrix validates output parity and input no-modify invariants across self-intersects include modes (`ALL`, `LOCAL`, `GLOBAL`) and bounded tolerance scales (`0.5x`, `1.0x`, `2.0x`).
+  2. Each source-backed specific case has explicit legacy provenance attribution in failure diagnostics.
+  3. Full workspace and planning health gates are green, with post-phase alignment map updated.
+**Plans**: 3 plans
+
+Plans:
+- [x] 53-01: Add reversed specific-edge attribution matrix test for options-path offset flow.
+- [x] 53-02: Publish post-deepening alignment map for next bounded targets.
+- [x] 53-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -891,3 +906,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 50. C-API Options-Path Reversed Self-Intersects No-Modify Stress Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 51. C-API FFI Parity Helper Extraction (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 52. C-API Reversed Output/No-Modify Merge Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 53. C-API Reversed Specific-Edge Attribution Matrix (No Clipper) | 3/3 | Complete   | 2026-05-14 |

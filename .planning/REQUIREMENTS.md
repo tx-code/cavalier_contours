@@ -212,6 +212,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-130**: Reversed-input options-path stress matrix co-validates output parity and input no-modify invariants across self-intersects include modes and bounded tolerance scales on source-backed simple/specific offset cases.
 - **PAR-131**: Merged reversed stress checks preserve explicit mode/scale-attributed failure diagnostics for both output and input-stability assertions.
 - **PAR-132**: Reversed output/no-modify merge-matrix phase closes with full verification/planning health gates and an explicit post-phase alignment map.
+- **PAR-133**: Reversed-input source-backed specific-case matrix co-validates output parity and input no-modify invariants across self-intersects include modes and bounded tolerance scales.
+- **PAR-134**: Specific-case parity checks include explicit old C++ provenance attribution in failure diagnostics for each imported specific scenario.
+- **PAR-135**: Reversed specific-edge attribution matrix phase closes with full verification/planning health gates and an explicit post-phase alignment map.
 
 ## Out of Scope
 
@@ -388,13 +391,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-130 | Phase 52 | Complete |
 | PAR-131 | Phase 52 | Complete |
 | PAR-132 | Phase 52 | Complete |
+| PAR-133 | Phase 53 | Complete |
+| PAR-134 | Phase 53 | Complete |
+| PAR-135 | Phase 53 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 132 (`PAR-01..PAR-132`), mapped to Phases 9-52
+- additional tracked post-v1 requirements: 135 (`PAR-01..PAR-135`), mapped to Phases 9-53
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 52 completion*
+*Last updated: 2026-05-14 after Phase 53 completion*
