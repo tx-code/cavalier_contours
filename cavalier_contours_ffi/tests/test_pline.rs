@@ -729,7 +729,11 @@ fn cpp_offset_specific_cases() -> Vec<OffsetCase> {
 fn cpp_offset_specific_edge_matrix_cases() -> Vec<OffsetCase> {
     let mut cases = cpp_offset_specific_cases();
     let mut simple_cases = cpp_offset_simple_cases();
-    for case_name in ["closed_rectangle_coincident", "open_rectangle_outward"] {
+    for case_name in [
+        "closed_rectangle_coincident",
+        "open_rectangle_outward",
+        "closed_diamond_outward",
+    ] {
         let case_index = simple_cases
             .iter()
             .position(|case| case.name == case_name)
@@ -4599,6 +4603,7 @@ fn cpp_specific_edge_attribution(case_name: &str) -> &'static str {
             "old C++ simple edge case: closed rectangle offset inward into coincident line"
         }
         "open_rectangle_outward" => "old C++ simple case: open rectangle offset outward",
+        "closed_diamond_outward" => "old C++ simple case: closed diamond offset outward",
         other => panic!("unexpected specific case without attribution: {other}"),
     }
 }
