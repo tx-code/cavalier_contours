@@ -427,6 +427,21 @@ Plans:
 - [x] 25-02: Publish function-surface parity report and next-scope map.
 - [x] 25-03: Close verification gates and sync planning state.
 
+### Phase 26: C-API Options-Path Parity Bridge (No Clipper)
+**Goal**: Validate C-API options-path behavior parity against stabilized default-path behavior on source-backed boolean and offset matrix cases.
+**Depends on**: Phase 25
+**Requirements**: [PAR-52, PAR-53, PAR-54]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests execute old C++ `circle_rectangle` boolean matrix via C-API options-path (`cavc_pline_boolean_o`) and show property parity with default-path outputs.
+  2. FFI tests execute old C++ imported offset matrices via C-API options-path (`cavc_pline_parallel_offset_o`) and show property parity with default-path outputs.
+  3. Full workspace and planning health gates are green, and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 26-01: Add C-API options-path parity tests for boolean and offset matrices.
+- [x] 26-02: Publish options-path parity report and next-scope map.
+- [x] 26-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -459,3 +474,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 23. C-API Parallel-Offset Matrix Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 24. C-API Combine No-Modify Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-13 |
 | 25. C-API Function-Surface Matrix Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 26. C-API Options-Path Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-14 |

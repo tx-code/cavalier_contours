@@ -131,6 +131,9 @@ Deferred to a later roadmap. Tracked but not in current v1 scope.
 - **PAR-49**: The FFI surface executes old C++ generated circle and half-circle function matrices for area/path/extents/winding through direct C-API calls.
 - **PAR-50**: Closest-point expectations from old C++ function matrices are explicitly classified at C-API boundary as not-comparable until a closest-point FFI surface exists.
 - **PAR-51**: C-API function-surface matrix bridge work records next parity target scope and closes with full verification gates.
+- **PAR-52**: The FFI surface executes source-backed boolean matrix cases through `cavc_pline_boolean` options-path and matches default-path property outputs.
+- **PAR-53**: The FFI surface executes source-backed offset matrix cases through `cavc_pline_parallel_offset` options-path and matches default-path property outputs.
+- **PAR-54**: C-API options-path parity bridge work records next parity target scope and closes with full verification gates.
 
 ## Out of Scope
 
@@ -226,13 +229,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAR-49 | Phase 25 | Complete |
 | PAR-50 | Phase 25 | Complete |
 | PAR-51 | Phase 25 | Complete |
+| PAR-52 | Phase 26 | Complete |
+| PAR-53 | Phase 26 | Complete |
+| PAR-54 | Phase 26 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
 - v1 mapped to phases: 25
 - v1 unmapped: 0
-- additional tracked post-v1 requirements: 51 (`PAR-01..PAR-51`), mapped to Phases 9-25
+- additional tracked post-v1 requirements: 54 (`PAR-01..PAR-54`), mapped to Phases 9-26
 
 ---
 *Requirements defined: 2026-05-12*
-*Last updated: 2026-05-14 after Phase 25 completion*
+*Last updated: 2026-05-14 after Phase 26 completion*
