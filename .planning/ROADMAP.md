@@ -502,6 +502,21 @@ Plans:
 - [x] 30-02: Publish closest-point bridge report and next-scope map.
 - [x] 30-03: Close verification gates and sync planning state.
 
+### Phase 31: C-API Half-Circle Closest-Point Strict Index Parity (No Clipper)
+**Goal**: Close half-circle closest-point strict index parity at C-API boundary using source-backed generated matrix expectations.
+**Depends on**: Phase 30
+**Requirements**: [PAR-67, PAR-68, PAR-69]
+**Success Criteria** (what must be TRUE):
+  1. FFI tests execute half-circle generated matrix closest-point probes through `cavc_pline_eval_closest_point` and validate strict segment index expectations.
+  2. Open/closed, x/y aligned, direction, and center variants from source-backed matrix are covered for point/distance/index parity.
+  3. Full workspace and planning health gates are green, and next C-API parity target is explicitly mapped.
+**Plans**: 3 plans
+
+Plans:
+- [x] 31-01: Add C-API half-circle closest-point strict index matrix parity test.
+- [x] 31-02: Publish half-circle closest-point parity report and next-scope map.
+- [x] 31-03: Close verification gates and sync planning state.
+
 ## Progress
 
 **Execution Order:**
@@ -539,3 +554,4 @@ Phases execute in numeric order unless an inserted decimal phase is added for ur
 | 28. C-API Optioned Coincident Edge Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 29. C-API Optioned Coincident Output Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |
 | 30. C-API Closest-Point Parity Bridge (No Clipper) | 3/3 | Complete   | 2026-05-14 |
+| 31. C-API Half-Circle Closest-Point Strict Index Parity (No Clipper) | 3/3 | Complete   | 2026-05-14 |

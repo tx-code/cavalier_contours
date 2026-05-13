@@ -583,6 +583,14 @@ struct HalfCircleCaseKey {
     is_closed: bool,
 }
 
+#[derive(Copy, Clone)]
+struct HalfClosestCase {
+    query: (f64, f64),
+    expected_point: (f64, f64),
+    expected_distance: f64,
+    expected_index: u32,
+}
+
 fn assert_near_ctx(actual: f64, expected: f64, context: &str) {
     assert!(
         (actual - expected).abs() <= CPP_MATRIX_EPS,
@@ -732,6 +740,126 @@ fn cpp_expected_half_circle_extents(case: HalfCircleCaseKey) -> (f64, f64, f64, 
     }
 
     (min_x, min_y, max_x, max_y)
+}
+
+fn build_half_circle_closest_cases(case: HalfCircleCaseKey) -> Vec<HalfClosestCase> {
+    let (min_x, min_y, max_x, max_y) = cpp_expected_half_circle_extents(case);
+    let cx = case.center_x;
+    let cy = case.center_y;
+    let end_point_index = if case.is_closed { 1_u32 } else { 0_u32 };
+    let mut result = Vec::new();
+
+    if case.is_x_aligned {
+        result.push(HalfClosestCase {
+            query: (min_x, cy),
+            expected_point: (min_x, cy),
+            expected_distance: 0.0,
+            expected_index: 0,
+        });
+        result.push(HalfClosestCase {
+            query: (max_x, cy),
+            expected_point: (max_x, cy),
+            expected_distance: 0.0,
+            expected_index: end_point_index,
+        });
+    } else {
+        result.push(HalfClosestCase {
+            query: (cx, min_y),
+            expected_point: (cx, min_y),
+            expected_distance: 0.0,
+            expected_index: 0,
+        });
+        result.push(HalfClosestCase {
+            query: (cx, max_y),
+            expected_point: (cx, max_y),
+            expected_distance: 0.0,
+            expected_index: end_point_index,
+        });
+    }
+
+    if case.is_x_aligned {
+        let arc_midpoint_y = if case.direction > 0 { min_y } else { max_y };
+        result.push(HalfClosestCase {
+            query: (min_x - CPP_PROBE_DELTA, cy),
+            expected_point: (min_x, cy),
+            expected_distance: CPP_PROBE_DELTA,
+            expected_index: 0,
+        });
+        result.push(HalfClosestCase {
+            query: (max_x + CPP_PROBE_DELTA, cy),
+            expected_point: (max_x, cy),
+            expected_distance: CPP_PROBE_DELTA,
+            expected_index: end_point_index,
+        });
+        result.push(HalfClosestCase {
+            query: (cx, arc_midpoint_y - CPP_PROBE_DELTA),
+            expected_point: (cx, arc_midpoint_y),
+            expected_distance: CPP_PROBE_DELTA,
+            expected_index: 0,
+        });
+        result.push(HalfClosestCase {
+            query: (cx, arc_midpoint_y + CPP_PROBE_DELTA),
+            expected_point: (cx, arc_midpoint_y),
+            expected_distance: CPP_PROBE_DELTA,
+            expected_index: 0,
+        });
+        if case.is_closed {
+            result.push(HalfClosestCase {
+                query: (cx, cy - CPP_PROBE_DELTA),
+                expected_point: (cx, cy),
+                expected_distance: CPP_PROBE_DELTA,
+                expected_index: 1,
+            });
+            result.push(HalfClosestCase {
+                query: (cx, cy + CPP_PROBE_DELTA),
+                expected_point: (cx, cy),
+                expected_distance: CPP_PROBE_DELTA,
+                expected_index: 1,
+            });
+        }
+    } else {
+        let arc_midpoint_x = if case.direction > 0 { max_x } else { min_x };
+        result.push(HalfClosestCase {
+            query: (cx, min_y - CPP_PROBE_DELTA),
+            expected_point: (cx, min_y),
+            expected_distance: CPP_PROBE_DELTA,
+            expected_index: 0,
+        });
+        result.push(HalfClosestCase {
+            query: (cx, max_y + CPP_PROBE_DELTA),
+            expected_point: (cx, max_y),
+            expected_distance: CPP_PROBE_DELTA,
+            expected_index: end_point_index,
+        });
+        result.push(HalfClosestCase {
+            query: (arc_midpoint_x - CPP_PROBE_DELTA, cy),
+            expected_point: (arc_midpoint_x, cy),
+            expected_distance: CPP_PROBE_DELTA,
+            expected_index: 0,
+        });
+        result.push(HalfClosestCase {
+            query: (arc_midpoint_x + CPP_PROBE_DELTA, cy),
+            expected_point: (arc_midpoint_x, cy),
+            expected_distance: CPP_PROBE_DELTA,
+            expected_index: 0,
+        });
+        if case.is_closed {
+            result.push(HalfClosestCase {
+                query: (cx - CPP_PROBE_DELTA, cy),
+                expected_point: (cx, cy),
+                expected_distance: CPP_PROBE_DELTA,
+                expected_index: 1,
+            });
+            result.push(HalfClosestCase {
+                query: (cx + CPP_PROBE_DELTA, cy),
+                expected_point: (cx, cy),
+                expected_distance: CPP_PROBE_DELTA,
+                expected_index: 1,
+            });
+        }
+    }
+
+    result
 }
 
 fn circle_expected_closest_point(
@@ -991,6 +1119,41 @@ fn pline_function_surface_half_circle_metrics_winding_cpp_matrix_parity() {
             assert_eq!(eval_wn(pline, x, y), expected_inside_winding);
         }
 
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
+fn pline_function_surface_half_circle_closest_point_strict_index_cpp_matrix_parity() {
+    for case in cpp_half_circle_matrix_cases() {
+        let pline = create_pline(&cpp_half_circle_case_vertices(case), case.is_closed);
+        let closest_cases = build_half_circle_closest_cases(case);
+        for (case_idx, expected) in closest_cases.iter().enumerate() {
+            let (seg_index, p, d) =
+                eval_closest_point_result(pline, expected.query.0, expected.query.1, 1e-5);
+            assert_eq!(
+                seg_index, expected.expected_index,
+                "half-circle closest index mismatch at case #{case_idx} query={:?}",
+                expected.query
+            );
+            assert_near_ctx(
+                p.x,
+                expected.expected_point.0,
+                "half-circle closest point x",
+            );
+            assert_near_ctx(
+                p.y,
+                expected.expected_point.1,
+                "half-circle closest point y",
+            );
+            assert_near_ctx(
+                d,
+                expected.expected_distance,
+                "half-circle closest distance",
+            );
+        }
         unsafe {
             cavc_pline_f(pline);
         }
