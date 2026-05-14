@@ -2365,6 +2365,70 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn coincident_arc_end_points_touch_collection_level_distinct_nonzero_indexes_role_flip() {
+        // Distinct-index counterpart for coincident dual-endpoint-touch branch to explicitly
+        // verify start-index role inversion under parameter swap.
+        let mut pline1 = Polyline::new();
+        pline1.add(3.2, 3.0, 0.0); // index 0 (line)
+        pline1.add(3.0, 3.0, 1.0); // index 1 (arc)
+        pline1.add(1.0, 1.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(0.6, 1.4, 0.0); // index 0 (line)
+        pline2.add(0.6, 1.2, 0.0); // index 1 (line)
+        pline2.add(1.0, 1.0, 1.0); // index 2 (arc)
+        pline2.add(3.0, 3.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+        assert_eq!(intrs.overlapping_intersects.len(), 0);
+        assert_eq!(intrs.basic_intersects.len(), 2);
+        assert_eq!(intrs.basic_intersects[0].start_index1, 1);
+        assert_eq!(intrs.basic_intersects[0].start_index2, 2);
+        assert_fuzzy_eq!(intrs.basic_intersects[0].point, Vector2::new(1.0, 1.0));
+        assert_eq!(intrs.basic_intersects[1].start_index1, 1);
+        assert_eq!(intrs.basic_intersects[1].start_index2, 2);
+        assert_fuzzy_eq!(intrs.basic_intersects[1].point, Vector2::new(3.0, 3.0));
+
+        let intrs_flipped = find_intersects(&pline2, &pline1, &Default::default());
+        assert_eq!(intrs_flipped.overlapping_intersects.len(), 0);
+        assert_eq!(intrs_flipped.basic_intersects.len(), 2);
+        assert_eq!(intrs_flipped.basic_intersects[0].start_index1, 2);
+        assert_eq!(intrs_flipped.basic_intersects[0].start_index2, 1);
+        assert_fuzzy_eq!(
+            intrs_flipped.basic_intersects[0].point,
+            Vector2::new(3.0, 3.0)
+        );
+        assert_eq!(intrs_flipped.basic_intersects[1].start_index1, 2);
+        assert_eq!(intrs_flipped.basic_intersects[1].start_index2, 1);
+        assert_fuzzy_eq!(
+            intrs_flipped.basic_intersects[1].point,
+            Vector2::new(1.0, 1.0)
+        );
+
+        let mut pline2_reversed = Polyline::new();
+        pline2_reversed.add(3.4, 2.6, 0.0); // index 0 (line)
+        pline2_reversed.add(3.4, 2.8, 0.0); // index 1 (line)
+        pline2_reversed.add(3.0, 3.0, -1.0); // index 2 (reversed arc)
+        pline2_reversed.add(1.0, 1.0, 0.0);
+
+        let intrs_reversed = find_intersects(&pline1, &pline2_reversed, &Default::default());
+        assert_eq!(intrs_reversed.overlapping_intersects.len(), 0);
+        assert_eq!(intrs_reversed.basic_intersects.len(), 2);
+        assert_eq!(intrs_reversed.basic_intersects[0].start_index1, 1);
+        assert_eq!(intrs_reversed.basic_intersects[0].start_index2, 2);
+        assert_fuzzy_eq!(
+            intrs_reversed.basic_intersects[0].point,
+            Vector2::new(3.0, 3.0)
+        );
+        assert_eq!(intrs_reversed.basic_intersects[1].start_index1, 1);
+        assert_eq!(intrs_reversed.basic_intersects[1].start_index2, 2);
+        assert_fuzzy_eq!(
+            intrs_reversed.basic_intersects[1].point,
+            Vector2::new(1.0, 1.0)
+        );
+    }
+
+    #[test]
     fn opposite_direction_arc_end_touch_collection_level_bug_guard() {
         // Collection-level guard for issue #42 geometry:
         // opposite-direction coincident arcs touching at one endpoint should report that endpoint,
