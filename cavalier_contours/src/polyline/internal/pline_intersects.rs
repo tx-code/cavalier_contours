@@ -1460,6 +1460,47 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_two_intersects_shared_end_filters_one_point_with_zero_length_lead_segment() {
+        // Re-parameterization boundary probe for global-self `TwoIntersects` + skip-at-end:
+        // add a zero-length leading segment to shift indexes while keeping the same target
+        // arc/line geometry. Shared end (1,0) should still be filtered and (-1,0) retained.
+        let mut pline = Polyline::new();
+        pline.add(-4.0, 2.0, 0.0);
+        pline.add(-4.0, 2.0, 0.0); // zero-length lead segment
+        pline.add(-3.0, 1.0, 0.0);
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 3 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 3)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one retained basic intersect for shifted pair (3,7), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert!(
+            target_pair[0]
+                .point
+                .fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5),
+            "expected retained point (-1,0) for shifted pair (3,7), actual pair points: {:?}",
+            target_pair.iter().map(|x| x.point).collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
     fn non_local_overlap_with_shared_end_on_point2_is_kept() {
         // Global-self overlap branch shared-end boundary probe:
         // segment 0 and segment 5 overlap on [3,0] -> [4,0], and both segment ends are at (4,0).

@@ -72,6 +72,11 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_shared_end_point_filters_one_point_nonzero_indexes`
   - verifies shared-endpoint skip behavior remains stable away from index-0
     segment pairs.
+- Added re-parameterization counterpart for the same global-self
+  `TwoIntersects` shared-end filter path using a zero-length lead segment:
+  - `non_local_two_intersects_shared_end_filters_one_point_with_zero_length_lead_segment`
+  - verifies shared-end filtering still retains only `(-1,0)` after index shift
+    caused by a leading degenerate segment.
 - Added single-intersect branch counterparts where the intersect is at one
   segment end but not both segment ends:
   - `non_local_one_intersect_at_single_segment_end_is_kept`
