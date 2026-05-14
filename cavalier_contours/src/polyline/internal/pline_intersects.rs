@@ -1263,6 +1263,33 @@ mod global_self_intersect_tests {
             intrs.overlapping_intersects
         );
     }
+
+    #[test]
+    fn non_local_shared_end_point_pair_is_skipped() {
+        // Global-self skip-at-end probe:
+        // segment 0 and segment 4 meet at the same end point (0, 0), so that
+        // pair should be skipped in global-self basic-intersect output.
+        let mut pline = Polyline::new();
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, -1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let has_target_pair = intrs.basic_intersects.iter().any(|intr| {
+            let expected_index_pair = (intr.start_index1 == 0 && intr.start_index2 == 4)
+                || (intr.start_index1 == 4 && intr.start_index2 == 0);
+            expected_index_pair && intr.point.fuzzy_eq_eps(Vector2::new(0.0, 0.0), 1e-5)
+        });
+
+        assert!(
+            !has_target_pair,
+            "segment pair (0,4) shared-end intersection should be skipped, actual basics: {:?}",
+            intrs.basic_intersects
+        );
+    }
 }
 
 #[cfg(test)]

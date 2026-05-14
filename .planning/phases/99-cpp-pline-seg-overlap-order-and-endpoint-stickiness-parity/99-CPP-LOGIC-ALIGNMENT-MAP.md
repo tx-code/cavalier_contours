@@ -59,6 +59,10 @@ endpoint-stickiness branch closure.
   - `non_local_coincident_arc_overlap_reversed_second_segment_ordering`
   - verifies overlap endpoints follow second-segment direction (`[3, 1] -> [2,
     0]`) with stable non-local pair mapping.
+- Added explicit global-self shared-endpoint skip probe:
+  - `non_local_shared_end_point_pair_is_skipped`
+  - verifies non-local segment pairs that intersect at a common end point are
+    filtered by `skip_intr_at_end` for global-self basic output.
 - Added bounded mixed line/arc overlap-adjacent collection-level parity probe:
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication`
 - Added closed/open asymmetry probe for mixed line/arc overlap-adjacent dedup:
