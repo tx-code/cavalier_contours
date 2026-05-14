@@ -1027,6 +1027,11 @@ endpoint-stickiness branch closure.
   - `cpp_circle_rectangle_intersection_start_index_rotation_full_matrix_parity`
   - verifies the same C++-aligned point set and AB/BA `start_index` role
     inversion across all rotated/reversed subject/clip combinations.
+- Strengthened offset input-immutability parity from single sample to full
+  C++-mapped offset fixture matrix:
+  - `cpp_parallel_offset_does_not_modify_input`
+  - verifies `parallel_offset` leaves input vertex data unchanged across all
+    simple + specific C++ offset fixtures.
 - Added combine-derived circle/rectangle commutative role-flip symmetry matrix
   parity across orientation reversals for C++-mapped operations:
   - `cpp_circle_rectangle_commutative_role_flip_matrix_parity`

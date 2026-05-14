@@ -328,24 +328,27 @@ fn cpp_parallel_offset_reversed_matrix_parity() {
 
 #[test]
 fn cpp_parallel_offset_does_not_modify_input() {
-    let case = &simple_cases()[0];
-    let before: Vec<_> = case.input.iter_vertexes().collect();
+    for case in simple_cases().into_iter().chain(specific_cases()) {
+        let before: Vec<_> = case.input.iter_vertexes().collect();
 
-    let _ = case.input.parallel_offset(case.delta);
+        let _ = case.input.parallel_offset(case.delta);
 
-    let after: Vec<_> = case.input.iter_vertexes().collect();
-    assert_eq!(
-        before.len(),
-        after.len(),
-        "input vertex count changed after offset"
-    );
-    for (idx, (v0, v1)) in before.iter().zip(after.iter()).enumerate() {
-        assert!(
-            (v0.x - v1.x).abs() <= EPS
-                && (v0.y - v1.y).abs() <= EPS
-                && (v0.bulge - v1.bulge).abs() <= EPS,
-            "input vertex changed at index {idx}: before={v0:?}, after={v1:?}"
+        let after: Vec<_> = case.input.iter_vertexes().collect();
+        assert_eq!(
+            before.len(),
+            after.len(),
+            "{}: input vertex count changed after offset",
+            case.name
         );
+        for (idx, (v0, v1)) in before.iter().zip(after.iter()).enumerate() {
+            assert!(
+                (v0.x - v1.x).abs() <= EPS
+                    && (v0.y - v1.y).abs() <= EPS
+                    && (v0.bulge - v1.bulge).abs() <= EPS,
+                "{}: input vertex changed at index {idx}: before={v0:?}, after={v1:?}",
+                case.name
+            );
+        }
     }
 }
 
