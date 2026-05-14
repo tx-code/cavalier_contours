@@ -256,6 +256,11 @@ endpoint-stickiness branch closure.
   - verifies prepending a zero-length lead segment (index shift) preserves one
     basic entry for shifted single-intersect pairs and one overlap entry for
     shifted overlap pairs.
+- Added canonical-name alias counterpart for direct index-0-shift tracing of
+  the same overlap dedup path:
+  - `non_local_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - verifies parity evidence is explicitly discoverable under index-0-shift
+    naming while reusing identical shifted geometry.
 - Added coincident-arc overlap counterparts for the same global-self
   visited-pair dedup overlap path:
   - `non_local_coincident_arc_overlap_pair_is_not_duplicated`
@@ -272,10 +277,11 @@ endpoint-stickiness branch closure.
   - `all_self_intersects_basic_overlap_pair_is_not_duplicated`
   - `all_self_intersects_basic_overlap_pair_is_not_duplicated_nonzero_indexes`
   - `all_self_intersects_basic_overlap_pair_is_not_duplicated_with_zero_length_lead_segment`
+  - `all_self_intersects_basic_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
   - verifies single-crossing pairs remain one basic entry under
-    `include_overlapping=false/true`, and overlap pairs emit no basics when
-    `include_overlapping=false` and exactly two overlap endpoints (no duplicate
-    endpoint expansion) when `include_overlapping=true`, across index-0,
+  `include_overlapping=false/true`, and overlap pairs emit no basics when
+  `include_overlapping=false` and exactly two overlap endpoints (no duplicate
+  endpoint expansion) when `include_overlapping=true`, across index-0,
     non-zero, and zero-length-lead re-parameterization variants.
 - Added explicit `TwoIntersects` visited-pair dedup probe:
   - `non_local_two_intersects_pair_is_not_duplicated`

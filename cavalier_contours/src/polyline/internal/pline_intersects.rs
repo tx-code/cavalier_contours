@@ -4612,6 +4612,13 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn all_self_intersects_basic_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
+     {
+        // Canonical-name alias for direct index-0-shift counterpart tracing.
+        all_self_intersects_basic_overlap_pair_is_not_duplicated_with_zero_length_lead_segment();
+    }
+
+    #[test]
     fn all_self_intersects_basic_two_intersects_pair_is_not_duplicated() {
         // API-level counterpart for global-self visited-pair dedup on `TwoIntersects`.
         let mut pline = Polyline::new();
@@ -5663,6 +5670,12 @@ mod global_self_intersect_tests {
             "expected one overlap for shifted pair (1,7), actual overlaps: {:?}",
             intrs.overlapping_intersects
         );
+    }
+
+    #[test]
+    fn non_local_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift() {
+        // Canonical-name alias for direct index-0-shift counterpart tracing.
+        non_local_overlap_pair_is_not_duplicated_with_zero_length_lead_segment();
     }
 
     #[test]
