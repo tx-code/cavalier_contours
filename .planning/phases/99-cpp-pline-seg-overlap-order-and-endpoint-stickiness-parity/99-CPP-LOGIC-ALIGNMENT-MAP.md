@@ -1075,6 +1075,13 @@ endpoint-stickiness branch closure.
     variants, preserves AB/BA role-flip mapping with expected swapped endpoint
     order, matches default-path index/point outputs, and leaves both inputs
     immutable.
+- Added Rust options-path endpoint-elision matrix counterpart for source-aligned
+  `skip_intr_at_end` boundary behavior:
+  - `cpp_skip_intr_at_end_options_matrix_parity`
+  - verifies `find_intersects_opt` reproduces open/closed `pline1` and
+    open/closed `pline2` next-segment start-index attribution at shared-endpoint
+    touches, matches default-path index/point outputs, preserves AB/BA role-flip
+    mapping, and leaves both inputs immutable.
 - Strengthened offset input-immutability parity from single sample to full
   C++-mapped offset fixture matrix:
   - `cpp_parallel_offset_does_not_modify_input`
