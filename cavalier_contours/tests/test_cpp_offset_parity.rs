@@ -1,6 +1,6 @@
 mod test_utils;
 
-use cavalier_contours::polyline::{PlineSource, PlineSourceMut, Polyline};
+use cavalier_contours::polyline::{PlineOffsetOptions, PlineSource, PlineSourceMut, Polyline};
 use cavalier_contours::{pline_closed, pline_open};
 use test_utils::{PlineProperties, create_property_set, property_sets_match};
 
@@ -375,6 +375,72 @@ fn cpp_parallel_offset_reversed_does_not_modify_input() {
                     && (v0.y - v1.y).abs() <= EPS
                     && (v0.bulge - v1.bulge).abs() <= EPS,
                 "{}: reversed input vertex changed at index {idx}: before={v0:?}, after={v1:?}",
+                case.name
+            );
+        }
+    }
+}
+
+#[test]
+fn cpp_parallel_offset_options_does_not_modify_input() {
+    for case in simple_cases().into_iter().chain(specific_cases()) {
+        let input_aabb = case.input.create_approx_aabb_index();
+        let options = PlineOffsetOptions {
+            aabb_index: Some(&input_aabb),
+            ..Default::default()
+        };
+
+        let before: Vec<_> = case.input.iter_vertexes().collect();
+
+        let _ = case.input.parallel_offset_opt(case.delta, &options);
+
+        let after: Vec<_> = case.input.iter_vertexes().collect();
+        assert_eq!(
+            before.len(),
+            after.len(),
+            "{}: options-path input vertex count changed after offset",
+            case.name
+        );
+        for (idx, (v0, v1)) in before.iter().zip(after.iter()).enumerate() {
+            assert!(
+                (v0.x - v1.x).abs() <= EPS
+                    && (v0.y - v1.y).abs() <= EPS
+                    && (v0.bulge - v1.bulge).abs() <= EPS,
+                "{}: options-path input vertex changed at index {idx}: before={v0:?}, after={v1:?}",
+                case.name
+            );
+        }
+    }
+}
+
+#[test]
+fn cpp_parallel_offset_options_reversed_does_not_modify_input() {
+    for case in simple_cases().into_iter().chain(specific_cases()) {
+        let mut reversed = case.input.clone();
+        reversed.invert_direction_mut();
+        let input_aabb = reversed.create_approx_aabb_index();
+        let options = PlineOffsetOptions {
+            aabb_index: Some(&input_aabb),
+            ..Default::default()
+        };
+        let before: Vec<_> = reversed.iter_vertexes().collect();
+        let delta = -case.delta;
+
+        let _ = reversed.parallel_offset_opt(delta, &options);
+
+        let after: Vec<_> = reversed.iter_vertexes().collect();
+        assert_eq!(
+            before.len(),
+            after.len(),
+            "{}: reversed options-path input vertex count changed after offset",
+            case.name
+        );
+        for (idx, (v0, v1)) in before.iter().zip(after.iter()).enumerate() {
+            assert!(
+                (v0.x - v1.x).abs() <= EPS
+                    && (v0.y - v1.y).abs() <= EPS
+                    && (v0.bulge - v1.bulge).abs() <= EPS,
+                "{}: reversed options-path input vertex changed at index {idx}: before={v0:?}, after={v1:?}",
                 case.name
             );
         }
