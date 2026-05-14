@@ -333,6 +333,44 @@ fn arc_arc_two_circle_intersections_only_one_in_sweeps_flipped_roles() {
 }
 
 #[test]
+fn arc_arc_two_circle_intersections_only_one_in_sweeps_reversed_dirs() {
+    // Complementary counterpart: reverse both arc directions so sweep filtering
+    // keeps the opposite circle intersection point.
+    let v1 = PlineVertex::new(1.0, 1.0, -1.0);
+    let v2 = PlineVertex::new(3.0, 1.0, 0.0);
+    let u1 = PlineVertex::new(1.5, 1.0, -1.0);
+    let u2 = PlineVertex::new(3.5, 1.0, 0.0);
+    let y = 1.0 + (15.0_f64).sqrt() / 4.0;
+
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(
+        result,
+        OneIntersect {
+            point: Vector2::new(2.25, y)
+        }
+    );
+}
+
+#[test]
+fn arc_arc_two_circle_intersections_only_one_in_sweeps_reversed_dirs_flipped_roles() {
+    // Parameter-role flipped counterpart for the reversed-direction one-sweep
+    // circle-circle branch.
+    let v1 = PlineVertex::new(1.0, 1.0, -1.0);
+    let v2 = PlineVertex::new(3.0, 1.0, 0.0);
+    let u1 = PlineVertex::new(1.5, 1.0, -1.0);
+    let u2 = PlineVertex::new(3.5, 1.0, 0.0);
+    let y = 1.0 + (15.0_f64).sqrt() / 4.0;
+
+    let result = pline_seg_intr(u1, u2, v1, v2, 1e-5);
+    assert_case_eq!(
+        result,
+        OneIntersect {
+            point: Vector2::new(2.25, y)
+        }
+    );
+}
+
+#[test]
 fn arc2_within_arc1_overlapping() {
     let v1 = PlineVertex::new(1.0, 1.0, 1.0);
     let v2 = PlineVertex::new(3.0, 1.0, 0.0);

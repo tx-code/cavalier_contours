@@ -9,9 +9,12 @@ endpoint-stickiness branch closure.
   where arc sweep filtering retains exactly one point:
   - `arc_arc_two_circle_intersections_only_one_in_sweeps`
   - `arc_arc_two_circle_intersections_only_one_in_sweeps_flipped_roles`
+  - `arc_arc_two_circle_intersections_only_one_in_sweeps_reversed_dirs`
+  - `arc_arc_two_circle_intersections_only_one_in_sweeps_reversed_dirs_flipped_roles`
   - verifies old C++ `intrPlineSegs` `Circle2Circle2IntrType::TwoIntersects`
     branch emits `OneIntersect` when only one of the two geometric circle
-    intersections lies within both arc sweeps, including role inversion.
+    intersections lies within both arc sweeps, including role inversion and
+    complementary arc-direction orientation.
 - Replaced the remaining index-0-shift canonical-name wrapper aliases with
   explicit assertion-backed probes, eliminating wrapper-style alias indirection
   in `find_intersects_tests`:
