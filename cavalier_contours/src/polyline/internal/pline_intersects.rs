@@ -2117,6 +2117,38 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_intersect_flipped_roles()
+     {
+        // Parameter-role flipped counterpart of the closed-pline2 closure-basic probe.
+        let mut pline1 = Polyline::new_closed();
+        pline1.add(2.0, 2.0, -1.0);
+        pline1.add(2.0, 0.0, 0.0);
+        pline1.add(2.0, -1.0, 0.0);
+        pline1.add(2.0, -3.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(1.0, 1.0, 1.0);
+        pline2.add(3.0, 1.0, 0.0);
+        pline2.add(4.0, 1.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 1);
+        assert_eq!(intrs.basic_intersects.len(), 1);
+
+        let basic = intrs.basic_intersects[0];
+        assert_eq!(basic.start_index1, 3);
+        assert_eq!(basic.start_index2, 0);
+        assert_fuzzy_eq!(basic.point, Vector2::new(2.0, 0.0));
+
+        let overlap = intrs.overlapping_intersects[0];
+        assert_eq!(overlap.start_index1, 0);
+        assert_eq!(overlap.start_index2, 0);
+        assert_fuzzy_eq!(overlap.point1, Vector2::new(2.0, 0.0));
+        assert_fuzzy_eq!(overlap.point2, Vector2::new(3.0, 1.0));
+    }
+
+    #[test]
     fn wrap_around_overlap_endpoint_deduplication_closed_pline1() {
         // Closed `pline1` probe for duplicate-filter wrap-around behavior:
         // overlap occurs on the closing segment (last index) and includes vertex 0, so
