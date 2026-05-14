@@ -1156,6 +1156,11 @@ endpoint-stickiness branch closure.
   - verifies `cavc_pline_boolean` with `cavc_pline_boolean_o` AB/BA
     `OR`/`NOT`/`AND`/`XOR` calls do not mutate either input across reversed and
     rotated circle/rectangle variants.
+- Added source-side Rust options-path counterpart for full circle/rectangle
+  combine immutability matrix coverage:
+  - `cpp_circle_rectangle_combine_options_full_matrix_does_not_modify_input`
+  - verifies `boolean_opt` AB/BA `OR`/`NOT`/`AND`/`XOR` calls do not mutate
+    either input across reversed and rotated circle/rectangle variants.
 - Added source-aligned self-combine reverse/mixed-direction invariants from old
   C++ combine test coverage:
   - `cpp_combine_with_self_reverse_mix_invariants`
@@ -1244,6 +1249,12 @@ endpoint-stickiness branch closure.
   - verifies `cavc_pline_boolean` with `cavc_pline_boolean_o` AB/BA
     `OR`/`NOT`/`AND`/`XOR` calls do not mutate either input across reversed and
     rotated closed-polyline variants for both coincident fixture families.
+- Added source-side Rust options-path counterpart for full coincident combine
+  immutability matrix coverage:
+  - `cpp_coincident_combine_options_full_matrix_does_not_modify_input`
+  - verifies `boolean_opt` AB/BA `OR`/`NOT`/`AND`/`XOR` calls do not mutate
+    either input across reversed and rotated closed-polyline variants for both
+    coincident fixture families.
 - Added source-aligned primitive parity probes for coincident-arc single-endpoint
   touch branches in old C++ `intrPlineSegs`:
   - `arc_arc_coincident_touch_only_at_arc1_start`
