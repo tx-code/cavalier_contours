@@ -23,6 +23,15 @@ endpoint-stickiness branch closure.
   - verifies one overlap with reversed endpoint ordering `(3, 1) -> (2, 0)` and
     one independent basic intersect at `(2, 2)` with explicit segment indexes
     under parameter-role inversion.
+- Added segment-level parity probes for old C++ `intrPlineSegs`
+  `Circle2Circle2IntrType::TwoIntersects` sweep-classification boundaries:
+  - `arc_arc_two_circle_intersections_both_in_sweeps`
+  - `arc_arc_two_circle_intersections_both_in_sweeps_flipped_roles`
+  - `arc_arc_two_circle_intersections_both_outside_sweeps_no_intersect`
+  - `arc_arc_two_circle_intersections_both_outside_sweeps_no_intersect_flipped_roles`
+  - verifies explicit `TwoIntersects` output when both circle intersection
+    points lie within both arc sweeps, and explicit `NoIntersect` output when
+    neither point lies within both sweeps, including parameter-role inversion.
 - Replaced the remaining index-0-shift canonical-name wrapper aliases with
   explicit assertion-backed probes, eliminating wrapper-style alias indirection
   in `find_intersects_tests`:

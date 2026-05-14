@@ -371,6 +371,86 @@ fn arc_arc_two_circle_intersections_only_one_in_sweeps_reversed_dirs_flipped_rol
 }
 
 #[test]
+fn arc_arc_two_circle_intersections_both_in_sweeps() {
+    // Source-aligned with old C++ `intrPlineSegs` circle-circle branch where both
+    // geometric circle intersection points lie within both arc sweeps.
+    let half_sqrt_15 = (15.0_f64).sqrt() / 2.0;
+    let v1 = PlineVertex::new(0.0, -2.0, 1.0);
+    let v2 = PlineVertex::new(0.0, 2.0, 0.0);
+    let u1 = PlineVertex::new(1.0, 2.0, 1.0);
+    let u2 = PlineVertex::new(1.0, -2.0, 0.0);
+
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    match result {
+        TwoIntersects { point1, point2 } => {
+            let upper = Vector2::new(0.5, half_sqrt_15);
+            let lower = Vector2::new(0.5, -half_sqrt_15);
+            let direct = point1.fuzzy_eq(upper) && point2.fuzzy_eq(lower);
+            let swapped = point1.fuzzy_eq(lower) && point2.fuzzy_eq(upper);
+            assert!(
+                direct || swapped,
+                "unexpected two-intersect points: {:?}, {:?}",
+                point1,
+                point2
+            );
+        }
+        _ => panic!("expected TwoIntersects, got: {:?}", result),
+    }
+}
+
+#[test]
+fn arc_arc_two_circle_intersections_both_in_sweeps_flipped_roles() {
+    // Parameter-role flipped counterpart of the same two-sweep circle-circle branch.
+    let half_sqrt_15 = (15.0_f64).sqrt() / 2.0;
+    let v1 = PlineVertex::new(0.0, -2.0, 1.0);
+    let v2 = PlineVertex::new(0.0, 2.0, 0.0);
+    let u1 = PlineVertex::new(1.0, 2.0, 1.0);
+    let u2 = PlineVertex::new(1.0, -2.0, 0.0);
+
+    let result = pline_seg_intr(u1, u2, v1, v2, 1e-5);
+    match result {
+        TwoIntersects { point1, point2 } => {
+            let upper = Vector2::new(0.5, half_sqrt_15);
+            let lower = Vector2::new(0.5, -half_sqrt_15);
+            let direct = point1.fuzzy_eq(upper) && point2.fuzzy_eq(lower);
+            let swapped = point1.fuzzy_eq(lower) && point2.fuzzy_eq(upper);
+            assert!(
+                direct || swapped,
+                "unexpected two-intersect points (role-flipped): {:?}, {:?}",
+                point1,
+                point2
+            );
+        }
+        _ => panic!("expected TwoIntersects, got: {:?}", result),
+    }
+}
+
+#[test]
+fn arc_arc_two_circle_intersections_both_outside_sweeps_no_intersect() {
+    // Source-aligned with old C++ `intrPlineSegs` circle-circle `TwoIntersects`
+    // branch where neither circle intersection point lies within both arc sweeps.
+    let v1 = PlineVertex::new(0.0, 2.0, 1.0);
+    let v2 = PlineVertex::new(0.0, -2.0, 0.0);
+    let u1 = PlineVertex::new(1.0, -2.0, 1.0);
+    let u2 = PlineVertex::new(1.0, 2.0, 0.0);
+
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(result, NoIntersect::<f64>);
+}
+
+#[test]
+fn arc_arc_two_circle_intersections_both_outside_sweeps_no_intersect_flipped_roles() {
+    // Parameter-role flipped counterpart for the same two-circle/out-of-sweep branch.
+    let v1 = PlineVertex::new(0.0, 2.0, 1.0);
+    let v2 = PlineVertex::new(0.0, -2.0, 0.0);
+    let u1 = PlineVertex::new(1.0, -2.0, 1.0);
+    let u2 = PlineVertex::new(1.0, 2.0, 0.0);
+
+    let result = pline_seg_intr(u1, u2, v1, v2, 1e-5);
+    assert_case_eq!(result, NoIntersect::<f64>);
+}
+
+#[test]
 fn arc2_within_arc1_overlapping() {
     let v1 = PlineVertex::new(1.0, 1.0, 1.0);
     let v2 = PlineVertex::new(3.0, 1.0, 0.0);
