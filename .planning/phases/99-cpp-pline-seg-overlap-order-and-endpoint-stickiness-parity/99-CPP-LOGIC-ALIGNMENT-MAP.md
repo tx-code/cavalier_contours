@@ -61,6 +61,9 @@ endpoint-stickiness branch closure.
 - Added bounded closed-shape collection-level counterpart for `both_reverse_dir`
   partial overlap:
   - `non_circle_partial_arc_overlap_both_reverse_dir_both_closed`
+- Added parameter-role flipped counterpart for the same bounded
+  `both_reverse_dir` + both-closed probe:
+  - `non_circle_partial_arc_overlap_both_reverse_dir_both_closed_flipped_roles`
 - Added bounded closed-shape collection-level counterpart for `arc2_reverse_dir`
   partial overlap:
   - `non_circle_partial_arc_overlap_arc2_reverse_dir_both_closed`
