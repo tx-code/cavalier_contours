@@ -1,9 +1,11 @@
 mod test_utils;
 
+use cavalier_contours::core::math::bulge_from_angle;
 use cavalier_contours::polyline::{
     FindIntersectsOptions, PlineOffsetOptions, PlineSource, PlineSourceMut, Polyline,
 };
 use cavalier_contours::{pline_closed, pline_open};
+use std::f64::consts::FRAC_PI_2;
 use test_utils::{PlineProperties, create_property_set, property_sets_match};
 
 const EPS: f64 = PlineProperties::POS_EQ_EPS;
@@ -1048,4 +1050,95 @@ fn cpp_circle_rectangle_intersection_full_matrix_does_not_modify_input() {
             );
         }
     }
+}
+
+#[test]
+fn cpp_overlap_and_basic_intersection_options_role_flip_parity_nonzero_open_index() {
+    fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
+        assert!(
+            (actual_x - expected_x).abs() <= EPS && (actual_y - expected_y).abs() <= EPS,
+            "point mismatch: actual=({actual_x}, {actual_y}), expected=({expected_x}, {expected_y})"
+        );
+    }
+
+    let mut open_side_reversed_nonzero = Polyline::new();
+    open_side_reversed_nonzero.add(2.0, 2.0, 0.0);
+    open_side_reversed_nonzero.add(2.0, 2.0, -1.0);
+    open_side_reversed_nonzero.add(2.0, 0.0, 0.0);
+    open_side_reversed_nonzero.add(2.0, -1.0, 0.0);
+
+    let mut closed_side_reversed_rotated = Polyline::new_closed();
+    closed_side_reversed_rotated.add(1.0, 3.0, 0.0);
+    closed_side_reversed_rotated.add(3.0, 1.0, bulge_from_angle(-FRAC_PI_2));
+    closed_side_reversed_rotated.add(2.0, 0.0, 0.0);
+
+    let open_before: Vec<_> = open_side_reversed_nonzero.iter_vertexes().collect();
+    let closed_before: Vec<_> = closed_side_reversed_rotated.iter_vertexes().collect();
+
+    let open_aabb = open_side_reversed_nonzero.create_approx_aabb_index();
+    let closed_aabb = closed_side_reversed_rotated.create_approx_aabb_index();
+    let options_ab = FindIntersectsOptions {
+        pline1_aabb_index: Some(&open_aabb),
+        pos_equal_eps: EPS,
+    };
+    let options_ba = FindIntersectsOptions {
+        pline1_aabb_index: Some(&closed_aabb),
+        pos_equal_eps: EPS,
+    };
+
+    let ab =
+        open_side_reversed_nonzero.find_intersects_opt(&closed_side_reversed_rotated, &options_ab);
+    let ba =
+        closed_side_reversed_rotated.find_intersects_opt(&open_side_reversed_nonzero, &options_ba);
+
+    assert_eq!(ab.basic_intersects.len(), 1);
+    assert_eq!(ab.overlapping_intersects.len(), 1);
+    assert_eq!(ba.basic_intersects.len(), 1);
+    assert_eq!(ba.overlapping_intersects.len(), 1);
+
+    let basic_ab = ab.basic_intersects[0];
+    let basic_ba = ba.basic_intersects[0];
+    assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+    assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+    assert_ne!(basic_ab.start_index1, 0);
+    assert_ne!(basic_ba.start_index2, 0);
+    assert_point_close(basic_ab.point.x, basic_ab.point.y, 2.0, 2.0);
+    assert_point_close(
+        basic_ab.point.x,
+        basic_ab.point.y,
+        basic_ba.point.x,
+        basic_ba.point.y,
+    );
+
+    let overlap_ab = ab.overlapping_intersects[0];
+    let overlap_ba = ba.overlapping_intersects[0];
+    assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+    assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+    assert_ne!(overlap_ab.start_index1, 0);
+    assert_ne!(overlap_ba.start_index2, 0);
+    assert_point_close(overlap_ab.point1.x, overlap_ab.point1.y, 3.0, 1.0);
+    assert_point_close(overlap_ab.point2.x, overlap_ab.point2.y, 2.0, 0.0);
+    assert_point_close(
+        overlap_ab.point1.x,
+        overlap_ab.point1.y,
+        overlap_ba.point1.x,
+        overlap_ba.point1.y,
+    );
+    assert_point_close(
+        overlap_ab.point2.x,
+        overlap_ab.point2.y,
+        overlap_ba.point2.x,
+        overlap_ba.point2.y,
+    );
+
+    let open_after: Vec<_> = open_side_reversed_nonzero.iter_vertexes().collect();
+    let closed_after: Vec<_> = closed_side_reversed_rotated.iter_vertexes().collect();
+    assert_eq!(
+        open_after, open_before,
+        "open-side input mutated by find_intersects_opt"
+    );
+    assert_eq!(
+        closed_after, closed_before,
+        "closed-side input mutated by find_intersects_opt"
+    );
 }

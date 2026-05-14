@@ -1039,6 +1039,13 @@ endpoint-stickiness branch closure.
     (including `pline1_aabb_index`) preserves the same C++-aligned point set
     and AB/BA role-flip symmetry across all rotated/reversed subject/clip
     combinations, while keeping both inputs immutable.
+- Added Rust options-path overlap+basic counterpart for source-aligned
+  non-circle wrap-around overlap-role geometry:
+  - `cpp_overlap_and_basic_intersection_options_role_flip_parity_nonzero_open_index`
+  - verifies `find_intersects_opt` preserves one basic + one overlapping
+    intersect with non-zero open-side segment index, keeps AB/BA role-flip
+    start-index mapping and overlap endpoint ordering, and leaves both inputs
+    immutable.
 - Strengthened offset input-immutability parity from single sample to full
   C++-mapped offset fixture matrix:
   - `cpp_parallel_offset_does_not_modify_input`
