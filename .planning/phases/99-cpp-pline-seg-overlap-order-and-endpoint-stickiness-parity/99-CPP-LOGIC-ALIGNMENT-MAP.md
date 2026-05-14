@@ -61,12 +61,13 @@ endpoint-stickiness branch closure.
   shift:
   - `non_circle_partial_arc_overlap_both_reverse_dir_both_closed_zero_length_lead_role_flip_symmetry`
   - `non_circle_partial_arc_overlap_both_reverse_dir_both_closed_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_both_reverse_dir_both_closed_start_index_rotation_closed_pline1_zero_length_lead_role_flip_symmetry`
   - `non_circle_partial_arc_overlap_both_reverse_dir_both_closed_start_index_rotation_closed_pline2_zero_length_lead_role_flip_symmetry`
   - verifies AB/BA role inversion preserves one-basic + one-overlap structure,
     preserves role-swapped basic/overlap start-index mapping with non-zero
     indexes, and preserves source-aligned overlap endpoint-order stability
     (`AB point1/point2 == BA point1/point2`) in non-rotated,
-    start-index-rotated, and closed-pline2-rotated + zero-length-lead
+    start-index-rotated, and closed-pline1/2-rotated + zero-length-lead
     geometries.
 - Added collection-level role-flip symmetry guard for bounded both-closed
   `arc2 reverse` mixed arc + adjacent-line overlap with zero-length lead index
