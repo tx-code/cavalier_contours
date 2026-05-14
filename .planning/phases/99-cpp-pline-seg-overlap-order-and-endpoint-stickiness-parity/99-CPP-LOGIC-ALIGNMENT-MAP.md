@@ -150,6 +150,11 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_reversed_second_segment_keeps_both_nonzero`
   - verifies both points are retained when the reversed second-segment path has
     no shared-endpoint skip condition.
+- Added re-parameterization counterpart for the same non-zero + reversed
+  `TwoIntersects` positive path:
+  - `non_local_two_intersects_reversed_second_segment_keeps_both_with_zero_length_lead_segment`
+  - verifies prepending a zero-length lead segment (index shift) still retains
+    both points for the shifted target pair.
 - Added bounded mixed line/arc overlap-adjacent collection-level parity probe:
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication`
 - Added closed/open asymmetry probe for mixed line/arc overlap-adjacent dedup:
