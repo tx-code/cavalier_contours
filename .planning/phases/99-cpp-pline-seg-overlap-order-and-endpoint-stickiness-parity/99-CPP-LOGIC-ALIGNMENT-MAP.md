@@ -706,8 +706,15 @@ endpoint-stickiness branch closure.
   counterpart where the non-zero overlap segment index is carried by `pline1`:
   - `opposing_direction_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry`
   - verifies overlap-adjacent endpoint dedup behavior and AB/BA role inversion
-    remain stable when closed-side rotation is applied on the first input
-    polyline instead of the second.
+  remain stable when closed-side rotation is applied on the first input
+  polyline instead of the second.
+- Added zero-length-lead counterparts for the explicit closed-pline1/2 rotated
+  role-flip probes in the same opposing-direction branch:
+  - `opposing_direction_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_closed_pline2_zero_length_lead_role_flip_symmetry`
+  - `opposing_direction_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_closed_pline1_zero_length_lead_role_flip_symmetry`
+  - verifies pure-overlap dedup behavior (no basic intersects), AB/BA
+    role-inversion start-index mapping, and stable overlap endpoint-set
+    equivalence under non-zero index shift.
 - Added non-circle arc/arc-overlap-adjacent collection-level parity probe:
   - `non_circle_partial_arc_overlap_adjacent_endpoint_deduplication`
 - Added non-circle arc/arc-overlap-adjacent closed/open variant probes:
@@ -737,8 +744,15 @@ endpoint-stickiness branch closure.
   counterpart where the non-zero overlap segment index is carried by `pline1`:
   - `non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry`
   - verifies bounded overlap-adjacent dedup behavior and AB/BA index-role
-    inversion remain stable when closed-side rotation is applied on the first
-    input polyline instead of the second.
+  inversion remain stable when closed-side rotation is applied on the first
+  input polyline instead of the second.
+- Added zero-length-lead counterparts for the explicit closed-pline1/2 rotated
+  role-flip probes in the same adjacent-dedup branch:
+  - `non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_closed_pline2_zero_length_lead_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_closed_pline1_zero_length_lead_role_flip_symmetry`
+  - verifies no-basic overlap-adjacent dedup behavior, AB/BA role-inversion
+    start-index mapping, and branch-aligned overlap endpoint ordering under
+    non-zero index shift.
 - Added non-circle reversed-overlap-endpoint-order probe with adjacent-line flip:
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip`
 - Added complementary open-path `arc1_reverse_dir` collection-level probe:

@@ -9211,6 +9211,70 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn opposing_direction_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_closed_pline2_zero_length_lead_role_flip_symmetry()
+     {
+        // Zero-length-lead counterpart where the start-index-rotated closed `pline2`
+        // keeps the non-zero overlap segment index.
+        let mut closed_side_a = Polyline::new_closed();
+        closed_side_a.add(1.0, 1.0, 1.0);
+        closed_side_a.add(3.0, 1.0, 0.0);
+        closed_side_a.add(3.0, -2.0, 0.0);
+        closed_side_a.add(1.0, -2.0, 0.0);
+
+        let mut closed_side_b_rotated = Polyline::new_closed();
+        closed_side_b_rotated.add(1.0, 1.0, 0.0);
+        closed_side_b_rotated.add(1.0, 4.0, 0.0);
+        closed_side_b_rotated.add(1.0, 4.0, 0.0);
+        closed_side_b_rotated.add(3.0, 4.0, 0.0);
+        closed_side_b_rotated.add(3.0, 1.0, -1.0);
+
+        let ab = find_intersects(&closed_side_a, &closed_side_b_rotated, &Default::default());
+        let ba = find_intersects(&closed_side_b_rotated, &closed_side_a, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 0);
+        assert!(overlap_ab.start_index2 > 0);
+
+        let endpoint_set_a = overlap_ab.point1.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)
+            && overlap_ab.point2.fuzzy_eq_eps(Vector2::new(1.0, 1.0), 1e-5);
+        let endpoint_set_b = overlap_ab.point1.fuzzy_eq_eps(Vector2::new(1.0, 1.0), 1e-5)
+            && overlap_ab.point2.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5);
+        assert!(
+            endpoint_set_a || endpoint_set_b,
+            "unexpected AB arc-overlap endpoints: {:?}",
+            overlap_ab
+        );
+        // As in the non-zero-lead counterpart, role inversion can preserve or swap
+        // overlap endpoint ordering, so verify point-set equivalence.
+        let ab_p1_eq_ba_p1 = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point1, 1e-5);
+        let ab_p2_eq_ba_p2 = overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point2, 1e-5);
+        let ab_p1_eq_ba_p2 = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point2, 1e-5);
+        let ab_p2_eq_ba_p1 = overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point1, 1e-5);
+        assert!(
+            (ab_p1_eq_ba_p1 && ab_p2_eq_ba_p2) || (ab_p1_eq_ba_p2 && ab_p2_eq_ba_p1),
+            "AB/BA overlap endpoint sets diverged: AB={:?}, BA={:?}",
+            overlap_ab,
+            overlap_ba
+        );
+    }
+
+    #[test]
     fn opposing_direction_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry()
      {
         // Complementary start-index-rotated counterpart where closed `pline1`
@@ -9262,6 +9326,70 @@ mod find_intersects_tests {
 
         // Role inversion may preserve or swap overlap endpoint ordering, so
         // validate endpoint-set equivalence.
+        let ab_p1_eq_ba_p1 = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point1, 1e-5);
+        let ab_p2_eq_ba_p2 = overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point2, 1e-5);
+        let ab_p1_eq_ba_p2 = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point2, 1e-5);
+        let ab_p2_eq_ba_p1 = overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point1, 1e-5);
+        assert!(
+            (ab_p1_eq_ba_p1 && ab_p2_eq_ba_p2) || (ab_p1_eq_ba_p2 && ab_p2_eq_ba_p1),
+            "AB/BA overlap endpoint sets diverged after closed-side rotation: AB={:?}, BA={:?}",
+            overlap_ab,
+            overlap_ba
+        );
+    }
+
+    #[test]
+    fn opposing_direction_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_closed_pline1_zero_length_lead_role_flip_symmetry()
+     {
+        // Zero-length-lead counterpart of the explicit closed-pline1 rotated probe.
+        let mut closed_side_a_rotated = Polyline::new_closed();
+        closed_side_a_rotated.add(3.0, 1.0, 0.0);
+        closed_side_a_rotated.add(3.0, -2.0, 0.0);
+        closed_side_a_rotated.add(3.0, -2.0, 0.0);
+        closed_side_a_rotated.add(1.0, -2.0, 0.0);
+        closed_side_a_rotated.add(1.0, 1.0, 1.0);
+
+        let mut closed_side_b = Polyline::new_closed();
+        closed_side_b.add(3.0, 1.0, -1.0);
+        closed_side_b.add(1.0, 1.0, 0.0);
+        closed_side_b.add(1.0, 4.0, 0.0);
+        closed_side_b.add(3.0, 4.0, 0.0);
+
+        let ab = find_intersects(&closed_side_a_rotated, &closed_side_b, &Default::default());
+        let ba = find_intersects(&closed_side_b, &closed_side_a_rotated, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert!(overlap_ab.start_index1 > 0);
+        assert_eq!(overlap_ab.start_index2, 0);
+
+        let endpoint_set_a = overlap_ab.point1.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)
+            && overlap_ab.point2.fuzzy_eq_eps(Vector2::new(1.0, 1.0), 1e-5);
+        let endpoint_set_b = overlap_ab.point1.fuzzy_eq_eps(Vector2::new(1.0, 1.0), 1e-5)
+            && overlap_ab.point2.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5);
+        assert!(
+            endpoint_set_a || endpoint_set_b,
+            "unexpected AB overlap endpoints: {:?}",
+            overlap_ab
+        );
+
+        // As in the non-zero-lead counterpart, role inversion may preserve or swap
+        // overlap endpoint ordering, so compare endpoint sets.
         let ab_p1_eq_ba_p1 = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point1, 1e-5);
         let ab_p2_eq_ba_p2 = overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point2, 1e-5);
         let ab_p1_eq_ba_p2 = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point2, 1e-5);
@@ -9564,6 +9692,54 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_closed_pline2_zero_length_lead_role_flip_symmetry()
+     {
+        // Zero-length-lead counterpart where the start-index-rotated closed `pline2`
+        // keeps the non-zero overlap segment index.
+        let mut pline1 = Polyline::new_closed();
+        pline1.add(1.0, 1.0, 1.0);
+        pline1.add(3.0, 1.0, 0.0);
+        pline1.add(4.0, 1.0, 0.0);
+        pline1.add(0.0, -3.0, 0.0);
+
+        let mut pline2_rotated = Polyline::new_closed();
+        pline2_rotated.add(2.0, 2.0, 0.0);
+        pline2_rotated.add(2.0, 2.0, 0.0);
+        pline2_rotated.add(3.0, 1.0, 0.0);
+        pline2_rotated.add(4.0, 3.0, 0.0);
+        pline2_rotated.add(2.0, 0.0, 1.0);
+
+        let ab = find_intersects(&pline1, &pline2_rotated, &Default::default());
+        let ba = find_intersects(&pline2_rotated, &pline1, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 0);
+        assert!(overlap_ab.start_index2 > 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(2.0, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(3.0, 1.0));
+        // In this bounded both-closed adjacent dedup geometry, role inversion keeps
+        // overlap endpoint ordering after non-zero index shift.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
+    }
+
+    #[test]
     fn non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry()
      {
         // Complementary start-index-rotated counterpart where closed `pline1`
@@ -9615,6 +9791,70 @@ mod find_intersects_tests {
 
         // In this bounded both-closed rotated geometry, role inversion may
         // preserve or swap overlap endpoint ordering, so compare endpoint sets.
+        let ab_p1_eq_ba_p1 = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point1, 1e-5);
+        let ab_p2_eq_ba_p2 = overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point2, 1e-5);
+        let ab_p1_eq_ba_p2 = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point2, 1e-5);
+        let ab_p2_eq_ba_p1 = overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point1, 1e-5);
+        assert!(
+            (ab_p1_eq_ba_p1 && ab_p2_eq_ba_p2) || (ab_p1_eq_ba_p2 && ab_p2_eq_ba_p1),
+            "AB/BA overlap endpoint sets diverged after closed-side rotation: AB={:?}, BA={:?}",
+            overlap_ab,
+            overlap_ba
+        );
+    }
+
+    #[test]
+    fn non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_closed_pline1_zero_length_lead_role_flip_symmetry()
+     {
+        // Zero-length-lead counterpart of the explicit closed-pline1 rotated probe.
+        let mut pline1_rotated = Polyline::new_closed();
+        pline1_rotated.add(3.0, 1.0, 0.0);
+        pline1_rotated.add(4.0, 1.0, 0.0);
+        pline1_rotated.add(4.0, 1.0, 0.0);
+        pline1_rotated.add(0.0, -3.0, 0.0);
+        pline1_rotated.add(1.0, 1.0, 1.0);
+
+        let mut pline2 = Polyline::new_closed();
+        pline2.add(2.0, 0.0, 1.0);
+        pline2.add(2.0, 2.0, 0.0);
+        pline2.add(3.0, 1.0, 0.0);
+        pline2.add(4.0, 3.0, 0.0);
+
+        let ab = find_intersects(&pline1_rotated, &pline2, &Default::default());
+        let ba = find_intersects(&pline2, &pline1_rotated, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert!(overlap_ab.start_index1 > 0);
+        assert_eq!(overlap_ab.start_index2, 0);
+
+        let endpoint_set_a = overlap_ab.point1.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5)
+            && overlap_ab.point2.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5);
+        let endpoint_set_b = overlap_ab.point1.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)
+            && overlap_ab.point2.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5);
+        assert!(
+            endpoint_set_a || endpoint_set_b,
+            "unexpected AB overlap endpoints: {:?}",
+            overlap_ab
+        );
+
+        // In this bounded both-closed rotated geometry, role inversion may preserve
+        // or swap overlap endpoint ordering, so compare endpoint sets.
         let ab_p1_eq_ba_p1 = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point1, 1e-5);
         let ab_p2_eq_ba_p2 = overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point2, 1e-5);
         let ab_p1_eq_ba_p2 = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point2, 1e-5);
