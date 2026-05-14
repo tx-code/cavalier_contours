@@ -65,8 +65,10 @@ endpoint-stickiness branch closure.
   non-overlap branch split:
   - `line_line_true_intersect`
   - `line_line_false_intersect_outside_segments_no_intersect`
+  - `line_line_none_parallel_no_intersect`
   - verifies explicit `LineSeg2LineSeg2IntrType::True -> OneIntersect` mapping
-    and explicit `LineSeg2LineSeg2IntrType::False -> NoIntersect` mapping.
+    and explicit `LineSeg2LineSeg2IntrType::False/None -> NoIntersect`
+    mappings.
 - Replaced the remaining index-0-shift canonical-name wrapper aliases with
   explicit assertion-backed probes, eliminating wrapper-style alias indirection
   in `find_intersects_tests`:

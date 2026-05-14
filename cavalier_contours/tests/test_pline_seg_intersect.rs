@@ -228,6 +228,19 @@ fn line_line_false_intersect_outside_segments_no_intersect() {
 }
 
 #[test]
+fn line_line_none_parallel_no_intersect() {
+    // Source-aligned with old C++ `intrPlineSegs` line-line branch where
+    // `LineSeg2LineSeg2IntrType::None` maps to no intersect.
+    let v1 = PlineVertex::new(0.0, 0.0, 0.0);
+    let v2 = PlineVertex::new(1.0, 0.0, 0.0);
+    let u1 = PlineVertex::new(0.0, 1.0, 0.0);
+    let u2 = PlineVertex::new(1.0, 1.0, 0.0);
+
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(result, NoIntersect::<f64>);
+}
+
+#[test]
 fn overlapping_lines() {
     let v1 = PlineVertex::new(3.0, 3.0, 0.0);
     let v2 = PlineVertex::new(1.0, 1.0, 0.0);
