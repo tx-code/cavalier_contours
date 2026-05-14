@@ -1090,18 +1090,30 @@ fn cpp_overlap_and_basic_intersection_options_role_flip_parity_nonzero_open_inde
         open_side_reversed_nonzero.find_intersects_opt(&closed_side_reversed_rotated, &options_ab);
     let ba =
         closed_side_reversed_rotated.find_intersects_opt(&open_side_reversed_nonzero, &options_ba);
+    let default_ab = open_side_reversed_nonzero.find_intersects(&closed_side_reversed_rotated);
+    let default_ba = closed_side_reversed_rotated.find_intersects(&open_side_reversed_nonzero);
 
     assert_eq!(ab.basic_intersects.len(), 1);
     assert_eq!(ab.overlapping_intersects.len(), 1);
     assert_eq!(ba.basic_intersects.len(), 1);
     assert_eq!(ba.overlapping_intersects.len(), 1);
+    assert_eq!(default_ab.basic_intersects.len(), 1);
+    assert_eq!(default_ab.overlapping_intersects.len(), 1);
+    assert_eq!(default_ba.basic_intersects.len(), 1);
+    assert_eq!(default_ba.overlapping_intersects.len(), 1);
 
     let basic_ab = ab.basic_intersects[0];
     let basic_ba = ba.basic_intersects[0];
+    let default_basic_ab = default_ab.basic_intersects[0];
+    let default_basic_ba = default_ba.basic_intersects[0];
+    assert_eq!(basic_ab.start_index1, 1);
+    assert_eq!(basic_ab.start_index2, 0);
     assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
     assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
-    assert_ne!(basic_ab.start_index1, 0);
-    assert_ne!(basic_ba.start_index2, 0);
+    assert_eq!(basic_ab.start_index1, default_basic_ab.start_index1);
+    assert_eq!(basic_ab.start_index2, default_basic_ab.start_index2);
+    assert_eq!(basic_ba.start_index1, default_basic_ba.start_index1);
+    assert_eq!(basic_ba.start_index2, default_basic_ba.start_index2);
     assert_point_close(basic_ab.point.x, basic_ab.point.y, 2.0, 2.0);
     assert_point_close(
         basic_ab.point.x,
@@ -1109,13 +1121,31 @@ fn cpp_overlap_and_basic_intersection_options_role_flip_parity_nonzero_open_inde
         basic_ba.point.x,
         basic_ba.point.y,
     );
+    assert_point_close(
+        basic_ab.point.x,
+        basic_ab.point.y,
+        default_basic_ab.point.x,
+        default_basic_ab.point.y,
+    );
+    assert_point_close(
+        basic_ba.point.x,
+        basic_ba.point.y,
+        default_basic_ba.point.x,
+        default_basic_ba.point.y,
+    );
 
     let overlap_ab = ab.overlapping_intersects[0];
     let overlap_ba = ba.overlapping_intersects[0];
+    let default_overlap_ab = default_ab.overlapping_intersects[0];
+    let default_overlap_ba = default_ba.overlapping_intersects[0];
+    assert_eq!(overlap_ab.start_index1, 1);
+    assert_eq!(overlap_ab.start_index2, 1);
     assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
     assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
-    assert_ne!(overlap_ab.start_index1, 0);
-    assert_ne!(overlap_ba.start_index2, 0);
+    assert_eq!(overlap_ab.start_index1, default_overlap_ab.start_index1);
+    assert_eq!(overlap_ab.start_index2, default_overlap_ab.start_index2);
+    assert_eq!(overlap_ba.start_index1, default_overlap_ba.start_index1);
+    assert_eq!(overlap_ba.start_index2, default_overlap_ba.start_index2);
     assert_point_close(overlap_ab.point1.x, overlap_ab.point1.y, 3.0, 1.0);
     assert_point_close(overlap_ab.point2.x, overlap_ab.point2.y, 2.0, 0.0);
     assert_point_close(
@@ -1129,6 +1159,30 @@ fn cpp_overlap_and_basic_intersection_options_role_flip_parity_nonzero_open_inde
         overlap_ab.point2.y,
         overlap_ba.point2.x,
         overlap_ba.point2.y,
+    );
+    assert_point_close(
+        overlap_ab.point1.x,
+        overlap_ab.point1.y,
+        default_overlap_ab.point1.x,
+        default_overlap_ab.point1.y,
+    );
+    assert_point_close(
+        overlap_ab.point2.x,
+        overlap_ab.point2.y,
+        default_overlap_ab.point2.x,
+        default_overlap_ab.point2.y,
+    );
+    assert_point_close(
+        overlap_ba.point1.x,
+        overlap_ba.point1.y,
+        default_overlap_ba.point1.x,
+        default_overlap_ba.point1.y,
+    );
+    assert_point_close(
+        overlap_ba.point2.x,
+        overlap_ba.point2.y,
+        default_overlap_ba.point2.x,
+        default_overlap_ba.point2.y,
     );
 
     let open_after: Vec<_> = open_side_reversed_nonzero.iter_vertexes().collect();
