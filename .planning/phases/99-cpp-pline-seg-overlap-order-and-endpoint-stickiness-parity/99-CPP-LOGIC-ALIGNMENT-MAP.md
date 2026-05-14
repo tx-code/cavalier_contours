@@ -214,6 +214,9 @@ endpoint-stickiness branch closure.
 - Added bounded mixed line/arc wrap-around-adjacency endpoint-dedup probes:
   - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_closed_pline1`
   - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_closed_pline2`
+- Added both-closed counterpart for the same bounded mixed line/arc
+  wrap-around endpoint-dedup branch:
+  - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_both_closed`
 - Added closed-side start-index rotation role-flip symmetry counterpart for the
   bounded mixed line/arc closed-`pline2` wrap-around endpoint-dedup probe:
   - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_closed_pline2_start_index_rotation_role_flip_symmetry`
