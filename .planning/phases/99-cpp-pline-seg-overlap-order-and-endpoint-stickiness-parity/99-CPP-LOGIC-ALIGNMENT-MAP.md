@@ -93,6 +93,11 @@ endpoint-stickiness branch closure.
   - verifies non-local segment pairs that intersect at a common end point are
     filtered by `skip_intr_at_end` for global-self basic output, including a
     zero-length-lead re-parameterization shift.
+- Added index-0 re-parameterization counterpart for the same global-self
+  shared-endpoint skip probe:
+  - `non_local_shared_end_point_pair_is_skipped_with_zero_length_lead_segment_index0_shift`
+  - verifies prepending a zero-length lead segment (index shift) keeps shifted
+    pair (`start_index` pair `1/5`) filtered.
 - Added global-self `TwoIntersects` + shared-endpoint skip counterpart:
   - `non_local_two_intersects_shared_end_point_filters_one_point`
   - verifies when one of two intersection points is the shared segment end,
@@ -117,9 +122,11 @@ endpoint-stickiness branch closure.
   - `all_self_intersects_basic_shared_end_point_pair_is_skipped`
   - `all_self_intersects_basic_shared_end_point_pair_is_skipped_nonzero_indexes`
   - `all_self_intersects_basic_shared_end_point_pair_is_skipped_with_zero_length_lead_segment`
+  - `all_self_intersects_basic_shared_end_point_pair_is_skipped_with_zero_length_lead_segment_index0_shift`
   - verifies both `include_overlapping=false/true` keep shared-end pair output
-    filtered in API-level basics across index-0/non-zero index pairs,
-    including the zero-length-lead re-parameterization shift.
+  filtered in API-level basics across index-0/non-zero index pairs,
+    including the zero-length-lead re-parameterization shift (including
+    index-0 zero-length shift).
 - Added API-level `all_self_intersects_as_basic` counterparts for the same
   `TwoIntersects` shared-end filter path:
   - `all_self_intersects_basic_two_intersects_shared_end_filters_one_point`

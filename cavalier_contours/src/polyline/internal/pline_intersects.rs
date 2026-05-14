@@ -1504,6 +1504,37 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_shared_end_point_pair_is_skipped_with_zero_length_lead_segment_index0_shift() {
+        // Index-0 re-parameterization counterpart for global-self shared-endpoint skip:
+        // prepend a zero-length lead segment and keep shifted pair (1,5) skipped.
+        let mut pline = Polyline::new();
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0); // zero-length lead + original first vertex
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, -1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            0,
+            "segment pair (1,5) shared-end intersection should be skipped after index-0 shift, actual basics: {:?}",
+            intrs.basic_intersects
+        );
+    }
+
+    #[test]
     fn non_local_one_intersect_at_single_segment_end_is_kept() {
         // Global-self single-intersect branch probe:
         // segment 0 ends at (0,0) while segment 4 starts at (0,0); because the
@@ -3106,6 +3137,53 @@ mod global_self_intersect_tests {
             pair_with_overlap.len(),
             0,
             "expected no basics for shifted shared-end pair (2,6) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+    }
+
+    #[test]
+    fn all_self_intersects_basic_shared_end_point_pair_is_skipped_with_zero_length_lead_segment_index0_shift()
+     {
+        // Index-0 re-parameterization API-level counterpart for shared-endpoint skip:
+        // prepend a zero-length lead segment and keep shifted pair (1,5) filtered.
+        let mut pline = Polyline::new();
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0); // zero-length lead + original first vertex
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, -1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            0,
+            "expected no basics for shifted shared-end pair (1,5) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            0,
+            "expected no basics for shifted shared-end pair (1,5) with include_overlapping=true, actual basics: {:?}",
             basics_with_overlap
         );
     }
