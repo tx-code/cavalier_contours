@@ -191,9 +191,14 @@ endpoint-stickiness branch closure.
   - `non_local_zero_length_shared_end_pair_is_skipped_nonzero_indexes`
   - `non_local_zero_length_shared_end_pair_is_skipped_with_zero_length_lead_segment`
   - verifies when both segment ends coincide at the same point and one segment
-    is zero-length at that point, the pair is filtered (no basic and no overlap
-    output for the targeted pair), including a zero-length-lead
+  is zero-length at that point, the pair is filtered (no basic and no overlap
+  output for the targeted pair), including a zero-length-lead
     re-parameterization shift.
+- Added index-0 re-parameterization counterpart for the same zero-length
+  shared-end boundary:
+  - `non_local_zero_length_shared_end_pair_is_skipped_with_zero_length_lead_segment_index0_shift`
+  - verifies prepending a zero-length lead segment (index shift) keeps shifted
+    pair (`start_index` pair `1/6`) filtered in both basic and overlap output.
 - Added API-level `all_self_intersects_as_basic` counterparts for the same
   overlap/shared-end boundaries:
   - `all_self_intersects_basic_include_overlapping_keeps_point2_shared_end_overlap_pair`
@@ -205,11 +210,13 @@ endpoint-stickiness branch closure.
   - `all_self_intersects_basic_include_overlapping_skips_zero_length_shared_end_pair`
   - `all_self_intersects_basic_include_overlapping_skips_zero_length_shared_end_pair_nonzero_indexes`
   - `all_self_intersects_basic_include_overlapping_skips_zero_length_shared_end_pair_with_zero_length_lead_segment`
+  - `all_self_intersects_basic_include_overlapping_skips_zero_length_shared_end_pair_with_zero_length_lead_segment_index0_shift`
   - verifies `include_overlapping=true` emits both overlap endpoints only when
   the global-self overlap pair survives filtering, and does not re-introduce
-    endpoints for filtered zero-length shared-end pairs, including a
+  endpoints for filtered zero-length shared-end pairs, including a
     zero-length-lead re-parameterization shift (including index-0 zero-length
-    shifts for both shared-end-on-point2 and shared-end-on-point1 branches).
+    shifts for shared-end-on-point2, shared-end-on-point1, and zero-length
+    shared-end branches).
 - Added global-self `TwoIntersects` positive-path counterpart:
   - `non_local_two_intersects_keeps_both_points_when_not_shared_end`
   - verifies both intersection points are emitted when neither point satisfies
