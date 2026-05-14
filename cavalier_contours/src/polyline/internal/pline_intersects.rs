@@ -4184,6 +4184,14 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_intersect_role_flip_symmetry()
+     {
+        // Canonical-name alias for direct counterpart tracing from the
+        // `...with_closure_basic_intersect(_flipped_roles)` probes.
+        non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_role_flip_symmetry();
+    }
+
+    #[test]
     fn non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_start_index_rotation_role_flip_symmetry()
      {
         // Same bounded closed-pline2 reversed-endpoint-order closure-basic geometry
@@ -4225,6 +4233,14 @@ mod find_intersects_tests {
         // role inversion swaps overlap endpoint ordering.
         assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point2);
         assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point1);
+    }
+
+    #[test]
+    fn non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_intersect_start_index_rotation_role_flip_symmetry()
+     {
+        // Canonical-name alias for direct counterpart tracing from the
+        // `...with_closure_basic_intersect(_flipped_roles)` probes.
+        non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_start_index_rotation_role_flip_symmetry();
     }
 
     #[test]
@@ -4271,6 +4287,14 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_intersect_role_flip_symmetry()
+     {
+        // Canonical-name alias for direct counterpart tracing from the
+        // `...with_closure_basic_intersect(_flipped_roles)` probes.
+        non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_role_flip_symmetry();
+    }
+
+    #[test]
     fn non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_start_index_rotation_role_flip_symmetry()
      {
         // Same bounded closed-pline1 reversed-endpoint-order closure-basic geometry
@@ -4312,6 +4336,14 @@ mod find_intersects_tests {
         // role inversion swaps overlap endpoint ordering.
         assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point2);
         assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point1);
+    }
+
+    #[test]
+    fn non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_intersect_start_index_rotation_role_flip_symmetry()
+     {
+        // Canonical-name alias for direct counterpart tracing from the
+        // `...with_closure_basic_intersect(_flipped_roles)` probes.
+        non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_start_index_rotation_role_flip_symmetry();
     }
 
     #[test]
@@ -5977,6 +6009,14 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_intersect_role_flip_symmetry()
+     {
+        // Canonical-name alias for direct counterpart tracing from the
+        // `...with_closure_basic_intersect(_flipped_roles)` probes.
+        wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_role_flip_symmetry();
+    }
+
+    #[test]
     fn wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_start_index_rotation_role_flip_symmetry()
      {
         // Same bounded closure-edge geometry as the closed-pline2 same-order role-flip
@@ -6017,6 +6057,14 @@ mod find_intersects_tests {
         // overlap endpoint ordering.
         assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
         assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
+    }
+
+    #[test]
+    fn wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_intersect_start_index_rotation_role_flip_symmetry()
+     {
+        // Canonical-name alias for direct counterpart tracing from the
+        // `...with_closure_basic_intersect(_flipped_roles)` probes.
+        wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_start_index_rotation_role_flip_symmetry();
     }
 
     #[test]
@@ -6133,6 +6181,14 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_intersect_role_flip_symmetry()
+     {
+        // Canonical-name alias for direct counterpart tracing from the
+        // `...with_closure_basic_intersect(_flipped_roles)` probes.
+        wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_role_flip_symmetry();
+    }
+
+    #[test]
     fn wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_start_index_rotation_role_flip_symmetry()
      {
         // Start-index-rotated counterpart for the same open-side-reversed closed-`pline2`
@@ -6182,6 +6238,14 @@ mod find_intersects_tests {
         // overlap endpoint ordering.
         assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
         assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
+    }
+
+    #[test]
+    fn wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_intersect_start_index_rotation_role_flip_symmetry()
+     {
+        // Canonical-name alias for direct counterpart tracing from the
+        // `...with_closure_basic_intersect(_flipped_roles)` probes.
+        wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_start_index_rotation_role_flip_symmetry();
     }
 
     #[test]
@@ -6307,6 +6371,14 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_role_flip_symmetry()
+     {
+        // Canonical-name alias for direct counterpart tracing from the
+        // `...with_normal_closed_side_closure_basic_intersect(_flipped_roles)` probes.
+        wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_role_flip_symmetry();
+    }
+
+    #[test]
     fn wrap_around_non_circle_arc_overlap_open_side_reversed_normal_closed_side_start_index_rotation_role_flip_symmetry()
      {
         // Same bounded closure-edge geometry as the normal-closed-side role-flip probe,
@@ -6361,6 +6433,14 @@ mod find_intersects_tests {
         // Canonical-name alias for direct counterpart tracing from the
         // `..._closure_basic_intersect(_flipped_roles)` probes.
         wrap_around_non_circle_arc_overlap_open_side_reversed_normal_closed_side_start_index_rotation_role_flip_symmetry();
+    }
+
+    #[test]
+    fn wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_start_index_rotation_role_flip_symmetry()
+     {
+        // Canonical-name alias for direct counterpart tracing from the
+        // `...with_normal_closed_side_closure_basic_intersect(_flipped_roles)` probes.
+        wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_start_index_rotation_role_flip_symmetry();
     }
 
     #[test]

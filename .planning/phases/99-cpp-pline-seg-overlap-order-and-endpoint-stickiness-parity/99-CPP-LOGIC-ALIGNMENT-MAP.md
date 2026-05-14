@@ -204,6 +204,13 @@ endpoint-stickiness branch closure.
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_start_index_rotation_role_flip_symmetry`
   - verifies closed-side start-vertex rotation preserves bounded
     overlap/basic-point outcomes and AB/BA index-role inversion semantics.
+- Added canonical-name aliases for direct counterpart tracing from
+  `...with_closure_basic_intersect(_flipped_roles)` on both closed-side
+  assignments:
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_intersect_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_intersect_start_index_rotation_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_intersect_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_intersect_start_index_rotation_role_flip_symmetry`
 - Clarified bounded parity behavior for these variants: closure edges can
   produce additional real basic intersections that are independent of
   overlap-adjacent duplicate filtering.
@@ -374,6 +381,10 @@ endpoint-stickiness branch closure.
   - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_start_index_rotation_role_flip_symmetry`
   - verifies rotating closed-side start vertex preserves bounded basic/overlap
     outcomes, AB/BA index-role inversion, and stable overlap endpoint ordering.
+- Added canonical-name aliases for direct counterpart tracing from
+  `...open_side_reversed_closed_pline2_with_closure_basic_intersect(_flipped_roles)`:
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_intersect_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_intersect_start_index_rotation_role_flip_symmetry`
 - Added exact parameter-role flipped counterpart for the bounded same-order
   closed-`pline2` closure-edge variant:
   - `wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_intersect_flipped_roles`
@@ -387,6 +398,10 @@ endpoint-stickiness branch closure.
   - `wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_start_index_rotation_role_flip_symmetry`
   - verifies closed-side start-vertex rotation preserves bounded basic/overlap
     outcomes and AB/BA index-role inversion semantics.
+- Added canonical-name aliases for direct counterpart tracing from
+  `...same_order_closed_pline2_with_closure_basic_intersect(_flipped_roles)`:
+  - `wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_intersect_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_intersect_start_index_rotation_role_flip_symmetry`
 - Added closed-`pline2` closure-edge counterpart that isolates open-side
   reversal while keeping closed-side arc orientation non-reversed:
   - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect`
@@ -428,6 +443,11 @@ endpoint-stickiness branch closure.
 - Added canonical-name start-index-rotation alias for direct counterpart
   tracing from `...with_normal_closed_side_closure_basic_intersect(_flipped_roles)`:
   - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_start_index_rotation_role_flip_symmetry`
+- Added canonical-name aliases that retain the explicit `_intersect_` token for
+  direct parity-chain tracing from
+  `...with_normal_closed_side_closure_basic_intersect(_flipped_roles)`:
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_start_index_rotation_role_flip_symmetry`
 - Added closed-side-reversed start-index rotation counterpart for the same
   open-side-reversed closure-edge role-flip geometry:
   - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_side_reversed_start_index_rotation_role_flip_symmetry`
