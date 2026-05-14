@@ -209,6 +209,12 @@ endpoint-stickiness branch closure.
   - verifies closed-polyline start-vertex rotation and orientation reversals do
     not change C++-mapped geometry for `OR`/`AND`/`XOR`, and AB/BA remain
     symmetric.
+- Added FFI-side counterpart for the same circle/rectangle commutative
+  start-index-rotation matrix:
+  - `pline_boolean_circle_rectangle_commutative_start_index_rotation_matrix_parity`
+  - verifies `cavc_pline_boolean` remains aligned with C++-mapped
+    `OR`/`AND`/`XOR` expectations and AB/BA commutative symmetry across
+    rotated/reversed variants.
 - Added complementary `NOT` start-index rotation matrix parity for
   circle/rectangle combine:
   - `cpp_circle_rectangle_not_start_index_rotation_matrix_parity`
