@@ -33,6 +33,12 @@ endpoint-stickiness branch closure.
 - Added opposing-direction arc-overlap-adjacent closed/open variant probes:
   - `opposing_direction_arc_overlap_adjacent_endpoint_deduplication_closed_pline1`
   - `opposing_direction_arc_overlap_adjacent_endpoint_deduplication_closed_pline2`
+- Added both-closed start-index-rotation role-flip symmetry counterpart for the
+  same opposing-direction arc-overlap-adjacent dedup branch:
+  - `opposing_direction_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_role_flip_symmetry`
+  - verifies closed-side start-vertex rotation yields non-zero overlap segment
+    indexing, preserves overlap-adjacent endpoint basic dedup behavior, and
+    keeps AB/BA overlap endpoint sets equivalent under role inversion.
 - Added non-circle arc/arc-overlap-adjacent collection-level parity probe:
   - `non_circle_partial_arc_overlap_adjacent_endpoint_deduplication`
 - Added non-circle arc/arc-overlap-adjacent closed/open variant probes:
