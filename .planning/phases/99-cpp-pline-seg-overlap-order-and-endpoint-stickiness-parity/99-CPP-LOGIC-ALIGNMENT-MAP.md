@@ -65,6 +65,12 @@ endpoint-stickiness branch closure.
 - Added parameter-role flipped counterpart for the same bounded reversed
   endpoint-order + both-closed probe:
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed_flipped_roles`
+- Added closed-side start-index rotation counterpart for the same bounded
+  reversed endpoint-order + both-closed adjacent-line-flip probe:
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed_start_index_rotation_role_flip_symmetry`
+  - verifies non-zero overlap segment indexing under closed-side start-vertex
+    rotation, stable three-basic-intersect behavior, and AB/BA index-role
+    inversion semantics.
 - Added source-aligned primitive parity probes for non-circle partial-overlap
   where both arcs are reversed:
   - `arc_arc_partial_overlap_both_reverse_dir`
