@@ -2007,3 +2007,179 @@ fn cpp_skip_intr_at_end_options_matrix_parity() {
         );
     }
 }
+
+#[test]
+fn cpp_open_polyline_endpoint_touch_options_parity() {
+    struct Case {
+        name: &'static str,
+        lhs: Polyline<f64>,
+        rhs: Polyline<f64>,
+    }
+
+    fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
+        assert!(
+            (actual_x - expected_x).abs() <= EPS && (actual_y - expected_y).abs() <= EPS,
+            "point mismatch: actual=({actual_x}, {actual_y}), expected=({expected_x}, {expected_y})"
+        );
+    }
+
+    let mut end_touch_start_lhs = Polyline::new();
+    end_touch_start_lhs.add(0.0, 0.0, 0.0);
+    end_touch_start_lhs.add(1.0, 1.0, 0.0);
+
+    let mut end_touch_start_rhs = Polyline::new();
+    end_touch_start_rhs.add(-1.0, -1.0, 0.0);
+    end_touch_start_rhs.add(0.0, 0.0, 0.0);
+
+    let mut end_touch_start_flipped_lhs = Polyline::new();
+    end_touch_start_flipped_lhs.add(-1.0, -1.0, 0.0);
+    end_touch_start_flipped_lhs.add(0.0, 0.0, 0.0);
+
+    let mut end_touch_start_flipped_rhs = Polyline::new();
+    end_touch_start_flipped_rhs.add(0.0, 0.0, 0.0);
+    end_touch_start_flipped_rhs.add(1.0, 1.0, 0.0);
+
+    let mut start_touch_start_lhs = Polyline::new();
+    start_touch_start_lhs.add(0.0, 0.0, 0.0);
+    start_touch_start_lhs.add(1.0, 1.0, 0.0);
+
+    let mut start_touch_start_rhs = Polyline::new();
+    start_touch_start_rhs.add(0.0, 0.0, 0.0);
+    start_touch_start_rhs.add(-1.0, -1.0, 0.0);
+
+    let cases = [
+        Case {
+            name: "open_polylines_end_touch_start",
+            lhs: end_touch_start_lhs,
+            rhs: end_touch_start_rhs,
+        },
+        Case {
+            name: "open_polylines_end_touch_start_flipped",
+            lhs: end_touch_start_flipped_lhs,
+            rhs: end_touch_start_flipped_rhs,
+        },
+        Case {
+            name: "open_polylines_start_points_touch",
+            lhs: start_touch_start_lhs,
+            rhs: start_touch_start_rhs,
+        },
+    ];
+
+    for case in &cases {
+        let lhs_before: Vec<_> = case.lhs.iter_vertexes().collect();
+        let rhs_before: Vec<_> = case.rhs.iter_vertexes().collect();
+
+        let lhs_aabb = case.lhs.create_approx_aabb_index();
+        let rhs_aabb = case.rhs.create_approx_aabb_index();
+        let options_ab = FindIntersectsOptions {
+            pline1_aabb_index: Some(&lhs_aabb),
+            pos_equal_eps: EPS,
+        };
+        let options_ba = FindIntersectsOptions {
+            pline1_aabb_index: Some(&rhs_aabb),
+            pos_equal_eps: EPS,
+        };
+
+        let default_ab = case.lhs.find_intersects(&case.rhs);
+        let default_ba = case.rhs.find_intersects(&case.lhs);
+        let ab = case.lhs.find_intersects_opt(&case.rhs, &options_ab);
+        let ba = case.rhs.find_intersects_opt(&case.lhs, &options_ba);
+
+        assert!(
+            default_ab.overlapping_intersects.is_empty(),
+            "{}: default AB expected no overlaps, got {:?}",
+            case.name,
+            default_ab.overlapping_intersects
+        );
+        assert!(
+            default_ba.overlapping_intersects.is_empty(),
+            "{}: default BA expected no overlaps, got {:?}",
+            case.name,
+            default_ba.overlapping_intersects
+        );
+        assert!(
+            ab.overlapping_intersects.is_empty(),
+            "{}: options AB expected no overlaps, got {:?}",
+            case.name,
+            ab.overlapping_intersects
+        );
+        assert!(
+            ba.overlapping_intersects.is_empty(),
+            "{}: options BA expected no overlaps, got {:?}",
+            case.name,
+            ba.overlapping_intersects
+        );
+        assert_eq!(
+            default_ab.basic_intersects.len(),
+            1,
+            "{}: default AB expected one basic",
+            case.name
+        );
+        assert_eq!(
+            default_ba.basic_intersects.len(),
+            1,
+            "{}: default BA expected one basic",
+            case.name
+        );
+        assert_eq!(
+            ab.basic_intersects.len(),
+            1,
+            "{}: options AB expected one basic",
+            case.name
+        );
+        assert_eq!(
+            ba.basic_intersects.len(),
+            1,
+            "{}: options BA expected one basic",
+            case.name
+        );
+
+        let default_intr_ab = default_ab.basic_intersects[0];
+        let default_intr_ba = default_ba.basic_intersects[0];
+        let intr_ab = ab.basic_intersects[0];
+        let intr_ba = ba.basic_intersects[0];
+
+        assert_eq!(intr_ab.start_index1, 0);
+        assert_eq!(intr_ab.start_index2, 0);
+        assert_point_close(intr_ab.point.x, intr_ab.point.y, 0.0, 0.0);
+
+        assert_eq!(intr_ab.start_index1, default_intr_ab.start_index1);
+        assert_eq!(intr_ab.start_index2, default_intr_ab.start_index2);
+        assert_eq!(intr_ba.start_index1, default_intr_ba.start_index1);
+        assert_eq!(intr_ba.start_index2, default_intr_ba.start_index2);
+        assert_point_close(
+            intr_ab.point.x,
+            intr_ab.point.y,
+            default_intr_ab.point.x,
+            default_intr_ab.point.y,
+        );
+        assert_point_close(
+            intr_ba.point.x,
+            intr_ba.point.y,
+            default_intr_ba.point.x,
+            default_intr_ba.point.y,
+        );
+
+        assert_eq!(intr_ab.start_index1, intr_ba.start_index2);
+        assert_eq!(intr_ab.start_index2, intr_ba.start_index1);
+        assert_point_close(
+            intr_ab.point.x,
+            intr_ab.point.y,
+            intr_ba.point.x,
+            intr_ba.point.y,
+        );
+
+        let lhs_after: Vec<_> = case.lhs.iter_vertexes().collect();
+        let rhs_after: Vec<_> = case.rhs.iter_vertexes().collect();
+        assert_eq!(
+            lhs_after, lhs_before,
+            "{}: lhs mutated by find_intersects_opt",
+            case.name
+        );
+        assert_eq!(
+            rhs_after, rhs_before,
+            "{}: rhs mutated by find_intersects_opt",
+            case.name
+        );
+    }
+}

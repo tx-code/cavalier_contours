@@ -1082,6 +1082,13 @@ endpoint-stickiness branch closure.
     open/closed `pline2` next-segment start-index attribution at shared-endpoint
     touches, matches default-path index/point outputs, preserves AB/BA role-flip
     mapping, and leaves both inputs immutable.
+- Added Rust options-path endpoint-touch matrix counterpart for source-aligned
+  open-polyline touch boundaries:
+  - `cpp_open_polyline_endpoint_touch_options_parity`
+  - verifies `find_intersects_opt` reproduces end-touch-start, flipped, and
+    start-touch-start single-basic outputs (no overlaps), matches default-path
+    index/point outputs, preserves AB/BA role-flip mapping, and leaves both
+    inputs immutable.
 - Strengthened offset input-immutability parity from single sample to full
   C++-mapped offset fixture matrix:
   - `cpp_parallel_offset_does_not_modify_input`
