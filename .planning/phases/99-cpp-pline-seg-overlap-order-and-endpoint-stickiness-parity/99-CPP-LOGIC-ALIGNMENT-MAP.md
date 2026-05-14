@@ -99,6 +99,11 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_pair_is_not_duplicated_nonzero_indexes`
   - verifies two-point dedup behavior remains stable away from index-0 segment
     pairs.
+- Added non-zero-index counterpart for global-self reversed-second-segment
+  coincident-arc overlap ordering:
+  - `non_local_coincident_arc_overlap_reversed_second_segment_ordering_nonzero_index`
+  - verifies overlap endpoint ordering remains aligned to the reversed second
+    segment direction on non-zero segment indexes.
 - Added bounded mixed line/arc overlap-adjacent collection-level parity probe:
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication`
 - Added closed/open asymmetry probe for mixed line/arc overlap-adjacent dedup:
