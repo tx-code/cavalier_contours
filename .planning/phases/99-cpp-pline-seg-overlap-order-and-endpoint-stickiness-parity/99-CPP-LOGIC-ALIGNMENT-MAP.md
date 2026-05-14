@@ -178,6 +178,12 @@ endpoint-stickiness branch closure.
   modes (mirrors old C++ no-modify suite coverage):
   - `cpp_circle_rectangle_combine_does_not_modify_input`
   - verifies `OR`/`NOT`/`AND`/`XOR` do not mutate either input polyline.
+- Added source-aligned self-combine reverse/mixed-direction invariants from old
+  C++ combine test coverage:
+  - `cpp_combine_with_self_reverse_mix_invariants`
+  - verifies self `UNION`/`INTERSECT` returns self for forward and reversed
+    orientation, and self `EXCLUDE`/`XOR` stays empty for
+    `fwd/fwd`, `rev/rev`, `rev/fwd`, and `fwd/rev`.
 
 ## Next Alignment Targets (No Clipper)
 

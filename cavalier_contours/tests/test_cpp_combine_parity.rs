@@ -553,3 +553,110 @@ fn cpp_coincident_case1_intersect_with_collapsed_filter_matches_cpp_empty() {
         "expected empty intersect with collapsed_area_eps filter, got {actual:?}"
     );
 }
+
+#[test]
+fn cpp_combine_with_self_reverse_mix_invariants() {
+    let pline = pline_closed![
+        (27.554688, 1.0, 0.0),
+        (27.554688, 0.75, 0.414214),
+        (27.804688, 0.5, 0.0),
+        (32.195313, 0.5, 0.414214),
+        (32.445313, 0.75, 0.0),
+        (32.445313, 1.0, 0.414214),
+        (32.195313, 1.25, 0.0),
+        (31.5, 1.25, -0.414214),
+        (31.0, 1.75, 0.0),
+        (29.0, 1.75, -0.414214),
+        (28.5, 1.25, 0.0),
+        (27.804688, 1.25, 0.414214)
+    ];
+
+    let mut rev_pline = pline.clone();
+    rev_pline.invert_direction_mut();
+
+    let expected_fwd = create_property_set([&pline], false);
+    let expected_rev = create_property_set([&rev_pline], false);
+
+    let union_fwd = create_property_set(
+        pline
+            .boolean(&pline, BooleanOp::Or)
+            .pos_plines
+            .iter()
+            .map(|r| &r.pline),
+        false,
+    );
+    assert!(
+        geometry_sets_match_ignore_vertex_count(&union_fwd, &expected_fwd),
+        "union self mismatch for forward orientation: {union_fwd:?}"
+    );
+
+    let union_rev = create_property_set(
+        rev_pline
+            .boolean(&rev_pline, BooleanOp::Or)
+            .pos_plines
+            .iter()
+            .map(|r| &r.pline),
+        false,
+    );
+    assert!(
+        geometry_sets_match_ignore_vertex_count(&union_rev, &expected_rev),
+        "union self mismatch for reversed orientation: {union_rev:?}"
+    );
+
+    let intersect_fwd = create_property_set(
+        pline
+            .boolean(&pline, BooleanOp::And)
+            .pos_plines
+            .iter()
+            .map(|r| &r.pline),
+        false,
+    );
+    assert!(
+        geometry_sets_match_ignore_vertex_count(&intersect_fwd, &expected_fwd),
+        "intersect self mismatch for forward orientation: {intersect_fwd:?}"
+    );
+
+    let intersect_rev = create_property_set(
+        rev_pline
+            .boolean(&rev_pline, BooleanOp::And)
+            .pos_plines
+            .iter()
+            .map(|r| &r.pline),
+        false,
+    );
+    assert!(
+        geometry_sets_match_ignore_vertex_count(&intersect_rev, &expected_rev),
+        "intersect self mismatch for reversed orientation: {intersect_rev:?}"
+    );
+
+    for (lhs, rhs, label) in [
+        (&pline, &pline, "fwd/fwd"),
+        (&rev_pline, &rev_pline, "rev/rev"),
+        (&rev_pline, &pline, "rev/fwd"),
+        (&pline, &rev_pline, "fwd/rev"),
+    ] {
+        let exclude = create_property_set(
+            lhs.boolean(rhs, BooleanOp::Not)
+                .pos_plines
+                .iter()
+                .map(|r| &r.pline),
+            false,
+        );
+        assert!(
+            exclude.is_empty(),
+            "exclude self expected empty for {label}, got {exclude:?}"
+        );
+
+        let xor = create_property_set(
+            lhs.boolean(rhs, BooleanOp::Xor)
+                .pos_plines
+                .iter()
+                .map(|r| &r.pline),
+            false,
+        );
+        assert!(
+            xor.is_empty(),
+            "xor self expected empty for {label}, got {xor:?}"
+        );
+    }
+}
