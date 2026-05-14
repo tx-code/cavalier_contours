@@ -9691,6 +9691,53 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn non_circle_partial_arc_overlap_arc1_reverse_dir_with_adjacent_line_flip_role_flip_symmetry()
+    {
+        // Role-flip symmetry counterpart for bounded `arc1_reverse_dir` geometry
+        // with adjacent-line endpoint behavior.
+        let mut side_a = Polyline::new();
+        side_a.add(3.0, 1.0, -1.0);
+        side_a.add(1.0, 1.0, 0.0);
+        side_a.add(0.0, 1.0, 0.0);
+
+        let mut side_b = Polyline::new();
+        side_b.add(2.0, 0.0, 1.0);
+        side_b.add(2.0, 2.0, 0.0);
+        side_b.add(3.0, 1.0, 0.0);
+
+        let ab = find_intersects(&side_a, &side_b, &Default::default());
+        let ba = find_intersects(&side_b, &side_a, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert_eq!(ab.basic_intersects.len(), 1);
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert_eq!(ba.basic_intersects.len(), 1);
+
+        let basic_ab = ab.basic_intersects[0];
+        let basic_ba = ba.basic_intersects[0];
+        assert_fuzzy_eq!(basic_ab.point, Vector2::new(3.0, 1.0));
+        assert_fuzzy_eq!(basic_ba.point, Vector2::new(3.0, 1.0));
+        assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+        assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+
+        let same_order = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point1, 1e-5)
+            && overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point2, 1e-5);
+        let reversed_order = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point2, 1e-5)
+            && overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point1, 1e-5);
+        assert!(
+            same_order || reversed_order,
+            "AB/BA overlap endpoint sets diverged: AB={:?}, BA={:?}",
+            overlap_ab,
+            overlap_ba
+        );
+    }
+
+    #[test]
     fn non_circle_partial_arc_overlap_both_reverse_dir_with_adjacent_line_flip() {
         // Open-path counterpart where both arcs are reversed while adjacent-line behavior
         // remains bounded and source-traceable.
@@ -9718,6 +9765,53 @@ mod find_intersects_tests {
         assert_eq!(overlap.start_index2, 0);
         assert_fuzzy_eq!(overlap.point1, Vector2::new(3.0, 1.0));
         assert_fuzzy_eq!(overlap.point2, Vector2::new(2.0, 0.0));
+    }
+
+    #[test]
+    fn non_circle_partial_arc_overlap_both_reverse_dir_with_adjacent_line_flip_role_flip_symmetry()
+    {
+        // Role-flip symmetry counterpart for bounded both-reversed open-path geometry.
+        let mut side_a = Polyline::new();
+        side_a.add(3.0, 1.0, -1.0);
+        side_a.add(1.0, 1.0, 0.0);
+        side_a.add(0.0, 1.0, 0.0);
+
+        let mut side_b = Polyline::new();
+        side_b.add(2.0, 2.0, -1.0);
+        side_b.add(2.0, 0.0, 0.0);
+        side_b.add(2.0, -1.0, 0.0);
+
+        let ab = find_intersects(&side_a, &side_b, &Default::default());
+        let ba = find_intersects(&side_b, &side_a, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+
+        let same_order = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point1, 1e-5)
+            && overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point2, 1e-5);
+        let reversed_order = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point2, 1e-5)
+            && overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point1, 1e-5);
+        assert!(
+            same_order || reversed_order,
+            "AB/BA overlap endpoint sets diverged: AB={:?}, BA={:?}",
+            overlap_ab,
+            overlap_ba
+        );
     }
 
     #[test]
