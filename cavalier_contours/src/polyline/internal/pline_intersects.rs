@@ -3111,6 +3111,13 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn all_self_intersects_basic_include_overlapping_coincident_arc_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
+     {
+        // Canonical-name alias for direct index-0-shift counterpart tracing.
+        all_self_intersects_basic_include_overlapping_coincident_arc_overlap_ordering_with_zero_length_lead_segment_index0_shift();
+    }
+
+    #[test]
     fn all_self_intersects_basic_include_overlapping_coincident_arc_reversed_second_segment_ordering()
      {
         // API-level counterpart for reversed-second-segment coincident-arc overlap ordering.
@@ -3353,6 +3360,13 @@ mod global_self_intersect_tests {
                 .map(|x| x.point)
                 .collect::<Vec<_>>()
         );
+    }
+
+    #[test]
+    fn all_self_intersects_basic_include_overlapping_coincident_arc_reversed_second_segment_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
+     {
+        // Canonical-name alias for direct index-0-shift counterpart tracing.
+        all_self_intersects_basic_include_overlapping_coincident_arc_reversed_second_segment_ordering_with_zero_length_lead_segment_index0_shift();
     }
 
     #[test]
@@ -5801,6 +5815,13 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_coincident_arc_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
+     {
+        // Canonical-name alias for direct index-0-shift counterpart tracing.
+        non_local_coincident_arc_overlap_pair_is_not_duplicated_with_zero_length_lead_segment();
+    }
+
+    #[test]
     fn non_local_two_intersects_pair_is_not_duplicated() {
         // Global-self visited-pair dedup probe for `TwoIntersects` branch:
         // segment 0 (arc) and segment 4 (line) should contribute exactly two
@@ -6064,6 +6085,13 @@ mod global_self_intersect_tests {
             "expected one overlap for shifted pair (1,5), actual overlaps: {:?}",
             intrs.overlapping_intersects
         );
+    }
+
+    #[test]
+    fn non_local_coincident_arc_overlap_reversed_second_segment_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
+     {
+        // Canonical-name alias for direct index-0-shift counterpart tracing.
+        non_local_coincident_arc_overlap_reversed_second_segment_pair_is_not_duplicated_with_zero_length_lead_segment();
     }
 
     #[test]

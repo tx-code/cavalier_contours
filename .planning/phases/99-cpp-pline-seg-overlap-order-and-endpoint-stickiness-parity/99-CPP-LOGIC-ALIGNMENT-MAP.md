@@ -274,6 +274,11 @@ endpoint-stickiness branch closure.
   - verifies coincident-arc overlap pairs also remain deduplicated (single
     overlap entry) across index-0, non-zero, and zero-length-lead
     re-parameterization variants.
+- Added canonical-name alias counterpart for direct index-0-shift tracing of
+  the same coincident-arc overlap dedup path:
+  - `non_local_coincident_arc_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - verifies parity evidence is explicitly discoverable under index-0-shift
+    naming while reusing identical shifted geometry.
 - Added API-level `all_self_intersects_as_basic` counterparts for the same
   visited-pair dedup paths:
   - `all_self_intersects_basic_single_intersect_pair_is_not_duplicated`
@@ -289,6 +294,11 @@ endpoint-stickiness branch closure.
   `include_overlapping=false` and exactly two overlap endpoints (no duplicate
   endpoint expansion) when `include_overlapping=true`, across index-0,
     non-zero, and zero-length-lead re-parameterization variants.
+- Added canonical-name API-level alias counterpart for direct index-0-shift
+  tracing of the same coincident-arc overlap dedup path:
+  - `all_self_intersects_basic_include_overlapping_coincident_arc_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - verifies parity evidence is explicitly discoverable under index-0-shift
+    naming while reusing identical shifted geometry.
 - Added explicit `TwoIntersects` visited-pair dedup probe:
   - `non_local_two_intersects_pair_is_not_duplicated`
   - verifies a two-intersection pair contributes exactly two basic points (not
@@ -337,6 +347,11 @@ endpoint-stickiness branch closure.
   - `non_local_coincident_arc_overlap_reversed_second_segment_pair_is_not_duplicated_with_zero_length_lead_segment`
   - verifies prepending a zero-length lead segment (index shift) keeps the
     shifted reversed-overlap pair deduplicated as one entry.
+- Added canonical-name alias counterpart for direct index-0-shift tracing of
+  the same index-0 reversed-segment overlap dedup branch:
+  - `non_local_coincident_arc_overlap_reversed_second_segment_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - verifies parity evidence is explicitly discoverable under index-0-shift
+    naming while reusing identical shifted geometry.
 - Added pair-dedup counterpart for the same non-zero-index reversed-segment
   coincident-arc overlap branch:
   - `non_local_coincident_arc_overlap_reversed_second_segment_nonzero_not_duplicated`
@@ -358,6 +373,12 @@ endpoint-stickiness branch closure.
     targeted pair (no endpoint duplication) on index-0, non-zero, and
     zero-length-lead re-parameterization paths (including index-0 zero-length
     shift).
+- Added canonical-name API-level alias counterpart for direct index-0-shift
+  tracing of the same reversed-second-segment coincident-arc overlap dedup
+  path:
+  - `all_self_intersects_basic_include_overlapping_coincident_arc_reversed_second_segment_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - verifies parity evidence is explicitly discoverable under index-0-shift
+    naming while reusing identical shifted geometry.
 - Added index-0 + reversed + shared-end-anchor counterpart for global-self
   `TwoIntersects`:
   - `non_local_two_intersects_reversed_second_segment_shared_end_keeps_both`
