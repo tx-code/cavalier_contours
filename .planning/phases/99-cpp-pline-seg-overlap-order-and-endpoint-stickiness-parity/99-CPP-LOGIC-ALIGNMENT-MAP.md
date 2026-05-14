@@ -277,6 +277,11 @@ endpoint-stickiness branch closure.
   - `coincident_arc_end_points_touch_collection_level_nonzero_index_role_flip`
   - verifies stable dual-endpoint behavior when arc segments are not at index
     0, including parameter inversion and reversed second-arc direction.
+- Added collection-level guard for the opposite-direction endpoint-touch bug
+  geometry (issue #42):
+  - `opposite_direction_arc_end_touch_collection_level_bug_guard`
+  - verifies one-endpoint intersect remains anchored to the shared endpoint
+    under parameter inversion and reversed second-arc direction.
 
 ## Next Alignment Targets (No Clipper)
 
