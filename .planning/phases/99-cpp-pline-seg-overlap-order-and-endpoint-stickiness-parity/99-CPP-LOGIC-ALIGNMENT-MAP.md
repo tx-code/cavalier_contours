@@ -567,6 +567,12 @@ endpoint-stickiness branch closure.
   - verifies bounded basic+overlap behavior, AB/BA index-role inversion, and
     overlap endpoint-order swap semantics after closed-side start-vertex
     rotation.
+- Added complementary closed-side start-index-rotated role-flip symmetry
+  counterpart where the non-zero overlap segment index is carried by `pline2`:
+  - `non_circle_partial_arc_overlap_arc1_reverse_dir_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry`
+  - verifies bounded basic+overlap behavior, overlap endpoint-order swap
+    semantics, and AB/BA role inversion remain stable when rotation is applied
+    on the second input polyline.
 - Added bounded closed-shape collection-level counterpart for `both_reverse_dir`
   partial overlap:
   - `non_circle_partial_arc_overlap_both_reverse_dir_both_closed`
