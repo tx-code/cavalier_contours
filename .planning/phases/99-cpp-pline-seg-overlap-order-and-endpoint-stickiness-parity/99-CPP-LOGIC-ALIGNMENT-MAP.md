@@ -113,6 +113,7 @@ endpoint-stickiness branch closure.
   - `all_self_intersects_basic_include_overlapping_keeps_point1_shared_end_overlap_pair`
   - `all_self_intersects_basic_include_overlapping_keeps_point1_shared_end_overlap_pair_with_zero_length_lead_segment`
   - `all_self_intersects_basic_include_overlapping_skips_zero_length_shared_end_pair`
+  - `all_self_intersects_basic_include_overlapping_skips_zero_length_shared_end_pair_nonzero_indexes`
   - verifies `include_overlapping=true` emits both overlap endpoints only when
     the global-self overlap pair survives filtering, and does not re-introduce
     endpoints for filtered zero-length shared-end pairs.

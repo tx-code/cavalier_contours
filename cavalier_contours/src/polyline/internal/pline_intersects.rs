@@ -2127,6 +2127,54 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn all_self_intersects_basic_include_overlapping_skips_zero_length_shared_end_pair_nonzero_indexes()
+     {
+        // Non-zero-index API-level counterpart for shared-end zero-length boundary.
+        // Both include_overlapping=false/true should keep the targeted pair filtered.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, 1.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 6)
+                    || (intr.start_index1 == 6 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 6)
+                    || (intr.start_index1 == 6 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            0,
+            "expected no basics for shared-end zero-length pair (1,6) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            0,
+            "expected no basics for shared-end zero-length pair (1,6) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+    }
+
+    #[test]
     fn non_local_two_intersects_keeps_both_points_when_not_shared_end() {
         // Global-self `TwoIntersects` positive path:
         // segment 0 (arc) and segment 4 (line) intersect at (-1, 0) and (1, 0),
