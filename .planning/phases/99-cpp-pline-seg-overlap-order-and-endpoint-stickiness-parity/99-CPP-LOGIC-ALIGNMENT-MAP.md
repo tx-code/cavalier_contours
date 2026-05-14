@@ -28,6 +28,14 @@ endpoint-stickiness branch closure.
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication_closed_pline1`
 - Added complementary closed/open asymmetry probe where `pline2` is closed:
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication_closed_pline2`
+- Added both-closed counterpart for the same mixed line/arc
+  overlap-adjacent dedup branch:
+  - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication_both_closed`
+- Added role-flip symmetry counterpart for the same both-closed mixed line/arc
+  overlap-adjacent dedup branch:
+  - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication_both_closed_role_flip_symmetry`
+  - verifies AB/BA index-role inversion and stable overlap endpoint ordering in
+    bounded both-closed geometry.
 - Added opposing-direction arc-overlap-adjacent collection-level parity probe:
   - `opposing_direction_arc_overlap_adjacent_endpoint_deduplication`
 - Added opposing-direction arc-overlap-adjacent closed/open variant probes:
