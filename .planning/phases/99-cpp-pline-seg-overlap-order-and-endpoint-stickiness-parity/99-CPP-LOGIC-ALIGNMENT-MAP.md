@@ -195,6 +195,11 @@ endpoint-stickiness branch closure.
   - verifies Rust `neg_plines` remains empty across the C++-mapped
   circle/rectangle and coincident combine matrices where old
   `expectedSubtracted` is empty.
+- Added source-anchored commutative role-flip matrix parity across orientation
+  reversals for C++ coincident combine fixtures:
+  - `cpp_coincident_commutative_role_flip_matrix_parity`
+  - verifies AB/BA role inversion and orientation-matrix invariance for
+    `OR`/`AND`/`XOR` against the C++-mapped coincident expected geometry sets.
 - Added source-aligned primitive parity probes for coincident-arc single-endpoint
   touch branches in old C++ `intrPlineSegs`:
   - `arc_arc_coincident_touch_only_at_arc1_start`

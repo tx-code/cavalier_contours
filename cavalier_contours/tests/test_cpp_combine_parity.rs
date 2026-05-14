@@ -566,6 +566,75 @@ fn cpp_coincident_matrix_geometry_parity_holds() {
 }
 
 #[test]
+fn cpp_coincident_commutative_role_flip_matrix_parity() {
+    fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
+        pline.invert_direction_mut();
+        pline
+    }
+
+    for (case_prefix, inputs) in [
+        (
+            "coincident_case1_",
+            coincident_case1_inputs as fn() -> (Polyline<f64>, Polyline<f64>),
+        ),
+        (
+            "coincident_case2_",
+            coincident_case2_inputs as fn() -> (Polyline<f64>, Polyline<f64>),
+        ),
+    ] {
+        let case_expectations: Vec<_> = cpp_coincident_cases()
+            .into_iter()
+            .filter(|c| c.name.starts_with(case_prefix))
+            .collect();
+
+        let (subject, clip) = inputs();
+        let subject_reversed = reversed(subject.clone());
+        let clip_reversed = reversed(clip.clone());
+
+        let orientation_pairs = [
+            (&subject, &clip),
+            (&subject, &clip_reversed),
+            (&subject_reversed, &clip),
+            (&subject_reversed, &clip_reversed),
+        ];
+
+        for op in [BooleanOp::Or, BooleanOp::And, BooleanOp::Xor] {
+            let expected = &case_expectations
+                .iter()
+                .find(|c| c.op == op)
+                .unwrap_or_else(|| {
+                    panic!("missing expected coincident case for {case_prefix}{op:?}")
+                })
+                .expected;
+
+            for (a, b) in orientation_pairs {
+                let ab = create_property_set(
+                    a.boolean(b, op).pos_plines.iter().map(|r| &r.pline),
+                    false,
+                );
+                let ba = create_property_set(
+                    b.boolean(a, op).pos_plines.iter().map(|r| &r.pline),
+                    false,
+                );
+
+                assert!(
+                    geometry_sets_match_ignore_vertex_count(&ab, expected),
+                    "AB mismatch for case_prefix={case_prefix}, op={op:?}, ab={ab:?}, expected={expected:?}"
+                );
+                assert!(
+                    geometry_sets_match_ignore_vertex_count(&ba, expected),
+                    "BA mismatch for case_prefix={case_prefix}, op={op:?}, ba={ba:?}, expected={expected:?}"
+                );
+                assert!(
+                    geometry_sets_match_ignore_vertex_count(&ab, &ba),
+                    "AB/BA role-flip mismatch for case_prefix={case_prefix}, op={op:?}, ab={ab:?}, ba={ba:?}"
+                );
+            }
+        }
+    }
+}
+
+#[test]
 fn cpp_coincident_case1_intersect_with_collapsed_filter_matches_cpp_empty() {
     let (subject, clip) = coincident_case1_inputs();
     let options = PlineBooleanOptions {
