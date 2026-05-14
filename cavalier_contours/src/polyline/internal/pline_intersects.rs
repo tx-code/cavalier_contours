@@ -1231,6 +1231,47 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_coincident_arc_overlap_nonzero_index_reports_overlapping_intersect_with_zero_length_lead_segment()
+     {
+        // Re-parameterization counterpart for the same non-zero-index
+        // global-self coincident-arc overlap branch.
+        // Prepend a zero-length lead segment and verify shifted pair (3,7)
+        // still reports overlap endpoints [2, 0] and [3, 1].
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(-4.0, 2.0, 0.0);
+        pline.add(-4.0, 2.0, 0.0); // zero-length lead segment
+        pline.add(-0.5, 1.5, 0.0);
+        pline.add(1.0, 1.0, 1.0);
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(2.0, 0.0, quarter);
+        pline.add(3.0, 1.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        assert!(
+            !intrs.overlapping_intersects.is_empty(),
+            "expected at least one overlapping global self intersect"
+        );
+
+        let has_target_overlap = intrs.overlapping_intersects.iter().any(|overlap| {
+            let expected_index_pair = (overlap.start_index1 == 3 && overlap.start_index2 == 7)
+                || (overlap.start_index1 == 7 && overlap.start_index2 == 3);
+            let points_match = (overlap.point1.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5)
+                && overlap.point2.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5))
+                || (overlap.point1.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)
+                    && overlap.point2.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5));
+            expected_index_pair && points_match
+        });
+        assert!(
+            has_target_overlap,
+            "missing expected shifted non-local arc overlap [2,0]-[3,1] for pair (3,7), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
+
+    #[test]
     fn non_local_coincident_arc_overlap_reversed_second_segment_ordering() {
         // Global-self coincident-arc overlap with reversed second-segment direction.
         // segment 0 and segment 4 overlap and should report overlap endpoints ordered by

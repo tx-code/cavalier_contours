@@ -54,6 +54,12 @@ endpoint-stickiness branch closure.
   - `non_local_coincident_arc_overlap_nonzero_index_reports_overlapping_intersect`
   - verifies overlap detection and endpoint output remain stable with non-zero
     segment indexes (`start_index` pair `1/5`).
+- Added re-parameterization counterpart for the same non-zero-index
+  coincident-arc overlap branch:
+  - `non_local_coincident_arc_overlap_nonzero_index_reports_overlapping_intersect_with_zero_length_lead_segment`
+  - verifies prepending a zero-length lead segment (index shift) preserves
+    overlap detection and endpoint output for shifted pair (`start_index` pair
+    `3/7`).
 - Added reversed-second-segment counterpart for the same global-self
   coincident-arc overlap branch:
   - `non_local_coincident_arc_overlap_reversed_second_segment_ordering`
