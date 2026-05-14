@@ -5,6 +5,16 @@ endpoint-stickiness branch closure.
 
 ## Deepening Outcome
 
+- Replaced canonical-name wrapper aliases with explicit assertion-backed probes
+  for closure-basic `intersect` naming parity in bounded role-flip families:
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_intersect_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_intersect_start_index_rotation_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_intersect_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_intersect_start_index_rotation_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_intersect_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_intersect_start_index_rotation_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_intersect_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_intersect_start_index_rotation_role_flip_symmetry`
 - Added executable expected-case parity for old C++ `intrPlineSegs` branch
   families:
   - line-line overlap-order according to second segment direction
