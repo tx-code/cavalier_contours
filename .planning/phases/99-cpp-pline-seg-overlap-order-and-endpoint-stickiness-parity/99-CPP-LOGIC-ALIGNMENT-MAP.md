@@ -205,6 +205,11 @@ endpoint-stickiness branch closure.
   - `cpp_coincident_not_complementary_role_flip_matrix_parity`
   - verifies `A\B` and `B\A` each remain aligned to their respective
     C++-mapped expected geometry sets under orientation reversals.
+- Added source-aligned input immutability parity for C++ coincident combine
+  fixtures:
+  - `cpp_coincident_combine_does_not_modify_input`
+  - verifies all coincident case operations (`OR`/`NOT`/`AND`/`XOR`) preserve
+    both input polylines.
 - Added source-aligned primitive parity probes for coincident-arc single-endpoint
   touch branches in old C++ `intrPlineSegs`:
   - `arc_arc_coincident_touch_only_at_arc1_start`

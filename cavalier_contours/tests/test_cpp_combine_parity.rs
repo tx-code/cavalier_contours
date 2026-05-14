@@ -470,6 +470,30 @@ fn cpp_circle_rectangle_combine_does_not_modify_input() {
 }
 
 #[test]
+fn cpp_coincident_combine_does_not_modify_input() {
+    for case in cpp_coincident_cases() {
+        let subject_before: Vec<_> = case.subject.iter_vertexes().collect();
+        let clip_before: Vec<_> = case.clip.iter_vertexes().collect();
+
+        let _ = case.subject.boolean(&case.clip, case.op);
+
+        let subject_after: Vec<_> = case.subject.iter_vertexes().collect();
+        let clip_after: Vec<_> = case.clip.iter_vertexes().collect();
+
+        assert_eq!(
+            subject_after, subject_before,
+            "subject modified for case={} op={:?}",
+            case.name, case.op
+        );
+        assert_eq!(
+            clip_after, clip_before,
+            "clip modified for case={} op={:?}",
+            case.name, case.op
+        );
+    }
+}
+
+#[test]
 fn cpp_circle_rectangle_commutative_role_flip_matrix_parity() {
     fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
         pline.invert_direction_mut();
