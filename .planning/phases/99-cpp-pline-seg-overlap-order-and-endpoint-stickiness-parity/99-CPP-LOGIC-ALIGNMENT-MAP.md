@@ -224,7 +224,12 @@ endpoint-stickiness branch closure.
   reversals for C++ coincident combine fixtures:
   - `cpp_coincident_not_complementary_role_flip_matrix_parity`
   - verifies `A\B` and `B\A` each remain aligned to their respective
-    C++-mapped expected geometry sets under orientation reversals.
+  C++-mapped expected geometry sets under orientation reversals.
+- Added source-anchored complementary `NOT` start-index rotation matrix parity
+  for C++ coincident combine fixtures:
+  - `cpp_coincident_not_complementary_start_index_rotation_matrix_parity`
+  - verifies closed-polyline start-vertex rotation and orientation reversals do
+    not change C++-mapped `A\B` / `B\A` expected geometry sets.
 - Added source-aligned input immutability parity for C++ coincident combine
   fixtures:
   - `cpp_coincident_combine_does_not_modify_input`
