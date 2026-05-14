@@ -1603,6 +1603,40 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_one_intersect_at_single_segment_end_is_kept_with_zero_length_lead_segment_index0_shift()
+     {
+        // Index-0 re-parameterization counterpart for the same global-self
+        // single-intersect branch: prepend a zero-length lead segment and keep
+        // one retained point on shifted pair (1,5).
+        let mut pline = Polyline::new();
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0); // zero-length lead + original first vertex
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(2.0, -2.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(0.0, 3.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                ((intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1))
+                    && intr.point.fuzzy_eq_eps(Vector2::new(0.0, 0.0), 1e-5)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one retained single-end-point basic intersect for shifted pair (1,5), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+    }
+
+    #[test]
     fn non_local_two_intersects_shared_end_point_filters_one_point_nonzero_indexes() {
         // Non-zero-index counterpart for global-self `TwoIntersects` + skip-at-end.
         // segment 1 (arc) and segment 5 (line) intersect at two points, but one
@@ -3792,6 +3826,55 @@ mod global_self_intersect_tests {
             pair_with_overlap.len(),
             1,
             "expected one retained single-end-point basic for shifted pair (3,7) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+    }
+
+    #[test]
+    fn all_self_intersects_basic_one_intersect_at_single_segment_end_is_kept_with_zero_length_lead_segment_index0_shift()
+     {
+        // Index-0 re-parameterization API-level counterpart for
+        // single-intersect-at-one-end branch.
+        let mut pline = Polyline::new();
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0); // zero-length lead + original first vertex
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(2.0, -2.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(0.0, 3.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                ((intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1))
+                    && intr.point.fuzzy_eq_eps(Vector2::new(0.0, 0.0), 1e-5)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                ((intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1))
+                    && intr.point.fuzzy_eq_eps(Vector2::new(0.0, 0.0), 1e-5)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            1,
+            "expected one retained single-end-point basic for shifted pair (1,5) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            1,
+            "expected one retained single-end-point basic for shifted pair (1,5) with include_overlapping=true, actual basics: {:?}",
             basics_with_overlap
         );
     }

@@ -138,14 +138,20 @@ endpoint-stickiness branch closure.
   - verifies `skip_intr_at_end` does not filter one-intersect points unless the
     endpoint condition is simultaneously true for both tested segments,
     including a zero-length-lead re-parameterization shift.
+- Added index-0 re-parameterization counterpart for the same single-intersect
+  branch:
+  - `non_local_one_intersect_at_single_segment_end_is_kept_with_zero_length_lead_segment_index0_shift`
+  - verifies prepending a zero-length lead segment (index shift) still keeps
+    one retained point for shifted pair (`start_index` pair `1/5`).
 - Added API-level `all_self_intersects_as_basic` counterparts for the same
   single-intersect-at-one-end branch:
   - `all_self_intersects_basic_one_intersect_at_single_segment_end_is_kept`
   - `all_self_intersects_basic_one_intersect_at_single_segment_end_is_kept_nonzero_indexes`
   - `all_self_intersects_basic_one_intersect_at_single_segment_end_is_kept_with_zero_length_lead_segment`
+  - `all_self_intersects_basic_one_intersect_at_single_segment_end_is_kept_with_zero_length_lead_segment_index0_shift`
   - verifies both `include_overlapping=false/true` keep one retained basic
     point for the targeted pair across index-0/non-zero and zero-length-lead
-    re-parameterization variants.
+    re-parameterization variants (including index-0 zero-length shift).
 - Added overlap-branch shared-end boundary counterparts where the shared end
   appears on overlap `point2`:
   - `non_local_overlap_with_shared_end_on_point2_is_kept`
