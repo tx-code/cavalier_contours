@@ -4345,6 +4345,41 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_coincident_arc_overlap_pair_is_not_duplicated_with_zero_length_lead_segment() {
+        // Re-parameterization counterpart for coincident-arc overlap visited-pair
+        // dedup: prepend a zero-length lead segment and keep one overlap entry
+        // for the shifted pair.
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(-4.0, 2.0, 0.0);
+        pline.add(-4.0, 2.0, 0.0); // zero-length lead segment
+        pline.add(-0.5, 1.5, 0.0);
+        pline.add(1.0, 1.0, 1.0);
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(2.0, 0.0, quarter);
+        pline.add(3.0, 1.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 3 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 3)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one overlap for shifted pair (3,7), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
+
+    #[test]
     fn non_local_two_intersects_pair_is_not_duplicated() {
         // Global-self visited-pair dedup probe for `TwoIntersects` branch:
         // segment 0 (arc) and segment 4 (line) should contribute exactly two
@@ -4491,6 +4526,37 @@ mod global_self_intersect_tests {
             target_pair.len(),
             1,
             "expected one overlap for pair (1,5), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
+
+    #[test]
+    fn non_local_coincident_arc_overlap_reversed_second_segment_pair_is_not_duplicated() {
+        // Pair-dedup counterpart for index-0 reversed second-segment
+        // coincident-arc overlap.
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(1.0, 1.0, 1.0);
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(3.0, 1.0, -quarter);
+        pline.add(2.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 4)
+                    || (intr.start_index1 == 4 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one overlap for pair (0,4), actual overlaps: {:?}",
             intrs.overlapping_intersects
         );
     }

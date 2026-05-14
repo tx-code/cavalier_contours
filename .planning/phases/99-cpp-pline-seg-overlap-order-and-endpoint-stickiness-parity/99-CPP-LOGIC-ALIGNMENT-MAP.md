@@ -189,8 +189,10 @@ endpoint-stickiness branch closure.
   visited-pair dedup overlap path:
   - `non_local_coincident_arc_overlap_pair_is_not_duplicated`
   - `non_local_coincident_arc_overlap_pair_is_not_duplicated_nonzero_indexes`
+  - `non_local_coincident_arc_overlap_pair_is_not_duplicated_with_zero_length_lead_segment`
   - verifies coincident-arc overlap pairs also remain deduplicated (single
-    overlap entry) across index-0 and non-zero index variants.
+    overlap entry) across index-0, non-zero, and zero-length-lead
+    re-parameterization variants.
 - Added API-level `all_self_intersects_as_basic` counterparts for the same
   visited-pair dedup paths:
   - `all_self_intersects_basic_single_intersect_pair_is_not_duplicated`
@@ -229,6 +231,11 @@ endpoint-stickiness branch closure.
   - `non_local_coincident_arc_overlap_reversed_second_segment_ordering_with_zero_length_lead_segment`
   - verifies prepending a zero-length lead segment (index shift) keeps overlap
     endpoint ordering aligned to reversed second-segment direction.
+- Added pair-dedup counterpart for index-0 reversed-segment coincident-arc
+  overlap branch:
+  - `non_local_coincident_arc_overlap_reversed_second_segment_pair_is_not_duplicated`
+  - verifies the index-0 reversed-overlap pair contributes one overlap entry
+    (no reverse-traversal duplication).
 - Added pair-dedup counterpart for the same non-zero-index reversed-segment
   coincident-arc overlap branch:
   - `non_local_coincident_arc_overlap_reversed_second_segment_nonzero_not_duplicated`
