@@ -185,11 +185,13 @@ endpoint-stickiness branch closure.
   - `non_local_overlap_pair_is_not_duplicated_nonzero_indexes`
   - verifies visited-pair dedup behavior remains stable away from index-0
     segment pairs for both basic and overlap output paths.
-- Added re-parameterization counterpart for global-self overlap visited-pair
-  dedup:
+- Added re-parameterization counterparts for the same global-self visited-pair
+  dedup paths:
+  - `non_local_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment`
   - `non_local_overlap_pair_is_not_duplicated_with_zero_length_lead_segment`
   - verifies prepending a zero-length lead segment (index shift) preserves one
-    overlap entry for the shifted pair.
+    basic entry for shifted single-intersect pairs and one overlap entry for
+    shifted overlap pairs.
 - Added coincident-arc overlap counterparts for the same global-self
   visited-pair dedup overlap path:
   - `non_local_coincident_arc_overlap_pair_is_not_duplicated`
@@ -202,6 +204,7 @@ endpoint-stickiness branch closure.
   visited-pair dedup paths:
   - `all_self_intersects_basic_single_intersect_pair_is_not_duplicated`
   - `all_self_intersects_basic_single_intersect_pair_is_not_duplicated_nonzero_indexes`
+  - `all_self_intersects_basic_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment`
   - `all_self_intersects_basic_overlap_pair_is_not_duplicated`
   - `all_self_intersects_basic_overlap_pair_is_not_duplicated_nonzero_indexes`
   - `all_self_intersects_basic_overlap_pair_is_not_duplicated_with_zero_length_lead_segment`

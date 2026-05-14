@@ -3493,6 +3493,64 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn all_self_intersects_basic_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment()
+     {
+        // Re-parameterization counterpart for single-intersect visited-pair
+        // dedup: prepend a zero-length lead segment and preserve one basic point
+        // for the shifted pair under both include_overlapping modes.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, -1.0, 0.0);
+        pline.add(-1.0, -1.0, 0.0); // zero-length lead segment
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 2 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 2)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 2 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 2)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            1,
+            "expected one basic intersect for shifted pair (2,5) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            1,
+            "expected one basic intersect for shifted pair (2,5) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert_fuzzy_eq!(
+            pair_without_overlap[0].point,
+            Vector2::new(4.0 / 3.0, 4.0 / 3.0),
+            1e-5
+        );
+        assert_fuzzy_eq!(
+            pair_with_overlap[0].point,
+            Vector2::new(4.0 / 3.0, 4.0 / 3.0),
+            1e-5
+        );
+    }
+
+    #[test]
     fn all_self_intersects_basic_overlap_pair_is_not_duplicated() {
         // API-level counterpart for global-self overlap visited-pair dedup.
         // include_overlapping=false should emit no basics for overlap pair;
@@ -4296,6 +4354,43 @@ mod global_self_intersect_tests {
             target_pair.len(),
             1,
             "expected one basic intersect for pair (1,4), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert_fuzzy_eq!(
+            target_pair[0].point,
+            Vector2::new(4.0 / 3.0, 4.0 / 3.0),
+            1e-5
+        );
+    }
+
+    #[test]
+    fn non_local_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment() {
+        // Re-parameterization counterpart for global-self visited-pair dedup on
+        // single-intersect path: prepend a zero-length lead segment and keep one
+        // basic point for the shifted pair.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, -1.0, 0.0);
+        pline.add(-1.0, -1.0, 0.0); // zero-length lead segment
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 2 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 2)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one basic intersect for shifted pair (2,5), actual basics: {:?}",
             intrs.basic_intersects
         );
         assert_fuzzy_eq!(
