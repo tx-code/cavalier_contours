@@ -7080,6 +7080,57 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn line_line_true_intersection_collection_level_nonzero_indexes() {
+        // Collection-level guard for line-line `True` where intersecting segments
+        // are both at non-zero indexes.
+        let mut pline1 = Polyline::new();
+        pline1.add(0.0, 2.0, 0.0);
+        pline1.add(0.0, 3.0, 0.0);
+        pline1.add(2.0, 1.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(0.0, -1.0, 0.0);
+        pline2.add(0.0, -2.0, 0.0);
+        pline2.add(2.0, 2.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 0);
+        assert_eq!(intrs.basic_intersects.len(), 1);
+        assert_eq!(intrs.basic_intersects[0].start_index1, 1);
+        assert_eq!(intrs.basic_intersects[0].start_index2, 1);
+        assert_fuzzy_eq!(
+            intrs.basic_intersects[0].point,
+            Vector2::new(5.0 / 3.0, 4.0 / 3.0)
+        );
+    }
+
+    #[test]
+    fn line_line_true_intersection_collection_level_nonzero_indexes_flipped_roles() {
+        // Parameter-role flipped counterpart for the non-zero-index line-line `True` path.
+        let mut pline1 = Polyline::new();
+        pline1.add(0.0, -1.0, 0.0);
+        pline1.add(0.0, -2.0, 0.0);
+        pline1.add(2.0, 2.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(0.0, 2.0, 0.0);
+        pline2.add(0.0, 3.0, 0.0);
+        pline2.add(2.0, 1.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 0);
+        assert_eq!(intrs.basic_intersects.len(), 1);
+        assert_eq!(intrs.basic_intersects[0].start_index1, 1);
+        assert_eq!(intrs.basic_intersects[0].start_index2, 1);
+        assert_fuzzy_eq!(
+            intrs.basic_intersects[0].point,
+            Vector2::new(5.0 / 3.0, 4.0 / 3.0)
+        );
+    }
+
+    #[test]
     fn skip_intr_at_end_open_pline1_uses_next_segment_index() {
         let mut pline1 = Polyline::new();
         pline1.add(0.0, 0.0, 0.0);

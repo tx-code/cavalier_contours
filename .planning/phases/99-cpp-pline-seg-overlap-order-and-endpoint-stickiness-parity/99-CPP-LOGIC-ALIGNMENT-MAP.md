@@ -75,9 +75,12 @@ endpoint-stickiness branch closure.
   - `line_line_none_parallel_no_intersects_collection_level`
   - `line_line_true_intersection_collection_level`
   - `line_line_true_intersection_collection_level_flipped_roles`
+  - `line_line_true_intersection_collection_level_nonzero_indexes`
+  - `line_line_true_intersection_collection_level_nonzero_indexes_flipped_roles`
   - verifies no basic/overlap emission when segment-level line-line result is
     `False` or `None`, and verifies one basic/no-overlap emission when
-    segment-level line-line result is `True`.
+    segment-level line-line result is `True`, including stable non-zero segment
+    start-index attribution under parameter-role inversion.
 - Replaced the remaining index-0-shift canonical-name wrapper aliases with
   explicit assertion-backed probes, eliminating wrapper-style alias indirection
   in `find_intersects_tests`:
