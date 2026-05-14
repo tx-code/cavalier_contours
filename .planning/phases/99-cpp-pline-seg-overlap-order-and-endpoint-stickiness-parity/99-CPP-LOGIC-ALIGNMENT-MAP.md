@@ -145,6 +145,11 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_reversed_second_segment_shared_end_keeps_both_nonzero`
   - verifies both points are retained when the shared intersection point is not
     simultaneously the end point of both segments under global-self skip logic.
+- Added re-parameterization counterpart for the same non-zero + reversed
+  shared-end-anchor `TwoIntersects` branch:
+  - `non_local_two_intersects_reversed_second_segment_shared_end_keeps_both_with_zero_length_lead_segment`
+  - verifies prepending a zero-length lead segment (index shift) still retains
+    both points for the shifted target pair.
 - Added complementary non-zero + reversed + no-shared-end counterpart for
   global-self `TwoIntersects`:
   - `non_local_two_intersects_reversed_second_segment_keeps_both_nonzero`

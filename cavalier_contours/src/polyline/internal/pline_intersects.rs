@@ -2131,6 +2131,50 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_two_intersects_reversed_second_segment_shared_end_keeps_both_with_zero_length_lead_segment()
+     {
+        // Re-parameterization counterpart for non-zero + reversed shared-end branch:
+        // prepend a zero-length lead segment and verify both points are still retained.
+        let mut pline = Polyline::new();
+        pline.add(-4.0, 2.0, 0.0);
+        pline.add(-4.0, 2.0, 0.0); // zero-length lead segment
+        pline.add(-3.0, 1.0, 0.0);
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 3 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 3)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            2,
+            "expected two retained basic intersects for shifted pair (3,7), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert!(
+            target_pair
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5))
+                && target_pair
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)),
+            "expected both two-intersect points for shifted pair (3,7), actual pair points: {:?}",
+            target_pair.iter().map(|x| x.point).collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
     fn non_local_two_intersects_reversed_second_segment_keeps_both_nonzero() {
         // Non-zero + reversed counterpart where `TwoIntersects` should keep both points:
         // segment 1 (arc) and segment 5 (line, reversed) intersect at (-1, 0) and (1, 0),
