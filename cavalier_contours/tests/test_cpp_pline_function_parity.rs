@@ -732,24 +732,67 @@ fn cpp_circle_winding_number_parity() {
     }
 }
 
-fn assert_combine_with_self_invariants(input: &Polyline<f64>) {
+fn assert_vertex_sequence_match_exact(
+    actual: &Polyline<f64>,
+    expected: &Polyline<f64>,
+    context: &str,
+) {
+    assert_eq!(
+        actual.is_closed(),
+        expected.is_closed(),
+        "{context}: closure mismatch"
+    );
+    assert_eq!(
+        actual.vertex_count(),
+        expected.vertex_count(),
+        "{context}: vertex count mismatch"
+    );
+    for i in 0..expected.vertex_count() {
+        assert!(
+            vertex_matches(actual.at(i), expected.at(i)),
+            "{context}: vertex mismatch at index {i}, actual={:?}, expected={:?}",
+            actual.at(i),
+            expected.at(i)
+        );
+    }
+}
+
+fn assert_combine_with_self_invariants(input: &Polyline<f64>, context: &str) {
     let expected = create_property_set([input], false);
 
     for op in [BooleanOp::Or, BooleanOp::And] {
         let result = input.boolean(input, op);
-        assert_eq!(result.pos_plines.len(), 1);
-        assert!(result.neg_plines.is_empty());
+        assert_eq!(
+            result.pos_plines.len(),
+            1,
+            "{context}: expected one positive result for op={op:?}"
+        );
+        assert!(
+            result.neg_plines.is_empty(),
+            "{context}: expected empty negative result for op={op:?}"
+        );
         let actual = create_property_set(result.pos_plines.iter().map(|p| &p.pline), false);
         assert!(
             property_sets_match(&actual, &expected),
-            "combine-with-self parity mismatch for op={op:?}"
+            "{context}: combine-with-self property parity mismatch for op={op:?}"
+        );
+        assert_vertex_sequence_match_exact(
+            &result.pos_plines[0].pline,
+            input,
+            &format!("{context}: combine-with-self strict vertex parity op={op:?}"),
         );
     }
 
     for op in [BooleanOp::Not, BooleanOp::Xor] {
         let result = input.boolean(input, op);
-        assert!(result.pos_plines.is_empty());
-        assert!(result.neg_plines.is_empty());
+        assert!(
+            result.pos_plines.is_empty(),
+            "{context}: expected empty positive result for op={op:?}"
+        );
+        assert!(
+            result.neg_plines.is_empty(),
+            "{context}: expected empty negative result for op={op:?}"
+        );
     }
 }
 
@@ -764,8 +807,26 @@ fn cpp_combine_with_self_invariants_parity() {
         (0.0, 10.0, 0.0)
     ];
 
-    assert_combine_with_self_invariants(&circle);
-    assert_combine_with_self_invariants(&rect);
+    assert_combine_with_self_invariants(&circle, "single-case circle");
+    assert_combine_with_self_invariants(&rect, "single-case rectangle");
+}
+
+#[test]
+fn cpp_generated_closed_shape_matrix_combine_with_self_invariants_parity() {
+    for case in circle_matrix_cases() {
+        let pline = build_circle_case(case);
+        let context = format!("circle matrix {}", circle_case_label(case));
+        assert_combine_with_self_invariants(&pline, &context);
+    }
+
+    for case in half_circle_matrix_cases()
+        .into_iter()
+        .filter(|c| c.is_closed)
+    {
+        let pline = build_half_circle_case(case);
+        let context = format!("half-circle matrix {}", case_label(case));
+        assert_combine_with_self_invariants(&pline, &context);
+    }
 }
 
 #[test]

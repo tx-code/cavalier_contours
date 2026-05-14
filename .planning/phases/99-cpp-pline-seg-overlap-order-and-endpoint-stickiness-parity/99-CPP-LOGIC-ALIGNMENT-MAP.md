@@ -1089,6 +1089,12 @@ endpoint-stickiness branch closure.
   - verifies single-result positive output keeps vertex-by-vertex
     `(x, y, bulge)` parity with input orientation (forward and reversed), in
     addition to existing geometry-set invariants.
+- Extended source-aligned self-combine invariants to old C++
+  `cavc_plineFunctionTests` closed-case matrix coverage:
+  - `cpp_generated_closed_shape_matrix_combine_with_self_invariants_parity`
+  - verifies all generated closed circle and half-circle cases preserve strict
+    vertex-by-vertex `(x, y, bulge)` parity for self `UNION`/`INTERSECT`, and
+    keep both outputs empty for self `EXCLUDE`/`XOR`.
 - Added source-aligned `subtracted`-surface parity for combine fixtures:
   - `cpp_combine_expected_subtracted_empty_parity`
   - verifies Rust `neg_plines` remains empty across the C++-mapped
