@@ -3865,6 +3865,127 @@ fn pline_boolean_coincident_commutative_start_index_rotation_matrix_parity() {
 }
 
 #[test]
+fn pline_boolean_coincident_not_complementary_start_index_rotation_matrix_parity() {
+    let cases = cpp_coincident_boolean_matrix_cases()
+        .into_iter()
+        .filter(|case| case.operation == 2)
+        .collect::<Vec<_>>();
+
+    for case in cases {
+        let subject_base = case.subject;
+        let clip_base = case.clip;
+
+        let subject_shift = if subject_base.len() > 1 { 1 } else { 0 };
+        let clip_shift = if clip_base.len() > 2 {
+            2
+        } else if clip_base.len() > 1 {
+            1
+        } else {
+            0
+        };
+
+        let subject_variants = [
+            subject_base.clone(),
+            rotate_closed_input(&subject_base, subject_shift),
+        ];
+        let clip_variants = [
+            clip_base.clone(),
+            rotate_closed_input(&clip_base, clip_shift),
+        ];
+
+        let subject_baseline = create_pline(&subject_base, true);
+        let clip_baseline = create_pline(&clip_base, true);
+        let (baseline_ab_remaining, baseline_ab_subtracted) =
+            run_boolean_props(subject_baseline, clip_baseline, case.operation);
+        let (baseline_ba_remaining, baseline_ba_subtracted) =
+            run_boolean_props(clip_baseline, subject_baseline, case.operation);
+
+        assert!(
+            baseline_ab_subtracted.is_empty(),
+            "baseline AB NOT expected empty subtracted for case={}, got {baseline_ab_subtracted:?}",
+            case.name
+        );
+        assert!(
+            baseline_ba_subtracted.is_empty(),
+            "baseline BA NOT expected empty subtracted for case={}, got {baseline_ba_subtracted:?}",
+            case.name
+        );
+
+        unsafe {
+            cavc_pline_f(subject_baseline);
+            cavc_pline_f(clip_baseline);
+        }
+
+        for subject_input in &subject_variants {
+            for clip_input in &clip_variants {
+                for &subject_reversed in &[false, true] {
+                    for &clip_reversed in &[false, true] {
+                        let subject_pline = create_pline(subject_input, true);
+                        let clip_pline = create_pline(clip_input, true);
+
+                        unsafe {
+                            if subject_reversed {
+                                assert_eq!(cavc_pline_invert_direction(subject_pline), 0);
+                            }
+                            if clip_reversed {
+                                assert_eq!(cavc_pline_invert_direction(clip_pline), 0);
+                            }
+                        }
+
+                        let (ab_remaining, ab_subtracted) =
+                            run_boolean_props(subject_pline, clip_pline, case.operation);
+                        let (ba_remaining, ba_subtracted) =
+                            run_boolean_props(clip_pline, subject_pline, case.operation);
+
+                        assert!(
+                            props_set_match_ignore_area_sign(
+                                &ab_remaining,
+                                &baseline_ab_remaining,
+                                1e-4
+                            ),
+                            "AB NOT remaining mismatch for case={} rotation/reversal variant (subject_reversed={}, clip_reversed={})\nab={ab_remaining:?}\nbaseline={baseline_ab_remaining:?}",
+                            case.name,
+                            subject_reversed,
+                            clip_reversed
+                        );
+                        assert!(
+                            props_set_match_ignore_area_sign(
+                                &ba_remaining,
+                                &baseline_ba_remaining,
+                                1e-4
+                            ),
+                            "BA NOT remaining mismatch for case={} rotation/reversal variant (subject_reversed={}, clip_reversed={})\nba={ba_remaining:?}\nbaseline={baseline_ba_remaining:?}",
+                            case.name,
+                            subject_reversed,
+                            clip_reversed
+                        );
+                        assert!(
+                            ab_subtracted.is_empty(),
+                            "AB NOT expected empty subtracted for case={} rotation/reversal variant (subject_reversed={}, clip_reversed={}), got {ab_subtracted:?}",
+                            case.name,
+                            subject_reversed,
+                            clip_reversed
+                        );
+                        assert!(
+                            ba_subtracted.is_empty(),
+                            "BA NOT expected empty subtracted for case={} rotation/reversal variant (subject_reversed={}, clip_reversed={}), got {ba_subtracted:?}",
+                            case.name,
+                            subject_reversed,
+                            clip_reversed
+                        );
+
+                        unsafe {
+                            cavc_pline_f(subject_pline);
+                            cavc_pline_f(clip_pline);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[test]
 fn pline_boolean_coincident_case1_cpp_matrix_parity() {
     let pline_a = create_pline(
         &[
