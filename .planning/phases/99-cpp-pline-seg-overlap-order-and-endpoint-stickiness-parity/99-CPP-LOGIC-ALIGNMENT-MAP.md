@@ -233,6 +233,11 @@ endpoint-stickiness branch closure.
   - `coincident_arc_touch_only_at_arc2_start_collection_level`
   - verifies `find_intersects` yields exactly one basic endpoint intersect with
     no overlap, including parameter inversion and reversed second-arc direction.
+- Added non-zero-segment-index collection-level counterpart for the
+  `arc2 end == arc1 start` single-touch branch:
+  - `coincident_arc_touch_only_at_arc1_start_collection_level_nonzero_index_role_flip`
+  - verifies single-touch behavior remains stable when arc segments are not at
+    index 0, including parameter inversion and reversed second-arc direction.
 - Added collection-level parity guard for coincident-arc dual-endpoint touch
   (`TwoIntersects`) branch:
   - `coincident_arc_end_points_touch_collection_level`
