@@ -199,11 +199,12 @@ endpoint-stickiness branch closure.
   - `all_self_intersects_basic_single_intersect_pair_is_not_duplicated_nonzero_indexes`
   - `all_self_intersects_basic_overlap_pair_is_not_duplicated`
   - `all_self_intersects_basic_overlap_pair_is_not_duplicated_nonzero_indexes`
+  - `all_self_intersects_basic_overlap_pair_is_not_duplicated_with_zero_length_lead_segment`
   - verifies single-crossing pairs remain one basic entry under
     `include_overlapping=false/true`, and overlap pairs emit no basics when
     `include_overlapping=false` and exactly two overlap endpoints (no duplicate
-    endpoint expansion) when `include_overlapping=true`, across index-0 and
-    non-zero index variants.
+    endpoint expansion) when `include_overlapping=true`, across index-0,
+    non-zero, and zero-length-lead re-parameterization variants.
 - Added explicit `TwoIntersects` visited-pair dedup probe:
   - `non_local_two_intersects_pair_is_not_duplicated`
   - verifies a two-intersection pair contributes exactly two basic points (not

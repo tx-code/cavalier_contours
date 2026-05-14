@@ -3614,6 +3614,67 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn all_self_intersects_basic_overlap_pair_is_not_duplicated_with_zero_length_lead_segment() {
+        // Re-parameterization counterpart for overlap visited-pair dedup:
+        // prepend a zero-length lead segment and preserve dedup behavior.
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(0.0, 0.0, 0.0); // zero-length lead segment
+        pline.add(3.0, 0.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(1.0, 1.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            0,
+            "expected no basics for shifted overlap pair (1,7) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            2,
+            "expected two overlap endpoints for shifted pair (1,7) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert!(
+            pair_with_overlap
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5))
+                && pair_with_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)),
+            "expected overlap endpoints (2,0) and (1,0) for shifted pair (1,7), actual pair points: {:?}",
+            pair_with_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
     fn all_self_intersects_basic_two_intersects_pair_is_not_duplicated() {
         // API-level counterpart for global-self visited-pair dedup on `TwoIntersects`.
         let mut pline = Polyline::new();
