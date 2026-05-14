@@ -805,6 +805,22 @@ fn cpp_coincident_case2_inputs() -> (PlineInput, PlineInput) {
     )
 }
 
+fn rotate_closed_input(input: &PlineInput, shift: usize) -> PlineInput {
+    if input.is_empty() {
+        return Vec::new();
+    }
+
+    let shift = shift % input.len();
+    if shift == 0 {
+        return input.clone();
+    }
+
+    let mut rotated = Vec::with_capacity(input.len());
+    rotated.extend_from_slice(&input[shift..]);
+    rotated.extend_from_slice(&input[..shift]);
+    rotated
+}
+
 struct CoincidentMatrixCase {
     name: &'static str,
     operation: u32,
@@ -3698,6 +3714,153 @@ fn pline_boolean_circle_rectangle_commutative_start_index_rotation_matrix_parity
         cavc_pline_f(clip_rotated);
         cavc_pline_f(clip_reversed);
         cavc_pline_f(clip_rotated_reversed);
+    }
+}
+
+#[test]
+fn pline_boolean_coincident_commutative_start_index_rotation_matrix_parity() {
+    let cases = cpp_coincident_boolean_matrix_cases()
+        .into_iter()
+        .filter(|case| matches!(case.operation, 0 | 1 | 3))
+        .collect::<Vec<_>>();
+
+    for case in cases {
+        let subject_base = case.subject;
+        let clip_base = case.clip;
+
+        let subject_shift = if subject_base.len() > 1 { 1 } else { 0 };
+        let clip_shift = if clip_base.len() > 2 {
+            2
+        } else if clip_base.len() > 1 {
+            1
+        } else {
+            0
+        };
+
+        let subject_variants = [
+            subject_base.clone(),
+            rotate_closed_input(&subject_base, subject_shift),
+        ];
+        let clip_variants = [
+            clip_base.clone(),
+            rotate_closed_input(&clip_base, clip_shift),
+        ];
+
+        let subject_baseline = create_pline(&subject_base, true);
+        let clip_baseline = create_pline(&clip_base, true);
+        let (baseline_ab_remaining, baseline_ab_subtracted) =
+            run_boolean_props(subject_baseline, clip_baseline, case.operation);
+        let (baseline_ba_remaining, baseline_ba_subtracted) =
+            run_boolean_props(clip_baseline, subject_baseline, case.operation);
+
+        assert!(
+            props_set_match_ignore_area_sign(&baseline_ab_remaining, &baseline_ba_remaining, 1e-4),
+            "baseline AB/BA remaining mismatch for case={}\nab={baseline_ab_remaining:?}\nba={baseline_ba_remaining:?}",
+            case.name
+        );
+        assert!(
+            props_set_match_ignore_area_sign(
+                &baseline_ab_subtracted,
+                &baseline_ba_subtracted,
+                1e-4
+            ),
+            "baseline AB/BA subtracted mismatch for case={}\nab={baseline_ab_subtracted:?}\nba={baseline_ba_subtracted:?}",
+            case.name
+        );
+
+        unsafe {
+            cavc_pline_f(subject_baseline);
+            cavc_pline_f(clip_baseline);
+        }
+
+        for subject_input in &subject_variants {
+            for clip_input in &clip_variants {
+                for &subject_reversed in &[false, true] {
+                    for &clip_reversed in &[false, true] {
+                        let subject_pline = create_pline(subject_input, true);
+                        let clip_pline = create_pline(clip_input, true);
+
+                        unsafe {
+                            if subject_reversed {
+                                assert_eq!(cavc_pline_invert_direction(subject_pline), 0);
+                            }
+                            if clip_reversed {
+                                assert_eq!(cavc_pline_invert_direction(clip_pline), 0);
+                            }
+                        }
+
+                        let (ab_remaining, ab_subtracted) =
+                            run_boolean_props(subject_pline, clip_pline, case.operation);
+                        let (ba_remaining, ba_subtracted) =
+                            run_boolean_props(clip_pline, subject_pline, case.operation);
+
+                        assert!(
+                            props_set_match_ignore_area_sign(
+                                &ab_remaining,
+                                &baseline_ab_remaining,
+                                1e-4
+                            ),
+                            "AB remaining mismatch for case={} rotation/reversal variant (subject_reversed={}, clip_reversed={})\nab={ab_remaining:?}\nbaseline={baseline_ab_remaining:?}",
+                            case.name,
+                            subject_reversed,
+                            clip_reversed
+                        );
+                        assert!(
+                            props_set_match_ignore_area_sign(
+                                &ab_subtracted,
+                                &baseline_ab_subtracted,
+                                1e-4
+                            ),
+                            "AB subtracted mismatch for case={} rotation/reversal variant (subject_reversed={}, clip_reversed={})\nab={ab_subtracted:?}\nbaseline={baseline_ab_subtracted:?}",
+                            case.name,
+                            subject_reversed,
+                            clip_reversed
+                        );
+                        assert!(
+                            props_set_match_ignore_area_sign(
+                                &ba_remaining,
+                                &baseline_ba_remaining,
+                                1e-4
+                            ),
+                            "BA remaining mismatch for case={} rotation/reversal variant (subject_reversed={}, clip_reversed={})\nba={ba_remaining:?}\nbaseline={baseline_ba_remaining:?}",
+                            case.name,
+                            subject_reversed,
+                            clip_reversed
+                        );
+                        assert!(
+                            props_set_match_ignore_area_sign(
+                                &ba_subtracted,
+                                &baseline_ba_subtracted,
+                                1e-4
+                            ),
+                            "BA subtracted mismatch for case={} rotation/reversal variant (subject_reversed={}, clip_reversed={})\nba={ba_subtracted:?}\nbaseline={baseline_ba_subtracted:?}",
+                            case.name,
+                            subject_reversed,
+                            clip_reversed
+                        );
+                        assert!(
+                            props_set_match_ignore_area_sign(&ab_remaining, &ba_remaining, 1e-4),
+                            "AB/BA remaining commutative mismatch for case={} rotation/reversal variant (subject_reversed={}, clip_reversed={})\nab={ab_remaining:?}\nba={ba_remaining:?}",
+                            case.name,
+                            subject_reversed,
+                            clip_reversed
+                        );
+                        assert!(
+                            props_set_match_ignore_area_sign(&ab_subtracted, &ba_subtracted, 1e-4),
+                            "AB/BA subtracted commutative mismatch for case={} rotation/reversal variant (subject_reversed={}, clip_reversed={})\nab={ab_subtracted:?}\nba={ba_subtracted:?}",
+                            case.name,
+                            subject_reversed,
+                            clip_reversed
+                        );
+
+                        unsafe {
+                            cavc_pline_f(subject_pline);
+                            cavc_pline_f(clip_pline);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

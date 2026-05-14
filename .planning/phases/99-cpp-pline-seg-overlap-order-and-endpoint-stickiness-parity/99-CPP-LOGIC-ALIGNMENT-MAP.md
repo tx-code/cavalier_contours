@@ -252,6 +252,12 @@ endpoint-stickiness branch closure.
   - `cpp_coincident_commutative_start_index_rotation_matrix_parity`
   - verifies closed-polyline start-vertex rotation and orientation reversals do
     not change C++-mapped `OR`/`AND`/`XOR` geometry, and AB/BA remain symmetric.
+- Added FFI-side counterpart for coincident commutative start-index-rotation
+  matrix parity:
+  - `pline_boolean_coincident_commutative_start_index_rotation_matrix_parity`
+  - verifies `cavc_pline_boolean` remains aligned with C++-mapped coincident
+    `OR`/`AND`/`XOR` expectations and AB/BA commutative symmetry across
+    rotated/reversed variants.
 - Added source-anchored complementary `NOT` matrix parity across orientation
   reversals for C++ coincident combine fixtures:
   - `cpp_coincident_not_complementary_role_flip_matrix_parity`
