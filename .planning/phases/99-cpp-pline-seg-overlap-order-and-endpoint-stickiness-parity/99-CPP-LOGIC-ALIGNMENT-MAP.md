@@ -154,6 +154,14 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_keeps_both_points_when_not_shared_end`
   - verifies both intersection points are emitted when neither point satisfies
     the shared-endpoint skip condition.
+- Added API-level `all_self_intersects_as_basic` counterparts for the same
+  `TwoIntersects` positive path:
+  - `all_self_intersects_basic_two_intersects_keeps_both_points_when_not_shared_end`
+  - `all_self_intersects_basic_two_intersects_keeps_both_points_when_not_shared_end_nonzero_indexes`
+  - `all_self_intersects_basic_two_intersects_keeps_both_points_when_not_shared_end_with_zero_length_lead_segment`
+  - verifies both `include_overlapping=false/true` retain both intersection
+    points for targeted pairs across index-0/non-zero and zero-length-lead
+    re-parameterization variants.
 - Added explicit global-self visited-pair dedup probe:
   - `non_local_single_intersect_pair_is_not_duplicated`
   - verifies a non-local crossing pair contributes one basic intersect even

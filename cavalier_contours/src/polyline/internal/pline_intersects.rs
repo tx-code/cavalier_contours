@@ -2671,6 +2671,211 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn all_self_intersects_basic_two_intersects_keeps_both_points_when_not_shared_end() {
+        // API-level counterpart for global-self `TwoIntersects` positive path.
+        // Both include_overlapping=false/true should retain two basic points.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 4)
+                    || (intr.start_index1 == 4 && intr.start_index2 == 0)
+            })
+            .map(|intr| intr.point)
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 4)
+                    || (intr.start_index1 == 4 && intr.start_index2 == 0)
+            })
+            .map(|intr| intr.point)
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            2,
+            "expected two retained points for pair (0,4) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            2,
+            "expected two retained points for pair (0,4) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+
+        let has_without_neg = pair_without_overlap
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5));
+        let has_without_pos = pair_without_overlap
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5));
+        let has_with_neg = pair_with_overlap
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5));
+        let has_with_pos = pair_with_overlap
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5));
+
+        assert!(
+            has_without_neg && has_without_pos && has_with_neg && has_with_pos,
+            "expected (-1,0) and (1,0) for pair (0,4), actual pair points: without={:?}, with={:?}",
+            pair_without_overlap,
+            pair_with_overlap
+        );
+    }
+
+    #[test]
+    fn all_self_intersects_basic_two_intersects_keeps_both_points_when_not_shared_end_nonzero_indexes()
+     {
+        // Non-zero-index API-level counterpart for the same `TwoIntersects` positive path.
+        let mut pline = Polyline::new();
+        pline.add(-3.0, 1.0, 0.0);
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .map(|intr| intr.point)
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .map(|intr| intr.point)
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            2,
+            "expected two retained points for nonzero pair (1,5) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            2,
+            "expected two retained points for nonzero pair (1,5) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+
+        let has_without_neg = pair_without_overlap
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5));
+        let has_without_pos = pair_without_overlap
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5));
+        let has_with_neg = pair_with_overlap
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5));
+        let has_with_pos = pair_with_overlap
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5));
+
+        assert!(
+            has_without_neg && has_without_pos && has_with_neg && has_with_pos,
+            "expected (-1,0) and (1,0) for nonzero pair (1,5), actual pair points: without={:?}, with={:?}",
+            pair_without_overlap,
+            pair_with_overlap
+        );
+    }
+
+    #[test]
+    fn all_self_intersects_basic_two_intersects_keeps_both_points_when_not_shared_end_with_zero_length_lead_segment()
+     {
+        // Re-parameterization API-level counterpart for the same `TwoIntersects` positive path.
+        let mut pline = Polyline::new();
+        pline.add(-4.0, 2.0, 0.0);
+        pline.add(-4.0, 2.0, 0.0); // zero-length lead segment
+        pline.add(-3.0, 1.0, 0.0);
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 3 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 3)
+            })
+            .map(|intr| intr.point)
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 3 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 3)
+            })
+            .map(|intr| intr.point)
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            2,
+            "expected two retained points for shifted pair (3,7) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            2,
+            "expected two retained points for shifted pair (3,7) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+
+        let has_without_neg = pair_without_overlap
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5));
+        let has_without_pos = pair_without_overlap
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5));
+        let has_with_neg = pair_with_overlap
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5));
+        let has_with_pos = pair_with_overlap
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5));
+
+        assert!(
+            has_without_neg && has_without_pos && has_with_neg && has_with_pos,
+            "expected (-1,0) and (1,0) for shifted pair (3,7), actual pair points: without={:?}, with={:?}",
+            pair_without_overlap,
+            pair_with_overlap
+        );
+    }
+
+    #[test]
     fn all_self_intersects_basic_one_intersect_at_single_segment_end_is_kept() {
         // API-level counterpart for single-intersect-at-one-end branch:
         // both include_overlapping=false/true should keep one retained point.
