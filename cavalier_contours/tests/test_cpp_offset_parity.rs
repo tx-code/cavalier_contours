@@ -803,3 +803,60 @@ fn cpp_circle_rectangle_intersection_start_index_rotation_full_matrix_parity() {
         }
     }
 }
+
+#[test]
+fn cpp_circle_rectangle_intersection_full_matrix_does_not_modify_input() {
+    fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
+        pline.invert_direction_mut();
+        pline
+    }
+
+    let subject = pline_closed![(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)];
+    let subject_rotated = pline_closed![(10.0, 1.0, 1.0), (0.0, 1.0, 1.0)];
+    let clip = pline_closed![
+        (3.0, -10.0, 0.0),
+        (6.0, -10.0, 0.0),
+        (6.0, 10.0, 0.0),
+        (3.0, 10.0, 0.0)
+    ];
+    let clip_rotated = pline_closed![
+        (6.0, -10.0, 0.0),
+        (6.0, 10.0, 0.0),
+        (3.0, 10.0, 0.0),
+        (3.0, -10.0, 0.0)
+    ];
+
+    let subject_variants = [
+        subject.clone(),
+        subject_rotated.clone(),
+        reversed(subject.clone()),
+        reversed(subject_rotated),
+    ];
+    let clip_variants = [
+        clip.clone(),
+        clip_rotated.clone(),
+        reversed(clip.clone()),
+        reversed(clip_rotated),
+    ];
+
+    for (s_idx, lhs) in subject_variants.iter().enumerate() {
+        for (c_idx, rhs) in clip_variants.iter().enumerate() {
+            let lhs_before: Vec<_> = lhs.iter_vertexes().collect();
+            let rhs_before: Vec<_> = rhs.iter_vertexes().collect();
+
+            let _ = lhs.find_intersects(rhs);
+            let _ = rhs.find_intersects(lhs);
+
+            let lhs_after: Vec<_> = lhs.iter_vertexes().collect();
+            let rhs_after: Vec<_> = rhs.iter_vertexes().collect();
+            assert_eq!(
+                lhs_after, lhs_before,
+                "subject mutated in intersection matrix variant s_idx={s_idx} c_idx={c_idx}"
+            );
+            assert_eq!(
+                rhs_after, rhs_before,
+                "clip mutated in intersection matrix variant s_idx={s_idx} c_idx={c_idx}"
+            );
+        }
+    }
+}
