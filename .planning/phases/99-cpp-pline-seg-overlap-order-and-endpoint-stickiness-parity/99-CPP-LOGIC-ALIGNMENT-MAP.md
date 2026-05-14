@@ -1287,6 +1287,15 @@ endpoint-stickiness branch closure.
   - both now execute full rotated closed-`pline2` geometry checks inline,
     including AB/BA role-flip start-index mapping, endpoint-order invariants,
     and (for reversed-endpoint-order branch) adjacent-line basic dedup guards.
+- Replaced three canonical closed-`pline1` start-index-rotation alias wrappers
+  in non-circle both-closed direction-variant branches with explicit
+  branch-local assertions (no delegation):
+  - `non_circle_partial_arc_overlap_both_reverse_dir_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_arc2_reverse_dir_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_arc1_reverse_dir_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry`
+  - each now runs full rotated closed-`pline1` geometry checks inline with
+    explicit AB/BA index-role mapping and branch-specific overlap endpoint-order
+    invariants.
 - Added Rust options-path wrap-around closure-edge matrix counterpart for
   source-aligned non-circle arc overlap boundaries with closed `pline1`:
   - `cpp_wrap_around_closed_pline1_closure_basic_options_matrix_parity`
