@@ -277,6 +277,12 @@ endpoint-stickiness branch closure.
   - verifies `cavc_pline_boolean_o` output remains aligned with default
     `cavc_pline_boolean` output for AB and BA across coincident orientation
     role-flip variants for `OR`/`AND`/`XOR`.
+- Added FFI options-path coincident commutative start-index rotation matrix
+  parity:
+  - `pline_boolean_options_coincident_commutative_start_index_rotation_matrix_cpp_parity`
+  - verifies `cavc_pline_boolean_o` output remains aligned with default
+    `cavc_pline_boolean` output for AB and BA across coincident start-index
+    rotation and orientation-reversal variants for `OR`/`AND`/`XOR`.
 - Added FFI options-path coincident complementary `NOT` role-flip matrix
   parity:
   - `pline_boolean_options_coincident_not_complementary_role_flip_matrix_cpp_parity`
