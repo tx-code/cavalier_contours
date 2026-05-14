@@ -1513,6 +1513,51 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn overlap_endpoint_arc_adjacent_basic_intersect_deduplication_both_closed_start_index_rotation_role_flip_symmetry()
+     {
+        // Start-index-rotated counterpart for the same mixed line/arc both-closed
+        // geometry: rotate one closed side so overlap is tracked at a non-zero index.
+        let mut closed_side_a = Polyline::new_closed();
+        closed_side_a.add(0.0, 0.0, 0.0);
+        closed_side_a.add(2.0, 0.0, bulge_from_angle(FRAC_PI_2));
+        closed_side_a.add(3.0, 1.0, 0.0);
+
+        let mut closed_side_b_rotated = Polyline::new_closed();
+        closed_side_b_rotated.add(2.0, 0.0, 0.0);
+        closed_side_b_rotated.add(2.0, -1.0, 0.0);
+        closed_side_b_rotated.add(0.5, -2.0, 0.0);
+        closed_side_b_rotated.add(1.0, 0.0, 0.0);
+
+        let ab = find_intersects(&closed_side_a, &closed_side_b_rotated, &Default::default());
+        let ba = find_intersects(&closed_side_b_rotated, &closed_side_a, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 0);
+        assert_ne!(overlap_ab.start_index2, 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(1.0, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(2.0, 0.0));
+        // As in the non-rotated both-closed probe, role inversion keeps overlap ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
+    }
+
+    #[test]
     fn opposing_direction_arc_overlap_adjacent_endpoint_deduplication() {
         // Bounded opposing-direction arc-overlap collection-level probe:
         // arc overlap endpoints also appear as basic intersects on adjacent line segments and
