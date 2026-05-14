@@ -471,6 +471,12 @@ endpoint-stickiness branch closure.
   - verifies closed-side start-vertex rotation yields non-zero overlap segment
     indexing, preserves overlap-adjacent endpoint basic dedup behavior, and
     keeps AB/BA overlap endpoint sets equivalent under role inversion.
+- Added complementary closed-side start-index-rotated role-flip symmetry
+  counterpart where the non-zero overlap segment index is carried by `pline1`:
+  - `opposing_direction_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry`
+  - verifies overlap-adjacent endpoint dedup behavior and AB/BA role inversion
+    remain stable when closed-side rotation is applied on the first input
+    polyline instead of the second.
 - Added non-circle arc/arc-overlap-adjacent collection-level parity probe:
   - `non_circle_partial_arc_overlap_adjacent_endpoint_deduplication`
 - Added non-circle arc/arc-overlap-adjacent closed/open variant probes:
