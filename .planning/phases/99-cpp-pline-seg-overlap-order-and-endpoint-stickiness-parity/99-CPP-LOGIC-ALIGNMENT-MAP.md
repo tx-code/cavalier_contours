@@ -45,6 +45,11 @@ endpoint-stickiness branch closure.
   - `non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_both_closed_flipped_roles`
 - Added non-circle reversed-overlap-endpoint-order probe with adjacent-line flip:
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip`
+- Added complementary open-path `arc1_reverse_dir` collection-level probe:
+  - `non_circle_partial_arc_overlap_arc1_reverse_dir_with_adjacent_line_flip`
+- This probe pins a bounded asymmetry: unlike the paired `arc2_reverse_dir`
+  open-path case, an endpoint basic at `(3, 1)` can remain as an independent
+  adjacent-line intersect.
 - Added non-circle reversed-overlap-endpoint-order both-closed variant with
   explicit independent closure-edge basics:
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed`
