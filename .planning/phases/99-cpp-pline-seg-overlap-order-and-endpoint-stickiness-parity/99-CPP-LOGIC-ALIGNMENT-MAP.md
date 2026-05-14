@@ -266,6 +266,11 @@ endpoint-stickiness branch closure.
 - Added both-closed counterpart for the bounded same-order non-circle arc/arc
   wrap-around dedup branch:
   - `wrap_around_non_circle_arc_overlap_deduplication_same_order_both_closed`
+- Added role-flip symmetry counterpart for the same bounded same-order
+  non-circle both-closed wrap-around dedup branch:
+  - `wrap_around_non_circle_arc_overlap_deduplication_same_order_both_closed_role_flip_symmetry`
+  - verifies AB/BA index-role inversion with no-basic dedup behavior and stable
+    overlap endpoint ordering.
 - Added exact parameter-role flipped counterpart for the bounded same-order
   closed-`pline2` wrap-around dedup probe:
   - `wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline2_flipped_roles`

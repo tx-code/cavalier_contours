@@ -5065,6 +5065,50 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn wrap_around_non_circle_arc_overlap_deduplication_same_order_both_closed_role_flip_symmetry()
+    {
+        // Role-flip symmetry counterpart for the same both-closed same-order
+        // non-circle wrap-around dedup geometry.
+        let mut closed_side_a = Polyline::new_closed();
+        closed_side_a.add(3.0, 1.0, 0.0);
+        closed_side_a.add(4.0, 5.0, 0.0);
+        closed_side_a.add(1.0, 1.0, 1.0);
+
+        let mut closed_side_b = Polyline::new_closed();
+        closed_side_b.add(2.0, 0.0, 1.0);
+        closed_side_b.add(2.0, 2.0, 0.0);
+        closed_side_b.add(3.0, 1.0, 0.0);
+        closed_side_b.add(4.0, -1.0, 0.0);
+
+        let ab = find_intersects(&closed_side_a, &closed_side_b, &Default::default());
+        let ba = find_intersects(&closed_side_b, &closed_side_a, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(2.0, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(3.0, 1.0));
+        // In this bounded same-order both-closed geometry, role inversion keeps
+        // overlap endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
+    }
+
+    #[test]
     fn wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline2_flipped_roles() {
         // Exact parameter-role flipped counterpart of the closed-pline2 same-order
         // wrap-around dedup probe.
