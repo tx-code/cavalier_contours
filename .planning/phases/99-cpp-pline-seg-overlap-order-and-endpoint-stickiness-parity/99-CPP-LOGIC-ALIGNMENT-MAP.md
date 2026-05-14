@@ -72,6 +72,12 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_shared_end_point_filters_one_point_nonzero_indexes`
   - verifies shared-endpoint skip behavior remains stable away from index-0
     segment pairs.
+- Added single-intersect branch counterparts where the intersect is at one
+  segment end but not both segment ends:
+  - `non_local_one_intersect_at_single_segment_end_is_kept`
+  - `non_local_one_intersect_at_single_segment_end_is_kept_nonzero_indexes`
+  - verifies `skip_intr_at_end` does not filter one-intersect points unless the
+    endpoint condition is simultaneously true for both tested segments.
 - Added global-self `TwoIntersects` positive-path counterpart:
   - `non_local_two_intersects_keeps_both_points_when_not_shared_end`
   - verifies both intersection points are emitted when neither point satisfies

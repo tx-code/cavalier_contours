@@ -1357,6 +1357,71 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_one_intersect_at_single_segment_end_is_kept() {
+        // Global-self single-intersect branch probe:
+        // segment 0 ends at (0,0) while segment 4 starts at (0,0); because the
+        // intersect is not at both segment ends simultaneously, it should be kept.
+        let mut pline = Polyline::new();
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(2.0, -2.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(0.0, 3.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                ((intr.start_index1 == 0 && intr.start_index2 == 4)
+                    || (intr.start_index1 == 4 && intr.start_index2 == 0))
+                    && intr.point.fuzzy_eq_eps(Vector2::new(0.0, 0.0), 1e-5)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one retained single-end-point basic intersect for pair (0,4), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+    }
+
+    #[test]
+    fn non_local_one_intersect_at_single_segment_end_is_kept_nonzero_indexes() {
+        // Non-zero-index counterpart for the same global-self single-intersect branch.
+        // segment 1 ends at (0,0) while segment 5 starts at (0,0); the intersect
+        // is not at both segment ends and should be kept.
+        let mut pline = Polyline::new();
+        pline.add(-3.0, 1.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(2.0, -2.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(0.0, 3.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                ((intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1))
+                    && intr.point.fuzzy_eq_eps(Vector2::new(0.0, 0.0), 1e-5)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one retained single-end-point basic intersect for pair (1,5), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+    }
+
+    #[test]
     fn non_local_two_intersects_shared_end_point_filters_one_point_nonzero_indexes() {
         // Non-zero-index counterpart for global-self `TwoIntersects` + skip-at-end.
         // segment 1 (arc) and segment 5 (line) intersect at two points, but one
