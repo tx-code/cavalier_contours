@@ -590,3 +590,88 @@ fn cpp_circle_rectangle_intersection_role_flip_symmetry_matrix_parity() {
         assert_role_flip_symmetry(&ab, &ba, &expected_points);
     }
 }
+
+#[test]
+fn cpp_circle_rectangle_intersection_start_index_rotation_parity() {
+    fn assert_points_only(
+        intersects: &cavalier_contours::polyline::PlineIntersectsCollection<f64>,
+        expected_points: &[(f64, f64)],
+    ) {
+        assert_eq!(intersects.basic_intersects.len(), expected_points.len());
+        assert!(
+            intersects.overlapping_intersects.is_empty(),
+            "expected no overlapping intersections, actual={:?}",
+            intersects.overlapping_intersects
+        );
+
+        for &(x, y) in expected_points {
+            let matched = intersects
+                .basic_intersects
+                .iter()
+                .any(|intr| (intr.point.x - x).abs() <= EPS && (intr.point.y - y).abs() <= EPS);
+            assert!(
+                matched,
+                "missing expected point ({x}, {y}), actual={:?}",
+                intersects.basic_intersects
+            );
+        }
+    }
+
+    fn assert_role_flip_pairs(
+        ab: &cavalier_contours::polyline::PlineIntersectsCollection<f64>,
+        ba: &cavalier_contours::polyline::PlineIntersectsCollection<f64>,
+    ) {
+        for intr_ab in &ab.basic_intersects {
+            let role_flip_match = ba.basic_intersects.iter().any(|intr_ba| {
+                intr_ab.start_index1 == intr_ba.start_index2
+                    && intr_ab.start_index2 == intr_ba.start_index1
+                    && (intr_ab.point.x - intr_ba.point.x).abs() <= EPS
+                    && (intr_ab.point.y - intr_ba.point.y).abs() <= EPS
+            });
+            assert!(
+                role_flip_match,
+                "missing AB->BA role-flip counterpart for intr_ab={intr_ab:?}, BA={:?}",
+                ba.basic_intersects
+            );
+        }
+    }
+
+    // Same source geometry as the circle/rectangle parity matrix, but with rotated
+    // closed-polyline start vertices to stress index re-parameterization invariance.
+    let subject = pline_closed![(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)];
+    let subject_rotated = pline_closed![(10.0, 1.0, 1.0), (0.0, 1.0, 1.0)];
+
+    let clip = pline_closed![
+        (3.0, -10.0, 0.0),
+        (6.0, -10.0, 0.0),
+        (6.0, 10.0, 0.0),
+        (3.0, 10.0, 0.0)
+    ];
+    let clip_rotated = pline_closed![
+        (6.0, -10.0, 0.0),
+        (6.0, 10.0, 0.0),
+        (3.0, 10.0, 0.0),
+        (3.0, -10.0, 0.0)
+    ];
+
+    let expected_points = [
+        (6.0, -3.898979485566356),
+        (6.0, 5.898979485566356),
+        (3.0, -3.58257569495584),
+        (3.0, 5.58257569495584),
+    ];
+
+    let variants = [
+        (&subject, &clip_rotated),
+        (&subject_rotated, &clip),
+        (&subject_rotated, &clip_rotated),
+    ];
+
+    for (lhs, rhs) in variants {
+        let ab = lhs.find_intersects(rhs);
+        let ba = rhs.find_intersects(lhs);
+        assert_points_only(&ab, &expected_points);
+        assert_points_only(&ba, &expected_points);
+        assert_role_flip_pairs(&ab, &ba);
+    }
+}
