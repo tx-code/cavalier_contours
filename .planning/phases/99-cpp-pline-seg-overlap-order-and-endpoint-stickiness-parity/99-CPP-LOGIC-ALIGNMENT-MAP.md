@@ -2018,6 +2018,14 @@ endpoint-stickiness branch closure.
     all have explicit
     `*_start_index_rotation_zero_length_lead_role_flip_symmetry` counterparts in
     `pline_intersects` (`BASE_COUNT=32`, `MISSING_COUNT=0`).
+- Added non-zero-open-index role-flip symmetry guards for non-circle
+  reversed-endpoint-order closure-basic branches:
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_role_flip_symmetry_nonzero_open_index`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_role_flip_symmetry_nonzero_open_index`
+  - verifies open-side zero-length lead index shift does not change
+    branch-expected `1 basic + 1 overlap` behavior, and AB/BA role inversion
+    continues to preserve basic-point equivalence with reversed overlap endpoint
+    ordering.
 
 ## Next Alignment Targets (No Clipper)
 
