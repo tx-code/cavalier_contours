@@ -1206,6 +1206,13 @@ endpoint-stickiness branch closure.
     default-path index/point parity for the
     `...open_side_reversed_normal_closed_side...nonzero_open_index` geometry,
     while preserving AB/BA role-flip mapping and input immutability.
+- Replaced the closed-side-reversed start-index-rotation alias with an explicit
+  options-path semantic probe:
+  - `cpp_wrap_around_open_side_reversed_closed_side_reversed_start_index_rotation_options_parity`
+  - now asserts exact AB start-index values (`basic 0/0`, `overlap 0/1`) and
+    default-path index/point parity for the
+    `...open_side_reversed_closed_side_reversed...start_index_rotation`
+    geometry, while preserving AB/BA role-flip mapping and input immutability.
 - Added Rust options-path wrap-around closure-edge matrix counterpart for
   source-aligned non-circle arc overlap boundaries with closed `pline1`:
   - `cpp_wrap_around_closed_pline1_closure_basic_options_matrix_parity`
