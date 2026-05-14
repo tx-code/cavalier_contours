@@ -186,6 +186,37 @@ fn sorted_vertex_counts(properties: &[PlineProperties]) -> Vec<usize> {
     counts
 }
 
+fn assert_vertices_match_eps(
+    actual: &Polyline<f64>,
+    expected: &Polyline<f64>,
+    eps: f64,
+    label: &str,
+) {
+    let actual_vertices: Vec<_> = actual.iter_vertexes().collect();
+    let expected_vertices: Vec<_> = expected.iter_vertexes().collect();
+
+    assert_eq!(
+        actual_vertices.len(),
+        expected_vertices.len(),
+        "{label}: vertex count mismatch, actual={:?}, expected={:?}",
+        actual_vertices,
+        expected_vertices
+    );
+
+    for (idx, (a, e)) in actual_vertices
+        .iter()
+        .zip(expected_vertices.iter())
+        .enumerate()
+    {
+        assert!(
+            (a.x - e.x).abs() <= eps
+                && (a.y - e.y).abs() <= eps
+                && (a.bulge - e.bulge).abs() <= eps,
+            "{label}: vertex mismatch at index {idx}, actual={a:?}, expected={e:?}"
+        );
+    }
+}
+
 struct CppCombineCase {
     name: &'static str,
     subject: Polyline<f64>,
@@ -1154,6 +1185,18 @@ fn cpp_combine_with_self_reverse_mix_invariants() {
         geometry_sets_match_ignore_vertex_count(&union_fwd, &expected_fwd),
         "union self mismatch for forward orientation: {union_fwd:?}"
     );
+    assert_eq!(
+        union_fwd_result.pos_plines.len(),
+        1,
+        "union self expected one positive result for forward orientation, got {:?}",
+        union_fwd_result.pos_plines
+    );
+    assert_vertices_match_eps(
+        &union_fwd_result.pos_plines[0].pline,
+        &pline,
+        EPS,
+        "union self forward exact-vertex parity",
+    );
 
     let union_rev_result = rev_pline.boolean(&rev_pline, BooleanOp::Or);
     assert!(
@@ -1166,6 +1209,18 @@ fn cpp_combine_with_self_reverse_mix_invariants() {
     assert!(
         geometry_sets_match_ignore_vertex_count(&union_rev, &expected_rev),
         "union self mismatch for reversed orientation: {union_rev:?}"
+    );
+    assert_eq!(
+        union_rev_result.pos_plines.len(),
+        1,
+        "union self expected one positive result for reversed orientation, got {:?}",
+        union_rev_result.pos_plines
+    );
+    assert_vertices_match_eps(
+        &union_rev_result.pos_plines[0].pline,
+        &rev_pline,
+        EPS,
+        "union self reversed exact-vertex parity",
     );
 
     let intersect_fwd_result = pline.boolean(&pline, BooleanOp::And);
@@ -1182,6 +1237,18 @@ fn cpp_combine_with_self_reverse_mix_invariants() {
         geometry_sets_match_ignore_vertex_count(&intersect_fwd, &expected_fwd),
         "intersect self mismatch for forward orientation: {intersect_fwd:?}"
     );
+    assert_eq!(
+        intersect_fwd_result.pos_plines.len(),
+        1,
+        "intersect self expected one positive result for forward orientation, got {:?}",
+        intersect_fwd_result.pos_plines
+    );
+    assert_vertices_match_eps(
+        &intersect_fwd_result.pos_plines[0].pline,
+        &pline,
+        EPS,
+        "intersect self forward exact-vertex parity",
+    );
 
     let intersect_rev_result = rev_pline.boolean(&rev_pline, BooleanOp::And);
     assert!(
@@ -1196,6 +1263,18 @@ fn cpp_combine_with_self_reverse_mix_invariants() {
     assert!(
         geometry_sets_match_ignore_vertex_count(&intersect_rev, &expected_rev),
         "intersect self mismatch for reversed orientation: {intersect_rev:?}"
+    );
+    assert_eq!(
+        intersect_rev_result.pos_plines.len(),
+        1,
+        "intersect self expected one positive result for reversed orientation, got {:?}",
+        intersect_rev_result.pos_plines
+    );
+    assert_vertices_match_eps(
+        &intersect_rev_result.pos_plines[0].pline,
+        &rev_pline,
+        EPS,
+        "intersect self reversed exact-vertex parity",
     );
 
     for (lhs, rhs, label) in [

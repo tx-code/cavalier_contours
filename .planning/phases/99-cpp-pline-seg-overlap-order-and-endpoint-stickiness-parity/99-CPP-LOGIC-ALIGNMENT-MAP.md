@@ -1084,6 +1084,11 @@ endpoint-stickiness branch closure.
     orientation while keeping `neg_plines` empty, and self `EXCLUDE`/`XOR`
     keeps both `pos_plines` and `neg_plines` empty for
     `fwd/fwd`, `rev/rev`, `rev/fwd`, and `fwd/rev`.
+- Strengthened the same self-combine invariant probe with source-aligned
+  exact-vertex sequence assertions for self `UNION`/`INTERSECT`:
+  - verifies single-result positive output keeps vertex-by-vertex
+    `(x, y, bulge)` parity with input orientation (forward and reversed), in
+    addition to existing geometry-set invariants.
 - Added source-aligned `subtracted`-surface parity for combine fixtures:
   - `cpp_combine_expected_subtracted_empty_parity`
   - verifies Rust `neg_plines` remains empty across the C++-mapped
