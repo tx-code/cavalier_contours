@@ -3262,6 +3262,51 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn non_circle_partial_arc_overlap_both_reverse_dir_both_closed_start_index_rotation_role_flip_symmetry()
+     {
+        // Start-index-rotated counterpart of `both_reverse_dir` + both-closed probe.
+        // Closed-side start-vertex rotation should preserve bounded basic+overlap behavior,
+        // AB/BA index-role inversion, and overlap endpoint-order stability.
+        let mut closed_side_rotated = Polyline::new_closed();
+        closed_side_rotated.add(1.0, 1.0, 0.0);
+        closed_side_rotated.add(3.0, -3.0, 0.0);
+        closed_side_rotated.add(3.0, 1.0, -1.0);
+
+        let mut other_closed = Polyline::new_closed();
+        other_closed.add(2.0, 2.0, -1.0);
+        other_closed.add(2.0, 0.0, 0.0);
+        other_closed.add(3.0, 1.0, 0.0);
+
+        let ab = find_intersects(&closed_side_rotated, &other_closed, &Default::default());
+        let ba = find_intersects(&other_closed, &closed_side_rotated, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert_eq!(ab.basic_intersects.len(), 1);
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert_eq!(ba.basic_intersects.len(), 1);
+
+        let basic_ab = ab.basic_intersects[0];
+        let basic_ba = ba.basic_intersects[0];
+        assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+        assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+        assert_ne!(basic_ab.start_index1, 0);
+        assert_fuzzy_eq!(basic_ab.point, Vector2::new(3.0, 1.0));
+        assert_fuzzy_eq!(basic_ab.point, basic_ba.point);
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_ne!(overlap_ab.start_index1, 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(3.0, 1.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(2.0, 0.0));
+        // As in the non-rotated `both_reverse_dir` + both-closed probe, role inversion
+        // keeps overlap endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
+    }
+
+    #[test]
     fn non_circle_partial_arc_overlap_arc2_reverse_dir_both_closed() {
         // Bounded closed-shape counterpart for the `arc2_reverse_dir` primitive overlap.
         let mut pline1 = Polyline::new_closed();
