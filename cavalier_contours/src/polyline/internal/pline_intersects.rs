@@ -2340,6 +2340,127 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn all_self_intersects_basic_include_overlapping_coincident_arc_reversed_second_segment_ordering()
+     {
+        // API-level counterpart for reversed-second-segment coincident-arc overlap ordering.
+        // include_overlapping=false should not emit overlap endpoints as basics; true should emit exactly two.
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(1.0, 1.0, 1.0);
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(3.0, 1.0, -quarter);
+        pline.add(2.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 4)
+                    || (intr.start_index1 == 4 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 4)
+                    || (intr.start_index1 == 4 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            0,
+            "expected no basics for overlap pair (0,4) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            2,
+            "expected two overlap endpoints for pair (0,4) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert!(
+            pair_with_overlap
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5))
+                && pair_with_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5)),
+            "expected overlap endpoints (3,1) and (2,0) for pair (0,4), actual pair points: {:?}",
+            pair_with_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn all_self_intersects_basic_include_overlapping_coincident_arc_reversed_second_segment_ordering_nonzero_indexes()
+     {
+        // Non-zero-index API-level counterpart for reversed-second-segment coincident-arc overlap ordering.
+        // include_overlapping=true should emit exactly two basics for the targeted pair (dedup preserved).
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(-0.5, 1.5, 0.0);
+        pline.add(1.0, 1.0, 1.0);
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(3.0, 1.0, -quarter);
+        pline.add(2.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            0,
+            "expected no basics for overlap pair (1,5) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            2,
+            "expected two overlap endpoints for pair (1,5) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert!(
+            pair_with_overlap
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5))
+                && pair_with_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5)),
+            "expected overlap endpoints (3,1) and (2,0) for pair (1,5), actual pair points: {:?}",
+            pair_with_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
     fn all_self_intersects_basic_shared_end_point_pair_is_skipped() {
         // API-level counterpart for global-self shared-endpoint skip:
         // both include_overlapping=false/true should keep this pair filtered.
