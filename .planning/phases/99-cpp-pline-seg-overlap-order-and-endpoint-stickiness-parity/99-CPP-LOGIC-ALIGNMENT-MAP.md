@@ -2026,6 +2026,14 @@ endpoint-stickiness branch closure.
     branch-expected `1 basic + 1 overlap` behavior, and AB/BA role inversion
     continues to preserve basic-point equivalence with reversed overlap endpoint
     ordering.
+- Added non-zero-open-index role-flip symmetry guards for non-circle
+  reversed-endpoint-order closure-basic-`intersect` branches:
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_intersect_role_flip_symmetry_nonzero_open_index`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_intersect_role_flip_symmetry_nonzero_open_index`
+  - verifies open-side zero-length lead index shift preserves explicit
+    closure-basic-`intersect` branch behavior (`1 basic + 1 overlap`), keeps
+    AB/BA role-swapped index mapping stable, and preserves the same
+    source-aligned overlap endpoint-order inversion.
 
 ## Next Alignment Targets (No Clipper)
 
