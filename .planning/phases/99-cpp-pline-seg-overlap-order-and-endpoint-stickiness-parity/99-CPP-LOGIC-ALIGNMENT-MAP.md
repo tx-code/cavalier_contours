@@ -1203,6 +1203,13 @@ endpoint-stickiness branch closure.
     while matching default-path index/point outputs, preserving AB/BA
     role-flip start-index mapping, validating branch-specific overlap endpoint-
     order invariants (stable vs swapped), and preserving input immutability.
+- Added canonical wrap-around closure-edge alias tests to map source branch
+  names directly onto existing options-path matrices:
+  - `cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_options_matrix_parity`
+  - `cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_options_matrix_parity`
+  - preserves existing assertions and execution semantics by delegating to the
+    already-verified matrix implementations while improving source-to-test
+    traceability for wrap-around closure-edge variants.
 - Strengthened offset input-immutability parity from single sample to full
   C++-mapped offset fixture matrix:
   - `cpp_parallel_offset_does_not_modify_input`

@@ -6053,3 +6053,17 @@ fn cpp_wrap_around_both_closed_dedup_options_matrix_parity() {
         );
     }
 }
+
+#[test]
+fn cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_options_matrix_parity() {
+    // Canonical alias for the wrap-around open-side-reversed + closed-pline2
+    // closure-edge options-path matrix.
+    cpp_overlap_and_basic_intersection_options_matrix_parity();
+}
+
+#[test]
+fn cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_options_matrix_parity() {
+    // Canonical alias for the wrap-around open-side-reversed + normal
+    // closed-side closure-edge options-path matrix.
+    cpp_overlap_and_basic_intersection_options_normal_closed_side_matrix_parity();
+}
