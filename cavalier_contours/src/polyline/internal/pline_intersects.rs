@@ -16404,6 +16404,98 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_role_flip_symmetry_nonzero_open_index()
+     {
+        // Non-zero-open-index counterpart of the same-order closed-pline2
+        // closure-basic role-flip probe.
+        let mut open_side_nonzero = Polyline::new();
+        open_side_nonzero.add(2.0, 0.0, 0.0);
+        open_side_nonzero.add(2.0, 0.0, 1.0);
+        open_side_nonzero.add(2.0, 2.0, 0.0);
+        open_side_nonzero.add(3.0, 1.0, 0.0);
+
+        let mut closed_side = Polyline::new_closed();
+        closed_side.add(3.0, 1.0, 0.0);
+        closed_side.add(4.0, 4.0, 0.0);
+        closed_side.add(1.0, 1.0, 1.0);
+
+        let ab = find_intersects(&open_side_nonzero, &closed_side, &Default::default());
+        let ba = find_intersects(&closed_side, &open_side_nonzero, &Default::default());
+
+        assert_eq!(ab.basic_intersects.len(), 1);
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert_eq!(ba.basic_intersects.len(), 1);
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+
+        let basic_ab = ab.basic_intersects[0];
+        let basic_ba = ba.basic_intersects[0];
+        assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+        assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+        assert!(basic_ab.start_index1 > 0);
+        assert!(basic_ba.start_index2 > 0);
+        assert_fuzzy_eq!(basic_ab.point, Vector2::new(2.0, 2.0));
+        assert_fuzzy_eq!(basic_ab.point, basic_ba.point);
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert!(overlap_ab.start_index1 > 0);
+        assert!(overlap_ba.start_index2 > 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(2.0, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(3.0, 1.0));
+        // As in the non-zero-open-index counterpart, role inversion keeps overlap ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
+    }
+
+    #[test]
+    fn wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_intersect_role_flip_symmetry_nonzero_open_index()
+     {
+        // Canonical-name counterpart of the non-zero-open-index same-order
+        // closed-pline2 closure-basic role-flip probe.
+        let mut open_side_nonzero = Polyline::new();
+        open_side_nonzero.add(2.0, 0.0, 0.0);
+        open_side_nonzero.add(2.0, 0.0, 1.0);
+        open_side_nonzero.add(2.0, 2.0, 0.0);
+        open_side_nonzero.add(3.0, 1.0, 0.0);
+
+        let mut closed_side = Polyline::new_closed();
+        closed_side.add(3.0, 1.0, 0.0);
+        closed_side.add(4.0, 4.0, 0.0);
+        closed_side.add(1.0, 1.0, 1.0);
+
+        let ab = find_intersects(&open_side_nonzero, &closed_side, &Default::default());
+        let ba = find_intersects(&closed_side, &open_side_nonzero, &Default::default());
+
+        assert_eq!(ab.basic_intersects.len(), 1);
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert_eq!(ba.basic_intersects.len(), 1);
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+
+        let basic_ab = ab.basic_intersects[0];
+        let basic_ba = ba.basic_intersects[0];
+        assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+        assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+        assert!(basic_ab.start_index1 > 0);
+        assert!(basic_ba.start_index2 > 0);
+        assert_fuzzy_eq!(basic_ab.point, Vector2::new(2.0, 2.0));
+        assert_fuzzy_eq!(basic_ab.point, basic_ba.point);
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert!(overlap_ab.start_index1 > 0);
+        assert!(overlap_ba.start_index2 > 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(2.0, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(3.0, 1.0));
+        // As in the non-zero-open-index counterpart, role inversion keeps overlap ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
+    }
+
+    #[test]
     fn wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_start_index_rotation_role_flip_symmetry()
      {
         // Same bounded closure-edge geometry as the closed-pline2 same-order role-flip
