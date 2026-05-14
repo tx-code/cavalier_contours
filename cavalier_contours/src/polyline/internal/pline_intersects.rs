@@ -2090,6 +2090,50 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_overlap_with_shared_end_on_point1_but_not_both_ends_is_kept_with_zero_length_lead_segment_index0_shift()
+     {
+        // Index-0 re-parameterization counterpart for overlap
+        // shared-end-on-point1 boundary: prepend a zero-length lead segment
+        // and keep overlap ordering [4,0] -> [3,0] on shifted pair (1,6).
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(0.0, 0.0, 0.0); // zero-length lead + original first vertex
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(3.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 6)
+                    || (intr.start_index1 == 6 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one retained overlap for shifted pair (1,6), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+        assert!(
+            target_pair[0]
+                .point1
+                .fuzzy_eq_eps(Vector2::new(4.0, 0.0), 1e-5)
+                && target_pair[0]
+                    .point2
+                    .fuzzy_eq_eps(Vector2::new(3.0, 0.0), 1e-5),
+            "expected overlap ordering [4,0] -> [3,0] for shifted pair (1,6), actual overlap: {:?}",
+            target_pair[0]
+        );
+    }
+
+    #[test]
     fn non_local_zero_length_shared_end_pair_is_skipped() {
         // Global-self boundary probe with a non-local zero-length segment:
         // segment 0 ends at (4,0) and segment 5 is a zero-length segment at (4,0).
@@ -2527,6 +2571,67 @@ mod global_self_intersect_tests {
                     .iter()
                     .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(3.0, 0.0), 1e-5)),
             "expected overlap endpoints [4,0] and [3,0] for shifted pair (3,8), actual pair points: {:?}",
+            pair_with_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn all_self_intersects_basic_include_overlapping_keeps_point1_shared_end_overlap_pair_with_zero_length_lead_segment_index0_shift()
+     {
+        // Index-0 re-parameterization API-level counterpart for overlap
+        // shared-end-on-point1 boundary.
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(0.0, 0.0, 0.0); // zero-length lead + original first vertex
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(3.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 6)
+                    || (intr.start_index1 == 6 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 6)
+                    || (intr.start_index1 == 6 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            0,
+            "expected no basic overlap endpoints when include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            2,
+            "expected two basic overlap endpoints when include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert!(
+            pair_with_overlap
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(4.0, 0.0), 1e-5))
+                && pair_with_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(3.0, 0.0), 1e-5)),
+            "expected overlap endpoints [4,0] and [3,0] for shifted pair (1,6), actual pair points: {:?}",
             pair_with_overlap
                 .iter()
                 .map(|x| x.point)
