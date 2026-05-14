@@ -5218,6 +5218,139 @@ fn pline_boolean_options_path_circle_rectangle_role_flip_matrix_cpp_parity() {
 }
 
 #[test]
+fn pline_boolean_options_coincident_commutative_role_flip_matrix_cpp_parity() {
+    let coincident_cases = [
+        ("coincident_case1", cpp_coincident_case1_inputs()),
+        ("coincident_case2", cpp_coincident_case2_inputs()),
+    ];
+
+    for (case_name, (subject_input, clip_input)) in coincident_cases {
+        for operation in [0_u32, 1_u32, 3_u32] {
+            for &subject_reversed in &[false, true] {
+                for &clip_reversed in &[false, true] {
+                    let subject = create_pline(&subject_input, true);
+                    let clip = create_pline(&clip_input, true);
+
+                    unsafe {
+                        if subject_reversed {
+                            assert_eq!(cavc_pline_invert_direction(subject), 0);
+                        }
+                        if clip_reversed {
+                            assert_eq!(cavc_pline_invert_direction(clip), 0);
+                        }
+                    }
+
+                    let (default_ab_remaining, default_ab_subtracted) =
+                        run_boolean_props(subject, clip, operation);
+                    let (default_ba_remaining, default_ba_subtracted) =
+                        run_boolean_props(clip, subject, operation);
+
+                    unsafe {
+                        let mut options_ab = cavc_pline_boolean_o {
+                            pline1_aabb_index: std::ptr::null(),
+                            pos_equal_eps: f64::NAN,
+                            collapsed_area_eps: f64::NAN,
+                        };
+                        assert_eq!(cavc_pline_boolean_o_init(&mut options_ab), 0);
+                        let mut aabb_ab = ptr::null();
+                        assert_eq!(cavc_pline_create_approx_aabbindex(subject, &mut aabb_ab), 0);
+                        options_ab.pline1_aabb_index = aabb_ab;
+
+                        let (opt_ab_remaining, opt_ab_subtracted) =
+                            run_boolean_props_with_options(subject, clip, operation, &options_ab);
+
+                        assert!(
+                            props_set_match_ignore_area_sign(
+                                &opt_ab_remaining,
+                                &default_ab_remaining,
+                                1e-4
+                            ) && props_set_match_ignore_area_sign(
+                                &default_ab_remaining,
+                                &opt_ab_remaining,
+                                1e-4
+                            ),
+                            "coincident options AB remaining mismatch for {case_name} op={operation} subject_reversed={subject_reversed} clip_reversed={clip_reversed}\ndefault={default_ab_remaining:?}\noptions={opt_ab_remaining:?}"
+                        );
+                        assert!(
+                            props_set_match_ignore_area_sign(
+                                &opt_ab_subtracted,
+                                &default_ab_subtracted,
+                                1e-4
+                            ) && props_set_match_ignore_area_sign(
+                                &default_ab_subtracted,
+                                &opt_ab_subtracted,
+                                1e-4
+                            ),
+                            "coincident options AB subtracted mismatch for {case_name} op={operation} subject_reversed={subject_reversed} clip_reversed={clip_reversed}\ndefault={default_ab_subtracted:?}\noptions={opt_ab_subtracted:?}"
+                        );
+
+                        cavc_aabbindex_f(aabb_ab as *mut _);
+
+                        let mut options_ba = cavc_pline_boolean_o {
+                            pline1_aabb_index: std::ptr::null(),
+                            pos_equal_eps: f64::NAN,
+                            collapsed_area_eps: f64::NAN,
+                        };
+                        assert_eq!(cavc_pline_boolean_o_init(&mut options_ba), 0);
+                        let mut aabb_ba = ptr::null();
+                        assert_eq!(cavc_pline_create_approx_aabbindex(clip, &mut aabb_ba), 0);
+                        options_ba.pline1_aabb_index = aabb_ba;
+
+                        let (opt_ba_remaining, opt_ba_subtracted) =
+                            run_boolean_props_with_options(clip, subject, operation, &options_ba);
+
+                        assert!(
+                            props_set_match_ignore_area_sign(
+                                &opt_ba_remaining,
+                                &default_ba_remaining,
+                                1e-4
+                            ) && props_set_match_ignore_area_sign(
+                                &default_ba_remaining,
+                                &opt_ba_remaining,
+                                1e-4
+                            ),
+                            "coincident options BA remaining mismatch for {case_name} op={operation} subject_reversed={subject_reversed} clip_reversed={clip_reversed}\ndefault={default_ba_remaining:?}\noptions={opt_ba_remaining:?}"
+                        );
+                        assert!(
+                            props_set_match_ignore_area_sign(
+                                &opt_ba_subtracted,
+                                &default_ba_subtracted,
+                                1e-4
+                            ) && props_set_match_ignore_area_sign(
+                                &default_ba_subtracted,
+                                &opt_ba_subtracted,
+                                1e-4
+                            ),
+                            "coincident options BA subtracted mismatch for {case_name} op={operation} subject_reversed={subject_reversed} clip_reversed={clip_reversed}\ndefault={default_ba_subtracted:?}\noptions={opt_ba_subtracted:?}"
+                        );
+                        assert!(
+                            props_set_match_ignore_area_sign(
+                                &opt_ab_remaining,
+                                &opt_ba_remaining,
+                                1e-4
+                            ),
+                            "coincident options AB/BA remaining mismatch for {case_name} op={operation} subject_reversed={subject_reversed} clip_reversed={clip_reversed}\nab={opt_ab_remaining:?}\nba={opt_ba_remaining:?}"
+                        );
+                        assert!(
+                            props_set_match_ignore_area_sign(
+                                &opt_ab_subtracted,
+                                &opt_ba_subtracted,
+                                1e-4
+                            ),
+                            "coincident options AB/BA subtracted mismatch for {case_name} op={operation} subject_reversed={subject_reversed} clip_reversed={clip_reversed}\nab={opt_ab_subtracted:?}\nba={opt_ba_subtracted:?}"
+                        );
+
+                        cavc_aabbindex_f(aabb_ba as *mut _);
+                        cavc_pline_f(subject);
+                        cavc_pline_f(clip);
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[test]
 fn pline_boolean_options_path_circle_rectangle_vertex_output_cpp_parity() {
     let pline_a = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
     let pline_b = create_pline(
