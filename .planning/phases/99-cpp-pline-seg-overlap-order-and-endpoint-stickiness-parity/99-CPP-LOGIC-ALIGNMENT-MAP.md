@@ -1143,6 +1143,22 @@ endpoint-stickiness branch closure.
     (including swapped overlap endpoint order), across closed-side
     start-index-rotation variants, while matching default-path index/point
     outputs and preserving input immutability.
+- Added Rust options-path `both_reverse_dir` + both-closed matrix counterpart
+  for source-aligned non-circle arc overlap boundaries:
+  - `cpp_both_reverse_dir_both_closed_options_matrix_parity`
+  - verifies `find_intersects_opt` reproduces one-basic + one-overlap output
+    with branch-specific overlap endpoint ordering and AB/BA role-flip behavior
+    (keeping overlap endpoint ordering stable under inversion), across
+    closed-side start-index-rotation variants, while matching default-path
+    index/point outputs and preserving input immutability.
+- Added Rust options-path `arc2_reverse_dir` + both-closed matrix counterpart
+  for source-aligned non-circle arc overlap boundaries:
+  - `cpp_arc2_reverse_dir_both_closed_options_matrix_parity`
+  - verifies `find_intersects_opt` reproduces overlap-only output (no basics)
+    with branch-specific overlap endpoint ordering and AB/BA role-flip behavior
+    (including swapped overlap endpoint order), across closed-side
+    start-index-rotation variants, while matching default-path index/point
+    outputs and preserving input immutability.
 - Strengthened offset input-immutability parity from single sample to full
   C++-mapped offset fixture matrix:
   - `cpp_parallel_offset_does_not_modify_input`
