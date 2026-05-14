@@ -67,6 +67,11 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_shared_end_point_filters_one_point`
   - verifies when one of two intersection points is the shared segment end,
     only the non-shared point is emitted in global-self basic output.
+- Added non-zero-index counterparts for the same global-self skip branches:
+  - `non_local_shared_end_point_pair_is_skipped_nonzero_indexes`
+  - `non_local_two_intersects_shared_end_point_filters_one_point_nonzero_indexes`
+  - verifies shared-endpoint skip behavior remains stable away from index-0
+    segment pairs.
 - Added bounded mixed line/arc overlap-adjacent collection-level parity probe:
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication`
 - Added closed/open asymmetry probe for mixed line/arc overlap-adjacent dedup:
