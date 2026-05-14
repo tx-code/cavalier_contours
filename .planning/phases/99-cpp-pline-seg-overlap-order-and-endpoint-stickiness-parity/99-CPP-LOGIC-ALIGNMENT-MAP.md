@@ -1111,6 +1111,14 @@ endpoint-stickiness branch closure.
     start-index-rotation variants, matches default-path index/point outputs,
     preserves AB/BA role-flip start-index mapping, and leaves both inputs
     immutable.
+- Added Rust options-path arc-adjacent overlap-endpoint dedup matrix counterpart
+  for source-aligned mixed line/arc overlap boundaries:
+  - `cpp_overlap_endpoint_arc_adjacent_dedup_options_matrix_parity`
+  - verifies `find_intersects_opt` reproduces bounded both-closed
+    overlap-only output (no basics), including closed-side start-index-rotation
+    variants, matches default-path index/point outputs, preserves AB/BA
+    role-flip start-index mapping with stable endpoint ordering, and leaves
+    both inputs immutable.
 - Strengthened offset input-immutability parity from single sample to full
   C++-mapped offset fixture matrix:
   - `cpp_parallel_offset_does_not_modify_input`
