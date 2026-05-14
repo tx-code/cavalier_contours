@@ -537,6 +537,62 @@ fn cpp_circle_rectangle_commutative_role_flip_matrix_parity() {
 }
 
 #[test]
+fn cpp_circle_rectangle_not_complementary_role_flip_matrix_parity() {
+    fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
+        pline.invert_direction_mut();
+        pline
+    }
+
+    let (subject, clip) = circle_rectangle_inputs();
+    let subject_reversed = reversed(subject.clone());
+    let clip_reversed = reversed(clip.clone());
+
+    let orientation_pairs = [
+        (&subject, &clip),
+        (&subject, &clip_reversed),
+        (&subject_reversed, &clip),
+        (&subject_reversed, &clip_reversed),
+    ];
+
+    let expected_ab = cpp_expected(BooleanOp::Not);
+    let baseline_ba = create_property_set(
+        clip.boolean(&subject, BooleanOp::Not)
+            .pos_plines
+            .iter()
+            .map(|r| &r.pline),
+        false,
+    );
+
+    for (a, b) in orientation_pairs {
+        let ab_result = a.boolean(b, BooleanOp::Not);
+        let ba_result = b.boolean(a, BooleanOp::Not);
+
+        assert!(
+            ab_result.neg_plines.is_empty(),
+            "expected empty AB neg_plines for NOT role-flip variant, got {:?}",
+            ab_result.neg_plines
+        );
+        assert!(
+            ba_result.neg_plines.is_empty(),
+            "expected empty BA neg_plines for NOT role-flip variant, got {:?}",
+            ba_result.neg_plines
+        );
+
+        let ab = create_property_set(ab_result.pos_plines.iter().map(|r| &r.pline), false);
+        let ba = create_property_set(ba_result.pos_plines.iter().map(|r| &r.pline), false);
+
+        assert!(
+            geometry_sets_match_ignore_vertex_count(&ab, &expected_ab),
+            "AB NOT mismatch for circle-rectangle role-flip variant, ab={ab:?}, expected={expected_ab:?}"
+        );
+        assert!(
+            geometry_sets_match_ignore_vertex_count(&ba, &baseline_ba),
+            "BA NOT mismatch for circle-rectangle role-flip variant, ba={ba:?}, baseline={baseline_ba:?}"
+        );
+    }
+}
+
+#[test]
 fn cpp_circle_rectangle_commutative_start_index_rotation_matrix_parity() {
     fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
         pline.invert_direction_mut();
