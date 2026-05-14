@@ -2071,9 +2071,9 @@ mod find_intersects_tests {
         pline1.add(2.0, -1.0, 0.0);
 
         let mut pline2 = Polyline::new_closed();
-        pline2.add(3.0, 1.0, 0.0);
-        pline2.add(4.0, 4.0, 0.0);
-        pline2.add(1.0, 1.0, 1.0);
+        pline2.add(2.0, 0.0, 0.0);
+        pline2.add(1.0, 3.0, 0.0);
+        pline2.add(3.0, 1.0, bulge_from_angle(-FRAC_PI_2));
 
         let intrs = find_intersects(&pline1, &pline2, &Default::default());
 
@@ -2088,8 +2088,8 @@ mod find_intersects_tests {
         let overlap = intrs.overlapping_intersects[0];
         assert_eq!(overlap.start_index1, 0);
         assert_eq!(overlap.start_index2, 2);
-        assert_fuzzy_eq!(overlap.point1, Vector2::new(2.0, 0.0));
-        assert_fuzzy_eq!(overlap.point2, Vector2::new(3.0, 1.0));
+        assert_fuzzy_eq!(overlap.point1, Vector2::new(3.0, 1.0));
+        assert_fuzzy_eq!(overlap.point2, Vector2::new(2.0, 0.0));
     }
 
     #[test]
