@@ -2399,6 +2399,52 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn all_self_intersects_basic_shared_end_point_pair_is_skipped_nonzero_indexes() {
+        // Non-zero-index API-level counterpart for shared-endpoint skip.
+        // Both include_overlapping=false/true should keep pair (1,5) filtered.
+        let mut pline = Polyline::new();
+        pline.add(-3.0, 1.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, -1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            0,
+            "expected no basics for nonzero shared-end pair (1,5) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            0,
+            "expected no basics for nonzero shared-end pair (1,5) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+    }
+
+    #[test]
     fn all_self_intersects_basic_two_intersects_shared_end_filters_one_point() {
         // API-level counterpart for global-self `TwoIntersects` + shared-end filter:
         // include_overlapping does not change this pair because there is no overlap entry,
@@ -2516,6 +2562,69 @@ mod global_self_intersect_tests {
                     .point
                     .fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5),
             "expected retained point (-1,0) for shifted pair (3,7), actual pair points: without={:?}, with={:?}",
+            pair_without_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>(),
+            pair_with_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn all_self_intersects_basic_two_intersects_shared_end_filters_one_point_nonzero_indexes() {
+        // Non-zero-index API-level counterpart for `TwoIntersects` + shared-end filter.
+        // Both include_overlapping=false/true should retain only (-1,0) for pair (1,5).
+        let mut pline = Polyline::new();
+        pline.add(-3.0, 1.0, 0.0);
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            1,
+            "expected one retained point for nonzero pair (1,5) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            1,
+            "expected one retained point for nonzero pair (1,5) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert!(
+            pair_without_overlap[0]
+                .point
+                .fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5)
+                && pair_with_overlap[0]
+                    .point
+                    .fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5),
+            "expected retained point (-1,0) for nonzero pair (1,5), actual pair points: without={:?}, with={:?}",
             pair_without_overlap
                 .iter()
                 .map(|x| x.point)
