@@ -1961,12 +1961,21 @@ endpoint-stickiness branch closure.
     index shift while preserving branch-specific overlap endpoint semantics
     (same-order, endpoint-set equivalence, or reversed-order swap) and
     branch-expected basic/overlap counts.
+- Added the remaining wrap-around generic (non `closed_pline1/2`-specific)
+  zero-length-lead non-zero-index role-flip symmetry guards:
+  - `wrap_around_overlap_endpoint_deduplication_both_closed_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_both_closed_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_deduplication_same_order_both_closed_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_deduplication_reversed_order_both_closed_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - closes the generic both-closed start-index-rotation role-flip
+    zero-length-lead matrix for this branch family set (no missing counterparts
+    in `pline_intersects`).
 
 ## Next Alignment Targets (No Clipper)
 
 | Priority | Target | Rust file/module | Decision Boundary |
 |----------|--------|------------------|-------------------|
-| P1 | Add remaining generic (non `closed_pline1/2`-specific) zero-length-lead non-zero-index role-flip guards for both-closed wrap-around dedup branches (`overlap endpoint`, `overlap endpoint arc-adjacent`, non-circle `same order`, non-circle `reversed order`) | `cavalier_contours/src/polyline/internal/pline_intersects.rs` | Keep geometry bounded to direct old C++ branch families; avoid introducing extra crossings unrelated to the target branch. |
+| P1 | Extend collection-level parity to mixed arc/arc-overlap adjacency in non-circle closed shapes where direct old C++ mapping is available | `cavalier_contours/src/polyline/internal/pline_intersects.rs`, `cavalier_contours/tests/test_pline_seg_intersect.rs` | Keep source mapping explicit and bounded. |
 | P2 | Extend combine/offset-derived intersection fixture parity only when direct C++ source mapping exists | `cavalier_contours/tests/test_cpp_combine_parity.rs`, `cavalier_contours/tests/test_cpp_offset_parity.rs` | Keep provenance explicit and no-Clipper. |
 
 ## File-Level Alignment Surface
