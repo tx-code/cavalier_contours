@@ -262,6 +262,11 @@ endpoint-stickiness branch closure.
   - `non_local_coincident_arc_overlap_reversed_second_segment_pair_is_not_duplicated`
   - verifies the index-0 reversed-overlap pair contributes one overlap entry
     (no reverse-traversal duplication).
+- Added re-parameterization counterpart for index-0 reversed-segment overlap
+  dedup branch:
+  - `non_local_coincident_arc_overlap_reversed_second_segment_pair_is_not_duplicated_with_zero_length_lead_segment`
+  - verifies prepending a zero-length lead segment (index shift) keeps the
+    shifted reversed-overlap pair deduplicated as one entry.
 - Added pair-dedup counterpart for the same non-zero-index reversed-segment
   coincident-arc overlap branch:
   - `non_local_coincident_arc_overlap_reversed_second_segment_nonzero_not_duplicated`

@@ -4874,6 +4874,40 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_coincident_arc_overlap_reversed_second_segment_pair_is_not_duplicated_with_zero_length_lead_segment()
+     {
+        // Re-parameterization counterpart for index-0 reversed second-segment
+        // coincident-arc overlap dedup: prepend a zero-length lead segment and
+        // keep one overlap entry for shifted pair (1,5).
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(1.0, 1.0, 0.0);
+        pline.add(1.0, 1.0, 1.0); // zero-length lead + original first vertex
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(3.0, 1.0, -quarter);
+        pline.add(2.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one overlap for shifted pair (1,5), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
+
+    #[test]
     fn non_local_coincident_arc_overlap_reversed_second_segment_ordering_with_zero_length_lead_segment()
      {
         // Re-parameterization counterpart for non-zero-index reversed
