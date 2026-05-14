@@ -10927,9 +10927,46 @@ mod find_intersects_tests {
     #[test]
     fn wrap_around_overlap_endpoint_deduplication_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry()
      {
-        // Canonical-name alias for direct closed-pline2 rotated counterpart
-        // tracing.
-        wrap_around_overlap_endpoint_deduplication_closed_pline2_start_index_rotation_role_flip_symmetry();
+        // Canonical-name counterpart of the direct closed-pline2 rotated
+        // wrap-around dedup probe, kept inline for direct traceability.
+        let mut open_side = Polyline::new();
+        open_side.add(3.0, 0.0, 0.0);
+        open_side.add(0.0, 0.0, 0.0);
+        open_side.add(0.0, -1.0, 0.0);
+
+        let mut closed_side_rotated = Polyline::new_closed();
+        closed_side_rotated.add(2.0, 1.0, 0.0);
+        closed_side_rotated.add(4.0, 0.0, 0.0);
+        closed_side_rotated.add(0.0, 0.0, 0.0);
+
+        let ab = find_intersects(&open_side, &closed_side_rotated, &Default::default());
+        let ba = find_intersects(&closed_side_rotated, &open_side, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 0);
+        assert_eq!(overlap_ab.start_index2, 1);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(3.0, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(0.0, 0.0));
+        // In this bounded wrap-around dedup geometry, role inversion keeps overlap
+        // endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
     }
 
     #[test]
@@ -10981,9 +11018,46 @@ mod find_intersects_tests {
     #[test]
     fn wrap_around_overlap_endpoint_deduplication_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry()
      {
-        // Canonical-name alias for direct closed-pline1 rotated counterpart
-        // tracing.
-        wrap_around_overlap_endpoint_deduplication_closed_pline1_start_index_rotation_role_flip_symmetry();
+        // Canonical-name counterpart of the direct closed-pline1 rotated
+        // wrap-around dedup probe, kept inline for direct traceability.
+        let mut closed_side_rotated = Polyline::new_closed();
+        closed_side_rotated.add(2.0, 1.0, 0.0);
+        closed_side_rotated.add(4.0, 0.0, 0.0);
+        closed_side_rotated.add(0.0, 0.0, 0.0);
+
+        let mut open_side = Polyline::new();
+        open_side.add(3.0, 0.0, 0.0);
+        open_side.add(0.0, 0.0, 0.0);
+        open_side.add(0.0, -1.0, 0.0);
+
+        let ab = find_intersects(&closed_side_rotated, &open_side, &Default::default());
+        let ba = find_intersects(&open_side, &closed_side_rotated, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 1);
+        assert_eq!(overlap_ab.start_index2, 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(3.0, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(0.0, 0.0));
+        // In this bounded wrap-around dedup geometry, role inversion keeps overlap
+        // endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
     }
 
     #[test]
@@ -11214,9 +11288,46 @@ mod find_intersects_tests {
     #[test]
     fn wrap_around_overlap_endpoint_arc_adjacent_deduplication_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry()
      {
-        // Canonical-name alias for direct closed-pline2 rotated counterpart
-        // tracing.
-        wrap_around_overlap_endpoint_arc_adjacent_deduplication_closed_pline2_start_index_rotation_role_flip_symmetry();
+        // Canonical-name counterpart of the direct closed-pline2 rotated
+        // arc-adjacent wrap-around dedup probe, kept inline for direct traceability.
+        let mut open_side = Polyline::new();
+        open_side.add(1.5, 0.0, 0.0);
+        open_side.add(2.0, 0.0, 0.0);
+        open_side.add(2.0, -1.0, 0.0);
+
+        let mut closed_side_rotated = Polyline::new_closed();
+        closed_side_rotated.add(3.0, 1.0, 0.0);
+        closed_side_rotated.add(1.0, 0.0, 0.0);
+        closed_side_rotated.add(2.0, 0.0, bulge_from_angle(FRAC_PI_2));
+
+        let ab = find_intersects(&open_side, &closed_side_rotated, &Default::default());
+        let ba = find_intersects(&closed_side_rotated, &open_side, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 0);
+        assert_ne!(overlap_ab.start_index2, 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(1.5, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(2.0, 0.0));
+        // In this bounded arc-adjacent wrap-around dedup geometry, role inversion keeps
+        // overlap endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
     }
 
     #[test]
@@ -11268,9 +11379,46 @@ mod find_intersects_tests {
     #[test]
     fn wrap_around_overlap_endpoint_arc_adjacent_deduplication_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry()
      {
-        // Canonical-name alias for direct closed-pline1 rotated counterpart
-        // tracing.
-        wrap_around_overlap_endpoint_arc_adjacent_deduplication_closed_pline1_start_index_rotation_role_flip_symmetry();
+        // Canonical-name counterpart of the direct closed-pline1 rotated
+        // arc-adjacent wrap-around dedup probe, kept inline for direct traceability.
+        let mut closed_side_rotated = Polyline::new_closed();
+        closed_side_rotated.add(3.0, 1.0, 0.0);
+        closed_side_rotated.add(1.0, 0.0, 0.0);
+        closed_side_rotated.add(2.0, 0.0, bulge_from_angle(FRAC_PI_2));
+
+        let mut open_side = Polyline::new();
+        open_side.add(1.5, 0.0, 0.0);
+        open_side.add(2.0, 0.0, 0.0);
+        open_side.add(2.0, -1.0, 0.0);
+
+        let ab = find_intersects(&closed_side_rotated, &open_side, &Default::default());
+        let ba = find_intersects(&open_side, &closed_side_rotated, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 1);
+        assert_eq!(overlap_ab.start_index2, 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(1.5, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(2.0, 0.0));
+        // In this bounded arc-adjacent wrap-around dedup geometry, role inversion keeps
+        // overlap endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
     }
 
     #[test]
@@ -11425,9 +11573,46 @@ mod find_intersects_tests {
     #[test]
     fn wrap_around_non_circle_arc_overlap_deduplication_same_order_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry()
      {
-        // Canonical-name alias for direct closed-pline1 rotated counterpart
-        // tracing.
-        wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline1_start_index_rotation_role_flip_symmetry();
+        // Canonical-name counterpart of the direct closed-pline1 rotated same-order
+        // wrap-around dedup probe, kept inline for direct traceability.
+        let mut closed_side_rotated = Polyline::new_closed();
+        closed_side_rotated.add(4.0, 5.0, 0.0);
+        closed_side_rotated.add(1.0, 1.0, 1.0);
+        closed_side_rotated.add(3.0, 1.0, 0.0);
+
+        let mut open_side = Polyline::new();
+        open_side.add(2.0, 0.0, 1.0);
+        open_side.add(2.0, 2.0, 0.0);
+        open_side.add(3.0, 1.0, 0.0);
+
+        let ab = find_intersects(&closed_side_rotated, &open_side, &Default::default());
+        let ba = find_intersects(&open_side, &closed_side_rotated, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 1);
+        assert_eq!(overlap_ab.start_index2, 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(2.0, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(3.0, 1.0));
+        // In this bounded same-order wrap-around dedup geometry, role inversion keeps
+        // overlap endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
     }
 
     #[test]
@@ -11592,9 +11777,54 @@ mod find_intersects_tests {
     #[test]
     fn wrap_around_non_circle_arc_overlap_deduplication_reversed_order_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry()
      {
-        // Canonical-name alias for direct closed-pline1 rotated counterpart
-        // tracing.
-        wrap_around_non_circle_arc_overlap_deduplication_reversed_order_closed_pline1_start_index_rotation_role_flip_symmetry();
+        // Canonical-name counterpart of the direct closed-pline1 rotated reversed-order
+        // wrap-around dedup probe, kept inline for direct traceability.
+        let mut closed_side_rotated = Polyline::new_closed();
+        closed_side_rotated.add(4.0, 5.0, 0.0);
+        closed_side_rotated.add(1.0, 1.0, 1.0);
+        closed_side_rotated.add(3.0, 1.0, 0.0);
+
+        let mut open_side_reversed = Polyline::new();
+        open_side_reversed.add(2.0, 2.0, -1.0);
+        open_side_reversed.add(2.0, 0.0, 0.0);
+        open_side_reversed.add(2.0, -1.0, 0.0);
+
+        let ab = find_intersects(
+            &closed_side_rotated,
+            &open_side_reversed,
+            &Default::default(),
+        );
+        let ba = find_intersects(
+            &open_side_reversed,
+            &closed_side_rotated,
+            &Default::default(),
+        );
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 1);
+        assert_eq!(overlap_ab.start_index2, 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(3.0, 1.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(2.0, 0.0));
+        // In this bounded reversed-order wrap-around dedup geometry, role inversion swaps
+        // overlap endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point2);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point1);
     }
 
     #[test]
@@ -12040,9 +12270,46 @@ mod find_intersects_tests {
     #[test]
     fn wrap_around_non_circle_arc_overlap_deduplication_same_order_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry()
      {
-        // Canonical-name alias for direct closed-pline2 rotated counterpart
-        // tracing.
-        wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline2_start_index_rotation_role_flip_symmetry();
+        // Canonical-name counterpart of the direct closed-pline2 rotated same-order
+        // wrap-around dedup probe, kept inline for direct traceability.
+        let mut open_side = Polyline::new();
+        open_side.add(1.0, 1.0, 1.0);
+        open_side.add(3.0, 1.0, 0.0);
+        open_side.add(4.0, 1.0, 0.0);
+
+        let mut closed_side_rotated = Polyline::new_closed();
+        closed_side_rotated.add(4.0, 3.0, 0.0);
+        closed_side_rotated.add(2.0, 0.0, bulge_from_angle(FRAC_PI_2));
+        closed_side_rotated.add(3.0, 1.0, 0.0);
+
+        let ab = find_intersects(&open_side, &closed_side_rotated, &Default::default());
+        let ba = find_intersects(&closed_side_rotated, &open_side, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 0);
+        assert_ne!(overlap_ab.start_index2, 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(2.0, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(3.0, 1.0));
+        // In this bounded same-order wrap-around dedup geometry, role inversion keeps
+        // overlap endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
     }
 
     #[test]
@@ -12317,9 +12584,46 @@ mod find_intersects_tests {
     #[test]
     fn wrap_around_non_circle_arc_overlap_deduplication_reversed_order_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry()
      {
-        // Canonical-name alias for direct closed-pline2 rotated counterpart
-        // tracing.
-        wrap_around_non_circle_arc_overlap_deduplication_reversed_order_closed_pline2_start_index_rotation_role_flip_symmetry();
+        // Canonical-name counterpart of the direct closed-pline2 rotated reversed-order
+        // wrap-around dedup probe, kept inline for direct traceability.
+        let mut open_side = Polyline::new();
+        open_side.add(1.0, 1.0, 1.0);
+        open_side.add(3.0, 1.0, 0.0);
+        open_side.add(4.0, 1.0, 0.0);
+
+        let mut closed_side_rotated = Polyline::new_closed();
+        closed_side_rotated.add(6.0, -3.0, 0.0);
+        closed_side_rotated.add(3.0, 1.0, bulge_from_angle(-FRAC_PI_2));
+        closed_side_rotated.add(2.0, 0.0, 0.0);
+
+        let ab = find_intersects(&open_side, &closed_side_rotated, &Default::default());
+        let ba = find_intersects(&closed_side_rotated, &open_side, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 0);
+        assert_ne!(overlap_ab.start_index2, 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(3.0, 1.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(2.0, 0.0));
+        // As in the non-rotated reversed-order wrap-around probe, role inversion swaps
+        // overlap endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point2);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point1);
     }
 
     #[test]
@@ -12935,18 +13239,93 @@ mod find_intersects_tests {
     #[test]
     fn wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_role_flip_symmetry()
      {
-        // Canonical-name alias for direct counterpart tracing from the
-        // `..._closure_basic_intersect(_flipped_roles)` probes.
-        wrap_around_non_circle_arc_overlap_open_side_reversed_normal_closed_side_role_flip_symmetry(
+        // Canonical-name counterpart of the open-side-reversed + normal-closed-side
+        // closure-basic role-flip probe, kept inline for direct traceability.
+        let mut open_side_reversed = Polyline::new();
+        open_side_reversed.add(2.0, 2.0, -1.0);
+        open_side_reversed.add(2.0, 0.0, 0.0);
+        open_side_reversed.add(2.0, -1.0, 0.0);
+
+        let mut normal_closed_side = Polyline::new_closed();
+        normal_closed_side.add(3.0, 1.0, 0.0);
+        normal_closed_side.add(4.0, 4.0, 0.0);
+        normal_closed_side.add(1.0, 1.0, 1.0);
+
+        let ab = find_intersects(
+            &open_side_reversed,
+            &normal_closed_side,
+            &Default::default(),
         );
+        let ba = find_intersects(
+            &normal_closed_side,
+            &open_side_reversed,
+            &Default::default(),
+        );
+
+        assert_eq!(ab.basic_intersects.len(), 1);
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert_eq!(ba.basic_intersects.len(), 1);
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+
+        let basic_ab = ab.basic_intersects[0];
+        let basic_ba = ba.basic_intersects[0];
+        assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+        assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+        assert_fuzzy_eq!(basic_ab.point, basic_ba.point);
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        // In this bounded open-side-reversed + normal-closed-side geometry,
+        // role inversion swaps overlap endpoint order.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point2);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point1);
     }
 
     #[test]
     fn wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_role_flip_symmetry()
      {
-        // Canonical-name alias for direct counterpart tracing from the
-        // `...with_normal_closed_side_closure_basic_intersect(_flipped_roles)` probes.
-        wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_role_flip_symmetry();
+        // Canonical-name counterpart of the `..._closure_basic_intersect...` role-flip
+        // probe for the open-side-reversed + normal-closed-side geometry.
+        let mut open_side_reversed = Polyline::new();
+        open_side_reversed.add(2.0, 2.0, -1.0);
+        open_side_reversed.add(2.0, 0.0, 0.0);
+        open_side_reversed.add(2.0, -1.0, 0.0);
+
+        let mut normal_closed_side = Polyline::new_closed();
+        normal_closed_side.add(3.0, 1.0, 0.0);
+        normal_closed_side.add(4.0, 4.0, 0.0);
+        normal_closed_side.add(1.0, 1.0, 1.0);
+
+        let ab = find_intersects(
+            &open_side_reversed,
+            &normal_closed_side,
+            &Default::default(),
+        );
+        let ba = find_intersects(
+            &normal_closed_side,
+            &open_side_reversed,
+            &Default::default(),
+        );
+
+        assert_eq!(ab.basic_intersects.len(), 1);
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert_eq!(ba.basic_intersects.len(), 1);
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+
+        let basic_ab = ab.basic_intersects[0];
+        let basic_ba = ba.basic_intersects[0];
+        assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+        assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+        assert_fuzzy_eq!(basic_ab.point, basic_ba.point);
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point2);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point1);
     }
 
     #[test]
@@ -13055,17 +13434,98 @@ mod find_intersects_tests {
     #[test]
     fn wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_start_index_rotation_role_flip_symmetry()
      {
-        // Canonical-name alias for direct counterpart tracing from the
-        // `..._closure_basic_intersect(_flipped_roles)` probes.
-        wrap_around_non_circle_arc_overlap_open_side_reversed_normal_closed_side_start_index_rotation_role_flip_symmetry();
+        // Canonical-name counterpart of the start-index-rotated open-side-reversed +
+        // normal-closed-side closure-basic role-flip probe.
+        let mut open_side_reversed = Polyline::new();
+        open_side_reversed.add(2.0, 2.0, -1.0);
+        open_side_reversed.add(2.0, 0.0, 0.0);
+        open_side_reversed.add(2.0, -1.0, 0.0);
+
+        let mut normal_closed_side_rotated = Polyline::new_closed();
+        normal_closed_side_rotated.add(4.0, 4.0, 0.0);
+        normal_closed_side_rotated.add(1.0, 1.0, 1.0);
+        normal_closed_side_rotated.add(3.0, 1.0, 0.0);
+
+        let ab = find_intersects(
+            &open_side_reversed,
+            &normal_closed_side_rotated,
+            &Default::default(),
+        );
+        let ba = find_intersects(
+            &normal_closed_side_rotated,
+            &open_side_reversed,
+            &Default::default(),
+        );
+
+        assert_eq!(ab.basic_intersects.len(), 1);
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert_eq!(ba.basic_intersects.len(), 1);
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+
+        let basic_ab = ab.basic_intersects[0];
+        let basic_ba = ba.basic_intersects[0];
+        assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+        assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+        assert_fuzzy_eq!(basic_ab.point, Vector2::new(2.0, 2.0));
+        assert_fuzzy_eq!(basic_ab.point, basic_ba.point);
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(2.0, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(3.0, 1.0));
+        // As in the non-rotated normal-closed-side probe, role inversion swaps endpoint order.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point2);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point1);
     }
 
     #[test]
     fn wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_start_index_rotation_role_flip_symmetry()
      {
-        // Canonical-name alias for direct counterpart tracing from the
-        // `...with_normal_closed_side_closure_basic_intersect(_flipped_roles)` probes.
-        wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_start_index_rotation_role_flip_symmetry();
+        // Canonical-name counterpart of the `..._closure_basic_intersect...` start-index-
+        // rotated role-flip probe for the open-side-reversed + normal-closed-side geometry.
+        let mut open_side_reversed = Polyline::new();
+        open_side_reversed.add(2.0, 2.0, -1.0);
+        open_side_reversed.add(2.0, 0.0, 0.0);
+        open_side_reversed.add(2.0, -1.0, 0.0);
+
+        let mut normal_closed_side_rotated = Polyline::new_closed();
+        normal_closed_side_rotated.add(4.0, 4.0, 0.0);
+        normal_closed_side_rotated.add(1.0, 1.0, 1.0);
+        normal_closed_side_rotated.add(3.0, 1.0, 0.0);
+
+        let ab = find_intersects(
+            &open_side_reversed,
+            &normal_closed_side_rotated,
+            &Default::default(),
+        );
+        let ba = find_intersects(
+            &normal_closed_side_rotated,
+            &open_side_reversed,
+            &Default::default(),
+        );
+
+        assert_eq!(ab.basic_intersects.len(), 1);
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert_eq!(ba.basic_intersects.len(), 1);
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+
+        let basic_ab = ab.basic_intersects[0];
+        let basic_ba = ba.basic_intersects[0];
+        assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+        assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+        assert_fuzzy_eq!(basic_ab.point, Vector2::new(2.0, 2.0));
+        assert_fuzzy_eq!(basic_ab.point, basic_ba.point);
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(2.0, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(3.0, 1.0));
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point2);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point1);
     }
 
     #[test]
