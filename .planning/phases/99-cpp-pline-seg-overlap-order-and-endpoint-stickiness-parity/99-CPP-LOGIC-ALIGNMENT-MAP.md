@@ -1209,9 +1209,12 @@ endpoint-stickiness branch closure.
   - `cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_options_matrix_parity`
   - `cpp_wrap_around_closed_side_reversed_closure_basic_options_matrix_parity`
   - `cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_options_matrix_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_side_reversed_nonzero_open_index_options_parity`
+  - `cpp_wrap_around_open_side_reversed_normal_closed_side_nonzero_open_index_options_parity`
   - preserves existing assertions and execution semantics by delegating to the
     already-verified matrix implementations while improving source-to-test
-    traceability for wrap-around closure-edge variants.
+    traceability for wrap-around closure-edge variants, including explicit
+    non-zero-open-index source branch aliases.
 - Strengthened offset input-immutability parity from single sample to full
   C++-mapped offset fixture matrix:
   - `cpp_parallel_offset_does_not_modify_input`
