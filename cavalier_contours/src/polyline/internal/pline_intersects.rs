@@ -896,6 +896,26 @@ mod local_self_intersect_tests {
     }
 
     #[test]
+    fn closed_two_vertex_line_reports_self_overlap() {
+        // Source-aligned `vc == 2 && is_closed` local-self branch:
+        // zero-bulge line pair satisfies `bulge == -other_bulge` and should
+        // report a single overlapping intersect spanning the segment.
+        let mut pline = Polyline::new_closed();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+
+        let intrs = local_self_intersects(&pline, 1e-5);
+        assert_eq!(intrs.basic_intersects.len(), 0);
+        assert_eq!(intrs.overlapping_intersects.len(), 1);
+
+        let overlap = intrs.overlapping_intersects[0];
+        assert_eq!(overlap.start_index1, 0);
+        assert_eq!(overlap.start_index2, 1);
+        assert_fuzzy_eq!(overlap.point1, Vector2::new(0.0, 0.0));
+        assert_fuzzy_eq!(overlap.point2, Vector2::new(2.0, 0.0));
+    }
+
+    #[test]
     fn adjacent_duplicate_vertex_reports_overlapping_singularity() {
         // Source-aligned singularity probe: local self intersect on adjacent duplicate
         // vertexes should be reported as an overlapping intersect.

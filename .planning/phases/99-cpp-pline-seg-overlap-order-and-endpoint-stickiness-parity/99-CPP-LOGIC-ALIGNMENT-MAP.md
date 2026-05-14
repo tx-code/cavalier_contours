@@ -27,6 +27,11 @@ endpoint-stickiness branch closure.
   - `adjacent_duplicate_vertex_reports_overlapping_singularity`
   - verifies local self-intersect reports an overlapping intersect at the
     duplicate point instead of emitting a basic intersect.
+- Added source-aligned local-self `vc == 2 && is_closed` overlap probe for
+  zero-bulge two-vertex line geometry:
+  - `closed_two_vertex_line_reports_self_overlap`
+  - verifies the early local-self overlap branch emits one overlapping
+    intersect spanning the closed two-vertex segment.
 - Added source-aligned local-self singularity parity probe on closed
   wrap-around adjacency (`last -> first` local pass):
   - `closed_wraparound_duplicate_vertex_reports_overlapping_singularity`
