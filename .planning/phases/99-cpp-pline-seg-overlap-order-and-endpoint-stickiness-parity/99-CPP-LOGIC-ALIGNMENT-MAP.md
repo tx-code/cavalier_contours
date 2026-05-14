@@ -174,6 +174,10 @@ endpoint-stickiness branch closure.
   - `cpp_circle_rectangle_commutative_role_flip_matrix_parity`
   - verifies AB and BA both match C++-mapped geometry for `OR`/`AND`/`XOR`
     and match each other under role inversion.
+- Added source-aligned input immutability parity for circle/rectangle combine
+  modes (mirrors old C++ no-modify suite coverage):
+  - `cpp_circle_rectangle_combine_does_not_modify_input`
+  - verifies `OR`/`NOT`/`AND`/`XOR` do not mutate either input polyline.
 
 ## Next Alignment Targets (No Clipper)
 

@@ -444,6 +444,32 @@ fn cpp_circle_rectangle_topology_delta_snapshot() {
 }
 
 #[test]
+fn cpp_circle_rectangle_combine_does_not_modify_input() {
+    let (subject, clip) = circle_rectangle_inputs();
+
+    for op in [
+        BooleanOp::Or,
+        BooleanOp::Not,
+        BooleanOp::And,
+        BooleanOp::Xor,
+    ] {
+        let subject_before: Vec<_> = subject.iter_vertexes().collect();
+        let clip_before: Vec<_> = clip.iter_vertexes().collect();
+
+        let _ = subject.boolean(&clip, op);
+
+        let subject_after: Vec<_> = subject.iter_vertexes().collect();
+        let clip_after: Vec<_> = clip.iter_vertexes().collect();
+
+        assert_eq!(
+            subject_after, subject_before,
+            "subject modified for op={op:?}"
+        );
+        assert_eq!(clip_after, clip_before, "clip modified for op={op:?}");
+    }
+}
+
+#[test]
 fn cpp_circle_rectangle_commutative_role_flip_matrix_parity() {
     fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
         pline.invert_direction_mut();
