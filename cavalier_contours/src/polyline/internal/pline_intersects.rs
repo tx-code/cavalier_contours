@@ -2687,9 +2687,47 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn opposing_direction_arc_overlap_adjacent_endpoint_deduplication_both_closed() {
+        // Both-closed counterpart for opposing-direction arc-overlap-adjacent dedup.
+        let mut pline1 = Polyline::new_closed();
+        pline1.add(1.0, 1.0, 1.0);
+        pline1.add(3.0, 1.0, 0.0);
+        pline1.add(3.0, -2.0, 0.0);
+        pline1.add(1.0, -2.0, 0.0);
+
+        let mut pline2 = Polyline::new_closed();
+        pline2.add(3.0, 1.0, -1.0);
+        pline2.add(1.0, 1.0, 0.0);
+        pline2.add(1.0, 4.0, 0.0);
+        pline2.add(3.0, 4.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 1);
+        assert!(
+            intrs.basic_intersects.is_empty(),
+            "unexpected basic intersects: {:?}",
+            intrs.basic_intersects
+        );
+
+        let overlap = intrs.overlapping_intersects[0];
+        assert_eq!(overlap.start_index1, 0);
+        assert_eq!(overlap.start_index2, 0);
+        let endpoint_set_a = overlap.point1.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)
+            && overlap.point2.fuzzy_eq_eps(Vector2::new(1.0, 1.0), 1e-5);
+        let endpoint_set_b = overlap.point1.fuzzy_eq_eps(Vector2::new(1.0, 1.0), 1e-5)
+            && overlap.point2.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5);
+        assert!(
+            endpoint_set_a || endpoint_set_b,
+            "unexpected arc-overlap endpoints: {:?}",
+            overlap
+        );
+    }
+
+    #[test]
     fn opposing_direction_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_role_flip_symmetry()
      {
-        // Both-closed counterpart for opposing-direction arc-overlap-adjacent dedup,
+        // Start-index-rotated counterpart of the both-closed opposing-direction probe,
         // with closed-side start-vertex rotation to force non-zero overlap indexing.
         let mut closed_side_a = Polyline::new_closed();
         closed_side_a.add(1.0, 1.0, 1.0);
