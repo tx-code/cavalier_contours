@@ -55,6 +55,9 @@ endpoint-stickiness branch closure.
 - Added bounded closed-shape collection-level counterpart for `arc1_reverse_dir`
   partial overlap:
   - `non_circle_partial_arc_overlap_arc1_reverse_dir_both_closed`
+- Added bounded closed-shape collection-level counterpart for `both_reverse_dir`
+  partial overlap:
+  - `non_circle_partial_arc_overlap_both_reverse_dir_both_closed`
 - This closed-shape probe also pins a wrap-index nuance: a basic intersect at
   `(3, 1)` on `start_index2 = 2` remains independent from overlap-adjacent
   duplicate filtering for overlap `start_index2 = 0`.
