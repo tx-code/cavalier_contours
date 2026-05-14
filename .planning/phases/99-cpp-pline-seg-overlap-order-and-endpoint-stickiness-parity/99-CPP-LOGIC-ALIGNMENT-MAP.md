@@ -160,6 +160,11 @@ endpoint-stickiness branch closure.
 - Confirmed closed-`pline2` closure-edge counterpart with reversed overlap
   endpoint ordering (`point1 = (3, 1)`, `point2 = (2, 0)`) while still
   asserting one independent basic intersect.
+- Added offset-derived circle/rectangle intersection role-flip symmetry matrix
+  parity across orientation reversals:
+  - `cpp_circle_rectangle_intersection_role_flip_symmetry_matrix_parity`
+  - verifies AB/BA role inversion (`start_index1 <-> start_index2`) while
+    preserving the expected four C++-aligned intersection points.
 
 ## Next Alignment Targets (No Clipper)
 

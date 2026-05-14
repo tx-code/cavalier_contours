@@ -508,3 +508,85 @@ fn cpp_circle_rectangle_intersection_matrix_parity() {
         );
     }
 }
+
+#[test]
+fn cpp_circle_rectangle_intersection_role_flip_symmetry_matrix_parity() {
+    fn assert_role_flip_symmetry(
+        ab: &cavalier_contours::polyline::PlineIntersectsCollection<f64>,
+        ba: &cavalier_contours::polyline::PlineIntersectsCollection<f64>,
+        expected_points: &[(f64, f64)],
+    ) {
+        assert_eq!(ab.basic_intersects.len(), expected_points.len());
+        assert_eq!(ba.basic_intersects.len(), expected_points.len());
+        assert!(
+            ab.overlapping_intersects.is_empty(),
+            "expected no overlap in AB, got {:?}",
+            ab.overlapping_intersects
+        );
+        assert!(
+            ba.overlapping_intersects.is_empty(),
+            "expected no overlap in BA, got {:?}",
+            ba.overlapping_intersects
+        );
+
+        for &(x, y) in expected_points {
+            let ab_has = ab
+                .basic_intersects
+                .iter()
+                .any(|intr| (intr.point.x - x).abs() <= EPS && (intr.point.y - y).abs() <= EPS);
+            let ba_has = ba
+                .basic_intersects
+                .iter()
+                .any(|intr| (intr.point.x - x).abs() <= EPS && (intr.point.y - y).abs() <= EPS);
+            assert!(ab_has, "AB missing expected point ({x}, {y})");
+            assert!(ba_has, "BA missing expected point ({x}, {y})");
+        }
+
+        for intr_ab in &ab.basic_intersects {
+            let role_flip_match = ba.basic_intersects.iter().any(|intr_ba| {
+                intr_ab.start_index1 == intr_ba.start_index2
+                    && intr_ab.start_index2 == intr_ba.start_index1
+                    && (intr_ab.point.x - intr_ba.point.x).abs() <= EPS
+                    && (intr_ab.point.y - intr_ba.point.y).abs() <= EPS
+            });
+
+            assert!(
+                role_flip_match,
+                "missing AB->BA role-flip counterpart for intr_ab={intr_ab:?}, BA={:?}",
+                ba.basic_intersects
+            );
+        }
+    }
+
+    let subject = pline_closed![(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)];
+    let clip = pline_closed![
+        (3.0, -10.0, 0.0),
+        (6.0, -10.0, 0.0),
+        (6.0, 10.0, 0.0),
+        (3.0, 10.0, 0.0)
+    ];
+    let expected_points: [(f64, f64); 4] = [
+        (6.0, -3.898979485566356),
+        (6.0, 5.898979485566356),
+        (3.0, -3.58257569495584),
+        (3.0, 5.58257569495584),
+    ];
+
+    let mut subject_reversed = subject.clone();
+    subject_reversed.invert_direction_mut();
+    let mut clip_reversed = clip.clone();
+    clip_reversed.invert_direction_mut();
+
+    let orientation_pairs = [
+        (&subject, &clip),
+        (&subject, &clip_reversed),
+        (&subject_reversed, &clip),
+        (&subject_reversed, &clip_reversed),
+    ];
+
+    for (lhs, rhs) in orientation_pairs {
+        let ab = lhs.find_intersects(rhs);
+        let ba = rhs.find_intersects(lhs);
+        assert_role_flip_symmetry(&ab, &ba, &expected_points);
+    }
+}
