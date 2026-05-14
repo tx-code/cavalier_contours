@@ -1611,6 +1611,48 @@ mod global_self_intersect_tests {
             target_pair.iter().map(|x| x.point).collect::<Vec<_>>()
         );
     }
+
+    #[test]
+    fn non_local_two_intersects_pair_is_not_duplicated_nonzero_indexes() {
+        // Non-zero-index counterpart for global-self visited-pair dedup on `TwoIntersects`.
+        // segment 1 (arc) and segment 5 (line) should contribute exactly two
+        // basic intersects for that pair, not duplicated by reverse traversal.
+        let mut pline = Polyline::new();
+        pline.add(-3.0, 1.0, 0.0);
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            2,
+            "expected two basic intersects for pair (1,5), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert!(
+            target_pair
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5))
+                && target_pair
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)),
+            "expected both two-intersect points for pair (1,5), actual pair points: {:?}",
+            target_pair.iter().map(|x| x.point).collect::<Vec<_>>()
+        );
+    }
 }
 
 #[cfg(test)]

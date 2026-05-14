@@ -94,6 +94,11 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_pair_is_not_duplicated`
   - verifies a two-intersection pair contributes exactly two basic points (not
     duplicated via reverse pair traversal).
+- Added non-zero-index counterpart for the same `TwoIntersects` visited-pair
+  dedup probe:
+  - `non_local_two_intersects_pair_is_not_duplicated_nonzero_indexes`
+  - verifies two-point dedup behavior remains stable away from index-0 segment
+    pairs.
 - Added bounded mixed line/arc overlap-adjacent collection-level parity probe:
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication`
 - Added closed/open asymmetry probe for mixed line/arc overlap-adjacent dedup:
