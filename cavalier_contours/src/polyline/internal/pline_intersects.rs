@@ -1195,6 +1195,44 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_coincident_arc_overlap_reports_overlapping_intersect_with_zero_length_lead_segment()
+     {
+        // Re-parameterization counterpart for the same global-self coincident-arc
+        // overlap branch: prepend a zero-length lead segment and verify shifted
+        // pair (1,5) still reports overlap endpoints [2, 0] and [3, 1].
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(1.0, 1.0, 0.0);
+        pline.add(1.0, 1.0, 1.0); // zero-length lead + original first vertex
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(2.0, 0.0, quarter);
+        pline.add(3.0, 1.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        assert!(
+            !intrs.overlapping_intersects.is_empty(),
+            "expected at least one overlapping global self intersect"
+        );
+
+        let has_target_overlap = intrs.overlapping_intersects.iter().any(|overlap| {
+            let expected_index_pair = (overlap.start_index1 == 1 && overlap.start_index2 == 5)
+                || (overlap.start_index1 == 5 && overlap.start_index2 == 1);
+            let points_match = (overlap.point1.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5)
+                && overlap.point2.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5))
+                || (overlap.point1.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)
+                    && overlap.point2.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5));
+            expected_index_pair && points_match
+        });
+        assert!(
+            has_target_overlap,
+            "missing expected shifted non-local arc overlap [2,0]-[3,1] for pair (1,5), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
+
+    #[test]
     fn non_local_coincident_arc_overlap_nonzero_index_reports_overlapping_intersect() {
         // Non-zero-index counterpart for the same global-self coincident-arc overlap branch.
         // segment 1 and segment 5 overlap on [2, 0] -> [3, 1].

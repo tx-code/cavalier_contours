@@ -47,8 +47,14 @@ endpoint-stickiness branch closure.
   probe:
   - `non_local_coincident_arc_overlap_reports_overlapping_intersect`
   - verifies `visit_global_self_intersects` emits an overlapping intersect for
-    non-adjacent coincident arcs (`start_index` pair `0/4`) with overlap
-    endpoints `[2, 0]` and `[3, 1]`.
+  non-adjacent coincident arcs (`start_index` pair `0/4`) with overlap
+  endpoints `[2, 0]` and `[3, 1]`.
+- Added re-parameterization counterpart for the same global-self
+  coincident-arc overlap branch:
+  - `non_local_coincident_arc_overlap_reports_overlapping_intersect_with_zero_length_lead_segment`
+  - verifies prepending a zero-length lead segment (index shift) preserves
+    overlap detection and endpoint output for shifted pair (`start_index` pair
+    `1/5`).
 - Added non-zero-index counterpart for the same global-self coincident-arc
   overlap branch:
   - `non_local_coincident_arc_overlap_nonzero_index_reports_overlapping_intersect`
