@@ -537,6 +537,11 @@ endpoint-stickiness branch closure.
   - `wrap_around_non_circle_arc_overlap_open_side_reversed_normal_closed_side_start_index_rotation_role_flip_symmetry`
   - verifies rotating closed-side start vertex preserves bounded overlap/basic
     point outcomes and AB/BA index-role inversion semantics.
+- Added non-zero-open-index counterpart for the same open-side-reversed +
+  normal-closed-side role-flip symmetry geometry:
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_normal_closed_side_role_flip_symmetry_nonzero_open_index`
+  - verifies a shifted open-side overlap segment index (off zero) preserves the
+    same bounded overlap/basic point outcomes and AB/BA index-role inversion.
 - Added canonical-name start-index-rotation alias for direct counterpart
   tracing from `...with_normal_closed_side_closure_basic_intersect(_flipped_roles)`:
   - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_start_index_rotation_role_flip_symmetry`
