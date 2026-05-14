@@ -721,6 +721,12 @@ endpoint-stickiness branch closure.
   - verifies closed-side start-vertex rotation keeps no-basic dedup behavior
     while shifting overlap segment indexing away from zero with stable AB/BA
     role symmetry.
+- Added canonical-name alias counterparts for direct closed-side rotated
+  counterpart tracing of the same branch:
+  - `wrap_around_overlap_endpoint_deduplication_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry`
+  - `wrap_around_overlap_endpoint_deduplication_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry`
+  - verifies parity evidence is explicitly discoverable under closed-side
+    naming while reusing identical rotated geometry.
 - Added closed-side start-index rotation role-flip symmetry counterpart for the
   bounded closed-`pline2` wrap-around endpoint-dedup probe:
   - `wrap_around_overlap_endpoint_deduplication_closed_pline2_start_index_rotation_role_flip_symmetry`
@@ -748,6 +754,12 @@ endpoint-stickiness branch closure.
   - verifies closed-side start-vertex rotation keeps no-basic dedup behavior
     while shifting overlap segment indexing away from zero with stable AB/BA
     role symmetry.
+- Added canonical-name alias counterparts for direct closed-side rotated
+  counterpart tracing of the same branch:
+  - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry`
+  - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry`
+  - verifies parity evidence is explicitly discoverable under closed-side
+    naming while reusing identical rotated geometry.
 - Added closed-side start-index rotation role-flip symmetry counterpart for the
   bounded mixed line/arc closed-`pline2` wrap-around endpoint-dedup probe:
   - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_closed_pline2_start_index_rotation_role_flip_symmetry`
@@ -807,6 +819,12 @@ endpoint-stickiness branch closure.
   - verifies closed-side start-vertex rotation keeps no-basic dedup behavior
     while shifting overlap segment indexing away from zero with stable AB/BA
     role symmetry.
+- Added canonical-name alias counterparts for direct closed-side rotated
+  counterpart tracing of the same branch:
+  - `wrap_around_non_circle_arc_overlap_deduplication_same_order_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_deduplication_same_order_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry`
+  - verifies parity evidence is explicitly discoverable under closed-side
+    naming while reusing identical rotated geometry.
 - Added exact parameter-role flipped counterpart for the bounded same-order
   closed-`pline2` wrap-around dedup probe:
   - `wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline2_flipped_roles`
@@ -842,6 +860,12 @@ endpoint-stickiness branch closure.
   - verifies closed-side start-vertex rotation keeps no-basic dedup behavior
     while shifting overlap segment indexing away from zero with stable AB/BA
     role inversion and endpoint-order swap semantics.
+- Added canonical-name alias counterparts for direct closed-side rotated
+  counterpart tracing of the same branch:
+  - `wrap_around_non_circle_arc_overlap_deduplication_reversed_order_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_deduplication_reversed_order_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry`
+  - verifies parity evidence is explicitly discoverable under closed-side
+    naming while reusing identical rotated geometry.
 - Added closed-side start-index rotation role-flip symmetry counterpart for the
   same bounded reversed-order closed-`pline2` wrap-around dedup probe:
   - `wrap_around_non_circle_arc_overlap_deduplication_reversed_order_closed_pline2_start_index_rotation_role_flip_symmetry`
