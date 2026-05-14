@@ -231,6 +231,12 @@ endpoint-stickiness branch closure.
   one arc is fully overlapped by the other:
   - `coincident_arc_full_overlap_collection_level_ordering`
   - verifies pure overlap output (no basic intersects) plus overlap-endpoint
+  ordering behavior under parameter inversion and reversed second-arc
+  direction.
+- Added collection-level partial-overlap parity guard for coincident arcs where
+  overlap exists but neither arc fully contains the other:
+  - `coincident_arc_partial_overlap_collection_level_ordering`
+  - verifies pure overlap output (no basic intersects) plus overlap-endpoint
     ordering behavior under parameter inversion and reversed second-arc
     direction.
 - Added collection-level one-endpoint parity guards for coincident-arc
