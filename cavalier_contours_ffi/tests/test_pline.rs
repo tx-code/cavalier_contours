@@ -6286,6 +6286,125 @@ fn pline_boolean_options_coincident_matrices_do_not_modify_input_cpp_parity() {
 }
 
 #[test]
+fn pline_boolean_options_coincident_full_matrix_does_not_modify_input_cpp_parity() {
+    fn create_coincident_variant(
+        input: &PlineInput,
+        rotation_shift: usize,
+        reversed: bool,
+    ) -> *mut cavc_pline {
+        let rotated = rotate_closed_input(input, rotation_shift);
+        let pline = create_pline(&rotated, true);
+        if reversed {
+            unsafe {
+                assert_eq!(cavc_pline_invert_direction(pline), 0);
+            }
+        }
+        pline
+    }
+
+    for (case_name, (subject_input, clip_input), subject_shift, clip_shift) in [
+        (
+            "coincident_case1",
+            cpp_coincident_case1_inputs(),
+            1usize,
+            3usize,
+        ),
+        (
+            "coincident_case2",
+            cpp_coincident_case2_inputs(),
+            1usize,
+            2usize,
+        ),
+    ] {
+        for operation in CPP_CIRCLE_RECT_SOURCE_OPS {
+            for (subject_rotated, subject_reversed) in
+                [(false, false), (false, true), (true, false), (true, true)]
+            {
+                for (clip_rotated, clip_reversed) in
+                    [(false, false), (false, true), (true, false), (true, true)]
+                {
+                    let pline_a = create_coincident_variant(
+                        &subject_input,
+                        if subject_rotated { subject_shift } else { 0 },
+                        subject_reversed,
+                    );
+                    let pline_b = create_coincident_variant(
+                        &clip_input,
+                        if clip_rotated { clip_shift } else { 0 },
+                        clip_reversed,
+                    );
+                    let before_a = read_vertices(pline_a);
+                    let before_b = read_vertices(pline_b);
+
+                    unsafe {
+                        let mut options_ab = cavc_pline_boolean_o {
+                            pline1_aabb_index: std::ptr::null(),
+                            pos_equal_eps: f64::NAN,
+                            collapsed_area_eps: f64::NAN,
+                        };
+                        assert_eq!(cavc_pline_boolean_o_init(&mut options_ab), 0);
+                        let mut aabb_index_ab = ptr::null();
+                        assert_eq!(
+                            cavc_pline_create_approx_aabbindex(pline_a, &mut aabb_index_ab),
+                            0
+                        );
+                        options_ab.pline1_aabb_index = aabb_index_ab;
+                        let _ = run_boolean_props_with_options(
+                            pline_a,
+                            pline_b,
+                            operation,
+                            &options_ab,
+                        );
+                        cavc_aabbindex_f(aabb_index_ab as *mut _);
+
+                        let mut options_ba = cavc_pline_boolean_o {
+                            pline1_aabb_index: std::ptr::null(),
+                            pos_equal_eps: f64::NAN,
+                            collapsed_area_eps: f64::NAN,
+                        };
+                        assert_eq!(cavc_pline_boolean_o_init(&mut options_ba), 0);
+                        let mut aabb_index_ba = ptr::null();
+                        assert_eq!(
+                            cavc_pline_create_approx_aabbindex(pline_b, &mut aabb_index_ba),
+                            0
+                        );
+                        options_ba.pline1_aabb_index = aabb_index_ba;
+                        let _ = run_boolean_props_with_options(
+                            pline_b,
+                            pline_a,
+                            operation,
+                            &options_ba,
+                        );
+                        cavc_aabbindex_f(aabb_index_ba as *mut _);
+                    }
+
+                    let after_a = read_vertices(pline_a);
+                    let after_b = read_vertices(pline_b);
+
+                    assert_eq!(
+                        before_a.len(),
+                        after_a.len(),
+                        "subject vertex count changed for options path case={case_name} op={operation} subject_rotated={subject_rotated} subject_reversed={subject_reversed} clip_rotated={clip_rotated} clip_reversed={clip_reversed}"
+                    );
+                    assert_eq!(
+                        before_b.len(),
+                        after_b.len(),
+                        "clip vertex count changed for options path case={case_name} op={operation} subject_rotated={subject_rotated} subject_reversed={subject_reversed} clip_rotated={clip_rotated} clip_reversed={clip_reversed}"
+                    );
+                    compare_vertexes(&after_a, &before_a);
+                    compare_vertexes(&after_b, &before_b);
+
+                    unsafe {
+                        cavc_pline_f(pline_a);
+                        cavc_pline_f(pline_b);
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[test]
 fn pline_boolean_options_coincident_matrices_output_cpp_parity() {
     let cases = cpp_coincident_boolean_matrix_cases();
 
