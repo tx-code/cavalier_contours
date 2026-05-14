@@ -249,6 +249,11 @@ endpoint-stickiness branch closure.
   - verifies exactly two basic endpoint intersects with no overlap, including
     parameter inversion and reversed second-arc direction while preserving
     second-segment ordering semantics.
+- Added non-zero-segment-index collection-level counterpart for coincident
+  dual-endpoint touch (`TwoIntersects`) branch:
+  - `coincident_arc_end_points_touch_collection_level_nonzero_index_role_flip`
+  - verifies stable dual-endpoint behavior when arc segments are not at index
+    0, including parameter inversion and reversed second-arc direction.
 
 ## Next Alignment Targets (No Clipper)
 
