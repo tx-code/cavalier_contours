@@ -185,6 +185,12 @@ endpoint-stickiness branch closure.
   - `non_local_overlap_pair_is_not_duplicated_nonzero_indexes`
   - verifies visited-pair dedup behavior remains stable away from index-0
     segment pairs for both basic and overlap output paths.
+- Added coincident-arc overlap counterparts for the same global-self
+  visited-pair dedup overlap path:
+  - `non_local_coincident_arc_overlap_pair_is_not_duplicated`
+  - `non_local_coincident_arc_overlap_pair_is_not_duplicated_nonzero_indexes`
+  - verifies coincident-arc overlap pairs also remain deduplicated (single
+    overlap entry) across index-0 and non-zero index variants.
 - Added API-level `all_self_intersects_as_basic` counterparts for the same
   visited-pair dedup paths:
   - `all_self_intersects_basic_single_intersect_pair_is_not_duplicated`

@@ -4279,6 +4279,72 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_coincident_arc_overlap_pair_is_not_duplicated() {
+        // Global-self visited-pair dedup probe for coincident-arc overlap branch:
+        // segment 0 and segment 4 overlap, but should appear once even if reverse
+        // pair traversal is reachable.
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(1.0, 1.0, 1.0);
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(2.0, 0.0, quarter);
+        pline.add(3.0, 1.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 4)
+                    || (intr.start_index1 == 4 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one overlap for pair (0,4), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
+
+    #[test]
+    fn non_local_coincident_arc_overlap_pair_is_not_duplicated_nonzero_indexes() {
+        // Non-zero-index counterpart for global-self visited-pair dedup on
+        // coincident-arc overlap branch.
+        // segment 1 and segment 5 overlap, but should appear once even if reverse
+        // pair traversal is reachable.
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(-0.5, 1.5, 0.0);
+        pline.add(1.0, 1.0, 1.0);
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(2.0, 0.0, quarter);
+        pline.add(3.0, 1.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one overlap for pair (1,5), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
+
+    #[test]
     fn non_local_two_intersects_pair_is_not_duplicated() {
         // Global-self visited-pair dedup probe for `TwoIntersects` branch:
         // segment 0 (arc) and segment 4 (line) should contribute exactly two
