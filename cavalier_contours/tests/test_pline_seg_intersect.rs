@@ -205,6 +205,27 @@ fn arc_arc_coincident_touch_only_at_arc1_start() {
             point: Vector2::new(1.0, 0.0)
         }
     );
+
+    // reverse parameter order should preserve the same one-intersect point.
+    let result = pline_seg_intr(u1, u2, v1, v2, 1e-5);
+    assert_case_eq!(
+        result,
+        OneIntersect {
+            point: Vector2::new(1.0, 0.0)
+        }
+    );
+
+    // reversing arc2 direction while preserving the same geometric sweep should
+    // preserve the endpoint-touch result.
+    let u1 = PlineVertex::new(1.0, 0.0, -quarter);
+    let u2 = PlineVertex::new(0.0, -1.0, 0.0);
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(
+        result,
+        OneIntersect {
+            point: Vector2::new(1.0, 0.0)
+        }
+    );
 }
 
 #[test]
@@ -217,6 +238,27 @@ fn arc_arc_coincident_touch_only_at_arc2_start() {
     let u1 = PlineVertex::new(0.0, 1.0, quarter);
     let u2 = PlineVertex::new(-1.0, 0.0, 0.0);
 
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(
+        result,
+        OneIntersect {
+            point: Vector2::new(0.0, 1.0)
+        }
+    );
+
+    // reverse parameter order should preserve the same one-intersect point.
+    let result = pline_seg_intr(u1, u2, v1, v2, 1e-5);
+    assert_case_eq!(
+        result,
+        OneIntersect {
+            point: Vector2::new(0.0, 1.0)
+        }
+    );
+
+    // reversing arc2 direction while preserving the same geometric sweep should
+    // preserve the endpoint-touch result.
+    let u1 = PlineVertex::new(-1.0, 0.0, -quarter);
+    let u2 = PlineVertex::new(0.0, 1.0, 0.0);
     let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
     assert_case_eq!(
         result,

@@ -200,7 +200,8 @@ endpoint-stickiness branch closure.
   - `arc_arc_coincident_touch_only_at_arc1_start`
   - `arc_arc_coincident_touch_only_at_arc2_start`
   - verifies one-intersect endpoint behavior when only one coincident-arc end
-    touches (no overlap span).
+    touches (no overlap span), including parameter inversion and reversed
+    second-arc direction checks.
 - Added source-aligned primitive parity probe for coincident-arc disjoint-sweep
   branch in old C++ `intrPlineSegs`:
   - `arc_arc_coincident_disjoint_sweeps_no_intersect`
