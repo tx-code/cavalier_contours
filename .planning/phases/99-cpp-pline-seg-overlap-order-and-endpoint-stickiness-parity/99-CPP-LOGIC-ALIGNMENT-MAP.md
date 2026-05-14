@@ -118,6 +118,9 @@ endpoint-stickiness branch closure.
   for same and reversed endpoint ordering:
   - `wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline1`
   - `wrap_around_non_circle_arc_overlap_deduplication_reversed_order_closed_pline1`
+- Added exact parameter-role flipped counterpart for the bounded same-order
+  closed-`pline1` wrap-around dedup probe:
+  - `wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline1_flipped_roles`
 - Added complementary non-circle arc/arc wrap-around-adjacency probes where
   `pline2` is closed:
   - `wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline2`
