@@ -896,6 +896,26 @@ mod local_self_intersect_tests {
     }
 
     #[test]
+    fn adjacent_duplicate_vertex_reports_overlapping_singularity() {
+        // Source-aligned singularity probe: local self intersect on adjacent duplicate
+        // vertexes should be reported as an overlapping intersect.
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+
+        let intrs = local_self_intersects(&pline, 1e-5);
+        assert_eq!(intrs.basic_intersects.len(), 0);
+        assert_eq!(intrs.overlapping_intersects.len(), 1);
+
+        let overlap = intrs.overlapping_intersects[0];
+        assert_eq!(overlap.start_index1, 0);
+        assert_eq!(overlap.start_index2, 1);
+        assert_fuzzy_eq!(overlap.point1, Vector2::new(0.0, 0.0));
+        assert_fuzzy_eq!(overlap.point2, Vector2::new(0.0, 0.0));
+    }
+
+    #[test]
     fn circle_no_intersects() {
         let mut pline = Polyline::new_closed();
         pline.add(0.0, 0.0, 1.0);

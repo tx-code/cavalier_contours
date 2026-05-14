@@ -22,6 +22,11 @@ endpoint-stickiness branch closure.
   - `skip_intr_at_end_closed_pline1_uses_next_segment_index`
   - `skip_intr_at_end_open_pline2_uses_next_segment_index`
   - `skip_intr_at_end_closed_pline2_uses_next_segment_index`
+- Added source-aligned local-self singularity parity probe for adjacent
+  duplicate vertexes:
+  - `adjacent_duplicate_vertex_reports_overlapping_singularity`
+  - verifies local self-intersect reports an overlapping intersect at the
+    duplicate point instead of emitting a basic intersect.
 - Added bounded mixed line/arc overlap-adjacent collection-level parity probe:
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication`
 - Added closed/open asymmetry probe for mixed line/arc overlap-adjacent dedup:
