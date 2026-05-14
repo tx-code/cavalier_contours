@@ -1585,6 +1585,50 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_overlap_with_shared_end_on_point2_is_kept_with_zero_length_lead_segment() {
+        // Re-parameterization counterpart for overlap shared-end-on-point2 boundary:
+        // prepend a zero-length lead segment and keep the same overlap ordering.
+        let mut pline = Polyline::new();
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0); // zero-length lead segment
+        pline.add(-1.0, 1.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(3.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 3 && intr.start_index2 == 8)
+                    || (intr.start_index1 == 8 && intr.start_index2 == 3)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one retained overlap for shifted pair (3,8), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+        assert!(
+            target_pair[0]
+                .point1
+                .fuzzy_eq_eps(Vector2::new(3.0, 0.0), 1e-5)
+                && target_pair[0]
+                    .point2
+                    .fuzzy_eq_eps(Vector2::new(4.0, 0.0), 1e-5),
+            "expected overlap ordering [3,0] -> [4,0] for shifted pair (3,8), actual overlap: {:?}",
+            target_pair[0]
+        );
+    }
+
+    #[test]
     fn non_local_overlap_with_shared_end_on_point1_but_not_both_ends_is_kept() {
         // Global-self overlap branch boundary probe:
         // segment 0 and segment 5 overlap on [4,0] -> [3,0]. The shared end (4,0)

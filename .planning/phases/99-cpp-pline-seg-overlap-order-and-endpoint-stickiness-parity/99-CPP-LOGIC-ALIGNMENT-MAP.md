@@ -87,8 +87,10 @@ endpoint-stickiness branch closure.
   appears on overlap `point2`:
   - `non_local_overlap_with_shared_end_on_point2_is_kept`
   - `non_local_overlap_with_shared_end_on_point2_is_kept_nonzero_indexes`
+  - `non_local_overlap_with_shared_end_on_point2_is_kept_with_zero_length_lead_segment`
   - verifies these overlaps remain in output with ordering `[3,0] -> [4,0]`,
-  i.e. the overlap branch filters on `point1` only for this boundary shape.
+  i.e. the overlap branch filters on `point1` only for this boundary shape,
+  including a zero-length-lead re-parameterization shift.
 - Added overlap-branch shared-end boundary counterparts where the shared end
   appears on overlap `point1` but is not both segment ends:
   - `non_local_overlap_with_shared_end_on_point1_but_not_both_ends_is_kept`
