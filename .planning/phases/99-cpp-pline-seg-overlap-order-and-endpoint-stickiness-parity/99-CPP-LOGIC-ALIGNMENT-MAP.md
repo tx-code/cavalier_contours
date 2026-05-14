@@ -106,6 +106,13 @@ endpoint-stickiness branch closure.
   - verifies when both segment ends coincide at the same point and one segment
     is zero-length at that point, the pair is filtered (no basic and no overlap
     output for the targeted pair).
+- Added API-level `all_self_intersects_as_basic` counterparts for the same
+  overlap/shared-end boundaries:
+  - `all_self_intersects_basic_include_overlapping_keeps_point2_shared_end_overlap_pair`
+  - `all_self_intersects_basic_include_overlapping_skips_zero_length_shared_end_pair`
+  - verifies `include_overlapping=true` emits both overlap endpoints only when
+    the global-self overlap pair survives filtering, and does not re-introduce
+    endpoints for filtered zero-length shared-end pairs.
 - Added global-self `TwoIntersects` positive-path counterpart:
   - `non_local_two_intersects_keeps_both_points_when_not_shared_end`
   - verifies both intersection points are emitted when neither point satisfies

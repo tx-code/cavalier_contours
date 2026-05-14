@@ -1850,6 +1850,99 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn all_self_intersects_basic_include_overlapping_keeps_point2_shared_end_overlap_pair() {
+        // API-level counterpart for overlap shared-end-on-point2 boundary:
+        // include_overlapping=false should not emit overlap endpoints as basics,
+        // include_overlapping=true should emit both overlap endpoints.
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(3.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            0,
+            "expected no basic overlap endpoints when include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            2,
+            "expected two basic overlap endpoints when include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert!(
+            pair_with_overlap
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(3.0, 0.0), 1e-5))
+                && pair_with_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(4.0, 0.0), 1e-5)),
+            "expected overlap endpoints [3,0] and [4,0], actual pair points: {:?}",
+            pair_with_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn all_self_intersects_basic_include_overlapping_skips_zero_length_shared_end_pair() {
+        // API-level counterpart for shared-end zero-length boundary:
+        // since the overlap pair is filtered in global-self traversal, include_overlapping
+        // should not re-introduce endpoints for that pair.
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let target_pair = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            0,
+            "expected no basics for shared-end zero-length pair (0,5) even with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+    }
+
+    #[test]
     fn non_local_two_intersects_keeps_both_points_when_not_shared_end() {
         // Global-self `TwoIntersects` positive path:
         // segment 0 (arc) and segment 4 (line) intersect at (-1, 0) and (1, 0),
