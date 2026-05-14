@@ -103,9 +103,11 @@ endpoint-stickiness branch closure.
   non-local pairs:
   - `non_local_zero_length_shared_end_pair_is_skipped`
   - `non_local_zero_length_shared_end_pair_is_skipped_nonzero_indexes`
+  - `non_local_zero_length_shared_end_pair_is_skipped_with_zero_length_lead_segment`
   - verifies when both segment ends coincide at the same point and one segment
     is zero-length at that point, the pair is filtered (no basic and no overlap
-    output for the targeted pair).
+    output for the targeted pair), including a zero-length-lead
+    re-parameterization shift.
 - Added API-level `all_self_intersects_as_basic` counterparts for the same
   overlap/shared-end boundaries:
   - `all_self_intersects_basic_include_overlapping_keeps_point2_shared_end_overlap_pair`
@@ -114,9 +116,11 @@ endpoint-stickiness branch closure.
   - `all_self_intersects_basic_include_overlapping_keeps_point1_shared_end_overlap_pair_with_zero_length_lead_segment`
   - `all_self_intersects_basic_include_overlapping_skips_zero_length_shared_end_pair`
   - `all_self_intersects_basic_include_overlapping_skips_zero_length_shared_end_pair_nonzero_indexes`
+  - `all_self_intersects_basic_include_overlapping_skips_zero_length_shared_end_pair_with_zero_length_lead_segment`
   - verifies `include_overlapping=true` emits both overlap endpoints only when
     the global-self overlap pair survives filtering, and does not re-introduce
-    endpoints for filtered zero-length shared-end pairs.
+    endpoints for filtered zero-length shared-end pairs, including a
+    zero-length-lead re-parameterization shift.
 - Added global-self `TwoIntersects` positive-path counterpart:
   - `non_local_two_intersects_keeps_both_points_when_not_shared_end`
   - verifies both intersection points are emitted when neither point satisfies
