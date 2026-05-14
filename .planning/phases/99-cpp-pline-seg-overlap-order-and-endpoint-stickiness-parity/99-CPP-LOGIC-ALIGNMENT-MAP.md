@@ -303,11 +303,17 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment`
   - verifies prepending a zero-length lead segment (index shift) preserves
     exactly two basic points for the shifted pair.
+- Added canonical-name alias counterpart for direct index-0-shift tracing of
+  the same global-self `TwoIntersects` dedup path:
+  - `non_local_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - verifies parity evidence is explicitly discoverable under index-0-shift
+    naming while reusing identical shifted geometry.
 - Added API-level `all_self_intersects_as_basic` counterparts for the same
   `TwoIntersects` visited-pair dedup path:
   - `all_self_intersects_basic_two_intersects_pair_is_not_duplicated`
   - `all_self_intersects_basic_two_intersects_pair_is_not_duplicated_nonzero_indexes`
   - `all_self_intersects_basic_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment`
+  - `all_self_intersects_basic_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
   - verifies both `include_overlapping=false/true` preserve exactly two basic
   points for the targeted pair (no reverse-traversal duplication) across
     index-0, non-zero, and zero-length-lead re-parameterization variants.

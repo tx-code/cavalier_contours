@@ -4832,6 +4832,13 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn all_self_intersects_basic_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
+     {
+        // Canonical-name alias for direct index-0-shift counterpart tracing.
+        all_self_intersects_basic_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment();
+    }
+
+    #[test]
     fn all_self_intersects_basic_two_intersects_reversed_second_segment_shared_end_keeps_both() {
         // API-level counterpart for index-0 + reversed shared-end-anchor
         // `TwoIntersects`: both include_overlapping=false/true should retain
@@ -5917,6 +5924,13 @@ mod global_self_intersect_tests {
             "expected both two-intersect points for shifted pair (2,6), actual pair points: {:?}",
             target_pair.iter().map(|x| x.point).collect::<Vec<_>>()
         );
+    }
+
+    #[test]
+    fn non_local_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
+    {
+        // Canonical-name alias for direct index-0-shift counterpart tracing.
+        non_local_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment();
     }
 
     #[test]
