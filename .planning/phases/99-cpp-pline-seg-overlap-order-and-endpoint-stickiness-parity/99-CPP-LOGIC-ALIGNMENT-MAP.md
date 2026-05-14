@@ -1996,6 +1996,28 @@ endpoint-stickiness branch closure.
     `*_start_index_rotation_role_flip_symmetry` vs
     `*_start_index_rotation_zero_length_lead_role_flip_symmetry` counterpart
     matrix (`MISSING_COUNT=0` in `pline_intersects` scan).
+- Added zero-length-lead non-zero-index role-flip symmetry guards for
+  wrap-around overlap-endpoint dedup closed-side start-index-rotation families:
+  - `wrap_around_overlap_endpoint_deduplication_closed_pline1_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_overlap_endpoint_deduplication_closed_pline2_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_closed_pline1_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_closed_pline2_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - verifies rotated closed-side non-zero index attribution while preserving
+    overlap-only endpoint-dedup branch semantics and AB/BA role inversion.
+- Added zero-length-lead non-zero-index role-flip symmetry guards for
+  non-circle partial-overlap reversed-endpoint-order closure-basic rotated
+  closed-side families:
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_intersect_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_intersect_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - verifies `1 basic + 1 overlap` closure-basic behavior stays stable while
+    rotated closed-side index attribution shifts to non-zero positions.
+- Completion checkpoint:
+  - collection-level `*_start_index_rotation_role_flip_symmetry` functions now
+    all have explicit
+    `*_start_index_rotation_zero_length_lead_role_flip_symmetry` counterparts in
+    `pline_intersects` (`BASE_COUNT=32`, `MISSING_COUNT=0`).
 
 ## Next Alignment Targets (No Clipper)
 
