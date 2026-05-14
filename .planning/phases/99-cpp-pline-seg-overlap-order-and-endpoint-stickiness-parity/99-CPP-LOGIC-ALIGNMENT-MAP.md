@@ -18,9 +18,11 @@ endpoint-stickiness branch closure.
   - `overlap_endpoint_basic_intersect_deduplication`
 - Added source-aligned wrap-join branch parity for overlap-slice stitching:
   - `wrap_join_at_pline2_zero_vertex_increments_end_index_offset`
+  - `wrap_join_away_from_pline2_zero_vertex_keeps_end_index_offset`
   - verifies `sort_and_join_overlapping_intersects` joins last+first slices
-    when they connect at `pline2[0]` and increments `end_index_offset` to keep
-    the connection vertex in the stitched view.
+    when they connect at wrap boundary, including both:
+    - connection exactly at `pline2[0]` (increments `end_index_offset`)
+    - connection away from `pline2[0]` (keeps `end_index_offset` unchanged).
 - Strengthened full-loop overlap-slice parity probes for coincident circles:
   - `overlapping_circles_same_dir`
   - `overlapping_circles_same_dir_flipped_index`

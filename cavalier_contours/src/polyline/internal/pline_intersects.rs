@@ -12900,4 +12900,44 @@ mod sort_and_join_overlapping_intersects_tests {
         assert_fuzzy_eq!(slice_pline[0], PlineVertex::new(0.0, 1.0, 0.0));
         assert_fuzzy_eq!(slice_pline[2], PlineVertex::new(1.0, 0.0, 0.0));
     }
+
+    #[test]
+    fn wrap_join_away_from_pline2_zero_vertex_keeps_end_index_offset() {
+        // Companion wrap-join branch: last+first slices connect, but the connection point is not
+        // pline2[0], so no extra end-index offset is applied.
+        let mut pline1 = Polyline::new();
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(2.0, 0.0, 0.0);
+        pline1.add(2.0, 1.0, 0.0);
+        pline1.add(3.0, 1.0, 0.0);
+        pline1.add(3.0, 0.0, 0.0);
+        pline1.add(1.0, 0.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(0.0, 0.0, 0.0);
+        pline2.add(2.0, 0.0, 0.0);
+        pline2.add(2.0, 1.0, 0.0);
+        pline2.add(3.0, 1.0, 0.0);
+        pline2.add(3.0, 0.0, 0.0);
+        pline2.add(1.0, 0.0, 0.0);
+
+        let mut intersects = vec![
+            PlineOverlappingIntersect::new(0, 0, Vector2::new(1.0, 0.0), Vector2::new(1.5, 0.0)),
+            PlineOverlappingIntersect::new(4, 4, Vector2::new(2.0, 0.0), Vector2::new(1.0, 0.0)),
+        ];
+
+        let slices = sort_and_join_overlapping_intersects(&mut intersects, &pline1, &pline2, 1e-5);
+        assert_eq!(slices.len(), 1);
+
+        let slice = &slices[0];
+        assert_eq!(slice.start_indexes, (4, 4));
+        assert_eq!(slice.end_indexes, (0, 0));
+        assert_eq!(slice.view_data.start_index, 0);
+        assert_eq!(slice.view_data.end_index_offset, 0);
+
+        let slice_pline = Polyline::create_from(&slice.view(&pline2));
+        assert_eq!(slice_pline.vertex_count(), 2);
+        assert_fuzzy_eq!(slice_pline[0], PlineVertex::new(2.0, 0.0, 0.0));
+        assert_fuzzy_eq!(slice_pline[1], PlineVertex::new(1.5, 0.0, 0.0));
+    }
 }
