@@ -78,6 +78,12 @@ endpoint-stickiness branch closure.
   - `non_local_one_intersect_at_single_segment_end_is_kept_nonzero_indexes`
   - verifies `skip_intr_at_end` does not filter one-intersect points unless the
     endpoint condition is simultaneously true for both tested segments.
+- Added overlap-branch shared-end boundary counterparts where the shared end
+  appears on overlap `point2`:
+  - `non_local_overlap_with_shared_end_on_point2_is_kept`
+  - `non_local_overlap_with_shared_end_on_point2_is_kept_nonzero_indexes`
+  - verifies these overlaps remain in output with ordering `[3,0] -> [4,0]`,
+    i.e. the overlap branch filters on `point1` only for this boundary shape.
 - Added global-self `TwoIntersects` positive-path counterpart:
   - `non_local_two_intersects_keeps_both_points_when_not_shared_end`
   - verifies both intersection points are emitted when neither point satisfies

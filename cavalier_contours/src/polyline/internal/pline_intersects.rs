@@ -1460,6 +1460,90 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_overlap_with_shared_end_on_point2_is_kept() {
+        // Global-self overlap branch shared-end boundary probe:
+        // segment 0 and segment 5 overlap on [3,0] -> [4,0], and both segment ends are at (4,0).
+        // Because shared-end appears on overlap `point2` here, the overlap remains in output.
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(3.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one retained overlap for pair (0,5), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+        assert!(
+            target_pair[0]
+                .point1
+                .fuzzy_eq_eps(Vector2::new(3.0, 0.0), 1e-5)
+                && target_pair[0]
+                    .point2
+                    .fuzzy_eq_eps(Vector2::new(4.0, 0.0), 1e-5),
+            "expected overlap ordering [3,0] -> [4,0], actual overlap: {:?}",
+            target_pair[0]
+        );
+    }
+
+    #[test]
+    fn non_local_overlap_with_shared_end_on_point2_is_kept_nonzero_indexes() {
+        // Non-zero-index counterpart for the same overlap boundary:
+        // segment 1 and segment 6 overlap on [3,0] -> [4,0] and shared-end appears on point2.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, 1.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(3.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 6)
+                    || (intr.start_index1 == 6 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one retained overlap for pair (1,6), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+        assert!(
+            target_pair[0]
+                .point1
+                .fuzzy_eq_eps(Vector2::new(3.0, 0.0), 1e-5)
+                && target_pair[0]
+                    .point2
+                    .fuzzy_eq_eps(Vector2::new(4.0, 0.0), 1e-5),
+            "expected overlap ordering [3,0] -> [4,0], actual overlap: {:?}",
+            target_pair[0]
+        );
+    }
+
+    #[test]
     fn non_local_two_intersects_keeps_both_points_when_not_shared_end() {
         // Global-self `TwoIntersects` positive path:
         // segment 0 (arc) and segment 4 (line) intersect at (-1, 0) and (1, 0),
