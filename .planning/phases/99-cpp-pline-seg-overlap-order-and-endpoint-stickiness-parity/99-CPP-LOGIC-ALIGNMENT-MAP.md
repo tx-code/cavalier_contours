@@ -1060,6 +1060,13 @@ endpoint-stickiness branch closure.
     near-touch behavior as expected (`1e-6` => no intersects, `1e-3` => one
     basic intersect), preserves AB/BA role-flip symmetry, and leaves both
     inputs immutable.
+- Added Rust options-path overlap+basic matrix counterpart for source-aligned
+  wrap-around closure-edge geometry:
+  - `cpp_overlap_and_basic_intersection_options_matrix_parity`
+  - verifies `find_intersects_opt` keeps one basic + one overlap across
+    open-side nonzero-index and closed-side start-index-rotation variants,
+    preserves AB/BA role-flip mapping and expected overlap endpoints, and
+    leaves both inputs immutable.
 - Strengthened offset input-immutability parity from single sample to full
   C++-mapped offset fixture matrix:
   - `cpp_parallel_offset_does_not_modify_input`
