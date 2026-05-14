@@ -48,6 +48,9 @@ endpoint-stickiness branch closure.
 - Added non-circle reversed-overlap-endpoint-order both-closed variant with
   explicit independent closure-edge basics:
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed`
+- Added parameter-role flipped counterpart for the same bounded reversed
+  endpoint-order + both-closed probe:
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed_flipped_roles`
 - Added source-aligned primitive parity probes for non-circle partial-overlap
   where both arcs are reversed:
   - `arc_arc_partial_overlap_both_reverse_dir`
