@@ -1212,6 +1212,15 @@ endpoint-stickiness branch closure.
     variants; matches default-path index/point outputs; preserves AB/BA
     start-index role-flip mapping with stable overlap endpoint ordering; and
     preserves input immutability.
+- Added Rust options-path wrap-around arc-adjacent overlap-endpoint dedup
+  matrix counterpart for source-aligned closure-vertex duplicate-filter
+  boundaries:
+  - `cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_options_matrix_parity`
+  - verifies `find_intersects_opt` reproduces overlap-only output (no basics)
+    across closed-pline1, closed-pline2, both-closed, and start-index-rotation
+    variants for the arc-adjacent branch; matches default-path index/point
+    outputs; preserves AB/BA start-index role-flip mapping with stable overlap
+    endpoint ordering; and preserves input immutability.
 - Added canonical wrap-around closure-edge alias tests to map source branch
   names directly onto existing options-path matrices:
   - `cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_options_matrix_parity`
