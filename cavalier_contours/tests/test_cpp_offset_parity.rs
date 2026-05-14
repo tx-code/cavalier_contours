@@ -1142,3 +1142,150 @@ fn cpp_overlap_and_basic_intersection_options_role_flip_parity_nonzero_open_inde
         "closed-side input mutated by find_intersects_opt"
     );
 }
+
+#[test]
+fn cpp_overlap_endpoint_order_options_role_flip_parity() {
+    fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
+        assert!(
+            (actual_x - expected_x).abs() <= EPS && (actual_y - expected_y).abs() <= EPS,
+            "point mismatch: actual=({actual_x}, {actual_y}), expected=({expected_x}, {expected_y})"
+        );
+    }
+
+    let mut pline1 = Polyline::new();
+    pline1.add(0.0, 0.0, 0.0);
+    pline1.add(4.0, 0.0, 0.0);
+
+    let mut same_dir = Polyline::new();
+    same_dir.add(1.0, 0.0, 0.0);
+    same_dir.add(3.0, 0.0, 0.0);
+
+    let mut opposite_dir = Polyline::new();
+    opposite_dir.add(3.0, 0.0, 0.0);
+    opposite_dir.add(1.0, 0.0, 0.0);
+
+    for (label, pline2, expected_p1, expected_p2) in [
+        ("same_dir", same_dir, (1.0_f64, 0.0_f64), (3.0_f64, 0.0_f64)),
+        (
+            "opposite_dir",
+            opposite_dir,
+            (3.0_f64, 0.0_f64),
+            (1.0_f64, 0.0_f64),
+        ),
+    ] {
+        let pline1_before: Vec<_> = pline1.iter_vertexes().collect();
+        let pline2_before: Vec<_> = pline2.iter_vertexes().collect();
+
+        let pline1_aabb = pline1.create_approx_aabb_index();
+        let pline2_aabb = pline2.create_approx_aabb_index();
+        let options_ab = FindIntersectsOptions {
+            pline1_aabb_index: Some(&pline1_aabb),
+            pos_equal_eps: EPS,
+        };
+        let options_ba = FindIntersectsOptions {
+            pline1_aabb_index: Some(&pline2_aabb),
+            pos_equal_eps: EPS,
+        };
+
+        let default_ab = pline1.find_intersects(&pline2);
+        let ab = pline1.find_intersects_opt(&pline2, &options_ab);
+        let ba = pline2.find_intersects_opt(&pline1, &options_ba);
+
+        assert!(
+            default_ab.basic_intersects.is_empty(),
+            "{label}: expected no default basic intersects, got {:?}",
+            default_ab.basic_intersects
+        );
+        assert!(
+            default_ab.overlapping_intersects.len() == 1,
+            "{label}: expected one default overlap, got {:?}",
+            default_ab.overlapping_intersects
+        );
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "{label}: expected no options AB basic intersects, got {:?}",
+            ab.basic_intersects
+        );
+        assert!(
+            ab.overlapping_intersects.len() == 1,
+            "{label}: expected one options AB overlap, got {:?}",
+            ab.overlapping_intersects
+        );
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "{label}: expected no options BA basic intersects, got {:?}",
+            ba.basic_intersects
+        );
+        assert!(
+            ba.overlapping_intersects.len() == 1,
+            "{label}: expected one options BA overlap, got {:?}",
+            ba.overlapping_intersects
+        );
+
+        let default_intr = default_ab.overlapping_intersects[0];
+        let intr_ab = ab.overlapping_intersects[0];
+        let intr_ba = ba.overlapping_intersects[0];
+
+        assert_eq!(intr_ab.start_index1, intr_ba.start_index2);
+        assert_eq!(intr_ab.start_index2, intr_ba.start_index1);
+
+        assert_eq!(intr_ab.start_index1, default_intr.start_index1);
+        assert_eq!(intr_ab.start_index2, default_intr.start_index2);
+        assert_point_close(
+            intr_ab.point1.x,
+            intr_ab.point1.y,
+            default_intr.point1.x,
+            default_intr.point1.y,
+        );
+        assert_point_close(
+            intr_ab.point2.x,
+            intr_ab.point2.y,
+            default_intr.point2.x,
+            default_intr.point2.y,
+        );
+
+        assert_point_close(
+            intr_ab.point1.x,
+            intr_ab.point1.y,
+            expected_p1.0,
+            expected_p1.1,
+        );
+        assert_point_close(
+            intr_ab.point2.x,
+            intr_ab.point2.y,
+            expected_p2.0,
+            expected_p2.1,
+        );
+
+        let start_ab = pline2.at(intr_ab.start_index2).pos();
+        let dist1_ab = (start_ab.x - intr_ab.point1.x) * (start_ab.x - intr_ab.point1.x)
+            + (start_ab.y - intr_ab.point1.y) * (start_ab.y - intr_ab.point1.y);
+        let dist2_ab = (start_ab.x - intr_ab.point2.x) * (start_ab.x - intr_ab.point2.x)
+            + (start_ab.y - intr_ab.point2.y) * (start_ab.y - intr_ab.point2.y);
+        assert!(
+            dist1_ab <= dist2_ab + 1e-12,
+            "{label}: expected AB overlap point1 closest to second segment start, dist1={dist1_ab}, dist2={dist2_ab}, intr={intr_ab:?}"
+        );
+
+        let start_ba = pline1.at(intr_ba.start_index2).pos();
+        let dist1_ba = (start_ba.x - intr_ba.point1.x) * (start_ba.x - intr_ba.point1.x)
+            + (start_ba.y - intr_ba.point1.y) * (start_ba.y - intr_ba.point1.y);
+        let dist2_ba = (start_ba.x - intr_ba.point2.x) * (start_ba.x - intr_ba.point2.x)
+            + (start_ba.y - intr_ba.point2.y) * (start_ba.y - intr_ba.point2.y);
+        assert!(
+            dist1_ba <= dist2_ba + 1e-12,
+            "{label}: expected BA overlap point1 closest to second segment start, dist1={dist1_ba}, dist2={dist2_ba}, intr={intr_ba:?}"
+        );
+
+        let pline1_after: Vec<_> = pline1.iter_vertexes().collect();
+        let pline2_after: Vec<_> = pline2.iter_vertexes().collect();
+        assert_eq!(
+            pline1_after, pline1_before,
+            "{label}: pline1 mutated by options path"
+        );
+        assert_eq!(
+            pline2_after, pline2_before,
+            "{label}: pline2 mutated by options path"
+        );
+    }
+}

@@ -1046,6 +1046,13 @@ endpoint-stickiness branch closure.
     intersect with non-zero open-side segment index, keeps AB/BA role-flip
     start-index mapping and overlap endpoint ordering, and leaves both inputs
     immutable.
+- Added Rust options-path overlap-order counterpart for source-aligned
+  line-overlap direction ordering:
+  - `cpp_overlap_endpoint_order_options_role_flip_parity`
+  - verifies `find_intersects_opt` preserves overlap endpoint ordering by
+    second-segment direction for same/opposite overlap orientation, keeps AB/BA
+    start-index role flip symmetry, matches default-path overlap output, and
+    leaves both inputs immutable.
 - Strengthened offset input-immutability parity from single sample to full
   C++-mapped offset fixture matrix:
   - `cpp_parallel_offset_does_not_modify_input`
