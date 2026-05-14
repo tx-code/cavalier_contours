@@ -1089,6 +1089,13 @@ endpoint-stickiness branch closure.
     start-touch-start single-basic outputs (no overlaps), matches default-path
     index/point outputs, preserves AB/BA role-flip mapping, and leaves both
     inputs immutable.
+- Added Rust options-path circle-touch/overlap matrix counterpart for
+  source-aligned closed-circle boundaries:
+  - `cpp_circle_touch_and_overlap_options_parity_matrix`
+  - verifies `find_intersects_opt` reproduces touching-circle single-basic and
+    same/opposing-direction full-overlap outputs, matches default-path
+    index/point outputs, preserves AB/BA role-flip mapping, and leaves both
+    inputs immutable.
 - Strengthened offset input-immutability parity from single sample to full
   C++-mapped offset fixture matrix:
   - `cpp_parallel_offset_does_not_modify_input`

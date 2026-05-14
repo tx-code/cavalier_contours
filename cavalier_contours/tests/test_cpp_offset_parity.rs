@@ -2183,3 +2183,291 @@ fn cpp_open_polyline_endpoint_touch_options_parity() {
         );
     }
 }
+
+#[test]
+fn cpp_circle_touch_and_overlap_options_parity_matrix() {
+    type Point = (f64, f64);
+    type BasicExpected = (usize, usize, Point);
+    type OverlapExpected = (usize, usize, Point, Point);
+
+    #[derive(Clone)]
+    struct Case {
+        name: &'static str,
+        lhs: Polyline<f64>,
+        rhs: Polyline<f64>,
+        expected_basic: Vec<BasicExpected>,
+        expected_overlap: Vec<OverlapExpected>,
+    }
+
+    fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
+        assert!(
+            (actual_x - expected_x).abs() <= EPS && (actual_y - expected_y).abs() <= EPS,
+            "point mismatch: actual=({actual_x}, {actual_y}), expected=({expected_x}, {expected_y})"
+        );
+    }
+
+    fn normalize_basics(
+        intersects: &cavalier_contours::polyline::PlineIntersectsCollection<f64>,
+    ) -> Vec<(usize, usize, i64, i64)> {
+        let mut v = intersects
+            .basic_intersects
+            .iter()
+            .map(|intr| {
+                (
+                    intr.start_index1,
+                    intr.start_index2,
+                    (intr.point.x * 1.0e12).round() as i64,
+                    (intr.point.y * 1.0e12).round() as i64,
+                )
+            })
+            .collect::<Vec<_>>();
+        v.sort_unstable();
+        v
+    }
+
+    fn normalize_overlaps(
+        intersects: &cavalier_contours::polyline::PlineIntersectsCollection<f64>,
+    ) -> Vec<(usize, usize, i64, i64, i64, i64)> {
+        let mut v = intersects
+            .overlapping_intersects
+            .iter()
+            .map(|intr| {
+                (
+                    intr.start_index1,
+                    intr.start_index2,
+                    (intr.point1.x * 1.0e12).round() as i64,
+                    (intr.point1.y * 1.0e12).round() as i64,
+                    (intr.point2.x * 1.0e12).round() as i64,
+                    (intr.point2.y * 1.0e12).round() as i64,
+                )
+            })
+            .collect::<Vec<_>>();
+        v.sort_unstable();
+        v
+    }
+
+    let mut touch_lhs = Polyline::new_closed();
+    touch_lhs.add(0.0, 0.0, 1.0);
+    touch_lhs.add(1.0, 0.0, 1.0);
+
+    let mut touch_rhs = Polyline::new_closed();
+    touch_rhs.add(1.0, 0.0, 1.0);
+    touch_rhs.add(2.0, 0.0, 1.0);
+
+    let mut same_dir_lhs = Polyline::new_closed();
+    same_dir_lhs.add(0.0, 0.0, 1.0);
+    same_dir_lhs.add(1.0, 0.0, 1.0);
+    let same_dir_rhs = same_dir_lhs.clone();
+
+    let mut opposing_lhs = Polyline::new_closed();
+    opposing_lhs.add(0.0, 0.0, 1.0);
+    opposing_lhs.add(1.0, 0.0, 1.0);
+
+    let mut opposing_rhs = Polyline::new_closed();
+    opposing_rhs.add(0.0, 0.0, -1.0);
+    opposing_rhs.add(1.0, 0.0, -1.0);
+
+    let mut opposing_flipped_lhs = Polyline::new_closed();
+    opposing_flipped_lhs.add(0.0, 0.0, -1.0);
+    opposing_flipped_lhs.add(1.0, 0.0, -1.0);
+
+    let mut opposing_flipped_rhs = Polyline::new_closed();
+    opposing_flipped_rhs.add(0.0, 0.0, 1.0);
+    opposing_flipped_rhs.add(1.0, 0.0, 1.0);
+
+    let cases = [
+        Case {
+            name: "circles_touching",
+            lhs: touch_lhs,
+            rhs: touch_rhs,
+            expected_basic: vec![(1, 0, (1.0, 0.0))],
+            expected_overlap: vec![],
+        },
+        Case {
+            name: "circles_overlapping_same_direction",
+            lhs: same_dir_lhs,
+            rhs: same_dir_rhs,
+            expected_basic: vec![],
+            expected_overlap: vec![
+                (0, 0, (0.0, 0.0), (1.0, 0.0)),
+                (1, 1, (1.0, 0.0), (0.0, 0.0)),
+            ],
+        },
+        Case {
+            name: "circles_overlapping_opposing_direction",
+            lhs: opposing_lhs,
+            rhs: opposing_rhs,
+            expected_basic: vec![],
+            expected_overlap: vec![
+                (1, 0, (0.0, 0.0), (1.0, 0.0)),
+                (0, 1, (1.0, 0.0), (0.0, 0.0)),
+            ],
+        },
+        Case {
+            name: "circles_overlapping_opposing_direction_flipped",
+            lhs: opposing_flipped_lhs,
+            rhs: opposing_flipped_rhs,
+            expected_basic: vec![],
+            expected_overlap: vec![
+                (1, 0, (0.0, 0.0), (1.0, 0.0)),
+                (0, 1, (1.0, 0.0), (0.0, 0.0)),
+            ],
+        },
+    ];
+
+    for case in &cases {
+        let lhs_before: Vec<_> = case.lhs.iter_vertexes().collect();
+        let rhs_before: Vec<_> = case.rhs.iter_vertexes().collect();
+
+        let lhs_aabb = case.lhs.create_approx_aabb_index();
+        let rhs_aabb = case.rhs.create_approx_aabb_index();
+        let options_ab = FindIntersectsOptions {
+            pline1_aabb_index: Some(&lhs_aabb),
+            pos_equal_eps: EPS,
+        };
+        let options_ba = FindIntersectsOptions {
+            pline1_aabb_index: Some(&rhs_aabb),
+            pos_equal_eps: EPS,
+        };
+
+        let default_ab = case.lhs.find_intersects(&case.rhs);
+        let default_ba = case.rhs.find_intersects(&case.lhs);
+        let ab = case.lhs.find_intersects_opt(&case.rhs, &options_ab);
+        let ba = case.rhs.find_intersects_opt(&case.lhs, &options_ba);
+
+        assert_eq!(
+            normalize_basics(&ab),
+            normalize_basics(&default_ab),
+            "{}: options/default AB basic mismatch",
+            case.name
+        );
+        assert_eq!(
+            normalize_overlaps(&ab),
+            normalize_overlaps(&default_ab),
+            "{}: options/default AB overlap mismatch",
+            case.name
+        );
+        assert_eq!(
+            normalize_basics(&ba),
+            normalize_basics(&default_ba),
+            "{}: options/default BA basic mismatch",
+            case.name
+        );
+        assert_eq!(
+            normalize_overlaps(&ba),
+            normalize_overlaps(&default_ba),
+            "{}: options/default BA overlap mismatch",
+            case.name
+        );
+
+        assert_eq!(
+            ab.basic_intersects.len(),
+            case.expected_basic.len(),
+            "{}: basic count mismatch",
+            case.name
+        );
+        assert_eq!(
+            ab.overlapping_intersects.len(),
+            case.expected_overlap.len(),
+            "{}: overlap count mismatch",
+            case.name
+        );
+
+        for &(idx1, idx2, (x, y)) in &case.expected_basic {
+            let matched = ab.basic_intersects.iter().any(|intr| {
+                intr.start_index1 == idx1
+                    && intr.start_index2 == idx2
+                    && (intr.point.x - x).abs() <= EPS
+                    && (intr.point.y - y).abs() <= EPS
+            });
+            assert!(
+                matched,
+                "{}: missing expected basic (start_index1={}, start_index2={}, point=({}, {})), actual={:?}",
+                case.name, idx1, idx2, x, y, ab.basic_intersects
+            );
+        }
+
+        for &(idx1, idx2, (x1, y1), (x2, y2)) in &case.expected_overlap {
+            let matched = ab.overlapping_intersects.iter().any(|intr| {
+                intr.start_index1 == idx1
+                    && intr.start_index2 == idx2
+                    && (intr.point1.x - x1).abs() <= EPS
+                    && (intr.point1.y - y1).abs() <= EPS
+                    && (intr.point2.x - x2).abs() <= EPS
+                    && (intr.point2.y - y2).abs() <= EPS
+            });
+            assert!(
+                matched,
+                "{}: missing expected overlap (start_index1={}, start_index2={}, point1=({}, {}), point2=({}, {})), actual={:?}",
+                case.name, idx1, idx2, x1, y1, x2, y2, ab.overlapping_intersects
+            );
+        }
+
+        for intr_ab in &ab.basic_intersects {
+            let role_flip_match = ba.basic_intersects.iter().any(|intr_ba| {
+                intr_ab.start_index1 == intr_ba.start_index2
+                    && intr_ab.start_index2 == intr_ba.start_index1
+                    && (intr_ab.point.x - intr_ba.point.x).abs() <= EPS
+                    && (intr_ab.point.y - intr_ba.point.y).abs() <= EPS
+            });
+            assert!(
+                role_flip_match,
+                "{}: missing AB->BA basic role-flip counterpart for {:?}, BA={:?}",
+                case.name, intr_ab, ba.basic_intersects
+            );
+        }
+
+        for intr_ab in &ab.overlapping_intersects {
+            let role_flip_match = ba.overlapping_intersects.iter().any(|intr_ba| {
+                if intr_ab.start_index1 != intr_ba.start_index2
+                    || intr_ab.start_index2 != intr_ba.start_index1
+                {
+                    return false;
+                }
+                let same_order = (intr_ab.point1.x - intr_ba.point1.x).abs() <= EPS
+                    && (intr_ab.point1.y - intr_ba.point1.y).abs() <= EPS
+                    && (intr_ab.point2.x - intr_ba.point2.x).abs() <= EPS
+                    && (intr_ab.point2.y - intr_ba.point2.y).abs() <= EPS;
+                let swapped_order = (intr_ab.point1.x - intr_ba.point2.x).abs() <= EPS
+                    && (intr_ab.point1.y - intr_ba.point2.y).abs() <= EPS
+                    && (intr_ab.point2.x - intr_ba.point1.x).abs() <= EPS
+                    && (intr_ab.point2.y - intr_ba.point1.y).abs() <= EPS;
+                same_order || swapped_order
+            });
+            assert!(
+                role_flip_match,
+                "{}: missing AB->BA overlap role-flip counterpart for {:?}, BA={:?}",
+                case.name, intr_ab, ba.overlapping_intersects
+            );
+        }
+
+        let lhs_after: Vec<_> = case.lhs.iter_vertexes().collect();
+        let rhs_after: Vec<_> = case.rhs.iter_vertexes().collect();
+        assert_eq!(
+            lhs_after, lhs_before,
+            "{}: lhs mutated by find_intersects_opt",
+            case.name
+        );
+        assert_eq!(
+            rhs_after, rhs_before,
+            "{}: rhs mutated by find_intersects_opt",
+            case.name
+        );
+    }
+
+    // Sanity anchor on the touching-case expected point.
+    let mut sanity_circle_a = Polyline::new_closed();
+    sanity_circle_a.add(0.0, 0.0, 1.0);
+    sanity_circle_a.add(1.0, 0.0, 1.0);
+    let mut sanity_circle_b = Polyline::new_closed();
+    sanity_circle_b.add(1.0, 0.0, 1.0);
+    sanity_circle_b.add(2.0, 0.0, 1.0);
+    let sanity = sanity_circle_a.find_intersects(&sanity_circle_b);
+    assert_eq!(sanity.basic_intersects.len(), 1);
+    assert_point_close(
+        sanity.basic_intersects[0].point.x,
+        sanity.basic_intersects[0].point.y,
+        1.0,
+        0.0,
+    );
+}
