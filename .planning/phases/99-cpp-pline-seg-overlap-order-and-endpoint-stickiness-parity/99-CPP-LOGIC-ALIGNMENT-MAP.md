@@ -218,6 +218,12 @@ endpoint-stickiness branch closure.
   - `coincident_arc_touch_only_at_arc2_start_collection_level`
   - verifies `find_intersects` yields exactly one basic endpoint intersect with
     no overlap, including parameter inversion and reversed second-arc direction.
+- Added collection-level parity guard for coincident-arc dual-endpoint touch
+  (`TwoIntersects`) branch:
+  - `coincident_arc_end_points_touch_collection_level`
+  - verifies exactly two basic endpoint intersects with no overlap, including
+    parameter inversion and reversed second-arc direction while preserving
+    second-segment ordering semantics.
 
 ## Next Alignment Targets (No Clipper)
 
