@@ -257,6 +257,11 @@ endpoint-stickiness branch closure.
     basic entry for shifted single-intersect pairs and one overlap entry for
     shifted overlap pairs.
 - Added canonical-name alias counterpart for direct index-0-shift tracing of
+  the same single-intersect dedup path:
+  - `non_local_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - verifies parity evidence is explicitly discoverable under index-0-shift
+    naming while reusing identical shifted geometry.
+- Added canonical-name alias counterpart for direct index-0-shift tracing of
   the same overlap dedup path:
   - `non_local_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
   - verifies parity evidence is explicitly discoverable under index-0-shift
@@ -274,6 +279,7 @@ endpoint-stickiness branch closure.
   - `all_self_intersects_basic_single_intersect_pair_is_not_duplicated`
   - `all_self_intersects_basic_single_intersect_pair_is_not_duplicated_nonzero_indexes`
   - `all_self_intersects_basic_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment`
+  - `all_self_intersects_basic_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
   - `all_self_intersects_basic_overlap_pair_is_not_duplicated`
   - `all_self_intersects_basic_overlap_pair_is_not_duplicated_nonzero_indexes`
   - `all_self_intersects_basic_overlap_pair_is_not_duplicated_with_zero_length_lead_segment`

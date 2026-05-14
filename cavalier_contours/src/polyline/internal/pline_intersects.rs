@@ -4430,6 +4430,13 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn all_self_intersects_basic_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
+     {
+        // Canonical-name alias for direct index-0-shift counterpart tracing.
+        all_self_intersects_basic_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment();
+    }
+
+    #[test]
     fn all_self_intersects_basic_overlap_pair_is_not_duplicated() {
         // API-level counterpart for global-self overlap visited-pair dedup.
         // include_overlapping=false should emit no basics for overlap pair;
@@ -5602,6 +5609,13 @@ mod global_self_intersect_tests {
             Vector2::new(4.0 / 3.0, 4.0 / 3.0),
             1e-5
         );
+    }
+
+    #[test]
+    fn non_local_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
+     {
+        // Canonical-name alias for direct index-0-shift counterpart tracing.
+        non_local_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment();
     }
 
     #[test]
