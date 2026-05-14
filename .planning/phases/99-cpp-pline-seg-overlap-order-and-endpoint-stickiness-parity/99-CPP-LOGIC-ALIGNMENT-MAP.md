@@ -30,12 +30,13 @@ endpoint-stickiness branch closure.
   - `non_circle_partial_arc_overlap_arc1_reverse_dir_with_adjacent_line_flip_role_flip_symmetry`
   - `non_circle_partial_arc_overlap_arc1_reverse_dir_with_adjacent_line_flip_zero_length_lead_role_flip_symmetry`
   - `non_circle_partial_arc_overlap_both_reverse_dir_with_adjacent_line_flip_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_both_reverse_dir_with_adjacent_line_flip_zero_length_lead_role_flip_symmetry`
   - verifies AB/BA role inversion preserves overlap/basic cardinality, preserves
     role-swapped start-index attribution, and keeps overlap endpoint sets
     stable (allowing direction-order reversal) in source-traceable
     `reversed endpoint order`, `arc1 reverse`, and `both reverse` branch
     geometries, including zero-length-lead non-zero-index counterparts for
-    `reversed endpoint order` and `arc1 reverse`.
+    `reversed endpoint order`, `arc1 reverse`, and `both reverse`.
 - Added segment-level parity probes for old C++ `intrPlineSegs`
   `Circle2Circle2IntrType::TwoIntersects` sweep-classification boundaries:
   - `arc_arc_two_circle_intersections_both_in_sweeps`
