@@ -13143,4 +13143,41 @@ mod sort_and_join_overlapping_intersects_tests {
         assert_fuzzy_eq!(slice_pline[0], PlineVertex::new(8.0, 0.0, 0.0));
         assert_fuzzy_eq!(slice_pline[1], PlineVertex::new(2.0, 0.0, 0.0));
     }
+
+    #[test]
+    fn multi_segment_join_opposing_direction_marks_opposing() {
+        // Multi-segment join path (`end_intr` present and overlaps span multiple pline2 segments)
+        // with opposing segment directions.
+        let mut pline1 = Polyline::new();
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(10.0, 0.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(10.0, 0.0, 0.0);
+        pline2.add(6.0, 0.0, 0.0);
+        pline2.add(2.0, 0.0, 0.0);
+        pline2.add(0.0, 0.0, 0.0);
+
+        let mut intersects = vec![
+            PlineOverlappingIntersect::new(0, 1, Vector2::new(6.0, 0.0), Vector2::new(2.0, 0.0)),
+            PlineOverlappingIntersect::new(0, 0, Vector2::new(8.0, 0.0), Vector2::new(6.0, 0.0)),
+        ];
+
+        let slices = sort_and_join_overlapping_intersects(&mut intersects, &pline1, &pline2, 1e-5);
+        assert_eq!(slices.len(), 1);
+
+        let slice = &slices[0];
+        assert_eq!(slice.start_indexes, (0, 0));
+        assert_eq!(slice.end_indexes, (0, 1));
+        assert!(!slice.is_loop);
+        assert!(slice.opposing_directions);
+        assert_eq!(slice.view_data.start_index, 0);
+        assert_eq!(slice.view_data.end_index_offset, 1);
+
+        let slice_pline = Polyline::create_from(&slice.view(&pline2));
+        assert_eq!(slice_pline.vertex_count(), 3);
+        assert_fuzzy_eq!(slice_pline[0], PlineVertex::new(8.0, 0.0, 0.0));
+        assert_fuzzy_eq!(slice_pline[1], PlineVertex::new(6.0, 0.0, 0.0));
+        assert_fuzzy_eq!(slice_pline[2], PlineVertex::new(2.0, 0.0, 0.0));
+    }
 }
