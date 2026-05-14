@@ -13180,4 +13180,52 @@ mod sort_and_join_overlapping_intersects_tests {
         assert_fuzzy_eq!(slice_pline[1], PlineVertex::new(6.0, 0.0, 0.0));
         assert_fuzzy_eq!(slice_pline[2], PlineVertex::new(2.0, 0.0, 0.0));
     }
+
+    #[test]
+    fn find_intersects_overlapping_points_follow_second_segment_direction() {
+        let mut pline1 = Polyline::new();
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(4.0, 0.0, 0.0);
+
+        let mut same_dir = Polyline::new();
+        same_dir.add(1.0, 0.0, 0.0);
+        same_dir.add(3.0, 0.0, 0.0);
+
+        let mut opposite_dir = Polyline::new();
+        opposite_dir.add(3.0, 0.0, 0.0);
+        opposite_dir.add(1.0, 0.0, 0.0);
+
+        for (label, pline2, expected_p1, expected_p2) in [
+            (
+                "same_dir",
+                same_dir,
+                Vector2::new(1.0, 0.0),
+                Vector2::new(3.0, 0.0),
+            ),
+            (
+                "opposite_dir",
+                opposite_dir,
+                Vector2::new(3.0, 0.0),
+                Vector2::new(1.0, 0.0),
+            ),
+        ] {
+            let intrs = find_intersects(&pline1, &pline2, &Default::default());
+            assert_eq!(
+                intrs.overlapping_intersects.len(),
+                1,
+                "{label}: expected one overlap"
+            );
+            let intr = intrs.overlapping_intersects[0];
+            assert_fuzzy_eq!(intr.point1, expected_p1);
+            assert_fuzzy_eq!(intr.point2, expected_p2);
+
+            let start = pline2.at(intr.start_index2).pos();
+            let dist1 = dist_squared(start, intr.point1);
+            let dist2 = dist_squared(start, intr.point2);
+            assert!(
+                dist1 <= dist2 + 1e-12,
+                "{label}: expected point1 to be closest to second segment start, dist1={dist1}, dist2={dist2}, intr={intr:?}"
+            );
+        }
+    }
 }
