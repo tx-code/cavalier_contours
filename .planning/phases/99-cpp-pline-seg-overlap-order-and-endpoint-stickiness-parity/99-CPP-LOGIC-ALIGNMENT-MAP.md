@@ -266,6 +266,12 @@ endpoint-stickiness branch closure.
   - `coincident_arc_touch_only_at_arc1_start_collection_level_nonzero_index_role_flip`
   - verifies single-touch behavior remains stable when arc segments are not at
     index 0, including parameter inversion and reversed second-arc direction.
+- Added distinct-index role-inversion counterpart for the same single-touch
+  branch:
+  - `coincident_arc_touch_only_at_arc1_start_collection_level_distinct_nonzero_indexes_role_flip`
+  - verifies explicit `start_index1/start_index2` role swapping under parameter
+    inversion when the intersecting arc segments have different non-zero
+    indexes.
 - Added non-zero-segment-index collection-level counterpart for the
   `arc2 start == arc1 end` single-touch branch:
   - `coincident_arc_touch_only_at_arc2_start_collection_level_nonzero_index_role_flip`
