@@ -1588,6 +1588,70 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn coincident_arc_full_overlap_collection_level_nonzero_index_role_flip() {
+        // Non-zero-index counterpart for coincident full-overlap branch; keeps arc segments at
+        // index 1 with bounded pre-segments to avoid unrelated intersections.
+        let bulge = bulge_from_angle(FRAC_PI_2);
+
+        let mut pline1 = Polyline::new();
+        pline1.add(1.2, 1.2, 0.0);
+        pline1.add(1.0, 1.0, 1.0);
+        pline1.add(3.0, 1.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(1.8, -0.2, 0.0);
+        pline2.add(2.0, 0.0, bulge);
+        pline2.add(3.0, 1.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+        assert!(intrs.basic_intersects.is_empty());
+        assert_eq!(intrs.overlapping_intersects.len(), 1);
+        assert_eq!(intrs.overlapping_intersects[0].start_index1, 1);
+        assert_eq!(intrs.overlapping_intersects[0].start_index2, 1);
+        assert_fuzzy_eq!(
+            intrs.overlapping_intersects[0].point1,
+            Vector2::new(2.0, 0.0)
+        );
+        assert_fuzzy_eq!(
+            intrs.overlapping_intersects[0].point2,
+            Vector2::new(3.0, 1.0)
+        );
+
+        let intrs_flipped = find_intersects(&pline2, &pline1, &Default::default());
+        assert!(intrs_flipped.basic_intersects.is_empty());
+        assert_eq!(intrs_flipped.overlapping_intersects.len(), 1);
+        assert_eq!(intrs_flipped.overlapping_intersects[0].start_index1, 1);
+        assert_eq!(intrs_flipped.overlapping_intersects[0].start_index2, 1);
+        assert_fuzzy_eq!(
+            intrs_flipped.overlapping_intersects[0].point1,
+            Vector2::new(2.0, 0.0)
+        );
+        assert_fuzzy_eq!(
+            intrs_flipped.overlapping_intersects[0].point2,
+            Vector2::new(3.0, 1.0)
+        );
+
+        let mut pline2_reversed = Polyline::new();
+        pline2_reversed.add(3.2, 0.8, 0.0);
+        pline2_reversed.add(3.0, 1.0, -bulge);
+        pline2_reversed.add(2.0, 0.0, 0.0);
+
+        let intrs_reversed = find_intersects(&pline1, &pline2_reversed, &Default::default());
+        assert!(intrs_reversed.basic_intersects.is_empty());
+        assert_eq!(intrs_reversed.overlapping_intersects.len(), 1);
+        assert_eq!(intrs_reversed.overlapping_intersects[0].start_index1, 1);
+        assert_eq!(intrs_reversed.overlapping_intersects[0].start_index2, 1);
+        assert_fuzzy_eq!(
+            intrs_reversed.overlapping_intersects[0].point1,
+            Vector2::new(3.0, 1.0)
+        );
+        assert_fuzzy_eq!(
+            intrs_reversed.overlapping_intersects[0].point2,
+            Vector2::new(2.0, 0.0)
+        );
+    }
+
+    #[test]
     fn coincident_arc_partial_overlap_collection_level_ordering() {
         // Collection-level guard for old C++ `intrPlineSegs` coincident-arc branch where overlap
         // is partial (neither arc fully contains the other).
