@@ -32,10 +32,11 @@ endpoint-stickiness branch closure.
   - `overlapping_circles_same_dir_flipped_index`
   - `overlapping_circles_opposing_dir`
   - `unsorted_same_segment_overlaps_are_sorted_and_joined`
+  - `unsorted_multi_segment_overlaps_are_sorted_and_joined`
   - verifies `sort_and_join_overlapping_intersects` marks full overlap as
     `is_loop=true` with stable `start_index` / `end_index_offset` view data in
     both same-direction and opposing-direction paths, and still sorts+joins
-    out-of-order overlaps on the same segment.
+    out-of-order overlaps on the same segment and across multiple segments.
 - Added bounded collection-level parity for `skip_intr_at_end` endpoint-elision
   symmetry in open vs closed paths:
   - `skip_intr_at_end_open_pline1_uses_next_segment_index`

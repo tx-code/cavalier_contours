@@ -13033,4 +13033,44 @@ mod sort_and_join_overlapping_intersects_tests {
         assert_fuzzy_eq!(slice_pline[0], PlineVertex::new(1.0, 0.0, 0.0));
         assert_fuzzy_eq!(slice_pline[1], PlineVertex::new(4.0, 0.0, 0.0));
     }
+
+    #[test]
+    fn unsorted_multi_segment_overlaps_are_sorted_and_joined() {
+        // Sorting-path guard across multiple segments: overlaps arrive out of index order
+        // and should still stitch into one continuous slice.
+        let mut pline1 = Polyline::new();
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(2.0, 0.0, 0.0);
+        pline1.add(4.0, 0.0, 0.0);
+        pline1.add(6.0, 0.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(0.0, 0.0, 0.0);
+        pline2.add(2.0, 0.0, 0.0);
+        pline2.add(4.0, 0.0, 0.0);
+        pline2.add(6.0, 0.0, 0.0);
+
+        let mut intersects = vec![
+            PlineOverlappingIntersect::new(2, 2, Vector2::new(4.0, 0.0), Vector2::new(5.0, 0.0)),
+            PlineOverlappingIntersect::new(0, 0, Vector2::new(1.0, 0.0), Vector2::new(2.0, 0.0)),
+            PlineOverlappingIntersect::new(1, 1, Vector2::new(2.0, 0.0), Vector2::new(4.0, 0.0)),
+        ];
+
+        let slices = sort_and_join_overlapping_intersects(&mut intersects, &pline1, &pline2, 1e-5);
+        assert_eq!(slices.len(), 1);
+
+        let slice = &slices[0];
+        assert_eq!(slice.start_indexes, (0, 0));
+        assert_eq!(slice.end_indexes, (2, 2));
+        assert!(!slice.is_loop);
+        assert_eq!(slice.view_data.start_index, 0);
+        assert_eq!(slice.view_data.end_index_offset, 2);
+
+        let slice_pline = Polyline::create_from(&slice.view(&pline2));
+        assert_eq!(slice_pline.vertex_count(), 4);
+        assert_fuzzy_eq!(slice_pline[0], PlineVertex::new(1.0, 0.0, 0.0));
+        assert_fuzzy_eq!(slice_pline[1], PlineVertex::new(2.0, 0.0, 0.0));
+        assert_fuzzy_eq!(slice_pline[2], PlineVertex::new(4.0, 0.0, 0.0));
+        assert_fuzzy_eq!(slice_pline[3], PlineVertex::new(5.0, 0.0, 0.0));
+    }
 }
