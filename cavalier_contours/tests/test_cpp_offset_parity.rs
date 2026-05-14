@@ -7146,8 +7146,9 @@ fn cpp_wrap_around_closed_side_reversed_closure_basic_options_matrix_parity() {
 #[test]
 fn cpp_wrap_around_open_side_reversed_closed_side_reversed_role_flip_options_parity() {
     // Canonical alias for the closed-side-reversed role-flip-symmetry
-    // wrap-around closure-edge options-path matrix.
-    cpp_overlap_and_basic_intersection_options_matrix_parity();
+    // wrap-around closure-edge options-path probe, bound to the explicit
+    // branch-specific semantic test.
+    cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_options_matrix_parity();
 }
 
 #[test]
@@ -7160,8 +7161,9 @@ fn cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_options_m
 #[test]
 fn cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_role_flip_options_matrix_parity() {
     // Canonical alias for the open-side-reversed + closed-pline2 role-flip
-    // closure-edge options-path matrix.
-    cpp_overlap_and_basic_intersection_options_matrix_parity();
+    // closure-edge options-path probe, bound to the explicit
+    // branch-specific semantic test.
+    cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_options_matrix_parity();
 }
 
 #[test]
@@ -7176,8 +7178,9 @@ fn cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_role_flip
 fn cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_start_index_rotation_options_matrix_parity(
 ) {
     // Canonical alias for the wrap-around open-side-reversed + closed-pline2
-    // closure-edge start-index-rotation options-path matrix.
-    cpp_overlap_and_basic_intersection_options_matrix_parity();
+    // closure-edge start-index-rotation options-path probe, bound to the
+    // explicit start-index-rotation semantic test.
+    cpp_wrap_around_open_side_reversed_closed_side_reversed_start_index_rotation_options_parity();
 }
 
 #[test]
