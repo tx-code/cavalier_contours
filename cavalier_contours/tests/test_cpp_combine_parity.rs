@@ -501,6 +501,65 @@ fn cpp_circle_rectangle_combine_does_not_modify_input() {
 }
 
 #[test]
+fn cpp_circle_rectangle_combine_matrix_does_not_modify_input() {
+    fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
+        pline.invert_direction_mut();
+        pline
+    }
+
+    let (subject, clip) = circle_rectangle_inputs();
+    let subject_rotated = pline_closed![(10.0, 1.0, 1.0), (0.0, 1.0, 1.0)];
+    let clip_rotated = pline_closed![
+        (6.0, -10.0, 0.0),
+        (6.0, 10.0, 0.0),
+        (3.0, 10.0, 0.0),
+        (3.0, -10.0, 0.0)
+    ];
+
+    let subject_variants = [
+        subject.clone(),
+        subject_rotated.clone(),
+        reversed(subject),
+        reversed(subject_rotated),
+    ];
+    let clip_variants = [
+        clip.clone(),
+        clip_rotated.clone(),
+        reversed(clip),
+        reversed(clip_rotated),
+    ];
+
+    for op in [
+        BooleanOp::Or,
+        BooleanOp::Not,
+        BooleanOp::And,
+        BooleanOp::Xor,
+    ] {
+        for (s_idx, a) in subject_variants.iter().enumerate() {
+            for (c_idx, b) in clip_variants.iter().enumerate() {
+                let a_before: Vec<_> = a.iter_vertexes().collect();
+                let b_before: Vec<_> = b.iter_vertexes().collect();
+
+                let _ = a.boolean(b, op);
+                let _ = b.boolean(a, op);
+
+                let a_after: Vec<_> = a.iter_vertexes().collect();
+                let b_after: Vec<_> = b.iter_vertexes().collect();
+
+                assert_eq!(
+                    a_after, a_before,
+                    "subject mutated in matrix variant s_idx={s_idx} c_idx={c_idx} op={op:?}"
+                );
+                assert_eq!(
+                    b_after, b_before,
+                    "clip mutated in matrix variant s_idx={s_idx} c_idx={c_idx} op={op:?}"
+                );
+            }
+        }
+    }
+}
+
+#[test]
 fn cpp_coincident_combine_does_not_modify_input() {
     for case in cpp_coincident_cases() {
         let subject_before: Vec<_> = case.subject.iter_vertexes().collect();
