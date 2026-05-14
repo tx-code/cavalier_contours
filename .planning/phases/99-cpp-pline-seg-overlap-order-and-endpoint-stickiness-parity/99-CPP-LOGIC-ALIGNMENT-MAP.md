@@ -224,6 +224,12 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_reversed_second_segment_shared_end_keeps_both_with_zero_length_lead_segment`
   - verifies prepending a zero-length lead segment (index shift) still retains
     both points for the shifted target pair.
+- Added API-level `all_self_intersects_as_basic` counterparts for the same
+  non-zero + reversed shared-end-anchor `TwoIntersects` path:
+  - `all_self_intersects_basic_two_intersects_reversed_second_segment_shared_end_keeps_both_nonzero`
+  - `all_self_intersects_basic_two_intersects_reversed_second_segment_shared_end_keeps_both_with_zero_length_lead_segment`
+  - verifies both `include_overlapping=false/true` retain both points for the
+    targeted pair, including the zero-length-lead re-parameterization shift.
 - Added complementary non-zero + reversed + no-shared-end counterpart for
   global-self `TwoIntersects`:
   - `non_local_two_intersects_reversed_second_segment_keeps_both_nonzero`
