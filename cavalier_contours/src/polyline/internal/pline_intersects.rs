@@ -13228,4 +13228,41 @@ mod sort_and_join_overlapping_intersects_tests {
             );
         }
     }
+
+    #[test]
+    fn full_closed_line_overlap_loop_uses_vertex_count_minus_one_offset() {
+        let mut pline1 = Polyline::new_closed();
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(4.0, 0.0, 0.0);
+        pline1.add(4.0, 2.0, 0.0);
+        pline1.add(0.0, 2.0, 0.0);
+
+        let mut pline2 = Polyline::new_closed();
+        pline2.add(0.0, 0.0, 0.0);
+        pline2.add(4.0, 0.0, 0.0);
+        pline2.add(4.0, 2.0, 0.0);
+        pline2.add(0.0, 2.0, 0.0);
+
+        let mut intrs = find_intersects(&pline1, &pline2, &Default::default());
+        let slices = sort_and_join_overlapping_intersects(
+            &mut intrs.overlapping_intersects,
+            &pline1,
+            &pline2,
+            1e-5,
+        );
+        assert_eq!(slices.len(), 1);
+
+        let slice = &slices[0];
+        assert!(slice.is_loop);
+        assert_eq!(slice.view_data.start_index, 0);
+        assert_eq!(slice.view_data.end_index_offset, pline2.vertex_count() - 1);
+
+        let slice_pline = Polyline::create_from(&slice.view(&pline2));
+        assert_eq!(slice_pline.vertex_count(), pline2.vertex_count() + 1);
+        assert_fuzzy_eq!(slice_pline[0], pline2[0]);
+        assert_fuzzy_eq!(slice_pline[1], pline2[1]);
+        assert_fuzzy_eq!(slice_pline[2], pline2[2]);
+        assert_fuzzy_eq!(slice_pline[3], pline2[3]);
+        assert_fuzzy_eq!(slice_pline[4], pline2[0].with_bulge(0.0));
+    }
 }

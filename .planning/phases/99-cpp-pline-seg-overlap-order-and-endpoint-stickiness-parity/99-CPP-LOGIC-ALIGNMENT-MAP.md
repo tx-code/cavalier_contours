@@ -37,6 +37,7 @@ endpoint-stickiness branch closure.
   - `same_segment_join_opposing_direction_marks_opposing`
   - `multi_segment_join_opposing_direction_marks_opposing`
   - `find_intersects_overlapping_points_follow_second_segment_direction`
+  - `full_closed_line_overlap_loop_uses_vertex_count_minus_one_offset`
   - verifies `sort_and_join_overlapping_intersects` marks full overlap as
     `is_loop=true` with stable `start_index` / `end_index_offset` view data in
     both same-direction and opposing-direction paths, and still sorts+joins
@@ -45,7 +46,8 @@ endpoint-stickiness branch closure.
     `opposing_directions=true` when segment directions are opposite, including
     both joined-on-same-segment and joined-across-multiple-segments branches;
     and confirms `find_intersects` overlap endpoints respect second-segment
-    direction ordering invariant (`point1` closest to segment start).
+    direction ordering invariant (`point1` closest to segment start), including
+    loop offset behavior on closed multi-segment line overlaps (`vc - 1`).
 - Added bounded collection-level parity for `skip_intr_at_end` endpoint-elision
   symmetry in open vs closed paths:
   - `skip_intr_at_end_open_pline1_uses_next_segment_index`
