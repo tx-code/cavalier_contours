@@ -215,6 +215,11 @@ endpoint-stickiness branch closure.
   - verifies AB remains aligned to C++-mapped `NOT` expected geometry and BA
     remains stable versus the circle/rectangle BA baseline across all
     rotated/reversed subject/clip variants.
+- Added FFI-side counterpart for the same circle/rectangle `NOT`
+  start-index-rotation matrix:
+  - `pline_boolean_circle_rectangle_not_start_index_rotation_matrix_parity`
+  - verifies `cavc_pline_boolean` remains aligned with C++-mapped AB `NOT`
+    expectations and stable BA baseline across rotated/reversed variants.
 - Added source-aligned input immutability parity for circle/rectangle combine
   modes (mirrors old C++ no-modify suite coverage):
   - `cpp_circle_rectangle_combine_does_not_modify_input`
