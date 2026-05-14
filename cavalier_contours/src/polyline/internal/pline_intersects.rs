@@ -1344,6 +1344,41 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_coincident_arc_overlap_reversed_second_segment_ordering_with_zero_length_lead_segment_index0_shift()
+     {
+        // Re-parameterization counterpart for index-0 reversed second-segment
+        // coincident-arc overlap ordering.
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(1.0, 1.0, 0.0);
+        pline.add(1.0, 1.0, 1.0); // zero-length lead + original first vertex
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(3.0, 1.0, -quarter);
+        pline.add(2.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        assert!(
+            !intrs.overlapping_intersects.is_empty(),
+            "expected at least one overlapping global self intersect"
+        );
+
+        let has_target_overlap = intrs.overlapping_intersects.iter().any(|overlap| {
+            let expected_index_pair = (overlap.start_index1 == 1 && overlap.start_index2 == 5)
+                || (overlap.start_index1 == 5 && overlap.start_index2 == 1);
+            expected_index_pair
+                && overlap.point1.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)
+                && overlap.point2.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5)
+        });
+        assert!(
+            has_target_overlap,
+            "missing expected shifted reversed-order overlap [3,1]-[2,0] for pair (1,5), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
+
+    #[test]
     fn non_local_shared_end_point_pair_is_skipped() {
         // Global-self skip-at-end probe:
         // segment 0 and segment 4 meet at the same end point (0, 0), so that
