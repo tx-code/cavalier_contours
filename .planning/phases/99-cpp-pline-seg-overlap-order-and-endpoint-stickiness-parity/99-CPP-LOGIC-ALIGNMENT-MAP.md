@@ -60,6 +60,14 @@ endpoint-stickiness branch closure.
     preserves role-swapped basic/overlap start-index mapping with non-zero
     indexes, and preserves source-aligned overlap endpoint-order stability
     (`AB point1/point2 == BA point1/point2`).
+- Added collection-level role-flip symmetry guard for bounded both-closed
+  `arc2 reverse` mixed arc + adjacent-line overlap with zero-length lead index
+  shift:
+  - `non_circle_partial_arc_overlap_arc2_reverse_dir_both_closed_zero_length_lead_role_flip_symmetry`
+  - verifies AB/BA role inversion preserves no-basic + one-overlap structure,
+    preserves role-swapped overlap start-index mapping with non-zero indexes,
+    and preserves source-aligned overlap endpoint-order reversal
+    (`AB point1/point2 == BA point2/point1`).
 - Added segment-level parity probes for old C++ `intrPlineSegs`
   `Circle2Circle2IntrType::TwoIntersects` sweep-classification boundaries:
   - `arc_arc_two_circle_intersections_both_in_sweeps`
