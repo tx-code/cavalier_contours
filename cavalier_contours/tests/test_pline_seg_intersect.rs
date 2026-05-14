@@ -130,6 +130,72 @@ fn arc_line_tangent_outside_sweep_no_intersect() {
 }
 
 #[test]
+fn line_arc_two_intersections_only_one_in_sweep_non_sticky() {
+    // Source-aligned with old C++ `intrPlineSegs` line-arc path where line-circle
+    // has two intersections but only one lies within the arc sweep, and neither
+    // line endpoint is sticky-on-arc.
+    let quarter = bulge_from_angle(FRAC_PI_2);
+    let line_start = PlineVertex::new(-6.0, 3.0, 0.0);
+    let line_end = PlineVertex::new(6.0, 3.0, 0.0);
+    let arc_start = PlineVertex::new(0.0, 5.0, -quarter);
+    let arc_end = PlineVertex::new(5.0, 0.0, 0.0);
+
+    let result = pline_seg_intr(line_start, line_end, arc_start, arc_end, 1e-5);
+    assert_case_eq!(
+        result,
+        OneIntersect {
+            point: Vector2::new(4.0, 3.0)
+        }
+    );
+}
+
+#[test]
+fn arc_line_two_intersections_only_one_in_sweep_non_sticky() {
+    // Symmetric `u_is_line` counterpart of the same non-sticky one-in-sweep branch.
+    let quarter = bulge_from_angle(FRAC_PI_2);
+    let arc_start = PlineVertex::new(0.0, 5.0, -quarter);
+    let arc_end = PlineVertex::new(5.0, 0.0, 0.0);
+    let line_start = PlineVertex::new(-6.0, 3.0, 0.0);
+    let line_end = PlineVertex::new(6.0, 3.0, 0.0);
+
+    let result = pline_seg_intr(arc_start, arc_end, line_start, line_end, 1e-5);
+    assert_case_eq!(
+        result,
+        OneIntersect {
+            point: Vector2::new(4.0, 3.0)
+        }
+    );
+}
+
+#[test]
+fn line_arc_two_intersections_both_outside_sweep_no_intersect() {
+    // Source-aligned with old C++ `intrPlineSegs` line-arc path where line-circle
+    // has two intersections but both are outside the arc sweep.
+    let quarter = bulge_from_angle(FRAC_PI_2);
+    let line_start = PlineVertex::new(-6.0, 3.0, 0.0);
+    let line_end = PlineVertex::new(6.0, 3.0, 0.0);
+    let arc_start = PlineVertex::new(0.0, -5.0, quarter);
+    let arc_end = PlineVertex::new(5.0, 0.0, 0.0);
+
+    let result = pline_seg_intr(line_start, line_end, arc_start, arc_end, 1e-5);
+    assert_case_eq!(result, NoIntersect::<f64>);
+}
+
+#[test]
+fn arc_line_two_intersections_both_outside_sweep_no_intersect() {
+    // Symmetric `u_is_line` counterpart where both line-circle intersections are
+    // outside sweep and therefore filtered out.
+    let quarter = bulge_from_angle(FRAC_PI_2);
+    let arc_start = PlineVertex::new(0.0, -5.0, quarter);
+    let arc_end = PlineVertex::new(5.0, 0.0, 0.0);
+    let line_start = PlineVertex::new(-6.0, 3.0, 0.0);
+    let line_end = PlineVertex::new(6.0, 3.0, 0.0);
+
+    let result = pline_seg_intr(arc_start, arc_end, line_start, line_end, 1e-5);
+    assert_case_eq!(result, NoIntersect::<f64>);
+}
+
+#[test]
 fn overlapping_lines() {
     let v1 = PlineVertex::new(3.0, 3.0, 0.0);
     let v2 = PlineVertex::new(1.0, 1.0, 0.0);
