@@ -1229,6 +1229,40 @@ mod global_self_intersect_tests {
             intrs.overlapping_intersects
         );
     }
+
+    #[test]
+    fn non_local_coincident_arc_overlap_reversed_second_segment_ordering() {
+        // Global-self coincident-arc overlap with reversed second-segment direction.
+        // segment 0 and segment 4 overlap and should report overlap endpoints ordered by
+        // segment 4 direction.
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(1.0, 1.0, 1.0);
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(3.0, 1.0, -quarter);
+        pline.add(2.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        assert!(
+            !intrs.overlapping_intersects.is_empty(),
+            "expected at least one overlapping global self intersect"
+        );
+
+        let has_target_overlap = intrs.overlapping_intersects.iter().any(|overlap| {
+            let expected_index_pair = (overlap.start_index1 == 0 && overlap.start_index2 == 4)
+                || (overlap.start_index1 == 4 && overlap.start_index2 == 0);
+            expected_index_pair
+                && overlap.point1.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)
+                && overlap.point2.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5)
+        });
+        assert!(
+            has_target_overlap,
+            "missing expected reversed-order overlap [3,1]-[2,0], actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
 }
 
 #[cfg(test)]
