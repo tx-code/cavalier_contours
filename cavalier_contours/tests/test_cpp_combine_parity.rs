@@ -584,6 +584,87 @@ fn cpp_coincident_combine_does_not_modify_input() {
 }
 
 #[test]
+fn cpp_coincident_combine_matrix_does_not_modify_input() {
+    fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
+        pline.invert_direction_mut();
+        pline
+    }
+
+    fn rotate_closed_start(pline: &Polyline<f64>, shift: usize) -> Polyline<f64> {
+        let verts: Vec<_> = pline.iter_vertexes().collect();
+        let len = verts.len();
+        let shift = shift % len;
+        let mut result = Polyline::new_closed();
+        for i in 0..len {
+            let v = verts[(i + shift) % len];
+            result.add(v.x, v.y, v.bulge);
+        }
+        result
+    }
+
+    for (case_name, inputs, subject_shift, clip_shift) in [
+        (
+            "coincident_case1",
+            coincident_case1_inputs as fn() -> (Polyline<f64>, Polyline<f64>),
+            1usize,
+            3usize,
+        ),
+        (
+            "coincident_case2",
+            coincident_case2_inputs as fn() -> (Polyline<f64>, Polyline<f64>),
+            1usize,
+            2usize,
+        ),
+    ] {
+        let (subject, clip) = inputs();
+        let subject_rotated = rotate_closed_start(&subject, subject_shift);
+        let clip_rotated = rotate_closed_start(&clip, clip_shift);
+
+        let subject_variants = [
+            subject.clone(),
+            subject_rotated.clone(),
+            reversed(subject.clone()),
+            reversed(subject_rotated),
+        ];
+        let clip_variants = [
+            clip.clone(),
+            clip_rotated.clone(),
+            reversed(clip.clone()),
+            reversed(clip_rotated),
+        ];
+
+        for op in [
+            BooleanOp::Or,
+            BooleanOp::Not,
+            BooleanOp::And,
+            BooleanOp::Xor,
+        ] {
+            for (s_idx, a) in subject_variants.iter().enumerate() {
+                for (c_idx, b) in clip_variants.iter().enumerate() {
+                    let a_before: Vec<_> = a.iter_vertexes().collect();
+                    let b_before: Vec<_> = b.iter_vertexes().collect();
+
+                    let _ = a.boolean(b, op);
+                    let _ = b.boolean(a, op);
+
+                    let a_after: Vec<_> = a.iter_vertexes().collect();
+                    let b_after: Vec<_> = b.iter_vertexes().collect();
+
+                    assert_eq!(
+                        a_after, a_before,
+                        "subject mutated for {case_name} in matrix variant s_idx={s_idx} c_idx={c_idx} op={op:?}"
+                    );
+                    assert_eq!(
+                        b_after, b_before,
+                        "clip mutated for {case_name} in matrix variant s_idx={s_idx} c_idx={c_idx} op={op:?}"
+                    );
+                }
+            }
+        }
+    }
+}
+
+#[test]
 fn cpp_circle_rectangle_commutative_role_flip_matrix_parity() {
     fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
         pline.invert_direction_mut();

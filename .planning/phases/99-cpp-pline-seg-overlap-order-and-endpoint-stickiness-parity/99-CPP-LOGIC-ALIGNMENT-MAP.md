@@ -1189,6 +1189,12 @@ endpoint-stickiness branch closure.
   - `cpp_coincident_combine_does_not_modify_input`
   - verifies all coincident case operations (`OR`/`NOT`/`AND`/`XOR`) preserve
     both input polylines.
+- Strengthened the same C++ coincident combine immutability parity to full
+  orientation+start-index-rotation matrix variants:
+  - `cpp_coincident_combine_matrix_does_not_modify_input`
+  - verifies AB/BA `OR`/`NOT`/`AND`/`XOR` calls do not mutate either input
+    across reversed and rotated closed-polyline variants for both coincident
+    fixture families.
 - Added source-aligned primitive parity probes for coincident-arc single-endpoint
   touch branches in old C++ `intrPlineSegs`:
   - `arc_arc_coincident_touch_only_at_arc1_start`
