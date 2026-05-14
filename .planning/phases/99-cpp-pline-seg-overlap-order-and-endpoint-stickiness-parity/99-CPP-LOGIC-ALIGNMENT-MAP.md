@@ -1970,6 +1970,17 @@ endpoint-stickiness branch closure.
   - closes the generic both-closed start-index-rotation role-flip
     zero-length-lead matrix for this branch family set (no missing counterparts
     in `pline_intersects`).
+- Added closed-side-specific (non both-closed) zero-length-lead non-zero-index
+  role-flip symmetry guards for non-circle wrap-around dedup start-index
+  rotation branches:
+  - `wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline1_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline2_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_deduplication_reversed_order_closed_pline1_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_deduplication_reversed_order_closed_pline2_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - closes this deduplication sub-matrix (`same/reversed` x `closed_pline1/2`)
+    for `*_start_index_rotation_role_flip_symmetry` vs
+    `*_start_index_rotation_zero_length_lead_role_flip_symmetry`
+    counterparts.
 
 ## Next Alignment Targets (No Clipper)
 
