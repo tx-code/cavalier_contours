@@ -4456,6 +4456,74 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn all_self_intersects_basic_two_intersects_reversed_second_segment_keeps_both() {
+        // API-level counterpart for index-0 + reversed + no-shared-end
+        // `TwoIntersects`.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 4)
+                    || (intr.start_index1 == 4 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 4)
+                    || (intr.start_index1 == 4 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            2,
+            "expected two basics for pair (0,4) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            2,
+            "expected two basics for pair (0,4) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert!(
+            pair_without_overlap
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5))
+                && pair_without_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5))
+                && pair_with_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5))
+                && pair_with_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)),
+            "expected both two-intersect points for pair (0,4), actual pair points: without={:?}, with={:?}",
+            pair_without_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>(),
+            pair_with_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
     fn all_self_intersects_basic_two_intersects_reversed_second_segment_keeps_both_nonzero() {
         // API-level counterpart for non-zero + reversed + no-shared-end `TwoIntersects`.
         let mut pline = Polyline::new();
@@ -5442,6 +5510,47 @@ mod global_self_intersect_tests {
                     .iter()
                     .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)),
             "expected both two-intersect points for shifted pair (1,5), actual pair points: {:?}",
+            target_pair.iter().map(|x| x.point).collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn non_local_two_intersects_reversed_second_segment_keeps_both() {
+        // Index-0 + reversed counterpart where `TwoIntersects` should keep both points:
+        // segment 0 (arc) and segment 4 (line, reversed) intersect at (-1, 0)
+        // and (1, 0), and neither is a shared end point for both segments.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 4)
+                    || (intr.start_index1 == 4 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            2,
+            "expected two retained basic intersects for pair (0,4), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert!(
+            target_pair
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5))
+                && target_pair
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)),
+            "expected both two-intersect points for pair (0,4), actual pair points: {:?}",
             target_pair.iter().map(|x| x.point).collect::<Vec<_>>()
         );
     }

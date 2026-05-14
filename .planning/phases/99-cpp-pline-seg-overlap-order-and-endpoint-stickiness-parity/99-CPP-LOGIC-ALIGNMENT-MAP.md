@@ -324,11 +324,12 @@ endpoint-stickiness branch closure.
   - verifies both `include_overlapping=false/true` retain both points for the
   targeted pair across index-0/non-zero paths, including the zero-length-lead
     re-parameterization shift (including index-0 zero-length shift).
-- Added complementary non-zero + reversed + no-shared-end counterpart for
-  global-self `TwoIntersects`:
+- Added complementary index-0/non-zero + reversed + no-shared-end counterparts
+  for global-self `TwoIntersects`:
+  - `non_local_two_intersects_reversed_second_segment_keeps_both`
   - `non_local_two_intersects_reversed_second_segment_keeps_both_nonzero`
   - verifies both points are retained when the reversed second-segment path has
-    no shared-endpoint skip condition.
+    no shared-endpoint skip condition across index-0/non-zero pair indexes.
 - Added re-parameterization counterpart for the same non-zero + reversed
   `TwoIntersects` positive path:
   - `non_local_two_intersects_reversed_second_segment_keeps_both_with_zero_length_lead_segment`
@@ -336,10 +337,12 @@ endpoint-stickiness branch closure.
     both points for the shifted target pair.
 - Added API-level `all_self_intersects_as_basic` counterparts for the same
   non-zero + reversed + no-shared-end `TwoIntersects` path:
+  - `all_self_intersects_basic_two_intersects_reversed_second_segment_keeps_both`
   - `all_self_intersects_basic_two_intersects_reversed_second_segment_keeps_both_nonzero`
   - `all_self_intersects_basic_two_intersects_reversed_second_segment_keeps_both_with_zero_length_lead_segment`
   - verifies both `include_overlapping=false/true` retain both points for the
-    targeted pair, including the zero-length-lead re-parameterization shift.
+    targeted pair across index-0/non-zero paths, including the zero-length-lead
+    re-parameterization shift.
 - Added bounded mixed line/arc overlap-adjacent collection-level parity probe:
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication`
 - Added closed/open asymmetry probe for mixed line/arc overlap-adjacent dedup:
