@@ -1981,6 +1981,21 @@ endpoint-stickiness branch closure.
     for `*_start_index_rotation_role_flip_symmetry` vs
     `*_start_index_rotation_zero_length_lead_role_flip_symmetry`
     counterparts.
+- Added zero-length-lead non-zero-index role-flip symmetry guards for the
+  remaining non-circle wrap-around closure-basic start-index-rotation families:
+  - `wrap_around_non_circle_arc_overlap_closed_side_reversed_closure_basic_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_intersect_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_intersect_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_normal_closed_side_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_side_reversed_start_index_rotation_zero_length_lead_role_flip_symmetry`
+  - closes the full `wrap_around_non_circle_arc_overlap*` collection-level
+    `*_start_index_rotation_role_flip_symmetry` vs
+    `*_start_index_rotation_zero_length_lead_role_flip_symmetry` counterpart
+    matrix (`MISSING_COUNT=0` in `pline_intersects` scan).
 
 ## Next Alignment Targets (No Clipper)
 
