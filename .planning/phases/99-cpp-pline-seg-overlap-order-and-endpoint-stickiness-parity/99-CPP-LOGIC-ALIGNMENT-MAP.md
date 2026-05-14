@@ -69,6 +69,12 @@ endpoint-stickiness branch closure.
   - verifies explicit `LineSeg2LineSeg2IntrType::True -> OneIntersect` mapping
     and explicit `LineSeg2LineSeg2IntrType::False/None -> NoIntersect`
     mappings.
+- Added collection-level guards for the same line-line non-overlap split in
+  `find_intersects` with overlapping AABB candidates:
+  - `line_line_false_intersection_no_intersects_collection_level`
+  - `line_line_none_parallel_no_intersects_collection_level`
+  - verifies no basic/overlap emission when segment-level line-line result is
+    `False` or `None`.
 - Replaced the remaining index-0-shift canonical-name wrapper aliases with
   explicit assertion-backed probes, eliminating wrapper-style alias indirection
   in `find_intersects_tests`:
