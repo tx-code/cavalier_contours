@@ -174,6 +174,11 @@ endpoint-stickiness branch closure.
   - `wrap_around_non_circle_arc_overlap_open_side_reversed_normal_closed_side_start_index_rotation_role_flip_symmetry`
   - verifies rotating closed-side start vertex preserves bounded overlap/basic
     point outcomes and AB/BA index-role inversion semantics.
+- Added closed-side-reversed start-index rotation counterpart for the same
+  open-side-reversed closure-edge role-flip geometry:
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_side_reversed_start_index_rotation_role_flip_symmetry`
+  - verifies rotating closed-side start vertex preserves bounded overlap/basic
+    point outcomes and AB/BA index-role inversion semantics.
 - Added offset-derived circle/rectangle intersection role-flip symmetry matrix
   parity across orientation reversals:
   - `cpp_circle_rectangle_intersection_role_flip_symmetry_matrix_parity`
