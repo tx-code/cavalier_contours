@@ -211,7 +211,13 @@ endpoint-stickiness branch closure.
   disjoint-sweep branch:
   - `coincident_arc_disjoint_sweeps_no_intersects_collection_level`
   - verifies `find_intersects` does not surface basic/overlap entries for this
-    branch (including reversed second-arc direction).
+  branch (including reversed second-arc direction).
+- Added collection-level one-endpoint parity guards for coincident-arc
+  single-touch branches:
+  - `coincident_arc_touch_only_at_arc1_start_collection_level`
+  - `coincident_arc_touch_only_at_arc2_start_collection_level`
+  - verifies `find_intersects` yields exactly one basic endpoint intersect with
+    no overlap, including parameter inversion and reversed second-arc direction.
 
 ## Next Alignment Targets (No Clipper)
 
