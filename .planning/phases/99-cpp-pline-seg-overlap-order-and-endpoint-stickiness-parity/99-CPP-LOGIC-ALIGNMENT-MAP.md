@@ -49,6 +49,11 @@ endpoint-stickiness branch closure.
   - verifies `visit_global_self_intersects` emits an overlapping intersect for
     non-adjacent coincident arcs (`start_index` pair `0/4`) with overlap
     endpoints `[2, 0]` and `[3, 1]`.
+- Added non-zero-index counterpart for the same global-self coincident-arc
+  overlap branch:
+  - `non_local_coincident_arc_overlap_nonzero_index_reports_overlapping_intersect`
+  - verifies overlap detection and endpoint output remain stable with non-zero
+    segment indexes (`start_index` pair `1/5`).
 - Added bounded mixed line/arc overlap-adjacent collection-level parity probe:
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication`
 - Added closed/open asymmetry probe for mixed line/arc overlap-adjacent dedup:
