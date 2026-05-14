@@ -243,6 +243,12 @@ endpoint-stickiness branch closure.
   - `coincident_arc_full_overlap_collection_level_nonzero_index_role_flip`
   - verifies full-overlap behavior remains stable when arc segments are not at
     index 0, including parameter inversion and reversed second-arc direction.
+- Added distinct-index role-inversion counterpart for coincident full-overlap
+  branch:
+  - `coincident_arc_full_overlap_collection_level_distinct_nonzero_indexes_role_flip`
+  - verifies explicit `start_index1/start_index2` role swapping under parameter
+    inversion when the overlapping arc segments have different non-zero
+    indexes.
 - Added collection-level partial-overlap parity guard for coincident arcs where
   overlap exists but neither arc fully contains the other:
   - `coincident_arc_partial_overlap_collection_level_ordering`
