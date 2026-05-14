@@ -7039,6 +7039,84 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn line_line_false_intersection_no_intersects_collection_level_nonzero_indexes() {
+        // Non-zero-index counterpart for line-line `False` path using a zero-length
+        // lead segment to shift the evaluated segment index.
+        let mut pline1 = Polyline::new();
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(1.0, 1.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(0.0, 1.0, 0.0);
+        pline2.add(0.0, 1.0, 0.0);
+        pline2.add(0.2, 0.8, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert!(intrs.basic_intersects.is_empty());
+        assert!(intrs.overlapping_intersects.is_empty());
+    }
+
+    #[test]
+    fn line_line_false_intersection_no_intersects_collection_level_nonzero_indexes_flipped_roles() {
+        // Role-flipped counterpart for non-zero-index line-line `False` path.
+        let mut pline1 = Polyline::new();
+        pline1.add(0.0, 1.0, 0.0);
+        pline1.add(0.0, 1.0, 0.0);
+        pline1.add(0.2, 0.8, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(0.0, 0.0, 0.0);
+        pline2.add(0.0, 0.0, 0.0);
+        pline2.add(1.0, 1.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert!(intrs.basic_intersects.is_empty());
+        assert!(intrs.overlapping_intersects.is_empty());
+    }
+
+    #[test]
+    fn line_line_none_parallel_no_intersects_collection_level_nonzero_indexes() {
+        // Non-zero-index counterpart for line-line `None` path using a zero-length
+        // lead segment to shift the evaluated segment index.
+        let mut pline1 = Polyline::new();
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(1.0, 1.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(0.0, 0.2, 0.0);
+        pline2.add(0.0, 0.2, 0.0);
+        pline2.add(0.8, 1.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert!(intrs.basic_intersects.is_empty());
+        assert!(intrs.overlapping_intersects.is_empty());
+    }
+
+    #[test]
+    fn line_line_none_parallel_no_intersects_collection_level_nonzero_indexes_flipped_roles() {
+        // Role-flipped counterpart for non-zero-index line-line `None` path.
+        let mut pline1 = Polyline::new();
+        pline1.add(0.0, 0.2, 0.0);
+        pline1.add(0.0, 0.2, 0.0);
+        pline1.add(0.8, 1.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(0.0, 0.0, 0.0);
+        pline2.add(0.0, 0.0, 0.0);
+        pline2.add(1.0, 1.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert!(intrs.basic_intersects.is_empty());
+        assert!(intrs.overlapping_intersects.is_empty());
+    }
+
+    #[test]
     fn line_line_true_intersection_collection_level() {
         // Collection-level guard for old C++ `intrPlineSegs` line-line `True` path:
         // one basic intersect should be emitted, no overlap.
