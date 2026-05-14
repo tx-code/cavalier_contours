@@ -103,6 +103,12 @@ endpoint-stickiness branch closure.
 - Added parameter-role flipped counterpart for the closed-`pline2`
   closure-basic reversed-endpoint-order probe:
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline2_with_closure_basic_intersect_flipped_roles`
+- Added role-flip symmetry probe for the same bounded closed-`pline1`
+  reversed-endpoint-order closure-edge geometry:
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_role_flip_symmetry`
+  - verifies a stable closure-edge basic intersection and explicit
+    `start_index1/start_index2` inversion while overlap endpoint ordering swaps
+    under parameter inversion.
 - Clarified bounded parity behavior for these variants: closure edges can
   produce additional real basic intersections that are independent of
   overlap-adjacent duplicate filtering.
