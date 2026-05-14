@@ -1393,6 +1393,46 @@ mod global_self_intersect_tests {
             intrs.basic_intersects
         );
     }
+
+    #[test]
+    fn non_local_two_intersects_keeps_both_points_when_not_shared_end() {
+        // Global-self `TwoIntersects` positive path:
+        // segment 0 (arc) and segment 4 (line) intersect at (-1, 0) and (1, 0),
+        // and neither point is a shared segment end for both segments, so both
+        // intersections should be emitted.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_points = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 4)
+                    || (intr.start_index1 == 4 && intr.start_index2 == 0)
+            })
+            .map(|intr| intr.point)
+            .collect::<Vec<_>>();
+
+        let has_neg = target_points
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5));
+        let has_pos = target_points
+            .iter()
+            .any(|p| p.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5));
+
+        assert!(
+            has_neg && has_pos,
+            "expected both two-intersect points for pair (0,4), actual pair points: {:?}, all basics: {:?}",
+            target_points,
+            intrs.basic_intersects
+        );
+    }
 }
 
 #[cfg(test)]
