@@ -61,8 +61,10 @@ endpoint-stickiness branch closure.
     0]`) with stable non-local pair mapping.
 - Added explicit global-self shared-endpoint skip probe:
   - `non_local_shared_end_point_pair_is_skipped`
+  - `non_local_shared_end_point_pair_is_skipped_with_zero_length_lead_segment`
   - verifies non-local segment pairs that intersect at a common end point are
-    filtered by `skip_intr_at_end` for global-self basic output.
+    filtered by `skip_intr_at_end` for global-self basic output, including a
+    zero-length-lead re-parameterization shift.
 - Added global-self `TwoIntersects` + shared-endpoint skip counterpart:
   - `non_local_two_intersects_shared_end_point_filters_one_point`
   - verifies when one of two intersection points is the shared segment end,
@@ -77,6 +79,13 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_shared_end_filters_one_point_with_zero_length_lead_segment`
   - verifies shared-end filtering still retains only `(-1,0)` after index shift
     caused by a leading degenerate segment.
+- Added API-level `all_self_intersects_as_basic` counterparts for the same
+  shared-endpoint skip path:
+  - `all_self_intersects_basic_shared_end_point_pair_is_skipped`
+  - `all_self_intersects_basic_shared_end_point_pair_is_skipped_with_zero_length_lead_segment`
+  - verifies both `include_overlapping=false/true` keep shared-end pair output
+    filtered in API-level basics, including the zero-length-lead
+    re-parameterization shift.
 - Added API-level `all_self_intersects_as_basic` counterparts for the same
   `TwoIntersects` shared-end filter path:
   - `all_self_intersects_basic_two_intersects_shared_end_filters_one_point`
