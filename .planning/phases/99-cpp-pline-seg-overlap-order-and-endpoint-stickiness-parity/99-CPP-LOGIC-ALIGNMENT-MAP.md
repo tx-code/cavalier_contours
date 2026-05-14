@@ -151,6 +151,10 @@ endpoint-stickiness branch closure.
 - This additional probe pins side-specific ordering behavior: in this bounded
   configuration, open-side reversal alone does not flip overlap endpoint
   ordering when closed-side orientation remains non-reversed.
+- Added role-flip symmetry probe on the closed-side reversed closure-edge
+  geometry to assert start-index role swapping under parameter inversion while
+  preserving bounded overlap endpoint ordering:
+  - `wrap_around_non_circle_arc_overlap_closed_side_reversed_closure_basic_role_flip_symmetry`
 - Together, these closure-edge probes now cover bounded both-side reversed
   ordering symmetry with explicit source-traceable geometry.
 - Confirmed closed-`pline2` closure-edge counterpart with reversed overlap

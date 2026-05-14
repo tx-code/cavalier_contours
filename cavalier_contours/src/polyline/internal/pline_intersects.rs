@@ -2547,6 +2547,43 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn wrap_around_non_circle_arc_overlap_closed_side_reversed_closure_basic_role_flip_symmetry() {
+        // Role-flip symmetry probe for the closed-side reversed closure-edge geometry:
+        // swapping parameter order should swap start-index roles while preserving
+        // overlap endpoint ordering in this bounded case.
+        let mut closed_side = Polyline::new_closed();
+        closed_side.add(2.0, 0.0, 0.0);
+        closed_side.add(1.0, 3.0, 0.0);
+        closed_side.add(3.0, 1.0, bulge_from_angle(-FRAC_PI_2));
+
+        let mut open_side = Polyline::new();
+        open_side.add(2.0, 2.0, -1.0);
+        open_side.add(2.0, 0.0, 0.0);
+        open_side.add(2.0, -1.0, 0.0);
+
+        let ab = find_intersects(&closed_side, &open_side, &Default::default());
+        let ba = find_intersects(&open_side, &closed_side, &Default::default());
+
+        assert_eq!(ab.basic_intersects.len(), 1);
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert_eq!(ba.basic_intersects.len(), 1);
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+
+        let basic_ab = ab.basic_intersects[0];
+        let basic_ba = ba.basic_intersects[0];
+        assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+        assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+        assert_fuzzy_eq!(basic_ab.point, basic_ba.point);
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
+    }
+
+    #[test]
     fn wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline2() {
         // Complementary non-circle arc/arc same-order wrap-around probe with closed `pline2`.
         let mut pline1 = Polyline::new();
