@@ -4202,6 +4202,53 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn wrap_around_overlap_endpoint_deduplication_both_closed_start_index_rotation_role_flip_symmetry()
+     {
+        // Start-index-rotated counterpart for the same both-closed wrap-around geometry.
+        // Rotating one closed side should preserve no-basic dedup behavior while shifting
+        // overlap segment indexing away from zero.
+        let mut closed_side_a = Polyline::new_closed();
+        closed_side_a.add(0.0, 0.0, 0.0);
+        closed_side_a.add(2.0, 1.0, 0.0);
+        closed_side_a.add(4.0, 0.0, 0.0);
+
+        let mut closed_side_b_rotated = Polyline::new_closed();
+        closed_side_b_rotated.add(0.0, 0.0, 0.0);
+        closed_side_b_rotated.add(0.0, -1.0, 0.0);
+        closed_side_b_rotated.add(-1.0, -2.0, 0.0);
+        closed_side_b_rotated.add(3.0, 0.0, 0.0);
+
+        let ab = find_intersects(&closed_side_a, &closed_side_b_rotated, &Default::default());
+        let ba = find_intersects(&closed_side_b_rotated, &closed_side_a, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 2);
+        assert_ne!(overlap_ab.start_index2, 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(3.0, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(0.0, 0.0));
+        // As in the non-rotated both-closed wrap-around geometry, role inversion keeps
+        // overlap endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
+    }
+
+    #[test]
     fn wrap_around_overlap_endpoint_deduplication_closed_pline2_start_index_rotation_role_flip_symmetry()
      {
         // Start-index-rotated counterpart for the closed `pline2` wrap-around dedup path.
