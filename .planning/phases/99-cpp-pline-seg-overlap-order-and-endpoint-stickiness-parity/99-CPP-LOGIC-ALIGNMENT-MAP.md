@@ -128,6 +128,9 @@ endpoint-stickiness branch closure.
   `pline2` is closed:
   - `wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline2`
   - `wrap_around_non_circle_arc_overlap_deduplication_reversed_order_closed_pline2`
+- Added exact parameter-role flipped counterpart for the bounded same-order
+  closed-`pline2` wrap-around dedup probe:
+  - `wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline2_flipped_roles`
 - Added non-circle arc/arc wrap-around closure-edge variants where additional
   real basic intersects are expected and asserted:
   - `wrap_around_non_circle_arc_overlap_same_order_closed_pline1_with_closure_basic_intersect`
