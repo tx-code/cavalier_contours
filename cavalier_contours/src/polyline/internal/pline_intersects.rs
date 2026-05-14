@@ -2635,6 +2635,37 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn wrap_around_non_circle_arc_overlap_deduplication_reversed_order_closed_pline2_flipped_roles()
+    {
+        // Exact parameter-role flipped counterpart of the closed-pline2 reversed-order
+        // wrap-around dedup probe.
+        let mut pline1 = Polyline::new_closed();
+        pline1.add(2.0, 0.0, 0.0);
+        pline1.add(6.0, -3.0, 0.0);
+        pline1.add(3.0, 1.0, bulge_from_angle(-FRAC_PI_2));
+
+        let mut pline2 = Polyline::new();
+        pline2.add(1.0, 1.0, 1.0);
+        pline2.add(3.0, 1.0, 0.0);
+        pline2.add(4.0, 1.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 1);
+        assert!(
+            intrs.basic_intersects.is_empty(),
+            "unexpected basic intersects: {:?}",
+            intrs.basic_intersects
+        );
+
+        let overlap = intrs.overlapping_intersects[0];
+        assert_eq!(overlap.start_index1, 2);
+        assert_eq!(overlap.start_index2, 0);
+        assert_fuzzy_eq!(overlap.point1, Vector2::new(2.0, 0.0));
+        assert_fuzzy_eq!(overlap.point2, Vector2::new(3.0, 1.0));
+    }
+
+    #[test]
     fn wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_intersect() {
         // Mirrored from the closed-pline1 closure-edge variant by swapping pline roles.
         let mut pline1 = Polyline::new();
