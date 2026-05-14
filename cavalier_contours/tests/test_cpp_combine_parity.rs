@@ -597,6 +597,76 @@ fn cpp_circle_rectangle_commutative_start_index_rotation_matrix_parity() {
 }
 
 #[test]
+fn cpp_circle_rectangle_not_start_index_rotation_matrix_parity() {
+    fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
+        pline.invert_direction_mut();
+        pline
+    }
+
+    let (subject, clip) = circle_rectangle_inputs();
+    let subject_rotated = pline_closed![(10.0, 1.0, 1.0), (0.0, 1.0, 1.0)];
+    let clip_rotated = pline_closed![
+        (6.0, -10.0, 0.0),
+        (6.0, 10.0, 0.0),
+        (3.0, 10.0, 0.0),
+        (3.0, -10.0, 0.0)
+    ];
+
+    let subject_variants = [
+        subject.clone(),
+        subject_rotated.clone(),
+        reversed(subject.clone()),
+        reversed(subject_rotated),
+    ];
+    let clip_variants = [
+        clip.clone(),
+        clip_rotated.clone(),
+        reversed(clip.clone()),
+        reversed(clip_rotated),
+    ];
+
+    let expected_ab = cpp_expected(BooleanOp::Not);
+
+    let baseline_ba = create_property_set(
+        clip.boolean(&subject, BooleanOp::Not)
+            .pos_plines
+            .iter()
+            .map(|r| &r.pline),
+        false,
+    );
+
+    for a in &subject_variants {
+        for b in &clip_variants {
+            let ab_result = a.boolean(b, BooleanOp::Not);
+            let ba_result = b.boolean(a, BooleanOp::Not);
+
+            assert!(
+                ab_result.neg_plines.is_empty(),
+                "expected empty AB neg_plines for NOT matrix variant, got {:?}",
+                ab_result.neg_plines
+            );
+            assert!(
+                ba_result.neg_plines.is_empty(),
+                "expected empty BA neg_plines for NOT matrix variant, got {:?}",
+                ba_result.neg_plines
+            );
+
+            let ab = create_property_set(ab_result.pos_plines.iter().map(|r| &r.pline), false);
+            let ba = create_property_set(ba_result.pos_plines.iter().map(|r| &r.pline), false);
+
+            assert!(
+                geometry_sets_match_ignore_vertex_count(&ab, &expected_ab),
+                "AB NOT mismatch for rotated/reversed circle-rectangle variant, ab={ab:?}, expected={expected_ab:?}"
+            );
+            assert!(
+                geometry_sets_match_ignore_vertex_count(&ba, &baseline_ba),
+                "BA NOT mismatch for rotated/reversed circle-rectangle variant, ba={ba:?}, baseline={baseline_ba:?}"
+            );
+        }
+    }
+}
+
+#[test]
 fn cpp_combine_expected_subtracted_empty_parity() {
     // Source-aligned with old C++ `combine_plines_test` expectations in
     // TEST_cavc_combine_plines.cpp where simple/circle-rectangle and coincident

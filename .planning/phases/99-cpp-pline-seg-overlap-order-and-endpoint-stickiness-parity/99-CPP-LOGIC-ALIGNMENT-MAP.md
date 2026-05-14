@@ -209,6 +209,12 @@ endpoint-stickiness branch closure.
   - verifies closed-polyline start-vertex rotation and orientation reversals do
     not change C++-mapped geometry for `OR`/`AND`/`XOR`, and AB/BA remain
     symmetric.
+- Added complementary `NOT` start-index rotation matrix parity for
+  circle/rectangle combine:
+  - `cpp_circle_rectangle_not_start_index_rotation_matrix_parity`
+  - verifies AB remains aligned to C++-mapped `NOT` expected geometry and BA
+    remains stable versus the circle/rectangle BA baseline across all
+    rotated/reversed subject/clip variants.
 - Added source-aligned input immutability parity for circle/rectangle combine
   modes (mirrors old C++ no-modify suite coverage):
   - `cpp_circle_rectangle_combine_does_not_modify_input`
