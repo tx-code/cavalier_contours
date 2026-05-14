@@ -1008,6 +1008,12 @@ endpoint-stickiness branch closure.
   - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry`
   - verifies parity evidence is explicitly discoverable under closed-side
     naming while reusing identical rotated geometry.
+- Added zero-length-lead counterparts for the explicit closed-pline1/2 rotated
+  role-flip probes in the same mixed line/arc wrap-around endpoint-dedup branch:
+  - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_both_closed_start_index_rotation_closed_pline1_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_both_closed_start_index_rotation_closed_pline2_zero_length_lead_role_flip_symmetry`
+  - verifies no-basic dedup behavior, AB/BA role-inversion start-index mapping,
+    and stable overlap endpoint ordering under non-zero index shift.
 - Added closed-side start-index rotation role-flip symmetry counterpart for the
   bounded mixed line/arc closed-`pline2` wrap-around endpoint-dedup probe:
   - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_closed_pline2_start_index_rotation_role_flip_symmetry`
