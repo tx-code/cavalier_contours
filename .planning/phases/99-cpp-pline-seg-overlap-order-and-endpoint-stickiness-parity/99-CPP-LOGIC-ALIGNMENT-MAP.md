@@ -61,6 +61,12 @@ endpoint-stickiness branch closure.
   - verifies one-in-sweep filtering to `OneIntersect` and both-outside
     filtering to `NoIntersect` across both line-arc and arc-line dispatch
     paths when line endpoints are not arc endpoints.
+- Added segment-level parity probes for old C++ `intrPlineSegs` line-line
+  non-overlap branch split:
+  - `line_line_true_intersect`
+  - `line_line_false_intersect_outside_segments_no_intersect`
+  - verifies explicit `LineSeg2LineSeg2IntrType::True -> OneIntersect` mapping
+    and explicit `LineSeg2LineSeg2IntrType::False -> NoIntersect` mapping.
 - Replaced the remaining index-0-shift canonical-name wrapper aliases with
   explicit assertion-backed probes, eliminating wrapper-style alias indirection
   in `find_intersects_tests`:

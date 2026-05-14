@@ -196,6 +196,38 @@ fn arc_line_two_intersections_both_outside_sweep_no_intersect() {
 }
 
 #[test]
+fn line_line_true_intersect() {
+    // Source-aligned with old C++ `intrPlineSegs` line-line branch where
+    // `LineSeg2LineSeg2IntrType::True` maps to one basic intersect point.
+    let v1 = PlineVertex::new(0.0, 0.0, 0.0);
+    let v2 = PlineVertex::new(2.0, 2.0, 0.0);
+    let u1 = PlineVertex::new(0.0, 2.0, 0.0);
+    let u2 = PlineVertex::new(2.0, 0.0, 0.0);
+
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(
+        result,
+        OneIntersect {
+            point: Vector2::new(1.0, 1.0)
+        }
+    );
+}
+
+#[test]
+fn line_line_false_intersect_outside_segments_no_intersect() {
+    // Source-aligned with old C++ `intrPlineSegs` line-line branch where
+    // `LineSeg2LineSeg2IntrType::False` must map to no intersect.
+    // The infinite lines cross at (2, 0), outside both finite segments.
+    let v1 = PlineVertex::new(0.0, 0.0, 0.0);
+    let v2 = PlineVertex::new(1.0, 0.0, 0.0);
+    let u1 = PlineVertex::new(2.0, -2.0, 0.0);
+    let u2 = PlineVertex::new(2.0, -1.0, 0.0);
+
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(result, NoIntersect::<f64>);
+}
+
+#[test]
 fn overlapping_lines() {
     let v1 = PlineVertex::new(3.0, 3.0, 0.0);
     let v2 = PlineVertex::new(1.0, 1.0, 0.0);
