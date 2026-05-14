@@ -40,6 +40,9 @@ endpoint-stickiness branch closure.
   - `non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_closed_pline2`
 - Added non-circle arc/arc-overlap-adjacent both-closed variant probe:
   - `non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_both_closed`
+- Added parameter-role flipped counterpart for the same bounded
+  both-closed adjacent dedup probe:
+  - `non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_both_closed_flipped_roles`
 - Added non-circle reversed-overlap-endpoint-order probe with adjacent-line flip:
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip`
 - Added non-circle reversed-overlap-endpoint-order both-closed variant with
