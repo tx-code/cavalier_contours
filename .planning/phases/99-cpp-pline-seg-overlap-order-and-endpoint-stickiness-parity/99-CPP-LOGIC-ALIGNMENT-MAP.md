@@ -267,6 +267,11 @@ endpoint-stickiness branch closure.
   - verifies `cavc_pline_boolean_o` output remains aligned with default
     `cavc_pline_boolean` output for AB and BA across orientation role-flip
     variants.
+- Added FFI options-path circle/rectangle start-index rotation matrix parity:
+  - `pline_boolean_options_path_circle_rectangle_start_index_rotation_matrix_cpp_parity`
+  - verifies `cavc_pline_boolean_o` output remains aligned with default
+    `cavc_pline_boolean` output for AB and BA across start-index rotation and
+    orientation-reversal variants.
 - Added FFI options-path coincident commutative role-flip matrix parity:
   - `pline_boolean_options_coincident_commutative_role_flip_matrix_cpp_parity`
   - verifies `cavc_pline_boolean_o` output remains aligned with default

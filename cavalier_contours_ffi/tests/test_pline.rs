@@ -5218,6 +5218,154 @@ fn pline_boolean_options_path_circle_rectangle_role_flip_matrix_cpp_parity() {
 }
 
 #[test]
+fn pline_boolean_options_path_circle_rectangle_start_index_rotation_matrix_cpp_parity() {
+    let subject_base_input = vec![(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)];
+    let subject_rotated_input = vec![(10.0, 1.0, 1.0), (0.0, 1.0, 1.0)];
+    let clip_base_input = vec![
+        (3.0, -10.0, 0.0),
+        (6.0, -10.0, 0.0),
+        (6.0, 10.0, 0.0),
+        (3.0, 10.0, 0.0),
+    ];
+    let clip_rotated_input = vec![
+        (6.0, -10.0, 0.0),
+        (6.0, 10.0, 0.0),
+        (3.0, 10.0, 0.0),
+        (3.0, -10.0, 0.0),
+    ];
+
+    let subject_variants = [subject_base_input, subject_rotated_input];
+    let clip_variants = [clip_base_input, clip_rotated_input];
+
+    for subject_input in &subject_variants {
+        for clip_input in &clip_variants {
+            for &subject_reversed in &[false, true] {
+                for &clip_reversed in &[false, true] {
+                    let subject = create_pline(subject_input, true);
+                    let clip = create_pline(clip_input, true);
+
+                    unsafe {
+                        if subject_reversed {
+                            assert_eq!(cavc_pline_invert_direction(subject), 0);
+                        }
+                        if clip_reversed {
+                            assert_eq!(cavc_pline_invert_direction(clip), 0);
+                        }
+                    }
+
+                    for operation in CPP_CIRCLE_RECT_SOURCE_OPS {
+                        let (default_ab_remaining, default_ab_subtracted) =
+                            run_boolean_props(subject, clip, operation);
+                        let (default_ba_remaining, default_ba_subtracted) =
+                            run_boolean_props(clip, subject, operation);
+
+                        unsafe {
+                            let mut options_ab = cavc_pline_boolean_o {
+                                pline1_aabb_index: std::ptr::null(),
+                                pos_equal_eps: f64::NAN,
+                                collapsed_area_eps: f64::NAN,
+                            };
+                            assert_eq!(cavc_pline_boolean_o_init(&mut options_ab), 0);
+                            let mut aabb_ab = ptr::null();
+                            assert_eq!(
+                                cavc_pline_create_approx_aabbindex(subject, &mut aabb_ab),
+                                0
+                            );
+                            options_ab.pline1_aabb_index = aabb_ab;
+
+                            let (opt_ab_remaining, opt_ab_subtracted) =
+                                run_boolean_props_with_options(
+                                    subject,
+                                    clip,
+                                    operation,
+                                    &options_ab,
+                                );
+
+                            assert!(
+                                props_set_match_ignore_area_sign(
+                                    &opt_ab_remaining,
+                                    &default_ab_remaining,
+                                    1e-4
+                                ) && props_set_match_ignore_area_sign(
+                                    &default_ab_remaining,
+                                    &opt_ab_remaining,
+                                    1e-4
+                                ),
+                                "options AB remaining mismatch for start-index-rotation matrix op={operation} subject_reversed={subject_reversed} clip_reversed={clip_reversed}\ndefault={default_ab_remaining:?}\noptions={opt_ab_remaining:?}"
+                            );
+                            assert!(
+                                props_set_match_ignore_area_sign(
+                                    &opt_ab_subtracted,
+                                    &default_ab_subtracted,
+                                    1e-4
+                                ) && props_set_match_ignore_area_sign(
+                                    &default_ab_subtracted,
+                                    &opt_ab_subtracted,
+                                    1e-4
+                                ),
+                                "options AB subtracted mismatch for start-index-rotation matrix op={operation} subject_reversed={subject_reversed} clip_reversed={clip_reversed}\ndefault={default_ab_subtracted:?}\noptions={opt_ab_subtracted:?}"
+                            );
+
+                            cavc_aabbindex_f(aabb_ab as *mut _);
+
+                            let mut options_ba = cavc_pline_boolean_o {
+                                pline1_aabb_index: std::ptr::null(),
+                                pos_equal_eps: f64::NAN,
+                                collapsed_area_eps: f64::NAN,
+                            };
+                            assert_eq!(cavc_pline_boolean_o_init(&mut options_ba), 0);
+                            let mut aabb_ba = ptr::null();
+                            assert_eq!(cavc_pline_create_approx_aabbindex(clip, &mut aabb_ba), 0);
+                            options_ba.pline1_aabb_index = aabb_ba;
+
+                            let (opt_ba_remaining, opt_ba_subtracted) =
+                                run_boolean_props_with_options(
+                                    clip,
+                                    subject,
+                                    operation,
+                                    &options_ba,
+                                );
+
+                            assert!(
+                                props_set_match_ignore_area_sign(
+                                    &opt_ba_remaining,
+                                    &default_ba_remaining,
+                                    1e-4
+                                ) && props_set_match_ignore_area_sign(
+                                    &default_ba_remaining,
+                                    &opt_ba_remaining,
+                                    1e-4
+                                ),
+                                "options BA remaining mismatch for start-index-rotation matrix op={operation} subject_reversed={subject_reversed} clip_reversed={clip_reversed}\ndefault={default_ba_remaining:?}\noptions={opt_ba_remaining:?}"
+                            );
+                            assert!(
+                                props_set_match_ignore_area_sign(
+                                    &opt_ba_subtracted,
+                                    &default_ba_subtracted,
+                                    1e-4
+                                ) && props_set_match_ignore_area_sign(
+                                    &default_ba_subtracted,
+                                    &opt_ba_subtracted,
+                                    1e-4
+                                ),
+                                "options BA subtracted mismatch for start-index-rotation matrix op={operation} subject_reversed={subject_reversed} clip_reversed={clip_reversed}\ndefault={default_ba_subtracted:?}\noptions={opt_ba_subtracted:?}"
+                            );
+
+                            cavc_aabbindex_f(aabb_ba as *mut _);
+                        }
+                    }
+
+                    unsafe {
+                        cavc_pline_f(subject);
+                        cavc_pline_f(clip);
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[test]
 fn pline_boolean_options_coincident_commutative_role_flip_matrix_cpp_parity() {
     let coincident_cases = [
         ("coincident_case1", cpp_coincident_case1_inputs()),
