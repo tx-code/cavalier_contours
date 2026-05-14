@@ -59,6 +59,13 @@ endpoint-stickiness branch closure.
   - `non_local_coincident_arc_overlap_reversed_second_segment_ordering`
   - verifies overlap endpoints follow second-segment direction (`[3, 1] -> [2,
     0]`) with stable non-local pair mapping.
+- Added API-level `all_self_intersects_as_basic` counterparts for the same
+  non-local coincident-arc overlap branch:
+  - `all_self_intersects_basic_include_overlapping_coincident_arc_overlap_ordering`
+  - `all_self_intersects_basic_include_overlapping_coincident_arc_overlap_ordering_nonzero_indexes`
+  - verifies `include_overlapping=false` emits no basics for the overlap pair,
+    while `include_overlapping=true` emits exactly two overlap endpoints for
+    the targeted pair across index-0 and non-zero index paths.
 - Added explicit global-self shared-endpoint skip probe:
   - `non_local_shared_end_point_pair_is_skipped`
   - `non_local_shared_end_point_pair_is_skipped_with_zero_length_lead_segment`
