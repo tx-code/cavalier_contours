@@ -100,8 +100,18 @@ endpoint-stickiness branch closure.
   segment end but not both segment ends:
   - `non_local_one_intersect_at_single_segment_end_is_kept`
   - `non_local_one_intersect_at_single_segment_end_is_kept_nonzero_indexes`
+  - `non_local_one_intersect_at_single_segment_end_is_kept_with_zero_length_lead_segment`
   - verifies `skip_intr_at_end` does not filter one-intersect points unless the
-    endpoint condition is simultaneously true for both tested segments.
+    endpoint condition is simultaneously true for both tested segments,
+    including a zero-length-lead re-parameterization shift.
+- Added API-level `all_self_intersects_as_basic` counterparts for the same
+  single-intersect-at-one-end branch:
+  - `all_self_intersects_basic_one_intersect_at_single_segment_end_is_kept`
+  - `all_self_intersects_basic_one_intersect_at_single_segment_end_is_kept_nonzero_indexes`
+  - `all_self_intersects_basic_one_intersect_at_single_segment_end_is_kept_with_zero_length_lead_segment`
+  - verifies both `include_overlapping=false/true` keep one retained basic
+    point for the targeted pair across index-0/non-zero and zero-length-lead
+    re-parameterization variants.
 - Added overlap-branch shared-end boundary counterparts where the shared end
   appears on overlap `point2`:
   - `non_local_overlap_with_shared_end_on_point2_is_kept`
