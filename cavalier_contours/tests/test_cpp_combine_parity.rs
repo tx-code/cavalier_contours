@@ -537,6 +537,66 @@ fn cpp_circle_rectangle_commutative_role_flip_matrix_parity() {
 }
 
 #[test]
+fn cpp_circle_rectangle_commutative_start_index_rotation_matrix_parity() {
+    fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
+        pline.invert_direction_mut();
+        pline
+    }
+
+    let (subject, clip) = circle_rectangle_inputs();
+    let subject_rotated = pline_closed![(10.0, 1.0, 1.0), (0.0, 1.0, 1.0)];
+    let clip_rotated = pline_closed![
+        (6.0, -10.0, 0.0),
+        (6.0, 10.0, 0.0),
+        (3.0, 10.0, 0.0),
+        (3.0, -10.0, 0.0)
+    ];
+
+    let subject_variants = [
+        subject.clone(),
+        subject_rotated.clone(),
+        reversed(subject.clone()),
+        reversed(subject_rotated),
+    ];
+    let clip_variants = [
+        clip.clone(),
+        clip_rotated.clone(),
+        reversed(clip.clone()),
+        reversed(clip_rotated),
+    ];
+
+    for op in [BooleanOp::Or, BooleanOp::And, BooleanOp::Xor] {
+        let expected = cpp_expected(op);
+
+        for a in &subject_variants {
+            for b in &clip_variants {
+                let ab = create_property_set(
+                    a.boolean(b, op).pos_plines.iter().map(|r| &r.pline),
+                    false,
+                );
+                let ba = create_property_set(
+                    b.boolean(a, op).pos_plines.iter().map(|r| &r.pline),
+                    false,
+                );
+
+                assert!(
+                    geometry_sets_match_ignore_vertex_count(&ab, &expected),
+                    "AB mismatch for op={op:?}, ab={ab:?}, expected={expected:?}"
+                );
+                assert!(
+                    geometry_sets_match_ignore_vertex_count(&ba, &expected),
+                    "BA mismatch for op={op:?}, ba={ba:?}, expected={expected:?}"
+                );
+                assert!(
+                    geometry_sets_match_ignore_vertex_count(&ab, &ba),
+                    "AB/BA mismatch for op={op:?}, ab={ab:?}, ba={ba:?}"
+                );
+            }
+        }
+    }
+}
+
+#[test]
 fn cpp_combine_expected_subtracted_empty_parity() {
     // Source-aligned with old C++ `combine_plines_test` expectations in
     // TEST_cavc_combine_plines.cpp where simple/circle-rectangle and coincident

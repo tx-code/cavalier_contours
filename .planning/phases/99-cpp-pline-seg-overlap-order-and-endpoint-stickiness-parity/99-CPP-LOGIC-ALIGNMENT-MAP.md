@@ -182,7 +182,13 @@ endpoint-stickiness branch closure.
   parity across orientation reversals for C++-mapped operations:
   - `cpp_circle_rectangle_commutative_role_flip_matrix_parity`
   - verifies AB and BA both match C++-mapped geometry for `OR`/`AND`/`XOR`
-    and match each other under role inversion.
+  and match each other under role inversion.
+- Added combine-derived circle/rectangle commutative start-index rotation matrix
+  parity:
+  - `cpp_circle_rectangle_commutative_start_index_rotation_matrix_parity`
+  - verifies closed-polyline start-vertex rotation and orientation reversals do
+    not change C++-mapped geometry for `OR`/`AND`/`XOR`, and AB/BA remain
+    symmetric.
 - Added source-aligned input immutability parity for circle/rectangle combine
   modes (mirrors old C++ no-modify suite coverage):
   - `cpp_circle_rectangle_combine_does_not_modify_input`
