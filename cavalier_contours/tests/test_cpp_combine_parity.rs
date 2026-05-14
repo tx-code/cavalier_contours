@@ -513,6 +513,38 @@ fn cpp_circle_rectangle_commutative_role_flip_matrix_parity() {
 }
 
 #[test]
+fn cpp_combine_expected_subtracted_empty_parity() {
+    // Source-aligned with old C++ `combine_plines_test` expectations in
+    // TEST_cavc_combine_plines.cpp where simple/circle-rectangle and coincident
+    // fixtures define empty expectedSubtracted lists.
+    let (subject, clip) = circle_rectangle_inputs();
+    for op in [
+        BooleanOp::Or,
+        BooleanOp::Not,
+        BooleanOp::And,
+        BooleanOp::Xor,
+    ] {
+        let result = subject.boolean(&clip, op);
+        assert!(
+            result.neg_plines.is_empty(),
+            "expected empty neg_plines for circle/rectangle op={op:?}, got {:?}",
+            result.neg_plines
+        );
+    }
+
+    for case in cpp_coincident_cases() {
+        let result = case.subject.boolean(&case.clip, case.op);
+        assert!(
+            result.neg_plines.is_empty(),
+            "expected empty neg_plines for case={} op={:?}, got {:?}",
+            case.name,
+            case.op,
+            result.neg_plines
+        );
+    }
+}
+
+#[test]
 fn cpp_coincident_matrix_geometry_parity_holds() {
     for case in cpp_coincident_cases() {
         let actual = create_property_set(

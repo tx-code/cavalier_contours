@@ -189,6 +189,11 @@ endpoint-stickiness branch closure.
   - verifies self `UNION`/`INTERSECT` returns self for forward and reversed
     orientation, and self `EXCLUDE`/`XOR` stays empty for
     `fwd/fwd`, `rev/rev`, `rev/fwd`, and `fwd/rev`.
+- Added source-aligned `subtracted`-surface parity for combine fixtures:
+  - `cpp_combine_expected_subtracted_empty_parity`
+  - verifies Rust `neg_plines` remains empty across the C++-mapped
+    circle/rectangle and coincident combine matrices where old
+    `expectedSubtracted` is empty.
 
 ## Next Alignment Targets (No Clipper)
 
