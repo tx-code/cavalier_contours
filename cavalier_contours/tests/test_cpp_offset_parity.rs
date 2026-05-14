@@ -5810,6 +5810,14 @@ fn cpp_wrap_around_both_closed_dedup_options_matrix_parity() {
         pline
     }
 
+    fn same_order_closed_side_a_rotated() -> Polyline<f64> {
+        let mut pline = Polyline::new_closed();
+        pline.add(4.0, 5.0, 0.0);
+        pline.add(1.0, 1.0, 1.0);
+        pline.add(3.0, 1.0, 0.0);
+        pline
+    }
+
     fn same_order_closed_side_b() -> Polyline<f64> {
         let mut pline = Polyline::new_closed();
         pline.add(2.0, 0.0, 1.0);
@@ -5834,6 +5842,15 @@ fn cpp_wrap_around_both_closed_dedup_options_matrix_parity() {
         pline.add(3.0, 1.0, 0.0);
         pline.add(4.0, 1.0, 0.0);
         pline.add(6.0, 4.0, 0.0);
+        pline
+    }
+
+    fn reversed_order_closed_side_a_rotated() -> Polyline<f64> {
+        let mut pline = Polyline::new_closed();
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(4.0, 1.0, 0.0);
+        pline.add(6.0, 4.0, 0.0);
+        pline.add(1.0, 1.0, 1.0);
         pline
     }
 
@@ -5875,6 +5892,16 @@ fn cpp_wrap_around_both_closed_dedup_options_matrix_parity() {
             expect_role_flip_swaps_endpoint_order: false,
         },
         Case {
+            name: "same_order_both_closed_start_index_rotation_closed_pline1",
+            lhs: same_order_closed_side_a_rotated(),
+            rhs: same_order_closed_side_b(),
+            expected_overlap_point1: (2.0, 0.0),
+            expected_overlap_point2: (3.0, 1.0),
+            expect_start_index1_nonzero: true,
+            expect_start_index2_nonzero: false,
+            expect_role_flip_swaps_endpoint_order: false,
+        },
+        Case {
             name: "reversed_order_both_closed",
             lhs: reversed_order_closed_side_a(),
             rhs: reversed_order_closed_side_b(),
@@ -5891,6 +5918,16 @@ fn cpp_wrap_around_both_closed_dedup_options_matrix_parity() {
             expected_overlap_point1: (3.0, 1.0),
             expected_overlap_point2: (2.0, 0.0),
             expect_start_index1_nonzero: false,
+            expect_start_index2_nonzero: true,
+            expect_role_flip_swaps_endpoint_order: true,
+        },
+        Case {
+            name: "reversed_order_both_closed_start_index_rotation_closed_pline1",
+            lhs: reversed_order_closed_side_a_rotated(),
+            rhs: reversed_order_closed_side_b(),
+            expected_overlap_point1: (3.0, 1.0),
+            expected_overlap_point2: (2.0, 0.0),
+            expect_start_index1_nonzero: true,
             expect_start_index2_nonzero: true,
             expect_role_flip_swaps_endpoint_order: true,
         },
