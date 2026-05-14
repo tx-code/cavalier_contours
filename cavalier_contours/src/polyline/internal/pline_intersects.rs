@@ -9706,6 +9706,59 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_zero_length_lead_role_flip_symmetry()
+     {
+        // Non-zero-index counterpart for the same bounded open-path reversed-endpoint-order
+        // role-flip symmetry probe. Prepending a zero-length lead segment should preserve
+        // overlap behavior while shifting overlap start indexes away from zero.
+        let mut side_a = Polyline::new();
+        side_a.add(1.0, 1.0, 0.0);
+        side_a.add(1.0, 1.0, 1.0);
+        side_a.add(3.0, 1.0, 0.0);
+        side_a.add(4.0, 1.0, 0.0);
+
+        let mut side_b = Polyline::new();
+        side_b.add(2.0, 2.0, 0.0);
+        side_b.add(2.0, 2.0, -1.0);
+        side_b.add(2.0, 0.0, 0.0);
+        side_b.add(2.0, -1.0, 0.0);
+
+        let ab = find_intersects(&side_a, &side_b, &Default::default());
+        let ba = find_intersects(&side_b, &side_a, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert!(overlap_ab.start_index1 > 0);
+        assert!(overlap_ab.start_index2 > 0);
+
+        let same_order = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point1, 1e-5)
+            && overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point2, 1e-5);
+        let reversed_order = overlap_ab.point1.fuzzy_eq_eps(overlap_ba.point2, 1e-5)
+            && overlap_ab.point2.fuzzy_eq_eps(overlap_ba.point1, 1e-5);
+        assert!(
+            same_order || reversed_order,
+            "AB/BA overlap endpoint sets diverged after zero-length lead shift: AB={:?}, BA={:?}",
+            overlap_ab,
+            overlap_ba
+        );
+    }
+
+    #[test]
     fn non_circle_partial_arc_overlap_arc1_reverse_dir_with_adjacent_line_flip() {
         // Bounded non-circle variant for `arc1_reverse_dir` collection-level behavior:
         // overlap endpoint ordering follows the non-reversed second segment direction.
