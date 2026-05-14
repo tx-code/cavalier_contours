@@ -1290,6 +1290,43 @@ mod global_self_intersect_tests {
             intrs.basic_intersects
         );
     }
+
+    #[test]
+    fn non_local_two_intersects_shared_end_point_filters_one_point() {
+        // Global-self `TwoIntersects` + skip-at-end probe:
+        // segment 0 (arc) and segment 4 (line) intersect at two points, but one
+        // intersection is the shared segment end (1, 0), so only (-1, 0) should remain.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let has_kept_point = intrs.basic_intersects.iter().any(|intr| {
+            let expected_index_pair = (intr.start_index1 == 0 && intr.start_index2 == 4)
+                || (intr.start_index1 == 4 && intr.start_index2 == 0);
+            expected_index_pair && intr.point.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5)
+        });
+        let has_skipped_point = intrs.basic_intersects.iter().any(|intr| {
+            let expected_index_pair = (intr.start_index1 == 0 && intr.start_index2 == 4)
+                || (intr.start_index1 == 4 && intr.start_index2 == 0);
+            expected_index_pair && intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)
+        });
+
+        assert!(
+            has_kept_point,
+            "missing expected retained intersection at (-1,0), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert!(
+            !has_skipped_point,
+            "shared-end intersection at (1,0) should be skipped, actual basics: {:?}",
+            intrs.basic_intersects
+        );
+    }
 }
 
 #[cfg(test)]
