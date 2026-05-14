@@ -1032,6 +1032,11 @@ endpoint-stickiness branch closure.
   - `cpp_parallel_offset_does_not_modify_input`
   - verifies `parallel_offset` leaves input vertex data unchanged across all
     simple + specific C++ offset fixtures.
+- Added FFI-side counterpart for the same full offset input-immutability
+  fixture matrix:
+  - `pline_parallel_offset_does_not_modify_input_cpp_parity`
+  - verifies `cavc_pline_parallel_offset` leaves input vertex data unchanged
+    across all simple + specific C++ offset fixtures.
 - Added combine-derived circle/rectangle commutative role-flip symmetry matrix
   parity across orientation reversals for C++-mapped operations:
   - `cpp_circle_rectangle_commutative_role_flip_matrix_parity`

@@ -5192,14 +5192,26 @@ fn pline_parallel_offset_cpp_reversed_matrix_parity() {
 
 #[test]
 fn pline_parallel_offset_does_not_modify_input_cpp_parity() {
-    let case = &cpp_offset_simple_cases()[0];
-    let pline = create_pline(&case.input, case.is_closed);
-    let before = read_vertices(pline);
-    let _ = run_parallel_offset_props(pline, case.delta);
-    let after = read_vertices(pline);
-    compare_vertexes(&after, &before);
-    unsafe {
-        cavc_pline_f(pline);
+    for case in cpp_offset_simple_cases()
+        .into_iter()
+        .chain(cpp_offset_specific_cases())
+    {
+        let pline = create_pline(&case.input, case.is_closed);
+        let before = read_vertices(pline);
+
+        let _ = run_parallel_offset_props(pline, case.delta);
+
+        let after = read_vertices(pline);
+        assert_eq!(
+            before.len(),
+            after.len(),
+            "vertex count changed for case={}",
+            case.name
+        );
+        compare_vertexes(&after, &before);
+        unsafe {
+            cavc_pline_f(pline);
+        }
     }
 }
 
