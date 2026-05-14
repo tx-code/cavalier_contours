@@ -1032,11 +1032,21 @@ endpoint-stickiness branch closure.
   - `cpp_parallel_offset_does_not_modify_input`
   - verifies `parallel_offset` leaves input vertex data unchanged across all
     simple + specific C++ offset fixtures.
+- Added reversed-direction counterpart for the same Rust offset
+  input-immutability fixture matrix:
+  - `cpp_parallel_offset_reversed_does_not_modify_input`
+  - verifies reversed-input `parallel_offset(-delta)` leaves input vertex data
+    unchanged across all simple + specific C++ offset fixtures.
 - Added FFI-side counterpart for the same full offset input-immutability
   fixture matrix:
   - `pline_parallel_offset_does_not_modify_input_cpp_parity`
   - verifies `cavc_pline_parallel_offset` leaves input vertex data unchanged
     across all simple + specific C++ offset fixtures.
+- Added FFI-side reversed-direction counterpart for the same full offset
+  input-immutability fixture matrix:
+  - `pline_parallel_offset_reversed_does_not_modify_input_cpp_parity`
+  - verifies reversed-input `cavc_pline_parallel_offset(-delta)` leaves input
+    vertex data unchanged across all simple + specific C++ offset fixtures.
 - Added FFI options-path reversed counterpart for offset
   input-immutability fixture matrix:
   - `pline_parallel_offset_options_path_reversed_does_not_modify_input_cpp_parity`

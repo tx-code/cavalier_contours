@@ -5216,6 +5216,35 @@ fn pline_parallel_offset_does_not_modify_input_cpp_parity() {
 }
 
 #[test]
+fn pline_parallel_offset_reversed_does_not_modify_input_cpp_parity() {
+    for case in cpp_offset_simple_cases()
+        .into_iter()
+        .chain(cpp_offset_specific_cases())
+    {
+        let pline = create_pline(&case.input, case.is_closed);
+        unsafe {
+            assert_eq!(cavc_pline_invert_direction(pline), 0);
+        }
+        let delta = -case.delta;
+        let before = read_vertices(pline);
+
+        let _ = run_parallel_offset_props(pline, delta);
+
+        let after = read_vertices(pline);
+        assert_eq!(
+            before.len(),
+            after.len(),
+            "reversed vertex count changed for case={}",
+            case.name
+        );
+        compare_vertexes(&after, &before);
+        unsafe {
+            cavc_pline_f(pline);
+        }
+    }
+}
+
+#[test]
 fn pline_boolean_options_path_circle_rectangle_cpp_parity() {
     let pline_a = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
     let pline_b = create_pline(

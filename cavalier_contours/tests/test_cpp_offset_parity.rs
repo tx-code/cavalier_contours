@@ -353,6 +353,35 @@ fn cpp_parallel_offset_does_not_modify_input() {
 }
 
 #[test]
+fn cpp_parallel_offset_reversed_does_not_modify_input() {
+    for case in simple_cases().into_iter().chain(specific_cases()) {
+        let mut reversed = case.input.clone();
+        reversed.invert_direction_mut();
+        let before: Vec<_> = reversed.iter_vertexes().collect();
+        let delta = -case.delta;
+
+        let _ = reversed.parallel_offset(delta);
+
+        let after: Vec<_> = reversed.iter_vertexes().collect();
+        assert_eq!(
+            before.len(),
+            after.len(),
+            "{}: reversed input vertex count changed after offset",
+            case.name
+        );
+        for (idx, (v0, v1)) in before.iter().zip(after.iter()).enumerate() {
+            assert!(
+                (v0.x - v1.x).abs() <= EPS
+                    && (v0.y - v1.y).abs() <= EPS
+                    && (v0.bulge - v1.bulge).abs() <= EPS,
+                "{}: reversed input vertex changed at index {idx}: before={v0:?}, after={v1:?}",
+                case.name
+            );
+        }
+    }
+}
+
+#[test]
 fn cpp_collapsed_rectangle_parallel_offset_parity() {
     let input = pline_closed![
         (0.0, 0.0, 0.0),
