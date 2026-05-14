@@ -63,9 +63,11 @@ endpoint-stickiness branch closure.
   non-local coincident-arc overlap branch:
   - `all_self_intersects_basic_include_overlapping_coincident_arc_overlap_ordering`
   - `all_self_intersects_basic_include_overlapping_coincident_arc_overlap_ordering_nonzero_indexes`
+  - `all_self_intersects_basic_include_overlapping_coincident_arc_overlap_ordering_with_zero_length_lead_segment`
   - verifies `include_overlapping=false` emits no basics for the overlap pair,
     while `include_overlapping=true` emits exactly two overlap endpoints for
-    the targeted pair across index-0 and non-zero index paths.
+    the targeted pair across index-0, non-zero, and zero-length-lead
+    re-parameterization paths.
 - Added explicit global-self shared-endpoint skip probe:
   - `non_local_shared_end_point_pair_is_skipped`
   - `non_local_shared_end_point_pair_is_skipped_with_zero_length_lead_segment`
