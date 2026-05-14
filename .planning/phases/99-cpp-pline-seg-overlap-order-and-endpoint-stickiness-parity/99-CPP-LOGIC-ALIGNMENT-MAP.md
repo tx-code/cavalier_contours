@@ -261,6 +261,12 @@ endpoint-stickiness branch closure.
   - verifies partial-overlap behavior remains stable when arc segments are not
     at index 0, including parameter inversion and reversed second-arc
     direction.
+- Added distinct-index role-inversion counterpart for coincident
+  partial-overlap branch:
+  - `coincident_arc_partial_overlap_collection_level_distinct_nonzero_indexes_role_flip`
+  - verifies explicit `start_index1/start_index2` role swapping under parameter
+    inversion when the overlapping arc segments have different non-zero
+    indexes.
 - Added collection-level one-endpoint parity guards for coincident-arc
   single-touch branches:
   - `coincident_arc_touch_only_at_arc1_start_collection_level`
