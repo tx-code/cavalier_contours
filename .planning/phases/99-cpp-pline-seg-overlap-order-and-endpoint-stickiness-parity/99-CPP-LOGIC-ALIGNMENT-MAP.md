@@ -262,6 +262,11 @@ endpoint-stickiness branch closure.
   - `pline_boolean_circle_rectangle_not_complementary_role_flip_matrix_parity`
   - verifies `cavc_pline_boolean` keeps AB `NOT` expectations and BA baseline
     stable across orientation role-flip variants.
+- Added FFI options-path circle/rectangle role-flip matrix parity:
+  - `pline_boolean_options_path_circle_rectangle_role_flip_matrix_cpp_parity`
+  - verifies `cavc_pline_boolean_o` output remains aligned with default
+    `cavc_pline_boolean` output for AB and BA across orientation role-flip
+    variants.
 - Added source-aligned input immutability parity for circle/rectangle combine
   modes (mirrors old C++ no-modify suite coverage):
   - `cpp_circle_rectangle_combine_does_not_modify_input`

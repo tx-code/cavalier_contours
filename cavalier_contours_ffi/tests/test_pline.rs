@@ -5086,6 +5086,138 @@ fn pline_boolean_options_path_circle_rectangle_cpp_parity() {
 }
 
 #[test]
+fn pline_boolean_options_path_circle_rectangle_role_flip_matrix_cpp_parity() {
+    let subject_base = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
+    let subject_reversed = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
+    let clip_base = create_pline(
+        &[
+            (3.0, -10.0, 0.0),
+            (6.0, -10.0, 0.0),
+            (6.0, 10.0, 0.0),
+            (3.0, 10.0, 0.0),
+        ],
+        true,
+    );
+    let clip_reversed = create_pline(
+        &[
+            (3.0, -10.0, 0.0),
+            (6.0, -10.0, 0.0),
+            (6.0, 10.0, 0.0),
+            (3.0, 10.0, 0.0),
+        ],
+        true,
+    );
+
+    unsafe {
+        assert_eq!(cavc_pline_invert_direction(subject_reversed), 0);
+        assert_eq!(cavc_pline_invert_direction(clip_reversed), 0);
+    }
+
+    let subject_variants = [subject_base, subject_reversed];
+    let clip_variants = [clip_base, clip_reversed];
+
+    for &a in &subject_variants {
+        for &b in &clip_variants {
+            for operation in CPP_CIRCLE_RECT_SOURCE_OPS {
+                let (default_ab_remaining, default_ab_subtracted) =
+                    run_boolean_props(a, b, operation);
+                let (default_ba_remaining, default_ba_subtracted) =
+                    run_boolean_props(b, a, operation);
+
+                unsafe {
+                    let mut options_ab = cavc_pline_boolean_o {
+                        pline1_aabb_index: std::ptr::null(),
+                        pos_equal_eps: f64::NAN,
+                        collapsed_area_eps: f64::NAN,
+                    };
+                    assert_eq!(cavc_pline_boolean_o_init(&mut options_ab), 0);
+                    let mut aabb_ab = ptr::null();
+                    assert_eq!(cavc_pline_create_approx_aabbindex(a, &mut aabb_ab), 0);
+                    options_ab.pline1_aabb_index = aabb_ab;
+
+                    let (opt_ab_remaining, opt_ab_subtracted) =
+                        run_boolean_props_with_options(a, b, operation, &options_ab);
+
+                    assert!(
+                        props_set_match_ignore_area_sign(
+                            &opt_ab_remaining,
+                            &default_ab_remaining,
+                            1e-4
+                        ) && props_set_match_ignore_area_sign(
+                            &default_ab_remaining,
+                            &opt_ab_remaining,
+                            1e-4
+                        ),
+                        "options AB remaining mismatch for op={operation} role-flip variant\ndefault={default_ab_remaining:?}\noptions={opt_ab_remaining:?}"
+                    );
+                    assert!(
+                        props_set_match_ignore_area_sign(
+                            &opt_ab_subtracted,
+                            &default_ab_subtracted,
+                            1e-4
+                        ) && props_set_match_ignore_area_sign(
+                            &default_ab_subtracted,
+                            &opt_ab_subtracted,
+                            1e-4
+                        ),
+                        "options AB subtracted mismatch for op={operation} role-flip variant\ndefault={default_ab_subtracted:?}\noptions={opt_ab_subtracted:?}"
+                    );
+
+                    cavc_aabbindex_f(aabb_ab as *mut _);
+
+                    let mut options_ba = cavc_pline_boolean_o {
+                        pline1_aabb_index: std::ptr::null(),
+                        pos_equal_eps: f64::NAN,
+                        collapsed_area_eps: f64::NAN,
+                    };
+                    assert_eq!(cavc_pline_boolean_o_init(&mut options_ba), 0);
+                    let mut aabb_ba = ptr::null();
+                    assert_eq!(cavc_pline_create_approx_aabbindex(b, &mut aabb_ba), 0);
+                    options_ba.pline1_aabb_index = aabb_ba;
+
+                    let (opt_ba_remaining, opt_ba_subtracted) =
+                        run_boolean_props_with_options(b, a, operation, &options_ba);
+
+                    assert!(
+                        props_set_match_ignore_area_sign(
+                            &opt_ba_remaining,
+                            &default_ba_remaining,
+                            1e-4
+                        ) && props_set_match_ignore_area_sign(
+                            &default_ba_remaining,
+                            &opt_ba_remaining,
+                            1e-4
+                        ),
+                        "options BA remaining mismatch for op={operation} role-flip variant\ndefault={default_ba_remaining:?}\noptions={opt_ba_remaining:?}"
+                    );
+                    assert!(
+                        props_set_match_ignore_area_sign(
+                            &opt_ba_subtracted,
+                            &default_ba_subtracted,
+                            1e-4
+                        ) && props_set_match_ignore_area_sign(
+                            &default_ba_subtracted,
+                            &opt_ba_subtracted,
+                            1e-4
+                        ),
+                        "options BA subtracted mismatch for op={operation} role-flip variant\ndefault={default_ba_subtracted:?}\noptions={opt_ba_subtracted:?}"
+                    );
+
+                    cavc_aabbindex_f(aabb_ba as *mut _);
+                }
+            }
+        }
+    }
+
+    unsafe {
+        cavc_pline_f(subject_base);
+        cavc_pline_f(subject_reversed);
+        cavc_pline_f(clip_base);
+        cavc_pline_f(clip_reversed);
+    }
+}
+
+#[test]
 fn pline_boolean_options_path_circle_rectangle_vertex_output_cpp_parity() {
     let pline_a = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
     let pline_b = create_pline(
