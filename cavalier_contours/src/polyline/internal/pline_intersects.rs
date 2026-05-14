@@ -1628,6 +1628,98 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_zero_length_shared_end_pair_is_skipped() {
+        // Global-self boundary probe with a non-local zero-length segment:
+        // segment 0 ends at (4,0) and segment 5 is a zero-length segment at (4,0).
+        // The shared-end condition is simultaneously true for both segment ends, so
+        // the intersection is skipped.
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let basic_target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+        let overlap_target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            basic_target_pair.len(),
+            0,
+            "expected no basic intersects for shared-end zero-length pair (0,5), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert_eq!(
+            overlap_target_pair.len(),
+            0,
+            "expected no overlaps for shared-end zero-length pair (0,5), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
+
+    #[test]
+    fn non_local_zero_length_shared_end_pair_is_skipped_nonzero_indexes() {
+        // Non-zero-index counterpart for the same shared-end zero-length boundary.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, 1.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let basic_target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 6)
+                    || (intr.start_index1 == 6 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+        let overlap_target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 6)
+                    || (intr.start_index1 == 6 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            basic_target_pair.len(),
+            0,
+            "expected no basic intersects for shared-end zero-length pair (1,6), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert_eq!(
+            overlap_target_pair.len(),
+            0,
+            "expected no overlaps for shared-end zero-length pair (1,6), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
+
+    #[test]
     fn non_local_two_intersects_keeps_both_points_when_not_shared_end() {
         // Global-self `TwoIntersects` positive path:
         // segment 0 (arc) and segment 4 (line) intersect at (-1, 0) and (1, 0),

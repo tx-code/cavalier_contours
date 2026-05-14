@@ -91,6 +91,13 @@ endpoint-stickiness branch closure.
   - verifies these overlaps remain in output with ordering `[4,0] -> [3,0]`
     when the shared endpoint condition is not simultaneously true for both
     segment ends.
+- Added zero-length shared-end boundary counterparts for global-self
+  non-local pairs:
+  - `non_local_zero_length_shared_end_pair_is_skipped`
+  - `non_local_zero_length_shared_end_pair_is_skipped_nonzero_indexes`
+  - verifies when both segment ends coincide at the same point and one segment
+    is zero-length at that point, the pair is filtered (no basic and no overlap
+    output for the targeted pair).
 - Added global-self `TwoIntersects` positive-path counterpart:
   - `non_local_two_intersects_keeps_both_points_when_not_shared_end`
   - verifies both intersection points are emitted when neither point satisfies
