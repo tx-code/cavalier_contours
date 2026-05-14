@@ -76,6 +76,10 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_keeps_both_points_when_not_shared_end`
   - verifies both intersection points are emitted when neither point satisfies
     the shared-endpoint skip condition.
+- Added explicit global-self visited-pair dedup probe:
+  - `non_local_single_intersect_pair_is_not_duplicated`
+  - verifies a non-local crossing pair contributes one basic intersect even
+    when reverse pair traversal is reachable via the spatial index.
 - Added bounded mixed line/arc overlap-adjacent collection-level parity probe:
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication`
 - Added closed/open asymmetry probe for mixed line/arc overlap-adjacent dedup:

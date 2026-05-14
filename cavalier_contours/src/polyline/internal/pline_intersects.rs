@@ -1433,6 +1433,41 @@ mod global_self_intersect_tests {
             intrs.basic_intersects
         );
     }
+
+    #[test]
+    fn non_local_single_intersect_pair_is_not_duplicated() {
+        // Global-self visited-pair dedup probe:
+        // segment 0 and segment 3 cross once; output should contain one basic
+        // intersect for that pair (not duplicated by reverse pair traversal).
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 3)
+                    || (intr.start_index1 == 3 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one basic intersect for pair (0,3), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert_fuzzy_eq!(
+            target_pair[0].point,
+            Vector2::new(4.0 / 3.0, 4.0 / 3.0),
+            1e-5
+        );
+    }
 }
 
 #[cfg(test)]
