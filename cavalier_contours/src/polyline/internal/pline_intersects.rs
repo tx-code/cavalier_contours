@@ -1721,6 +1721,53 @@ mod global_self_intersect_tests {
             intrs.overlapping_intersects
         );
     }
+
+    #[test]
+    fn non_local_two_intersects_reversed_second_segment_shared_end_filters_one_nonzero() {
+        // Non-zero + reversed + shared-end skip probe for `TwoIntersects`:
+        // segment 1 (arc) and segment 5 (line, reversed) intersect at two points,
+        // with one point equal to both segment ends (1, 0). Global-self skip should
+        // filter that shared-end point and keep only (-1, 0).
+        let mut pline = Polyline::new();
+        pline.add(-3.0, 1.0, 0.0);
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one retained basic intersect for pair (1,5), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert!(
+            target_pair[0]
+                .point
+                .fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5),
+            "expected retained point (-1,0), actual pair points: {:?}",
+            target_pair.iter().map(|x| x.point).collect::<Vec<_>>()
+        );
+        assert!(
+            !target_pair
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)),
+            "shared-end point (1,0) should be skipped, actual pair points: {:?}",
+            target_pair.iter().map(|x| x.point).collect::<Vec<_>>()
+        );
+    }
 }
 
 #[cfg(test)]
