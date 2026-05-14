@@ -188,6 +188,11 @@ endpoint-stickiness branch closure.
   - `cpp_circle_rectangle_intersection_start_index_rotation_parity`
   - verifies closed-polyline start-vertex rotation keeps the same C++-aligned
     intersection point set while preserving AB/BA `start_index` role inversion.
+- Added full orientation+rotation matrix counterpart for the same offset-derived
+  circle/rectangle intersection parity:
+  - `cpp_circle_rectangle_intersection_start_index_rotation_full_matrix_parity`
+  - verifies the same C++-aligned point set and AB/BA `start_index` role
+    inversion across all rotated/reversed subject/clip combinations.
 - Added combine-derived circle/rectangle commutative role-flip symmetry matrix
   parity across orientation reversals for C++-mapped operations:
   - `cpp_circle_rectangle_commutative_role_flip_matrix_parity`
