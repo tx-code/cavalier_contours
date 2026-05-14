@@ -1065,8 +1065,8 @@ endpoint-stickiness branch closure.
   - `cpp_overlap_and_basic_intersection_options_matrix_parity`
   - verifies `find_intersects_opt` keeps one basic + one overlap across
     open-side nonzero-index and closed-side start-index-rotation variants,
-    preserves AB/BA role-flip mapping and expected overlap endpoints, and
-    leaves both inputs immutable.
+    preserves AB/BA role-flip mapping and expected overlap endpoints, matches
+    default-path index/point outputs, and leaves both inputs immutable.
 - Strengthened offset input-immutability parity from single sample to full
   C++-mapped offset fixture matrix:
   - `cpp_parallel_offset_does_not_modify_input`
