@@ -1119,6 +1119,17 @@ endpoint-stickiness branch closure.
   - `cpp_circle_rectangle_combine_matrix_does_not_modify_input`
   - verifies AB/BA `OR`/`NOT`/`AND`/`XOR` do not mutate either input across
     rotated/reversed subject+clip matrix variants.
+- Added FFI-side counterpart for full circle/rectangle combine immutability
+  matrix coverage:
+  - `pline_boolean_circle_rectangle_full_matrix_does_not_modify_input_cpp_parity`
+  - verifies `cavc_pline_boolean` AB/BA `OR`/`NOT`/`AND`/`XOR` calls do not
+    mutate either input across reversed and rotated circle/rectangle variants.
+- Added FFI options-path counterpart for full circle/rectangle combine
+  immutability matrix coverage:
+  - `pline_boolean_options_path_circle_rectangle_full_matrix_does_not_modify_input_cpp_parity`
+  - verifies `cavc_pline_boolean` with `cavc_pline_boolean_o` AB/BA
+    `OR`/`NOT`/`AND`/`XOR` calls do not mutate either input across reversed and
+    rotated circle/rectangle variants.
 - Added source-aligned self-combine reverse/mixed-direction invariants from old
   C++ combine test coverage:
   - `cpp_combine_with_self_reverse_mix_invariants`
