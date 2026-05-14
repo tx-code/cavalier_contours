@@ -203,6 +203,12 @@ endpoint-stickiness branch closure.
   - `cpp_circle_rectangle_commutative_role_flip_matrix_parity`
   - verifies AB and BA both match C++-mapped geometry for `OR`/`AND`/`XOR`
   and match each other under role inversion.
+- Added FFI-side counterpart for circle/rectangle commutative role-flip matrix
+  parity:
+  - `pline_boolean_circle_rectangle_commutative_role_flip_matrix_parity`
+  - verifies `cavc_pline_boolean` remains aligned with C++-mapped
+    `OR`/`AND`/`XOR` expectations and AB/BA commutative symmetry across
+    orientation role-flip variants.
 - Added combine-derived circle/rectangle commutative start-index rotation matrix
   parity:
   - `cpp_circle_rectangle_commutative_start_index_rotation_matrix_parity`

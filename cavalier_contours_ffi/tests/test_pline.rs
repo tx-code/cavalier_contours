@@ -3549,6 +3549,139 @@ fn pline_boolean_circle_rectangle_not_start_index_rotation_matrix_parity() {
 }
 
 #[test]
+fn pline_boolean_circle_rectangle_commutative_role_flip_matrix_parity() {
+    let expected_union = vec![PlineProps::new(
+        10,
+        109.15381629282,
+        52.324068506275,
+        0.0,
+        -10.0,
+        10.0,
+        10.0,
+    )];
+    let expected_intersect = vec![PlineProps::new(
+        4,
+        29.386000046924,
+        25.091858029623,
+        3.0,
+        -4.0,
+        6.0,
+        6.0,
+    )];
+    let expected_xor = vec![
+        PlineProps::new(
+            3,
+            19.816835628274,
+            20.757946197186,
+            0.0,
+            -3.582575694955841,
+            3.0,
+            5.5825756949558,
+        ),
+        PlineProps::new(
+            4,
+            -18.306999976538,
+            18.582818653767,
+            3.0,
+            -10.0,
+            6.0,
+            -3.5825756949558,
+        ),
+        PlineProps::new(
+            3,
+            29.336980664548,
+            23.492343031178,
+            6.0,
+            -3.8989794855664,
+            10.0,
+            5.898979485566356,
+        ),
+        PlineProps::new(
+            4,
+            -12.306999976538,
+            14.582818653767,
+            3.0,
+            5.5825756949558,
+            6.0,
+            10.0,
+        ),
+    ];
+
+    let subject_base = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
+    let subject_reversed = create_pline(&[(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)], true);
+
+    let clip_base = create_pline(
+        &[
+            (3.0, -10.0, 0.0),
+            (6.0, -10.0, 0.0),
+            (6.0, 10.0, 0.0),
+            (3.0, 10.0, 0.0),
+        ],
+        true,
+    );
+    let clip_reversed = create_pline(
+        &[
+            (3.0, -10.0, 0.0),
+            (6.0, -10.0, 0.0),
+            (6.0, 10.0, 0.0),
+            (3.0, 10.0, 0.0),
+        ],
+        true,
+    );
+
+    unsafe {
+        assert_eq!(cavc_pline_invert_direction(subject_reversed), 0);
+        assert_eq!(cavc_pline_invert_direction(clip_reversed), 0);
+    }
+
+    let subject_variants = [subject_base, subject_reversed];
+    let clip_variants = [clip_base, clip_reversed];
+
+    let cases: [(&str, u32, Vec<PlineProps>); 3] = [
+        ("circle_rectangle_union", 0, expected_union),
+        ("circle_rectangle_intersect", 1, expected_intersect),
+        ("circle_rectangle_xor", 3, expected_xor),
+    ];
+
+    for (case_name, operation, expected_remaining) in cases {
+        for &a in &subject_variants {
+            for &b in &clip_variants {
+                let (ab_remaining, ab_subtracted) = run_boolean_props(a, b, operation);
+                let (ba_remaining, ba_subtracted) = run_boolean_props(b, a, operation);
+
+                assert!(
+                    props_set_match_ignore_area_sign(&ab_remaining, &expected_remaining, 1e-4),
+                    "AB mismatch for case={case_name} role-flip variant\nab={ab_remaining:?}\nexpected={expected_remaining:?}"
+                );
+                assert!(
+                    props_set_match_ignore_area_sign(&ba_remaining, &expected_remaining, 1e-4),
+                    "BA mismatch for case={case_name} role-flip variant\nba={ba_remaining:?}\nexpected={expected_remaining:?}"
+                );
+                assert!(
+                    props_set_match_ignore_area_sign(&ab_remaining, &ba_remaining, 1e-4),
+                    "AB/BA commutative mismatch for case={case_name} role-flip variant\nab={ab_remaining:?}\nba={ba_remaining:?}"
+                );
+                assert!(
+                    ab_subtracted.is_empty(),
+                    "AB expected empty subtracted for case={case_name}, got {ab_subtracted:?}"
+                );
+                assert!(
+                    ba_subtracted.is_empty(),
+                    "BA expected empty subtracted for case={case_name}, got {ba_subtracted:?}"
+                );
+            }
+        }
+    }
+
+    unsafe {
+        cavc_pline_f(subject_base);
+        cavc_pline_f(subject_reversed);
+        cavc_pline_f(clip_base);
+        cavc_pline_f(clip_reversed);
+    }
+}
+
+#[test]
 fn pline_boolean_circle_rectangle_commutative_start_index_rotation_matrix_parity() {
     let expected_union = vec![PlineProps::new(
         10,
