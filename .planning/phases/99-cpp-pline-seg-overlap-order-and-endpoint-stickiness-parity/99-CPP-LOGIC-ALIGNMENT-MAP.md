@@ -142,6 +142,9 @@ endpoint-stickiness branch closure.
   independent basics are explicitly asserted:
   - `wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_intersect`
   - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_intersect`
+- Added exact parameter-role flipped counterpart for the bounded same-order
+  closed-`pline2` closure-edge variant:
+  - `wrap_around_non_circle_arc_overlap_same_order_closed_pline2_with_closure_basic_intersect_flipped_roles`
 - Added closed-`pline2` closure-edge counterpart that isolates open-side
   reversal while keeping closed-side arc orientation non-reversed:
   - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect`
