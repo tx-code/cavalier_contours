@@ -200,9 +200,10 @@ endpoint-stickiness branch closure.
   `TwoIntersects` visited-pair dedup path:
   - `all_self_intersects_basic_two_intersects_pair_is_not_duplicated`
   - `all_self_intersects_basic_two_intersects_pair_is_not_duplicated_nonzero_indexes`
+  - `all_self_intersects_basic_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment`
   - verifies both `include_overlapping=false/true` preserve exactly two basic
-    points for the targeted pair (no reverse-traversal duplication) across
-    index-0 and non-zero index variants.
+  points for the targeted pair (no reverse-traversal duplication) across
+    index-0, non-zero, and zero-length-lead re-parameterization variants.
 - Added non-zero-index counterpart for global-self reversed-second-segment
   coincident-arc overlap ordering:
   - `non_local_coincident_arc_overlap_reversed_second_segment_ordering_nonzero_index`
