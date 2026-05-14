@@ -192,8 +192,14 @@ endpoint-stickiness branch closure.
 - Added source-aligned `subtracted`-surface parity for combine fixtures:
   - `cpp_combine_expected_subtracted_empty_parity`
   - verifies Rust `neg_plines` remains empty across the C++-mapped
-    circle/rectangle and coincident combine matrices where old
-    `expectedSubtracted` is empty.
+  circle/rectangle and coincident combine matrices where old
+  `expectedSubtracted` is empty.
+- Added source-aligned primitive parity probes for coincident-arc single-endpoint
+  touch branches in old C++ `intrPlineSegs`:
+  - `arc_arc_coincident_touch_only_at_arc1_start`
+  - `arc_arc_coincident_touch_only_at_arc2_start`
+  - verifies one-intersect endpoint behavior when only one coincident-arc end
+    touches (no overlap span).
 
 ## Next Alignment Targets (No Clipper)
 

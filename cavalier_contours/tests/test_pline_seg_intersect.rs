@@ -189,6 +189,44 @@ fn arc_arc_end_points_touch_reverse_dir() {
 }
 
 #[test]
+fn arc_arc_coincident_touch_only_at_arc1_start() {
+    // Source-aligned with old C++ `intrPlineSegs` coincident-arc branch where
+    // arc2 end angle equals arc1 start angle, yielding exactly one endpoint intersect.
+    let quarter = bulge_from_angle(FRAC_PI_2);
+    let v1 = PlineVertex::new(1.0, 0.0, quarter);
+    let v2 = PlineVertex::new(0.0, 1.0, 0.0);
+    let u1 = PlineVertex::new(0.0, -1.0, quarter);
+    let u2 = PlineVertex::new(1.0, 0.0, 0.0);
+
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(
+        result,
+        OneIntersect {
+            point: Vector2::new(1.0, 0.0)
+        }
+    );
+}
+
+#[test]
+fn arc_arc_coincident_touch_only_at_arc2_start() {
+    // Source-aligned with old C++ `intrPlineSegs` coincident-arc branch where
+    // arc2 start angle equals arc1 end angle, yielding exactly one endpoint intersect.
+    let quarter = bulge_from_angle(FRAC_PI_2);
+    let v1 = PlineVertex::new(1.0, 0.0, quarter);
+    let v2 = PlineVertex::new(0.0, 1.0, 0.0);
+    let u1 = PlineVertex::new(0.0, 1.0, quarter);
+    let u2 = PlineVertex::new(-1.0, 0.0, 0.0);
+
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(
+        result,
+        OneIntersect {
+            point: Vector2::new(0.0, 1.0)
+        }
+    );
+}
+
+#[test]
 fn arc2_within_arc1_overlapping() {
     let v1 = PlineVertex::new(1.0, 1.0, 1.0);
     let v2 = PlineVertex::new(3.0, 1.0, 0.0);
