@@ -4558,6 +4558,49 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment() {
+        // Re-parameterization counterpart for global-self visited-pair dedup on
+        // `TwoIntersects`: prepend a zero-length lead segment and preserve
+        // exactly two points for the shifted pair.
+        let mut pline = Polyline::new();
+        pline.add(-3.0, 1.0, 0.0);
+        pline.add(-3.0, 1.0, 0.0); // zero-length lead segment
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 2 && intr.start_index2 == 6)
+                    || (intr.start_index1 == 6 && intr.start_index2 == 2)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            2,
+            "expected two basic intersects for shifted pair (2,6), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert!(
+            target_pair
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5))
+                && target_pair
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)),
+            "expected both two-intersect points for shifted pair (2,6), actual pair points: {:?}",
+            target_pair.iter().map(|x| x.point).collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
     fn non_local_coincident_arc_overlap_reversed_second_segment_ordering_nonzero_index() {
         // Non-zero-index counterpart for global-self coincident-arc overlap with
         // reversed second-segment direction.

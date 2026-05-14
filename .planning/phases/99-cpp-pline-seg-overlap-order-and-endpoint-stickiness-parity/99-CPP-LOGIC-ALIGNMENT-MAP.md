@@ -219,6 +219,11 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_pair_is_not_duplicated_nonzero_indexes`
   - verifies two-point dedup behavior remains stable away from index-0 segment
     pairs.
+- Added re-parameterization counterpart for the same global-self
+  `TwoIntersects` visited-pair dedup path:
+  - `non_local_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment`
+  - verifies prepending a zero-length lead segment (index shift) preserves
+    exactly two basic points for the shifted pair.
 - Added API-level `all_self_intersects_as_basic` counterparts for the same
   `TwoIntersects` visited-pair dedup path:
   - `all_self_intersects_basic_two_intersects_pair_is_not_duplicated`
