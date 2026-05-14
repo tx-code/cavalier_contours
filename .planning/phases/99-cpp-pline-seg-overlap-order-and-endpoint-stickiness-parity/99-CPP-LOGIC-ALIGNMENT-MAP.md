@@ -185,6 +185,11 @@ endpoint-stickiness branch closure.
   - `non_local_overlap_pair_is_not_duplicated_nonzero_indexes`
   - verifies visited-pair dedup behavior remains stable away from index-0
     segment pairs for both basic and overlap output paths.
+- Added re-parameterization counterpart for global-self overlap visited-pair
+  dedup:
+  - `non_local_overlap_pair_is_not_duplicated_with_zero_length_lead_segment`
+  - verifies prepending a zero-length lead segment (index shift) preserves one
+    overlap entry for the shifted pair.
 - Added coincident-arc overlap counterparts for the same global-self
   visited-pair dedup overlap path:
   - `non_local_coincident_arc_overlap_pair_is_not_duplicated`

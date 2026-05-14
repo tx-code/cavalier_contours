@@ -4340,6 +4340,40 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_overlap_pair_is_not_duplicated_with_zero_length_lead_segment() {
+        // Re-parameterization counterpart for global-self visited-pair dedup on
+        // overlap branch: prepend a zero-length lead segment and keep one
+        // overlap entry for the shifted pair.
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(0.0, 0.0, 0.0); // zero-length lead segment
+        pline.add(3.0, 0.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(1.0, 1.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one overlap for shifted pair (1,7), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
+
+    #[test]
     fn non_local_coincident_arc_overlap_pair_is_not_duplicated() {
         // Global-self visited-pair dedup probe for coincident-arc overlap branch:
         // segment 0 and segment 4 overlap, but should appear once even if reverse
