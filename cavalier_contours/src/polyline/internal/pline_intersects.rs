@@ -916,6 +916,40 @@ mod local_self_intersect_tests {
     }
 
     #[test]
+    fn closed_wraparound_duplicate_vertex_reports_overlapping_singularity() {
+        // Source-aligned singularity probe on the closed-path wrap-around local pass:
+        // when `last -> first` starts with duplicate positions, it should be reported as
+        // an overlapping intersect.
+        let mut pline = Polyline::new_closed();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+
+        let intrs = local_self_intersects(&pline, 1e-5);
+        assert_eq!(intrs.basic_intersects.len(), 0);
+        assert_eq!(intrs.overlapping_intersects.len(), 2);
+
+        let has_adjacent_collinear_reverse_overlap =
+            intrs.overlapping_intersects.iter().any(|overlap| {
+                overlap.start_index1 == 0
+                    && overlap.start_index2 == 1
+                    && overlap.point1.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)
+                    && overlap.point2.fuzzy_eq_eps(Vector2::new(0.0, 0.0), 1e-5)
+            });
+        let has_wraparound_singularity = intrs.overlapping_intersects.iter().any(|overlap| {
+            overlap.start_index1 == 2
+                && overlap.start_index2 == 0
+                && overlap.point1.fuzzy_eq_eps(Vector2::new(0.0, 0.0), 1e-5)
+                && overlap.point2.fuzzy_eq_eps(Vector2::new(0.0, 0.0), 1e-5)
+        });
+        assert!(
+            has_adjacent_collinear_reverse_overlap && has_wraparound_singularity,
+            "unexpected overlapping intersects: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
+
+    #[test]
     fn circle_no_intersects() {
         let mut pline = Polyline::new_closed();
         pline.add(0.0, 0.0, 1.0);
