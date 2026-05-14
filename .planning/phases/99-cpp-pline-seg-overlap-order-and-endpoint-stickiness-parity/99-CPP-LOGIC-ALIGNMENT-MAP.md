@@ -1261,6 +1261,24 @@ endpoint-stickiness branch closure.
     `...open_side_reversed_normal_closed_side...start_index_rotation` geometry,
     while preserving AB/BA role-flip mapping (with reversed overlap endpoint
     order) and input immutability.
+- Replaced three remaining wrap-around role-flip/start-index alias wrappers
+  with explicit options-path semantic probes (no test-to-test delegation):
+  - `cpp_wrap_around_open_side_reversed_closed_side_reversed_role_flip_options_parity`
+    and
+    `cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_role_flip_options_matrix_parity`
+    now each assert exact AB start-index values (`basic 1/0`, `overlap 2/0`)
+    plus default-path index/point parity for the role-flipped closure-edge
+    geometry, while preserving AB/BA start-index mapping and input immutability.
+  - `cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_role_flip_options_matrix_parity`
+    now asserts exact AB start-index values (`basic 1/0`, `overlap 2/0`) plus
+    default-path index/point parity for the role-flipped normal-closed-side
+    geometry, including expected AB/BA reversed overlap endpoint order and
+    input immutability.
+  - `cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_start_index_rotation_options_matrix_parity`
+    now asserts exact AB start-index values (`basic 0/0`, `overlap 0/1`) plus
+    default-path index/point parity for the closed-`pline2`
+    start-index-rotation geometry, while preserving AB/BA mapping and input
+    immutability.
 - Added Rust options-path wrap-around closure-edge matrix counterpart for
   source-aligned non-circle arc overlap boundaries with closed `pline1`:
   - `cpp_wrap_around_closed_pline1_closure_basic_options_matrix_parity`
