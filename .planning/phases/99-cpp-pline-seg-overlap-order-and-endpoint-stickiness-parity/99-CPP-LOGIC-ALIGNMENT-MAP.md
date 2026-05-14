@@ -15,6 +15,14 @@ endpoint-stickiness branch closure.
     branch emits `OneIntersect` when only one of the two geometric circle
     intersections lies within both arc sweeps, including role inversion and
     complementary arc-direction orientation.
+- Added collection-level explicit closure-basic expected-case probes for
+  open-side-reversed + closed-side-reversed wrap-around geometry on closed
+  `pline2`:
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closed_side_reversed_closure_basic_intersect`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closed_side_reversed_closure_basic_intersect_flipped_roles`
+  - verifies one overlap with reversed endpoint ordering `(3, 1) -> (2, 0)` and
+    one independent basic intersect at `(2, 2)` with explicit segment indexes
+    under parameter-role inversion.
 - Replaced the remaining index-0-shift canonical-name wrapper aliases with
   explicit assertion-backed probes, eliminating wrapper-style alias indirection
   in `find_intersects_tests`:
