@@ -9492,6 +9492,14 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn non_circle_partial_arc_overlap_both_reverse_dir_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry()
+     {
+        // Canonical-name alias for direct closed-pline1 rotated counterpart
+        // tracing.
+        non_circle_partial_arc_overlap_both_reverse_dir_both_closed_start_index_rotation_role_flip_symmetry();
+    }
+
+    #[test]
     fn non_circle_partial_arc_overlap_both_reverse_dir_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry()
      {
         // Complementary start-index-rotated counterpart where closed `pline2`
@@ -9683,6 +9691,14 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn non_circle_partial_arc_overlap_arc2_reverse_dir_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry()
+     {
+        // Canonical-name alias for direct closed-pline1 rotated counterpart
+        // tracing.
+        non_circle_partial_arc_overlap_arc2_reverse_dir_both_closed_start_index_rotation_role_flip_symmetry();
+    }
+
+    #[test]
     fn non_circle_partial_arc_overlap_arc2_reverse_dir_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry()
      {
         // Complementary start-index-rotated counterpart where closed `pline2`
@@ -9843,6 +9859,14 @@ mod find_intersects_tests {
         // swaps overlap endpoint ordering.
         assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point2);
         assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point1);
+    }
+
+    #[test]
+    fn non_circle_partial_arc_overlap_arc1_reverse_dir_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry()
+     {
+        // Canonical-name alias for direct closed-pline1 rotated counterpart
+        // tracing.
+        non_circle_partial_arc_overlap_arc1_reverse_dir_both_closed_start_index_rotation_role_flip_symmetry();
     }
 
     #[test]
