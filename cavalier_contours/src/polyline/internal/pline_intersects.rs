@@ -10453,6 +10453,85 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed_start_index_rotation_closed_pline2_zero_length_lead_role_flip_symmetry()
+     {
+        // Zero-length-lead counterpart where the start-index-rotated closed `pline2`
+        // keeps the non-zero overlap segment index.
+        let mut pline1 = Polyline::new_closed();
+        pline1.add(1.0, 1.0, 1.0);
+        pline1.add(3.0, 1.0, 0.0);
+        pline1.add(4.0, 1.0, 0.0);
+        pline1.add(0.0, -3.0, 0.0);
+
+        let mut pline2_rotated = Polyline::new_closed();
+        pline2_rotated.add(2.0, 0.0, 0.0);
+        pline2_rotated.add(2.0, -1.0, 0.0);
+        pline2_rotated.add(2.0, -3.0, 0.0);
+        pline2_rotated.add(2.0, 2.0, 0.0);
+        pline2_rotated.add(2.0, 2.0, -1.0);
+
+        let ab = find_intersects(&pline1, &pline2_rotated, &Default::default());
+        let ba = find_intersects(&pline2_rotated, &pline1, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert_eq!(ab.basic_intersects.len(), 3);
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert_eq!(ba.basic_intersects.len(), 3);
+
+        assert!(
+            !ab.basic_intersects
+                .iter()
+                .any(|basic| basic.point.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)),
+            "unexpected AB basic overlap endpoint at (3, 1): {:?}",
+            ab.basic_intersects
+        );
+        assert!(
+            !ba.basic_intersects
+                .iter()
+                .any(|basic| basic.point.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)),
+            "unexpected BA basic overlap endpoint at (3, 1): {:?}",
+            ba.basic_intersects
+        );
+
+        for basic_ab in &ab.basic_intersects {
+            let has_role_flipped_match = ba.basic_intersects.iter().any(|basic_ba| {
+                basic_ab.start_index1 == basic_ba.start_index2
+                    && basic_ab.start_index2 == basic_ba.start_index1
+                    && basic_ab.point.fuzzy_eq_eps(basic_ba.point, 1e-5)
+            });
+            assert!(
+                has_role_flipped_match,
+                "missing AB->BA role-flipped basic match for {:?}, BA basics: {:?}",
+                basic_ab, ba.basic_intersects
+            );
+        }
+        for basic_ba in &ba.basic_intersects {
+            let has_role_flipped_match = ab.basic_intersects.iter().any(|basic_ab| {
+                basic_ab.start_index1 == basic_ba.start_index2
+                    && basic_ab.start_index2 == basic_ba.start_index1
+                    && basic_ab.point.fuzzy_eq_eps(basic_ba.point, 1e-5)
+            });
+            assert!(
+                has_role_flipped_match,
+                "missing BA->AB role-flipped basic match for {:?}, AB basics: {:?}",
+                basic_ba, ab.basic_intersects
+            );
+        }
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 0);
+        assert!(overlap_ab.start_index2 > 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(3.0, 1.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(2.0, 0.0));
+        // As in the non-zero-lead counterpart, role inversion swaps overlap endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point2);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point1);
+    }
+
+    #[test]
     fn non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry()
      {
         // Complementary start-index-rotated counterpart where closed `pline1`
@@ -10527,6 +10606,84 @@ mod find_intersects_tests {
         assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(2.0, 0.0));
         // As in the non-rotated reversed-endpoint-order probe, role inversion
         // swaps overlap endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point2);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point1);
+    }
+
+    #[test]
+    fn non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed_start_index_rotation_closed_pline1_zero_length_lead_role_flip_symmetry()
+     {
+        // Zero-length-lead counterpart of the explicit closed-pline1 rotated probe.
+        let mut pline1_rotated = Polyline::new_closed();
+        pline1_rotated.add(3.0, 1.0, 0.0);
+        pline1_rotated.add(4.0, 1.0, 0.0);
+        pline1_rotated.add(0.0, -3.0, 0.0);
+        pline1_rotated.add(0.0, -3.0, 0.0);
+        pline1_rotated.add(1.0, 1.0, 1.0);
+
+        let mut pline2 = Polyline::new_closed();
+        pline2.add(2.0, 2.0, -1.0);
+        pline2.add(2.0, 0.0, 0.0);
+        pline2.add(2.0, -1.0, 0.0);
+        pline2.add(2.0, -3.0, 0.0);
+
+        let ab = find_intersects(&pline1_rotated, &pline2, &Default::default());
+        let ba = find_intersects(&pline2, &pline1_rotated, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert_eq!(ab.basic_intersects.len(), 3);
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert_eq!(ba.basic_intersects.len(), 3);
+
+        assert!(
+            !ab.basic_intersects
+                .iter()
+                .any(|basic| basic.point.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)),
+            "unexpected AB basic overlap endpoint at (3, 1): {:?}",
+            ab.basic_intersects
+        );
+        assert!(
+            !ba.basic_intersects
+                .iter()
+                .any(|basic| basic.point.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)),
+            "unexpected BA basic overlap endpoint at (3, 1): {:?}",
+            ba.basic_intersects
+        );
+
+        for basic_ab in &ab.basic_intersects {
+            let has_role_flipped_match = ba.basic_intersects.iter().any(|basic_ba| {
+                basic_ab.start_index1 == basic_ba.start_index2
+                    && basic_ab.start_index2 == basic_ba.start_index1
+                    && basic_ab.point.fuzzy_eq_eps(basic_ba.point, 1e-5)
+            });
+            assert!(
+                has_role_flipped_match,
+                "missing AB->BA role-flipped basic match for {:?}, BA basics: {:?}",
+                basic_ab, ba.basic_intersects
+            );
+        }
+        for basic_ba in &ba.basic_intersects {
+            let has_role_flipped_match = ab.basic_intersects.iter().any(|basic_ab| {
+                basic_ab.start_index1 == basic_ba.start_index2
+                    && basic_ab.start_index2 == basic_ba.start_index1
+                    && basic_ab.point.fuzzy_eq_eps(basic_ba.point, 1e-5)
+            });
+            assert!(
+                has_role_flipped_match,
+                "missing BA->AB role-flipped basic match for {:?}, AB basics: {:?}",
+                basic_ba, ab.basic_intersects
+            );
+        }
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert!(overlap_ab.start_index1 > 0);
+        assert_eq!(overlap_ab.start_index2, 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(3.0, 1.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(2.0, 0.0));
+        // As in the non-zero-lead counterpart, role inversion swaps overlap endpoint ordering.
         assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point2);
         assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point1);
     }

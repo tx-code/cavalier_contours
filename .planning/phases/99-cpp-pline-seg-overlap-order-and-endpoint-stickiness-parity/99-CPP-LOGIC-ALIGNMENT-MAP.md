@@ -41,9 +41,12 @@ endpoint-stickiness branch closure.
   reversed-endpoint-order mixed arc + adjacent-line overlap with zero-length
   lead index shift:
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed_zero_length_lead_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed_start_index_rotation_closed_pline2_zero_length_lead_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed_start_index_rotation_closed_pline1_zero_length_lead_role_flip_symmetry`
   - verifies AB/BA role inversion preserves overlap/basic structure and role-swapped
-    start-index mapping after non-zero index shift, while keeping overlap endpoint
-    ordering behavior (`AB point1/point2 == BA point2/point1`) source-aligned.
+  start-index mapping after non-zero index shift, while keeping overlap endpoint
+  ordering behavior (`AB point1/point2 == BA point2/point1`) source-aligned in
+  non-rotated and closed-pline1/2-rotated + zero-length-lead geometries.
 - Added collection-level role-flip symmetry guard for bounded both-closed
   `arc1 reverse` mixed arc + adjacent-line overlap with zero-length lead index
   shift:
@@ -773,8 +776,15 @@ endpoint-stickiness branch closure.
   counterpart where the non-zero overlap segment index is carried by `pline1`:
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed_start_index_rotation_closed_pline1_role_flip_symmetry`
   - verifies stable three-basic-intersect behavior, overlap-endpoint dedup
-    rules, and AB/BA role-inversion semantics when rotation is applied on the
-    first input polyline instead of the second.
+  rules, and AB/BA role-inversion semantics when rotation is applied on the
+  first input polyline instead of the second.
+- Added zero-length-lead counterparts for the explicit closed-pline1/2 rotated
+  role-flip probes in the same branch:
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed_start_index_rotation_closed_pline2_zero_length_lead_role_flip_symmetry`
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed_start_index_rotation_closed_pline1_zero_length_lead_role_flip_symmetry`
+  - verifies stable three-basic-intersect behavior without reintroducing the
+    overlap-endpoint basic at `(3, 1)`, plus AB/BA role-inversion start-index
+    mapping and overlap endpoint-order reversal under non-zero index shift.
 - Added source-aligned primitive parity probes for non-circle partial-overlap
   where both arcs are reversed:
   - `arc_arc_partial_overlap_both_reverse_dir`
