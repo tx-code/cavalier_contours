@@ -609,38 +609,40 @@ fn cpp_combine_with_self_reverse_mix_invariants() {
     let expected_fwd = create_property_set([&pline], false);
     let expected_rev = create_property_set([&rev_pline], false);
 
-    let union_fwd = create_property_set(
-        pline
-            .boolean(&pline, BooleanOp::Or)
-            .pos_plines
-            .iter()
-            .map(|r| &r.pline),
-        false,
+    let union_fwd_result = pline.boolean(&pline, BooleanOp::Or);
+    assert!(
+        union_fwd_result.neg_plines.is_empty(),
+        "union self expected empty neg_plines for forward orientation, got {:?}",
+        union_fwd_result.neg_plines
     );
+    let union_fwd =
+        create_property_set(union_fwd_result.pos_plines.iter().map(|r| &r.pline), false);
     assert!(
         geometry_sets_match_ignore_vertex_count(&union_fwd, &expected_fwd),
         "union self mismatch for forward orientation: {union_fwd:?}"
     );
 
-    let union_rev = create_property_set(
-        rev_pline
-            .boolean(&rev_pline, BooleanOp::Or)
-            .pos_plines
-            .iter()
-            .map(|r| &r.pline),
-        false,
+    let union_rev_result = rev_pline.boolean(&rev_pline, BooleanOp::Or);
+    assert!(
+        union_rev_result.neg_plines.is_empty(),
+        "union self expected empty neg_plines for reversed orientation, got {:?}",
+        union_rev_result.neg_plines
     );
+    let union_rev =
+        create_property_set(union_rev_result.pos_plines.iter().map(|r| &r.pline), false);
     assert!(
         geometry_sets_match_ignore_vertex_count(&union_rev, &expected_rev),
         "union self mismatch for reversed orientation: {union_rev:?}"
     );
 
+    let intersect_fwd_result = pline.boolean(&pline, BooleanOp::And);
+    assert!(
+        intersect_fwd_result.neg_plines.is_empty(),
+        "intersect self expected empty neg_plines for forward orientation, got {:?}",
+        intersect_fwd_result.neg_plines
+    );
     let intersect_fwd = create_property_set(
-        pline
-            .boolean(&pline, BooleanOp::And)
-            .pos_plines
-            .iter()
-            .map(|r| &r.pline),
+        intersect_fwd_result.pos_plines.iter().map(|r| &r.pline),
         false,
     );
     assert!(
@@ -648,12 +650,14 @@ fn cpp_combine_with_self_reverse_mix_invariants() {
         "intersect self mismatch for forward orientation: {intersect_fwd:?}"
     );
 
+    let intersect_rev_result = rev_pline.boolean(&rev_pline, BooleanOp::And);
+    assert!(
+        intersect_rev_result.neg_plines.is_empty(),
+        "intersect self expected empty neg_plines for reversed orientation, got {:?}",
+        intersect_rev_result.neg_plines
+    );
     let intersect_rev = create_property_set(
-        rev_pline
-            .boolean(&rev_pline, BooleanOp::And)
-            .pos_plines
-            .iter()
-            .map(|r| &r.pline),
+        intersect_rev_result.pos_plines.iter().map(|r| &r.pline),
         false,
     );
     assert!(
@@ -667,25 +671,26 @@ fn cpp_combine_with_self_reverse_mix_invariants() {
         (&rev_pline, &pline, "rev/fwd"),
         (&pline, &rev_pline, "fwd/rev"),
     ] {
-        let exclude = create_property_set(
-            lhs.boolean(rhs, BooleanOp::Not)
-                .pos_plines
-                .iter()
-                .map(|r| &r.pline),
-            false,
+        let exclude_result = lhs.boolean(rhs, BooleanOp::Not);
+        assert!(
+            exclude_result.neg_plines.is_empty(),
+            "exclude self expected empty neg_plines for {label}, got {:?}",
+            exclude_result.neg_plines
         );
+        let exclude =
+            create_property_set(exclude_result.pos_plines.iter().map(|r| &r.pline), false);
         assert!(
             exclude.is_empty(),
             "exclude self expected empty for {label}, got {exclude:?}"
         );
 
-        let xor = create_property_set(
-            lhs.boolean(rhs, BooleanOp::Xor)
-                .pos_plines
-                .iter()
-                .map(|r| &r.pline),
-            false,
+        let xor_result = lhs.boolean(rhs, BooleanOp::Xor);
+        assert!(
+            xor_result.neg_plines.is_empty(),
+            "xor self expected empty neg_plines for {label}, got {:?}",
+            xor_result.neg_plines
         );
+        let xor = create_property_set(xor_result.pos_plines.iter().map(|r| &r.pline), false);
         assert!(
             xor.is_empty(),
             "xor self expected empty for {label}, got {xor:?}"

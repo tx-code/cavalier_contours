@@ -187,7 +187,8 @@ endpoint-stickiness branch closure.
   C++ combine test coverage:
   - `cpp_combine_with_self_reverse_mix_invariants`
   - verifies self `UNION`/`INTERSECT` returns self for forward and reversed
-    orientation, and self `EXCLUDE`/`XOR` stays empty for
+    orientation while keeping `neg_plines` empty, and self `EXCLUDE`/`XOR`
+    keeps both `pos_plines` and `neg_plines` empty for
     `fwd/fwd`, `rev/rev`, `rev/fwd`, and `fwd/rev`.
 - Added source-aligned `subtracted`-surface parity for combine fixtures:
   - `cpp_combine_expected_subtracted_empty_parity`
