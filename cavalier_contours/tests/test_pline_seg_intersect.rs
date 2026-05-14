@@ -294,6 +294,68 @@ fn arc_arc_coincident_disjoint_sweeps_no_intersect() {
 }
 
 #[test]
+fn arc_arc_circle_tangent_in_sweeps() {
+    // Source-aligned with old C++ `intrPlineSegs` circle-circle
+    // `Circle2Circle2IntrType::OneIntersect` branch where the tangent point lies
+    // within both arc sweeps.
+    let v1 = PlineVertex::new(0.0, -1.0, 1.0);
+    let v2 = PlineVertex::new(0.0, 1.0, 0.0);
+    let u1 = PlineVertex::new(2.0, 1.0, 1.0);
+    let u2 = PlineVertex::new(2.0, -1.0, 0.0);
+
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(
+        result,
+        TangentIntersect {
+            point: Vector2::new(1.0, 0.0)
+        }
+    );
+}
+
+#[test]
+fn arc_arc_circle_tangent_in_sweeps_flipped_roles() {
+    // Parameter-role flipped counterpart of the same tangent-in-sweeps branch.
+    let v1 = PlineVertex::new(0.0, -1.0, 1.0);
+    let v2 = PlineVertex::new(0.0, 1.0, 0.0);
+    let u1 = PlineVertex::new(2.0, 1.0, 1.0);
+    let u2 = PlineVertex::new(2.0, -1.0, 0.0);
+
+    let result = pline_seg_intr(u1, u2, v1, v2, 1e-5);
+    assert_case_eq!(
+        result,
+        TangentIntersect {
+            point: Vector2::new(1.0, 0.0)
+        }
+    );
+}
+
+#[test]
+fn arc_arc_circle_tangent_outside_sweeps_no_intersect() {
+    // Source-aligned with old C++ `intrPlineSegs` circle-circle
+    // `Circle2Circle2IntrType::OneIntersect` branch where the tangent point is
+    // outside at least one arc sweep and should be filtered out.
+    let v1 = PlineVertex::new(0.0, 1.0, 1.0);
+    let v2 = PlineVertex::new(0.0, -1.0, 0.0);
+    let u1 = PlineVertex::new(2.0, -1.0, 1.0);
+    let u2 = PlineVertex::new(2.0, 1.0, 0.0);
+
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(result, NoIntersect::<f64>);
+}
+
+#[test]
+fn arc_arc_circle_tangent_outside_sweeps_no_intersect_flipped_roles() {
+    // Parameter-role flipped counterpart for the same tangent-out-of-sweep branch.
+    let v1 = PlineVertex::new(0.0, 1.0, 1.0);
+    let v2 = PlineVertex::new(0.0, -1.0, 0.0);
+    let u1 = PlineVertex::new(2.0, -1.0, 1.0);
+    let u2 = PlineVertex::new(2.0, 1.0, 0.0);
+
+    let result = pline_seg_intr(u1, u2, v1, v2, 1e-5);
+    assert_case_eq!(result, NoIntersect::<f64>);
+}
+
+#[test]
 fn arc_arc_two_circle_intersections_only_one_in_sweeps() {
     // Source-aligned with old C++ `intrPlineSegs` circle-circle branch where the
     // supporting circles intersect at two points, but arc sweep filtering keeps
