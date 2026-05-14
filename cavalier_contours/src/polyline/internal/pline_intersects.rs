@@ -4122,6 +4122,60 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn wrap_around_non_circle_arc_overlap_deduplication_reversed_order_closed_pline1_start_index_rotation_role_flip_symmetry()
+     {
+        // Start-index-rotated counterpart of the closed-pline1 reversed-order wrap-around
+        // dedup probe. Closed-side start-vertex rotation should preserve no-basic dedup
+        // behavior, AB/BA index-role inversion, and overlap endpoint-order swap semantics.
+        let mut closed_side_rotated = Polyline::new_closed();
+        closed_side_rotated.add(4.0, 5.0, 0.0);
+        closed_side_rotated.add(1.0, 1.0, 1.0);
+        closed_side_rotated.add(3.0, 1.0, 0.0);
+
+        let mut open_side_reversed = Polyline::new();
+        open_side_reversed.add(2.0, 2.0, -1.0);
+        open_side_reversed.add(2.0, 0.0, 0.0);
+        open_side_reversed.add(2.0, -1.0, 0.0);
+
+        let ab = find_intersects(
+            &closed_side_rotated,
+            &open_side_reversed,
+            &Default::default(),
+        );
+        let ba = find_intersects(
+            &open_side_reversed,
+            &closed_side_rotated,
+            &Default::default(),
+        );
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 1);
+        assert_eq!(overlap_ab.start_index2, 0);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(3.0, 1.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(2.0, 0.0));
+        // In this bounded reversed-order wrap-around dedup geometry, role inversion swaps
+        // overlap endpoint ordering.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point2);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point1);
+    }
+
+    #[test]
     fn wrap_around_non_circle_arc_overlap_same_order_closed_pline1_with_closure_basic_intersect() {
         // Closure-edge variant: keep wrap-around overlap, but route the support edge so it
         // creates an additional real basic intersect at (2, 2).
