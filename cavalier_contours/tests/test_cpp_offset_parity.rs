@@ -1,6 +1,8 @@
 mod test_utils;
 
-use cavalier_contours::polyline::{PlineOffsetOptions, PlineSource, PlineSourceMut, Polyline};
+use cavalier_contours::polyline::{
+    FindIntersectsOptions, PlineOffsetOptions, PlineSource, PlineSourceMut, Polyline,
+};
 use cavalier_contours::{pline_closed, pline_open};
 use test_utils::{PlineProperties, create_property_set, property_sets_match};
 
@@ -866,6 +868,127 @@ fn cpp_circle_rectangle_intersection_start_index_rotation_full_matrix_parity() {
             assert_points_only(&ab, &expected_points);
             assert_points_only(&ba, &expected_points);
             assert_role_flip_pairs(&ab, &ba);
+        }
+    }
+}
+
+#[test]
+fn cpp_circle_rectangle_intersection_options_full_matrix_parity() {
+    fn assert_points_only(
+        intersects: &cavalier_contours::polyline::PlineIntersectsCollection<f64>,
+        expected_points: &[(f64, f64)],
+    ) {
+        assert_eq!(intersects.basic_intersects.len(), expected_points.len());
+        assert!(
+            intersects.overlapping_intersects.is_empty(),
+            "expected no overlapping intersections, actual={:?}",
+            intersects.overlapping_intersects
+        );
+
+        for &(x, y) in expected_points {
+            let matched = intersects
+                .basic_intersects
+                .iter()
+                .any(|intr| (intr.point.x - x).abs() <= EPS && (intr.point.y - y).abs() <= EPS);
+            assert!(
+                matched,
+                "missing expected point ({x}, {y}), actual={:?}",
+                intersects.basic_intersects
+            );
+        }
+    }
+
+    fn assert_role_flip_pairs(
+        ab: &cavalier_contours::polyline::PlineIntersectsCollection<f64>,
+        ba: &cavalier_contours::polyline::PlineIntersectsCollection<f64>,
+    ) {
+        for intr_ab in &ab.basic_intersects {
+            let role_flip_match = ba.basic_intersects.iter().any(|intr_ba| {
+                intr_ab.start_index1 == intr_ba.start_index2
+                    && intr_ab.start_index2 == intr_ba.start_index1
+                    && (intr_ab.point.x - intr_ba.point.x).abs() <= EPS
+                    && (intr_ab.point.y - intr_ba.point.y).abs() <= EPS
+            });
+            assert!(
+                role_flip_match,
+                "missing AB->BA role-flip counterpart for intr_ab={intr_ab:?}, BA={:?}",
+                ba.basic_intersects
+            );
+        }
+    }
+
+    fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
+        pline.invert_direction_mut();
+        pline
+    }
+
+    let subject = pline_closed![(0.0, 1.0, 1.0), (10.0, 1.0, 1.0)];
+    let subject_rotated = pline_closed![(10.0, 1.0, 1.0), (0.0, 1.0, 1.0)];
+    let clip = pline_closed![
+        (3.0, -10.0, 0.0),
+        (6.0, -10.0, 0.0),
+        (6.0, 10.0, 0.0),
+        (3.0, 10.0, 0.0)
+    ];
+    let clip_rotated = pline_closed![
+        (6.0, -10.0, 0.0),
+        (6.0, 10.0, 0.0),
+        (3.0, 10.0, 0.0),
+        (3.0, -10.0, 0.0)
+    ];
+
+    let subject_variants = [
+        subject.clone(),
+        subject_rotated.clone(),
+        reversed(subject.clone()),
+        reversed(subject_rotated),
+    ];
+    let clip_variants = [
+        clip.clone(),
+        clip_rotated.clone(),
+        reversed(clip.clone()),
+        reversed(clip_rotated),
+    ];
+
+    let expected_points = [
+        (6.0, -3.898979485566356),
+        (6.0, 5.898979485566356),
+        (3.0, -3.58257569495584),
+        (3.0, 5.58257569495584),
+    ];
+
+    for (s_idx, lhs) in subject_variants.iter().enumerate() {
+        for (c_idx, rhs) in clip_variants.iter().enumerate() {
+            let lhs_before: Vec<_> = lhs.iter_vertexes().collect();
+            let rhs_before: Vec<_> = rhs.iter_vertexes().collect();
+
+            let lhs_aabb = lhs.create_approx_aabb_index();
+            let rhs_aabb = rhs.create_approx_aabb_index();
+            let options_ab = FindIntersectsOptions {
+                pline1_aabb_index: Some(&lhs_aabb),
+                pos_equal_eps: EPS,
+            };
+            let options_ba = FindIntersectsOptions {
+                pline1_aabb_index: Some(&rhs_aabb),
+                pos_equal_eps: EPS,
+            };
+
+            let ab = lhs.find_intersects_opt(rhs, &options_ab);
+            let ba = rhs.find_intersects_opt(lhs, &options_ba);
+            assert_points_only(&ab, &expected_points);
+            assert_points_only(&ba, &expected_points);
+            assert_role_flip_pairs(&ab, &ba);
+
+            let lhs_after: Vec<_> = lhs.iter_vertexes().collect();
+            let rhs_after: Vec<_> = rhs.iter_vertexes().collect();
+            assert_eq!(
+                lhs_after, lhs_before,
+                "subject mutated in options intersection matrix variant s_idx={s_idx} c_idx={c_idx}"
+            );
+            assert_eq!(
+                rhs_after, rhs_before,
+                "clip mutated in options intersection matrix variant s_idx={s_idx} c_idx={c_idx}"
+            );
         }
     }
 }
