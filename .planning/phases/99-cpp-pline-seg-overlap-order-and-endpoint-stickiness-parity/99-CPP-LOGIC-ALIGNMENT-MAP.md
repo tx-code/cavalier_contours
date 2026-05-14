@@ -109,6 +109,7 @@ endpoint-stickiness branch closure.
 - Added API-level `all_self_intersects_as_basic` counterparts for the same
   overlap/shared-end boundaries:
   - `all_self_intersects_basic_include_overlapping_keeps_point2_shared_end_overlap_pair`
+  - `all_self_intersects_basic_include_overlapping_keeps_point1_shared_end_overlap_pair`
   - `all_self_intersects_basic_include_overlapping_skips_zero_length_shared_end_pair`
   - verifies `include_overlapping=true` emits both overlap endpoints only when
     the global-self overlap pair survives filtering, and does not re-introduce
