@@ -363,6 +363,44 @@ fn arc_arc_partial_overlap_arc1_reverse_dir_flipped() {
 }
 
 #[test]
+fn arc_arc_partial_overlap_both_reverse_dir() {
+    // Source-aligned with old C++ `intrPlineSegs` coincident-arc overlap path where
+    // both arcs are reversed relative to the base partial-overlap geometry.
+    let v1 = PlineVertex::new(3.0, 1.0, -1.0);
+    let v2 = PlineVertex::new(1.0, 1.0, 0.0);
+
+    let u1 = PlineVertex::new(2.0, 2.0, -1.0);
+    let u2 = PlineVertex::new(2.0, 0.0, 0.0);
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(
+        result,
+        OverlappingArcs {
+            point1: Vector2::new(3.0, 1.0),
+            point2: Vector2::new(2.0, 0.0)
+        }
+    );
+}
+
+#[test]
+fn arc_arc_partial_overlap_both_reverse_dir_flipped() {
+    // With both arcs reversed, swapping parameter order does not flip overlap endpoint
+    // ordering for this bounded non-circle overlap geometry.
+    let v1 = PlineVertex::new(3.0, 1.0, -1.0);
+    let v2 = PlineVertex::new(1.0, 1.0, 0.0);
+
+    let u1 = PlineVertex::new(2.0, 2.0, -1.0);
+    let u2 = PlineVertex::new(2.0, 0.0, 0.0);
+    let result = pline_seg_intr(u1, u2, v1, v2, 1e-5);
+    assert_case_eq!(
+        result,
+        OverlappingArcs {
+            point1: Vector2::new(3.0, 1.0),
+            point2: Vector2::new(2.0, 0.0)
+        }
+    );
+}
+
+#[test]
 fn arc_arc_opposite_direction_touch_at_ends_bug() {
     // This test case reproduces the bug where arcs have the same radius and center but opposite
     // directions and only touch at the end points.

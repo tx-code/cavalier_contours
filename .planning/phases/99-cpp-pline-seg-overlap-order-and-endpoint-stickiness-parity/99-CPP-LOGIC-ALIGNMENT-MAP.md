@@ -45,6 +45,19 @@ endpoint-stickiness branch closure.
 - Added non-circle reversed-overlap-endpoint-order both-closed variant with
   explicit independent closure-edge basics:
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed`
+- Added source-aligned primitive parity probes for non-circle partial-overlap
+  where both arcs are reversed:
+  - `arc_arc_partial_overlap_both_reverse_dir`
+  - `arc_arc_partial_overlap_both_reverse_dir_flipped`
+- These probes lock an ordering nuance from old C++ behavior: in this bounded
+  geometry, swapping parameter order does not flip overlap endpoint ordering
+  when both arcs are reversed.
+- Added bounded closed-shape collection-level counterpart for `arc1_reverse_dir`
+  partial overlap:
+  - `non_circle_partial_arc_overlap_arc1_reverse_dir_both_closed`
+- This closed-shape probe also pins a wrap-index nuance: a basic intersect at
+  `(3, 1)` on `start_index2 = 2` remains independent from overlap-adjacent
+  duplicate filtering for overlap `start_index2 = 0`.
 - Added non-circle reversed-overlap-endpoint-order closed/open variants that
   also pin expected closure-edge basic intersections:
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_intersect`
