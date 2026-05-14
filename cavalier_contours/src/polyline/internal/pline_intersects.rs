@@ -2060,6 +2060,37 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn wrap_around_non_circle_arc_overlap_closed_side_reversed_closed_pline1_with_closure_basic_intersect()
+     {
+        // Closed-side reversed counterpart on the closed-pline1 surface.
+        let mut pline1 = Polyline::new_closed();
+        pline1.add(2.0, 0.0, 0.0);
+        pline1.add(1.0, 3.0, 0.0);
+        pline1.add(3.0, 1.0, bulge_from_angle(-FRAC_PI_2));
+
+        let mut pline2 = Polyline::new();
+        pline2.add(2.0, 2.0, -1.0);
+        pline2.add(2.0, 0.0, 0.0);
+        pline2.add(2.0, -1.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+
+        assert_eq!(intrs.overlapping_intersects.len(), 1);
+        assert_eq!(intrs.basic_intersects.len(), 1);
+
+        let basic = intrs.basic_intersects[0];
+        assert_eq!(basic.start_index1, 1);
+        assert_eq!(basic.start_index2, 0);
+        assert_fuzzy_eq!(basic.point, Vector2::new(2.0, 2.0));
+
+        let overlap = intrs.overlapping_intersects[0];
+        assert_eq!(overlap.start_index1, 2);
+        assert_eq!(overlap.start_index2, 0);
+        assert_fuzzy_eq!(overlap.point1, Vector2::new(3.0, 1.0));
+        assert_fuzzy_eq!(overlap.point2, Vector2::new(2.0, 0.0));
+    }
+
+    #[test]
     fn wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline2() {
         // Complementary non-circle arc/arc same-order wrap-around probe with closed `pline2`.
         let mut pline1 = Polyline::new();

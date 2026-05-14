@@ -79,9 +79,14 @@ endpoint-stickiness branch closure.
 - Added closed-`pline2` closure-edge counterpart that isolates open-side
   reversal while keeping closed-side arc orientation non-reversed:
   - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect`
+- Added closed-side reversed closure-edge counterpart on the closed-`pline1`
+  surface:
+  - `wrap_around_non_circle_arc_overlap_closed_side_reversed_closed_pline1_with_closure_basic_intersect`
 - This additional probe pins side-specific ordering behavior: in this bounded
   configuration, open-side reversal alone does not flip overlap endpoint
   ordering when closed-side orientation remains non-reversed.
+- Together, these closure-edge probes now cover bounded both-side reversed
+  ordering symmetry with explicit source-traceable geometry.
 - Confirmed closed-`pline2` closure-edge counterpart with reversed overlap
   endpoint ordering (`point1 = (3, 1)`, `point2 = (2, 0)`) while still
   asserting one independent basic intersect.
@@ -90,8 +95,7 @@ endpoint-stickiness branch closure.
 
 | Priority | Target | Rust file/module | Decision Boundary |
 |----------|--------|------------------|-------------------|
-| P1 | Extend closure-edge wrap-around variants to cover both-side reversed ordering symmetry with explicit source-traceable rationale | `cavalier_contours/src/polyline/internal/pline_intersects.rs` | Keep source-traceable cases and isolate ordering behavior from unrelated extra crossings. |
-| P2 | Extend collection-level parity to mixed arc/arc-overlap adjacency in non-circle closed shapes where direct old C++ mapping is available | `cavalier_contours/src/polyline/internal/pline_intersects.rs`, `cavalier_contours/tests/test_pline_seg_intersect.rs` | Keep source mapping explicit and bounded. |
+| P1 | Extend collection-level parity to mixed arc/arc-overlap adjacency in non-circle closed shapes where direct old C++ mapping is available | `cavalier_contours/src/polyline/internal/pline_intersects.rs`, `cavalier_contours/tests/test_pline_seg_intersect.rs` | Keep source mapping explicit and bounded. |
 | P2 | Extend combine/offset-derived intersection fixture parity only when direct C++ source mapping exists | `cavalier_contours/tests/test_cpp_combine_parity.rs`, `cavalier_contours/tests/test_cpp_offset_parity.rs` | Keep provenance explicit and no-Clipper. |
 
 ## File-Level Alignment Surface
