@@ -1523,6 +1523,40 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn coincident_arc_disjoint_sweeps_no_intersects_collection_level_nonzero_index_role_flip() {
+        // Non-zero-index counterpart for disjoint-sweep coincident-arc no-intersect branch.
+        let quarter = bulge_from_angle(FRAC_PI_2);
+
+        let mut pline1 = Polyline::new();
+        pline1.add(1.2, 0.2, 0.0);
+        pline1.add(1.0, 0.0, quarter);
+        pline1.add(0.0, 1.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(-1.2, -0.2, 0.0);
+        pline2.add(-1.0, 0.0, quarter);
+        pline2.add(0.0, -1.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+        assert!(intrs.basic_intersects.is_empty());
+        assert!(intrs.overlapping_intersects.is_empty());
+
+        let intrs_flipped = find_intersects(&pline2, &pline1, &Default::default());
+        assert!(intrs_flipped.basic_intersects.is_empty());
+        assert!(intrs_flipped.overlapping_intersects.is_empty());
+
+        // Reverse second arc direction while preserving geometric sweep.
+        let mut pline2_reversed = Polyline::new();
+        pline2_reversed.add(-0.2, -1.2, 0.0);
+        pline2_reversed.add(0.0, -1.0, -quarter);
+        pline2_reversed.add(-1.0, 0.0, 0.0);
+
+        let intrs_reversed = find_intersects(&pline1, &pline2_reversed, &Default::default());
+        assert!(intrs_reversed.basic_intersects.is_empty());
+        assert!(intrs_reversed.overlapping_intersects.is_empty());
+    }
+
+    #[test]
     fn coincident_arc_full_overlap_collection_level_ordering() {
         // Collection-level guard for old C++ `intrPlineSegs` coincident-arc branch where arc2 is
         // fully overlapped by arc1.

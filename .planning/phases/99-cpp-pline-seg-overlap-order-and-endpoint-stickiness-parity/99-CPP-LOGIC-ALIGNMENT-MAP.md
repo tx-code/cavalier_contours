@@ -227,6 +227,11 @@ endpoint-stickiness branch closure.
   - `coincident_arc_disjoint_sweeps_no_intersects_collection_level`
   - verifies `find_intersects` does not surface basic/overlap entries for this
   branch (including reversed second-arc direction).
+- Added non-zero-segment-index collection-level counterpart for coincident-arc
+  disjoint-sweep no-intersect branch:
+  - `coincident_arc_disjoint_sweeps_no_intersects_collection_level_nonzero_index_role_flip`
+  - verifies no-intersect behavior remains stable when arc segments are not at
+    index 0, including parameter inversion and reversed second-arc direction.
 - Added collection-level full-overlap parity guard for coincident arcs where
   one arc is fully overlapped by the other:
   - `coincident_arc_full_overlap_collection_level_ordering`
