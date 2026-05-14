@@ -84,6 +84,12 @@ endpoint-stickiness branch closure.
   - `non_local_overlap_pair_is_not_duplicated`
   - verifies a non-local overlapping pair contributes one overlap entry even
     when reverse pair traversal is reachable.
+- Added non-zero-index counterparts for the same global-self visited-pair dedup
+  probes:
+  - `non_local_single_intersect_pair_is_not_duplicated_nonzero_indexes`
+  - `non_local_overlap_pair_is_not_duplicated_nonzero_indexes`
+  - verifies visited-pair dedup behavior remains stable away from index-0
+    segment pairs for both basic and overlap output paths.
 - Added bounded mixed line/arc overlap-adjacent collection-level parity probe:
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication`
 - Added closed/open asymmetry probe for mixed line/arc overlap-adjacent dedup:

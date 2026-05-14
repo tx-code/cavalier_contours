@@ -1501,6 +1501,75 @@ mod global_self_intersect_tests {
             intrs.overlapping_intersects
         );
     }
+
+    #[test]
+    fn non_local_single_intersect_pair_is_not_duplicated_nonzero_indexes() {
+        // Non-zero-index counterpart for global-self visited-pair dedup on basic intersects.
+        // segment 1 and segment 4 cross once; output should contain one basic intersect.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, -1.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 4)
+                    || (intr.start_index1 == 4 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one basic intersect for pair (1,4), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert_fuzzy_eq!(
+            target_pair[0].point,
+            Vector2::new(4.0 / 3.0, 4.0 / 3.0),
+            1e-5
+        );
+    }
+
+    #[test]
+    fn non_local_overlap_pair_is_not_duplicated_nonzero_indexes() {
+        // Non-zero-index counterpart for global-self visited-pair dedup on overlap branch.
+        // segment 1 and segment 7 overlap, but should appear once even if reverse
+        // pair traversal is reachable.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, -1.0, 0.0);
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(3.0, 0.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(1.0, 1.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one overlap for pair (1,7), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
 }
 
 #[cfg(test)]
