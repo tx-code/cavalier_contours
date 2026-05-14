@@ -1670,6 +1670,56 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn coincident_arc_touch_only_at_arc2_start_collection_level_nonzero_index_role_flip() {
+        // Non-zero-index counterpart for the `arc2 start == arc1 end` coincident single-touch
+        // branch, using short pre-segments to avoid introducing unrelated intersections.
+        let quarter = bulge_from_angle(FRAC_PI_2);
+
+        let mut pline1 = Polyline::new();
+        pline1.add(1.2, 0.0, 0.0);
+        pline1.add(1.0, 0.0, quarter);
+        pline1.add(0.0, 1.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(0.2, 1.2, 0.0);
+        pline2.add(0.0, 1.0, quarter);
+        pline2.add(-1.0, 0.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+        assert_eq!(intrs.overlapping_intersects.len(), 0);
+        assert_eq!(intrs.basic_intersects.len(), 1);
+        assert_eq!(intrs.basic_intersects[0].start_index1, 1);
+        assert_eq!(intrs.basic_intersects[0].start_index2, 1);
+        assert_fuzzy_eq!(intrs.basic_intersects[0].point, Vector2::new(0.0, 1.0));
+
+        let intrs_flipped = find_intersects(&pline2, &pline1, &Default::default());
+        assert_eq!(intrs_flipped.overlapping_intersects.len(), 0);
+        assert_eq!(intrs_flipped.basic_intersects.len(), 1);
+        assert_eq!(intrs_flipped.basic_intersects[0].start_index1, 1);
+        assert_eq!(intrs_flipped.basic_intersects[0].start_index2, 1);
+        assert_fuzzy_eq!(
+            intrs_flipped.basic_intersects[0].point,
+            Vector2::new(0.0, 1.0)
+        );
+
+        // Reverse second-arc direction while preserving the same geometric sweep.
+        let mut pline2_reversed = Polyline::new();
+        pline2_reversed.add(-1.2, -0.2, 0.0);
+        pline2_reversed.add(-1.0, 0.0, -quarter);
+        pline2_reversed.add(0.0, 1.0, 0.0);
+
+        let intrs_reversed = find_intersects(&pline1, &pline2_reversed, &Default::default());
+        assert_eq!(intrs_reversed.overlapping_intersects.len(), 0);
+        assert_eq!(intrs_reversed.basic_intersects.len(), 1);
+        assert_eq!(intrs_reversed.basic_intersects[0].start_index1, 1);
+        assert_eq!(intrs_reversed.basic_intersects[0].start_index2, 1);
+        assert_fuzzy_eq!(
+            intrs_reversed.basic_intersects[0].point,
+            Vector2::new(0.0, 1.0)
+        );
+    }
+
+    #[test]
     fn coincident_arc_end_points_touch_collection_level() {
         // Collection-level guard for old C++ `intrPlineSegs` coincident-arc branch where
         // two half-circle arcs only touch at both endpoints: two basic intersects with
