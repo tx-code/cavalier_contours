@@ -1682,6 +1682,48 @@ mod global_self_intersect_tests {
     }
 
     #[test]
+    fn non_local_two_intersects_shared_end_filters_one_point_with_zero_length_lead_segment_index0_shift()
+     {
+        // Index-0 re-parameterization counterpart for global-self
+        // `TwoIntersects` + skip-at-end:
+        // add a zero-length leading segment to shift indexes while keeping the
+        // original index-0 arc/line geometry. Shared end (1,0) should still be
+        // filtered and (-1,0) retained for shifted pair (1,5).
+        let mut pline = Polyline::new();
+        pline.add(-1.0, 0.0, 0.0);
+        pline.add(-1.0, 0.0, 1.0); // zero-length lead + original first vertex
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one retained basic intersect for shifted pair (1,5), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert!(
+            target_pair[0]
+                .point
+                .fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5),
+            "expected retained point (-1,0) for shifted pair (1,5), actual pair points: {:?}",
+            target_pair.iter().map(|x| x.point).collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
     fn non_local_overlap_with_shared_end_on_point2_is_kept() {
         // Global-self overlap branch shared-end boundary probe:
         // segment 0 and segment 5 overlap on [3,0] -> [4,0], and both segment ends are at (4,0).
@@ -3198,6 +3240,70 @@ mod global_self_intersect_tests {
                     .point
                     .fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5),
             "expected retained point (-1,0) for shifted pair (3,7), actual pair points: without={:?}, with={:?}",
+            pair_without_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>(),
+            pair_with_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn all_self_intersects_basic_two_intersects_shared_end_filters_one_point_with_zero_length_lead_segment_index0_shift()
+     {
+        // Index-0 re-parameterization API-level counterpart for the same
+        // `TwoIntersects` boundary.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, 0.0, 0.0);
+        pline.add(-1.0, 0.0, 1.0); // zero-length lead + original first vertex
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            1,
+            "expected one retained point for shifted pair (1,5) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            1,
+            "expected one retained point for shifted pair (1,5) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert!(
+            pair_without_overlap[0]
+                .point
+                .fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5)
+                && pair_with_overlap[0]
+                    .point
+                    .fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5),
+            "expected retained point (-1,0) for shifted pair (1,5), actual pair points: without={:?}, with={:?}",
             pair_without_overlap
                 .iter()
                 .map(|x| x.point)

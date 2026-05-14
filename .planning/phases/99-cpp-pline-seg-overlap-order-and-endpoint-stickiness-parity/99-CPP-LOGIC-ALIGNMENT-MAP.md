@@ -107,6 +107,11 @@ endpoint-stickiness branch closure.
   - `non_local_two_intersects_shared_end_filters_one_point_with_zero_length_lead_segment`
   - verifies shared-end filtering still retains only `(-1,0)` after index shift
     caused by a leading degenerate segment.
+- Added index-0 re-parameterization counterpart for the same global-self
+  `TwoIntersects` shared-end filter path:
+  - `non_local_two_intersects_shared_end_filters_one_point_with_zero_length_lead_segment_index0_shift`
+  - verifies prepending a zero-length lead segment (index shift) still retains
+    only `(-1,0)` for shifted pair (`start_index` pair `1/5`).
 - Added API-level `all_self_intersects_as_basic` counterparts for the same
   shared-endpoint skip path:
   - `all_self_intersects_basic_shared_end_point_pair_is_skipped`
@@ -120,10 +125,11 @@ endpoint-stickiness branch closure.
   - `all_self_intersects_basic_two_intersects_shared_end_filters_one_point`
   - `all_self_intersects_basic_two_intersects_shared_end_filters_one_point_nonzero_indexes`
   - `all_self_intersects_basic_two_intersects_shared_end_filters_one_point_with_zero_length_lead_segment`
+  - `all_self_intersects_basic_two_intersects_shared_end_filters_one_point_with_zero_length_lead_segment_index0_shift`
   - verifies both `include_overlapping=false/true` retain only the non-shared
-    point for the targeted pair and do not re-introduce the filtered shared-end
+  point for the targeted pair and do not re-introduce the filtered shared-end
     point across index-0/non-zero index pairs, including the zero-length-lead
-    re-parameterization shift.
+    re-parameterization shift (including index-0 zero-length shift).
 - Added single-intersect branch counterparts where the intersect is at one
   segment end but not both segment ends:
   - `non_local_one_intersect_at_single_segment_end_is_kept`
