@@ -50,6 +50,10 @@ endpoint-stickiness branch closure.
 - This probe pins a bounded asymmetry: unlike the paired `arc2_reverse_dir`
   open-path case, an endpoint basic at `(3, 1)` can remain as an independent
   adjacent-line intersect.
+- Added open-path counterpart where both arcs are reversed:
+  - `non_circle_partial_arc_overlap_both_reverse_dir_with_adjacent_line_flip`
+- In this bounded geometry, overlap ordering remains `(3, 1) -> (2, 0)` with
+  no surviving basic intersects.
 - Added non-circle reversed-overlap-endpoint-order both-closed variant with
   explicit independent closure-edge basics:
   - `non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip_both_closed`
