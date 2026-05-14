@@ -322,6 +322,12 @@ endpoint-stickiness branch closure.
   - `opposite_direction_arc_end_touch_collection_level_bug_guard_nonzero_index_role_flip`
   - verifies endpoint anchoring remains stable when arc segments are not at
     index 0, including parameter inversion and reversed second-arc direction.
+- Added distinct-index role-inversion counterpart for the same opposite-
+  direction endpoint-touch bug geometry:
+  - `opposite_direction_arc_end_touch_collection_level_bug_guard_distinct_nonzero_indexes_role_flip`
+  - verifies explicit `start_index1/start_index2` role swapping under parameter
+    inversion while preserving endpoint anchoring when the intersecting arc
+    segments have different non-zero indexes.
 
 ## Next Alignment Targets (No Clipper)
 
