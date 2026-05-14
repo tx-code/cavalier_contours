@@ -16,6 +16,11 @@ endpoint-stickiness branch closure.
 - Added bounded collection-level parity for overlap-adjacent duplicate-filter
   behavior in `find_intersects`:
   - `overlap_endpoint_basic_intersect_deduplication`
+- Added source-aligned wrap-join branch parity for overlap-slice stitching:
+  - `wrap_join_at_pline2_zero_vertex_increments_end_index_offset`
+  - verifies `sort_and_join_overlapping_intersects` joins last+first slices
+    when they connect at `pline2[0]` and increments `end_index_offset` to keep
+    the connection vertex in the stitched view.
 - Added bounded collection-level parity for `skip_intr_at_end` endpoint-elision
   symmetry in open vs closed paths:
   - `skip_intr_at_end_open_pline1_uses_next_segment_index`

@@ -12636,7 +12636,7 @@ mod find_intersects_tests {
 #[cfg(test)]
 mod sort_and_join_overlapping_intersects_tests {
     use super::*;
-    use crate::core::math::bulge_from_angle;
+    use crate::core::math::{Vector2, bulge_from_angle};
     use crate::polyline::{PlineCreation, PlineSourceMut, PlineVertex, Polyline};
 
     #[test]
@@ -12853,5 +12853,42 @@ mod sort_and_join_overlapping_intersects_tests {
         assert_eq!(slices[0].start_indexes, (0, 5));
         assert_eq!(slices[0].end_indexes, (0, 9));
         assert!(!slices[0].opposing_directions);
+    }
+
+    #[test]
+    fn wrap_join_at_pline2_zero_vertex_increments_end_index_offset() {
+        // Source-aligned `sortAndjoinCoincidentSlices`/`sort_and_join_overlapping_intersects`
+        // wrap-join branch: when the last slice ends at pline2[0], joining with the first slice
+        // should increment end_index_offset to include the pline2[0] connection vertex.
+        let mut pline1 = Polyline::new_closed();
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(2.0, 0.0, 0.0);
+        pline1.add(2.0, 2.0, 0.0);
+        pline1.add(0.0, 2.0, 0.0);
+
+        let mut pline2 = Polyline::new_closed();
+        pline2.add(0.0, 0.0, 0.0);
+        pline2.add(2.0, 0.0, 0.0);
+        pline2.add(2.0, 2.0, 0.0);
+        pline2.add(0.0, 2.0, 0.0);
+
+        let mut intersects = vec![
+            PlineOverlappingIntersect::new(0, 0, Vector2::new(0.0, 0.0), Vector2::new(1.0, 0.0)),
+            PlineOverlappingIntersect::new(3, 3, Vector2::new(0.0, 1.0), Vector2::new(0.0, 0.0)),
+        ];
+
+        let slices = sort_and_join_overlapping_intersects(&mut intersects, &pline1, &pline2, 1e-5);
+        assert_eq!(slices.len(), 1);
+
+        let slice = &slices[0];
+        assert_eq!(slice.start_indexes, (3, 3));
+        assert_eq!(slice.end_indexes, (0, 0));
+        assert_eq!(slice.view_data.start_index, 0);
+        assert_eq!(slice.view_data.end_index_offset, 1);
+
+        let slice_pline = Polyline::create_from(&slice.view(&pline2));
+        assert_eq!(slice_pline.vertex_count(), 3);
+        assert_fuzzy_eq!(slice_pline[0], PlineVertex::new(0.0, 1.0, 0.0));
+        assert_fuzzy_eq!(slice_pline[2], PlineVertex::new(1.0, 0.0, 0.0));
     }
 }
