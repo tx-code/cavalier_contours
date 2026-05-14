@@ -1079,6 +1079,13 @@ endpoint-stickiness branch closure.
   - `wrap_around_non_circle_arc_overlap_deduplication_same_order_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry`
   - verifies parity evidence is explicitly discoverable under closed-side
     naming while reusing identical rotated geometry.
+- Added zero-length-lead counterparts for the explicit closed-pline1/2 rotated
+  role-flip probes in the same same-order both-closed non-circle wrap-around
+  dedup branch:
+  - `wrap_around_non_circle_arc_overlap_deduplication_same_order_both_closed_start_index_rotation_closed_pline1_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_deduplication_same_order_both_closed_start_index_rotation_closed_pline2_zero_length_lead_role_flip_symmetry`
+  - verifies no-basic dedup behavior, AB/BA role-inversion start-index mapping,
+    and stable overlap endpoint ordering under non-zero index shift.
 - Added exact parameter-role flipped counterpart for the bounded same-order
   closed-`pline2` wrap-around dedup probe:
   - `wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline2_flipped_roles`
@@ -1120,6 +1127,13 @@ endpoint-stickiness branch closure.
   - `wrap_around_non_circle_arc_overlap_deduplication_reversed_order_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry`
   - verifies parity evidence is explicitly discoverable under closed-side
     naming while reusing identical rotated geometry.
+- Added zero-length-lead counterparts for the explicit closed-pline1/2 rotated
+  role-flip probes in the same reversed-order both-closed non-circle wrap-around
+  dedup branch:
+  - `wrap_around_non_circle_arc_overlap_deduplication_reversed_order_both_closed_start_index_rotation_closed_pline1_zero_length_lead_role_flip_symmetry`
+  - `wrap_around_non_circle_arc_overlap_deduplication_reversed_order_both_closed_start_index_rotation_closed_pline2_zero_length_lead_role_flip_symmetry`
+  - verifies no-basic dedup behavior, AB/BA role-inversion start-index mapping,
+    and branch-aligned overlap endpoint-order swap semantics under non-zero index shift.
 - Added closed-side start-index rotation role-flip symmetry counterpart for the
   same bounded reversed-order closed-`pline2` wrap-around dedup probe:
   - `wrap_around_non_circle_arc_overlap_deduplication_reversed_order_closed_pline2_start_index_rotation_role_flip_symmetry`
