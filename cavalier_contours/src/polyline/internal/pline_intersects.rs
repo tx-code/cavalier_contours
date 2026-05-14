@@ -12640,6 +12640,21 @@ mod sort_and_join_overlapping_intersects_tests {
     use crate::polyline::{PlineCreation, PlineSourceMut, PlineVertex, Polyline};
 
     #[test]
+    fn empty_overlapping_intersects_returns_no_slices() {
+        let mut pline1 = Polyline::new();
+        pline1.add(0.0, 0.0, 0.0);
+        pline1.add(1.0, 0.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(0.0, 0.0, 0.0);
+        pline2.add(1.0, 0.0, 0.0);
+
+        let mut intersects: Vec<PlineOverlappingIntersect<f64>> = Vec::new();
+        let slices = sort_and_join_overlapping_intersects(&mut intersects, &pline1, &pline2, 1e-5);
+        assert!(slices.is_empty());
+    }
+
+    #[test]
     fn overlapping_circles_same_dir() {
         let mut pline1 = Polyline::new_closed();
         pline1.add(0.0, 0.0, 1.0);

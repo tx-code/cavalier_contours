@@ -17,11 +17,13 @@ endpoint-stickiness branch closure.
   behavior in `find_intersects`:
   - `overlap_endpoint_basic_intersect_deduplication`
 - Added source-aligned wrap-join branch parity for overlap-slice stitching:
+  - `empty_overlapping_intersects_returns_no_slices`
   - `wrap_join_at_pline2_zero_vertex_increments_end_index_offset`
   - `wrap_join_away_from_pline2_zero_vertex_keeps_end_index_offset`
   - `non_connected_overlapping_slices_remain_separate`
   - verifies `sort_and_join_overlapping_intersects` joins last+first slices
     when they connect at wrap boundary, including both:
+    - empty overlap input returns no slices,
     - connection exactly at `pline2[0]` (increments `end_index_offset`)
     - connection away from `pline2[0]` (keeps `end_index_offset` unchanged),
     - and preserves separate slices when overlaps are not end/start connected.
