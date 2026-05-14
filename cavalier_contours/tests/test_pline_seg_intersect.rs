@@ -70,6 +70,66 @@ fn line_arc_no_intersect() {
 }
 
 #[test]
+fn line_arc_tangent_in_sweep() {
+    // Source-aligned with old C++ `intrPlineSegs` line-arc path where line-circle
+    // is tangent and the tangent point lies within arc sweep.
+    let line_start = PlineVertex::new(0.0, 1.0, 0.0);
+    let line_end = PlineVertex::new(2.0, 1.0, 0.0);
+    let arc_start = PlineVertex::new(0.0, 0.0, -1.0);
+    let arc_end = PlineVertex::new(2.0, 0.0, 0.0);
+
+    let result = pline_seg_intr(line_start, line_end, arc_start, arc_end, 1e-5);
+    assert_case_eq!(
+        result,
+        TangentIntersect {
+            point: Vector2::new(1.0, 1.0)
+        }
+    );
+}
+
+#[test]
+fn line_arc_tangent_outside_sweep_no_intersect() {
+    // Source-aligned with old C++ `intrPlineSegs` line-arc path where line-circle
+    // is tangent but tangent point is outside arc sweep.
+    let line_start = PlineVertex::new(0.0, 1.0, 0.0);
+    let line_end = PlineVertex::new(2.0, 1.0, 0.0);
+    let arc_start = PlineVertex::new(0.0, 0.0, 1.0);
+    let arc_end = PlineVertex::new(2.0, 0.0, 0.0);
+
+    let result = pline_seg_intr(line_start, line_end, arc_start, arc_end, 1e-5);
+    assert_case_eq!(result, NoIntersect::<f64>);
+}
+
+#[test]
+fn arc_line_tangent_in_sweep() {
+    // Symmetric `u_is_line` counterpart of the tangent-in-sweep line-arc branch.
+    let arc_start = PlineVertex::new(0.0, 0.0, -1.0);
+    let arc_end = PlineVertex::new(2.0, 0.0, 0.0);
+    let line_start = PlineVertex::new(0.0, 1.0, 0.0);
+    let line_end = PlineVertex::new(2.0, 1.0, 0.0);
+
+    let result = pline_seg_intr(arc_start, arc_end, line_start, line_end, 1e-5);
+    assert_case_eq!(
+        result,
+        TangentIntersect {
+            point: Vector2::new(1.0, 1.0)
+        }
+    );
+}
+
+#[test]
+fn arc_line_tangent_outside_sweep_no_intersect() {
+    // Symmetric `u_is_line` counterpart where tangent point is outside arc sweep.
+    let arc_start = PlineVertex::new(0.0, 0.0, 1.0);
+    let arc_end = PlineVertex::new(2.0, 0.0, 0.0);
+    let line_start = PlineVertex::new(0.0, 1.0, 0.0);
+    let line_end = PlineVertex::new(2.0, 1.0, 0.0);
+
+    let result = pline_seg_intr(arc_start, arc_end, line_start, line_end, 1e-5);
+    assert_case_eq!(result, NoIntersect::<f64>);
+}
+
+#[test]
 fn overlapping_lines() {
     let v1 = PlineVertex::new(3.0, 3.0, 0.0);
     let v2 = PlineVertex::new(1.0, 1.0, 0.0);

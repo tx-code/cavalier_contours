@@ -42,6 +42,15 @@ endpoint-stickiness branch closure.
     inside both arc sweeps, and explicit filtering to `NoIntersect` when the
     tangent point falls outside sweep coverage, including parameter-role
     inversion.
+- Added segment-level parity probes for old C++ `intrPlineSegs`
+  `processLineArcIntr` `numIntersects == 1` (line-circle tangent) boundaries:
+  - `line_arc_tangent_in_sweep`
+  - `line_arc_tangent_outside_sweep_no_intersect`
+  - `arc_line_tangent_in_sweep`
+  - `arc_line_tangent_outside_sweep_no_intersect`
+  - verifies tangent retention when line-circle tangent point lies in arc
+    sweep, and filtering to `NoIntersect` when tangent lies outside sweep,
+    across both line-arc and arc-line dispatch paths.
 - Replaced the remaining index-0-shift canonical-name wrapper aliases with
   explicit assertion-backed probes, eliminating wrapper-style alias indirection
   in `find_intersects_tests`:
