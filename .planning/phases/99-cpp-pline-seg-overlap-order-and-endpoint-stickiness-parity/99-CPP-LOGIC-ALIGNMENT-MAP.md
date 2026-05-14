@@ -159,6 +159,11 @@ endpoint-stickiness branch closure.
   closure-edge geometry; this bounded case keeps index-role inversion but
   swaps overlap endpoint ordering under parameter inversion:
   - `wrap_around_non_circle_arc_overlap_open_side_reversed_normal_closed_side_role_flip_symmetry`
+- Added role-flip symmetry probe on the open-side-reversed + closed-side-reversed
+  closure-edge geometry:
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_side_reversed_role_flip_symmetry`
+  - in this bounded case, role inversion keeps overlap endpoint ordering while
+    swapping index roles.
 - Together, these closure-edge probes now cover bounded both-side reversed
   ordering symmetry with explicit source-traceable geometry.
 - Confirmed closed-`pline2` closure-edge counterpart with reversed overlap
