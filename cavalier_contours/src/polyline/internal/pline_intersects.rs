@@ -1468,6 +1468,39 @@ mod global_self_intersect_tests {
             1e-5
         );
     }
+
+    #[test]
+    fn non_local_overlap_pair_is_not_duplicated() {
+        // Global-self visited-pair dedup probe for overlap branch:
+        // segment 0 and segment 6 overlap, but should appear once even if reverse
+        // pair traversal is reachable.
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(3.0, 0.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(1.0, 1.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 0 && intr.start_index2 == 6)
+                    || (intr.start_index1 == 6 && intr.start_index2 == 0)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one overlap for pair (0,6), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
 }
 
 #[cfg(test)]
