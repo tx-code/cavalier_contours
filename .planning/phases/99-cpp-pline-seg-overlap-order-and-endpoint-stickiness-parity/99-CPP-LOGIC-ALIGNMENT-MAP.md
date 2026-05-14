@@ -162,6 +162,11 @@ endpoint-stickiness branch closure.
   - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_closed_pline2_start_index_rotation_role_flip_symmetry`
   - verifies no-basic dedup behavior, AB/BA index-role inversion, and overlap
     endpoint-order stability after closed-side start-vertex rotation.
+- Added closed-side start-index rotation role-flip symmetry counterpart for the
+  bounded mixed line/arc closed-`pline1` wrap-around endpoint-dedup probe:
+  - `wrap_around_overlap_endpoint_arc_adjacent_deduplication_closed_pline1_start_index_rotation_role_flip_symmetry`
+  - verifies no-basic dedup behavior, AB/BA index-role inversion, and overlap
+    endpoint-order stability after closed-side start-vertex rotation.
 - Added bounded non-circle arc/arc wrap-around-adjacency endpoint-dedup probes
   for same and reversed endpoint ordering:
   - `wrap_around_non_circle_arc_overlap_deduplication_same_order_closed_pline1`
