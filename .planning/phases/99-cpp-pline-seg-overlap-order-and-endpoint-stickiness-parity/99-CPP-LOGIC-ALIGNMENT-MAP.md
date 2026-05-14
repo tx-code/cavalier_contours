@@ -1195,6 +1195,12 @@ endpoint-stickiness branch closure.
   - verifies AB/BA `OR`/`NOT`/`AND`/`XOR` calls do not mutate either input
     across reversed and rotated closed-polyline variants for both coincident
     fixture families.
+- Added FFI-side counterpart for full coincident combine immutability matrix
+  coverage:
+  - `pline_boolean_coincident_full_matrix_does_not_modify_input_cpp_parity`
+  - verifies `cavc_pline_boolean` AB/BA `OR`/`NOT`/`AND`/`XOR` calls do not
+    mutate either input across reversed and rotated closed-polyline variants
+    for both coincident fixture families.
 - Added source-aligned primitive parity probes for coincident-arc single-endpoint
   touch branches in old C++ `intrPlineSegs`:
   - `arc_arc_coincident_touch_only_at_arc1_start`
