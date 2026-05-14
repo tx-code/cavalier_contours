@@ -2042,6 +2042,22 @@ endpoint-stickiness branch closure.
     closure-basic and closure-basic-`intersect` branch behavior (`1 basic + 1 overlap`),
     keeps AB/BA role-swapped index mapping stable, and keeps the same
     source-aligned overlap endpoint ordering under role inversion.
+- Added non-zero-open-index role-flip symmetry guards for remaining wrap-around
+  open-side-reversed closure-basic naming families:
+  - `wrap_around_non_circle_arc_overlap_closed_side_reversed_closure_basic_role_flip_symmetry_nonzero_open_index`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_role_flip_symmetry_nonzero_open_index`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_closure_basic_intersect_role_flip_symmetry_nonzero_open_index`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_role_flip_symmetry_nonzero_open_index`
+  - `wrap_around_non_circle_arc_overlap_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_role_flip_symmetry_nonzero_open_index`
+  - verifies open-side zero-length lead index shift preserves branch-expected
+    `1 basic + 1 overlap` behavior, preserves AB/BA role-swapped index
+    attribution, and keeps branch-specific overlap endpoint ordering
+    semantics (same-order for closed-side-reversed, swapped-order for
+    normal-closed-side variants).
+- Completion checkpoint:
+  - collection-level `*_closure_basic*_role_flip_symmetry` functions now all
+    have explicit `*_nonzero_open_index` counterparts in `pline_intersects`
+    (`BASE_COUNT=11`, `MISSING_COUNT=0`).
 
 ## Next Alignment Targets (No Clipper)
 
