@@ -227,6 +227,31 @@ fn arc_arc_coincident_touch_only_at_arc2_start() {
 }
 
 #[test]
+fn arc_arc_coincident_disjoint_sweeps_no_intersect() {
+    // Source-aligned with old C++ `intrPlineSegs` coincident-arc branch where
+    // neither arc endpoint lies within the other arc sweep: result is no intersect.
+    let quarter = bulge_from_angle(FRAC_PI_2);
+    let v1 = PlineVertex::new(1.0, 0.0, quarter);
+    let v2 = PlineVertex::new(0.0, 1.0, 0.0);
+    let u1 = PlineVertex::new(-1.0, 0.0, quarter);
+    let u2 = PlineVertex::new(0.0, -1.0, 0.0);
+
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(result, NoIntersect::<f64>);
+
+    // reverse parameter order should remain no-intersect.
+    let result = pline_seg_intr(u1, u2, v1, v2, 1e-5);
+    assert_case_eq!(result, NoIntersect::<f64>);
+
+    // reversing arc2 direction while keeping the same geometric sweep should also remain
+    // no-intersect.
+    let u1 = PlineVertex::new(0.0, -1.0, -quarter);
+    let u2 = PlineVertex::new(-1.0, 0.0, 0.0);
+    let result = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    assert_case_eq!(result, NoIntersect::<f64>);
+}
+
+#[test]
 fn arc2_within_arc1_overlapping() {
     let v1 = PlineVertex::new(1.0, 1.0, 1.0);
     let v2 = PlineVertex::new(3.0, 1.0, 0.0);
