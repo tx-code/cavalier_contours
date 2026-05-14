@@ -2837,6 +2837,54 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn non_circle_partial_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_role_flip_symmetry()
+     {
+        // Start-index-rotated counterpart of the bounded both-closed adjacent dedup probe.
+        // Rotate the closed `pline2` start vertex so overlap is tracked at a non-zero index,
+        // then verify AB/BA role inversion preserves bounded overlap behavior.
+        let mut pline1 = Polyline::new_closed();
+        pline1.add(1.0, 1.0, 1.0);
+        pline1.add(3.0, 1.0, 0.0);
+        pline1.add(4.0, 1.0, 0.0);
+        pline1.add(0.0, -3.0, 0.0);
+
+        let mut pline2_rotated = Polyline::new_closed();
+        pline2_rotated.add(2.0, 2.0, 0.0);
+        pline2_rotated.add(3.0, 1.0, 0.0);
+        pline2_rotated.add(4.0, 3.0, 0.0);
+        pline2_rotated.add(2.0, 0.0, 1.0);
+
+        let ab = find_intersects(&pline1, &pline2_rotated, &Default::default());
+        let ba = find_intersects(&pline2_rotated, &pline1, &Default::default());
+
+        assert_eq!(ab.overlapping_intersects.len(), 1);
+        assert!(
+            ab.basic_intersects.is_empty(),
+            "unexpected AB basic intersects: {:?}",
+            ab.basic_intersects
+        );
+        assert_eq!(ba.overlapping_intersects.len(), 1);
+        assert!(
+            ba.basic_intersects.is_empty(),
+            "unexpected BA basic intersects: {:?}",
+            ba.basic_intersects
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, 0);
+        assert_eq!(overlap_ab.start_index2, 3);
+        assert_fuzzy_eq!(overlap_ab.point1, Vector2::new(2.0, 0.0));
+        assert_fuzzy_eq!(overlap_ab.point2, Vector2::new(3.0, 1.0));
+        // In this bounded both-closed adjacent dedup geometry, role inversion keeps
+        // overlap endpoint ordering after closed-side start-index rotation.
+        assert_fuzzy_eq!(overlap_ab.point1, overlap_ba.point1);
+        assert_fuzzy_eq!(overlap_ab.point2, overlap_ba.point2);
+    }
+
+    #[test]
     fn non_circle_partial_arc_overlap_reversed_endpoint_order_with_adjacent_line_flip() {
         // Bounded non-circle variant with reversed arc overlap endpoint ordering by second
         // segment direction (`arc2_reverse_dir` style geometry).
