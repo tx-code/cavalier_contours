@@ -109,6 +109,11 @@ endpoint-stickiness branch closure.
   - verifies a stable closure-edge basic intersection and explicit
     `start_index1/start_index2` inversion while overlap endpoint ordering swaps
     under parameter inversion.
+- Added closed-side start-index rotation counterpart for the same bounded
+  closed-`pline1` reversed-endpoint-order closure-edge role-flip geometry:
+  - `non_circle_partial_arc_overlap_reversed_endpoint_order_closed_pline1_with_closure_basic_start_index_rotation_role_flip_symmetry`
+  - verifies closed-side start-vertex rotation preserves bounded
+    overlap/basic-point outcomes and AB/BA index-role inversion semantics.
 - Clarified bounded parity behavior for these variants: closure edges can
   produce additional real basic intersections that are independent of
   overlap-adjacent duplicate filtering.
