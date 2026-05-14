@@ -95,9 +95,10 @@ endpoint-stickiness branch closure.
   appears on overlap `point1` but is not both segment ends:
   - `non_local_overlap_with_shared_end_on_point1_but_not_both_ends_is_kept`
   - `non_local_overlap_with_shared_end_on_point1_but_not_both_ends_is_kept_nonzero_indexes`
+  - `non_local_overlap_with_shared_end_on_point1_but_not_both_ends_is_kept_with_zero_length_lead_segment`
   - verifies these overlaps remain in output with ordering `[4,0] -> [3,0]`
     when the shared endpoint condition is not simultaneously true for both
-    segment ends.
+    segment ends, including a zero-length-lead re-parameterization shift.
 - Added zero-length shared-end boundary counterparts for global-self
   non-local pairs:
   - `non_local_zero_length_shared_end_pair_is_skipped`
