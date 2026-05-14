@@ -1207,6 +1207,7 @@ endpoint-stickiness branch closure.
 - Added canonical wrap-around closure-edge alias tests to map source branch
   names directly onto existing options-path matrices:
   - `cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_options_matrix_parity`
+  - `cpp_wrap_around_closed_side_reversed_closure_basic_options_matrix_parity`
   - `cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_options_matrix_parity`
   - preserves existing assertions and execution semantics by delegating to the
     already-verified matrix implementations while improving source-to-test
