@@ -38,6 +38,11 @@ endpoint-stickiness branch closure.
   - verifies no basic intersects and two overlapping intersects: one from the
     adjacent collinear-reverse segment pair and one from the wrap-around
     singularity pass, with stable start-index mapping.
+- Added source-aligned global-self non-local overlap parity probe:
+  - `non_local_collinear_overlap_reports_overlapping_intersect`
+  - verifies `visit_global_self_intersects` emits an overlapping intersect for
+    non-adjacent collinear segments (`start_index` pair `0/6`) with overlap
+    endpoints `[1, 0]` and `[2, 0]`.
 - Added bounded mixed line/arc overlap-adjacent collection-level parity probe:
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication`
 - Added closed/open asymmetry probe for mixed line/arc overlap-adjacent dedup:

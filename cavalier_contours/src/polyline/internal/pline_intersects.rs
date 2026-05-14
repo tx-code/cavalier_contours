@@ -1122,6 +1122,42 @@ mod global_self_intersect_tests {
         assert_eq!(intrs.basic_intersects[0].start_index2, 3);
         assert_fuzzy_eq!(intrs.basic_intersects[0].point, pline[4].pos(), 1e-5);
     }
+
+    #[test]
+    fn non_local_collinear_overlap_reports_overlapping_intersect() {
+        // Global-self non-local overlap probe:
+        // segment 0 and segment 6 are collinear and overlap on [1, 0] -> [2, 0].
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(3.0, 0.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(1.0, 1.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        assert!(
+            !intrs.overlapping_intersects.is_empty(),
+            "expected at least one overlapping global self intersect"
+        );
+
+        let has_target_overlap = intrs.overlapping_intersects.iter().any(|overlap| {
+            let expected_index_pair = (overlap.start_index1 == 0 && overlap.start_index2 == 6)
+                || (overlap.start_index1 == 6 && overlap.start_index2 == 0);
+            let points_match = (overlap.point1.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5)
+                && overlap.point2.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5))
+                || (overlap.point1.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)
+                    && overlap.point2.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5));
+            expected_index_pair && points_match
+        });
+        assert!(
+            has_target_overlap,
+            "missing expected non-local overlap [1,0]-[2,0], actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
+    }
 }
 
 #[cfg(test)]
