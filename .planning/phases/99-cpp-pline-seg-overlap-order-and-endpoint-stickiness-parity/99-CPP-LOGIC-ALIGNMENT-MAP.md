@@ -36,6 +36,11 @@ endpoint-stickiness branch closure.
 - Added both-closed counterpart for the same opposing-direction
   arc-overlap-adjacent dedup branch:
   - `opposing_direction_arc_overlap_adjacent_endpoint_deduplication_both_closed`
+- Added role-flip symmetry counterpart for the same both-closed
+  opposing-direction arc-overlap-adjacent dedup branch:
+  - `opposing_direction_arc_overlap_adjacent_endpoint_deduplication_both_closed_role_flip_symmetry`
+  - verifies AB/BA index-role inversion and overlap-endpoint set equivalence in
+    bounded both-closed geometry.
 - Added both-closed start-index-rotation role-flip symmetry counterpart for the
   same opposing-direction arc-overlap-adjacent dedup branch:
   - `opposing_direction_arc_overlap_adjacent_endpoint_deduplication_both_closed_start_index_rotation_role_flip_symmetry`
