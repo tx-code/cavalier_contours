@@ -225,9 +225,11 @@ endpoint-stickiness branch closure.
   reversed-second-segment coincident-arc overlap path:
   - `all_self_intersects_basic_include_overlapping_coincident_arc_reversed_second_segment_ordering`
   - `all_self_intersects_basic_include_overlapping_coincident_arc_reversed_second_segment_ordering_nonzero_indexes`
+  - `all_self_intersects_basic_include_overlapping_coincident_arc_reversed_second_segment_ordering_with_zero_length_lead_segment`
   - verifies `include_overlapping=false` emits no basics for the overlap pair,
-    while `include_overlapping=true` emits exactly two overlap endpoints for the
-    targeted pair (no endpoint duplication) on both index-0 and non-zero paths.
+  while `include_overlapping=true` emits exactly two overlap endpoints for the
+    targeted pair (no endpoint duplication) on index-0, non-zero, and
+    zero-length-lead re-parameterization paths.
 - Added non-zero + reversed + shared-end-anchor counterpart for global-self
   `TwoIntersects`:
   - `non_local_two_intersects_reversed_second_segment_shared_end_keeps_both_nonzero`
