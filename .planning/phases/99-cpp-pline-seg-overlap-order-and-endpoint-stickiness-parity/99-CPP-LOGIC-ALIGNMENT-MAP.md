@@ -5,6 +5,19 @@ endpoint-stickiness branch closure.
 
 ## Deepening Outcome
 
+- Replaced the remaining index-0-shift canonical-name wrapper aliases with
+  explicit assertion-backed probes, eliminating wrapper-style alias indirection
+  in `find_intersects_tests`:
+  - `all_self_intersects_basic_include_overlapping_coincident_arc_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - `all_self_intersects_basic_include_overlapping_coincident_arc_reversed_second_segment_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - `all_self_intersects_basic_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - `all_self_intersects_basic_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - `all_self_intersects_basic_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - `non_local_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - `non_local_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - `non_local_coincident_arc_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - `non_local_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
+  - `non_local_coincident_arc_overlap_reversed_second_segment_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift`
 - Replaced canonical-name closed-side-rotation wrapper aliases with explicit
   assertion-backed probes in wrap-around overlap dedup families:
   - `wrap_around_overlap_endpoint_deduplication_both_closed_start_index_rotation_closed_pline2_role_flip_symmetry`

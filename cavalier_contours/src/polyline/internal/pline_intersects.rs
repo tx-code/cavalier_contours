@@ -3113,8 +3113,62 @@ mod global_self_intersect_tests {
     #[test]
     fn all_self_intersects_basic_include_overlapping_coincident_arc_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
      {
-        // Canonical-name alias for direct index-0-shift counterpart tracing.
-        all_self_intersects_basic_include_overlapping_coincident_arc_overlap_ordering_with_zero_length_lead_segment_index0_shift();
+        // Canonical-name counterpart of the index-0 shifted overlap-ordering
+        // API-level probe, kept inline for direct traceability.
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(1.0, 1.0, 0.0);
+        pline.add(1.0, 1.0, 1.0); // zero-length lead + original first vertex
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(2.0, 0.0, quarter);
+        pline.add(3.0, 1.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            0,
+            "expected no basics for shifted overlap pair (1,5) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            2,
+            "expected two overlap endpoints for shifted pair (1,5) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert!(
+            pair_with_overlap
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5))
+                && pair_with_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5)),
+            "expected overlap endpoints (2,0) and (3,1) for shifted pair (1,5), actual pair points: {:?}",
+            pair_with_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>()
+        );
     }
 
     #[test]
@@ -3365,8 +3419,62 @@ mod global_self_intersect_tests {
     #[test]
     fn all_self_intersects_basic_include_overlapping_coincident_arc_reversed_second_segment_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
      {
-        // Canonical-name alias for direct index-0-shift counterpart tracing.
-        all_self_intersects_basic_include_overlapping_coincident_arc_reversed_second_segment_ordering_with_zero_length_lead_segment_index0_shift();
+        // Canonical-name counterpart of the index-0 shifted reversed-second-
+        // segment overlap-ordering API-level probe.
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(1.0, 1.0, 0.0);
+        pline.add(1.0, 1.0, 1.0); // zero-length lead + original first vertex
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(3.0, 1.0, -quarter);
+        pline.add(2.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            0,
+            "expected no basics for shifted overlap pair (1,5) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            2,
+            "expected two overlap endpoints for shifted pair (1,5) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert!(
+            pair_with_overlap
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(3.0, 1.0), 1e-5))
+                && pair_with_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5)),
+            "expected overlap endpoints (3,1) and (2,0) for shifted pair (1,5), actual pair points: {:?}",
+            pair_with_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>()
+        );
     }
 
     #[test]
@@ -4446,8 +4554,58 @@ mod global_self_intersect_tests {
     #[test]
     fn all_self_intersects_basic_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
      {
-        // Canonical-name alias for direct index-0-shift counterpart tracing.
-        all_self_intersects_basic_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment();
+        // Canonical-name counterpart of the index-0 shifted single-intersect
+        // visited-pair dedup probe.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, -1.0, 0.0);
+        pline.add(-1.0, -1.0, 0.0); // zero-length lead segment
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 2 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 2)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 2 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 2)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            1,
+            "expected one basic intersect for shifted pair (2,5) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            1,
+            "expected one basic intersect for shifted pair (2,5) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert_fuzzy_eq!(
+            pair_without_overlap[0].point,
+            Vector2::new(4.0 / 3.0, 4.0 / 3.0),
+            1e-5
+        );
+        assert_fuzzy_eq!(
+            pair_with_overlap[0].point,
+            Vector2::new(4.0 / 3.0, 4.0 / 3.0),
+            1e-5
+        );
     }
 
     #[test]
@@ -4635,8 +4793,63 @@ mod global_self_intersect_tests {
     #[test]
     fn all_self_intersects_basic_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
      {
-        // Canonical-name alias for direct index-0-shift counterpart tracing.
-        all_self_intersects_basic_overlap_pair_is_not_duplicated_with_zero_length_lead_segment();
+        // Canonical-name counterpart of the index-0 shifted overlap visited-pair
+        // dedup probe.
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(0.0, 0.0, 0.0); // zero-length lead segment
+        pline.add(3.0, 0.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(1.0, 1.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            0,
+            "expected no basics for shifted overlap pair (1,7) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            2,
+            "expected two overlap endpoints for shifted pair (1,7) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert!(
+            pair_with_overlap
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(2.0, 0.0), 1e-5))
+                && pair_with_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)),
+            "expected overlap endpoints (2,0) and (1,0) for shifted pair (1,7), actual pair points: {:?}",
+            pair_with_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>()
+        );
     }
 
     #[test]
@@ -4848,8 +5061,73 @@ mod global_self_intersect_tests {
     #[test]
     fn all_self_intersects_basic_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
      {
-        // Canonical-name alias for direct index-0-shift counterpart tracing.
-        all_self_intersects_basic_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment();
+        // Canonical-name counterpart of the index-0 shifted `TwoIntersects`
+        // visited-pair dedup probe.
+        let mut pline = Polyline::new();
+        pline.add(-4.0, 2.0, 0.0);
+        pline.add(-4.0, 2.0, 0.0); // zero-length lead segment
+        pline.add(-3.0, 1.0, 0.0);
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+
+        let index = pline.create_approx_aabb_index();
+        let basics_without_overlap = all_self_intersects_as_basic(&pline, &index, false, 1e-5);
+        let basics_with_overlap = all_self_intersects_as_basic(&pline, &index, true, 1e-5);
+
+        let pair_without_overlap = basics_without_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 3 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 3)
+            })
+            .collect::<Vec<_>>();
+        let pair_with_overlap = basics_with_overlap
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 3 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 3)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            pair_without_overlap.len(),
+            2,
+            "expected two basics for shifted pair (3,7) with include_overlapping=false, actual basics: {:?}",
+            basics_without_overlap
+        );
+        assert_eq!(
+            pair_with_overlap.len(),
+            2,
+            "expected two basics for shifted pair (3,7) with include_overlapping=true, actual basics: {:?}",
+            basics_with_overlap
+        );
+        assert!(
+            pair_without_overlap
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5))
+                && pair_without_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5))
+                && pair_with_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5))
+                && pair_with_overlap
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)),
+            "expected both two-intersect points for shifted pair (3,7), actual pair points: without={:?}, with={:?}",
+            pair_without_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>(),
+            pair_with_overlap
+                .iter()
+                .map(|x| x.point)
+                .collect::<Vec<_>>()
+        );
     }
 
     #[test]
@@ -5635,8 +5913,38 @@ mod global_self_intersect_tests {
     #[test]
     fn non_local_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
      {
-        // Canonical-name alias for direct index-0-shift counterpart tracing.
-        non_local_single_intersect_pair_is_not_duplicated_with_zero_length_lead_segment();
+        // Canonical-name counterpart of the index-0 shifted global-self
+        // single-intersect visited-pair dedup probe.
+        let mut pline = Polyline::new();
+        pline.add(-1.0, -1.0, 0.0);
+        pline.add(-1.0, -1.0, 0.0); // zero-length lead segment
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(4.0, 2.0, 0.0);
+        pline.add(4.0, 0.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 2 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 2)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one basic intersect for shifted pair (2,5), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert_fuzzy_eq!(
+            target_pair[0].point,
+            Vector2::new(4.0 / 3.0, 4.0 / 3.0),
+            1e-5
+        );
     }
 
     #[test]
@@ -5709,8 +6017,35 @@ mod global_self_intersect_tests {
 
     #[test]
     fn non_local_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift() {
-        // Canonical-name alias for direct index-0-shift counterpart tracing.
-        non_local_overlap_pair_is_not_duplicated_with_zero_length_lead_segment();
+        // Canonical-name counterpart of the index-0 shifted global-self overlap
+        // visited-pair dedup probe.
+        let mut pline = Polyline::new();
+        pline.add(0.0, 0.0, 0.0);
+        pline.add(0.0, 0.0, 0.0); // zero-length lead segment
+        pline.add(3.0, 0.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(0.0, 2.0, 0.0);
+        pline.add(0.0, 1.0, 0.0);
+        pline.add(1.0, 1.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(1.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one overlap for shifted pair (1,7), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
     }
 
     #[test]
@@ -5817,8 +6152,36 @@ mod global_self_intersect_tests {
     #[test]
     fn non_local_coincident_arc_overlap_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
      {
-        // Canonical-name alias for direct index-0-shift counterpart tracing.
-        non_local_coincident_arc_overlap_pair_is_not_duplicated_with_zero_length_lead_segment();
+        // Canonical-name counterpart of the index-0 shifted global-self
+        // coincident-arc overlap visited-pair dedup probe.
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(-4.0, 2.0, 0.0);
+        pline.add(-4.0, 2.0, 0.0); // zero-length lead segment
+        pline.add(-0.5, 1.5, 0.0);
+        pline.add(1.0, 1.0, 1.0);
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(2.0, 0.0, quarter);
+        pline.add(3.0, 1.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 3 && intr.start_index2 == 7)
+                    || (intr.start_index1 == 7 && intr.start_index2 == 3)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one overlap for shifted pair (3,7), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
     }
 
     #[test]
@@ -5950,8 +6313,44 @@ mod global_self_intersect_tests {
     #[test]
     fn non_local_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
     {
-        // Canonical-name alias for direct index-0-shift counterpart tracing.
-        non_local_two_intersects_pair_is_not_duplicated_with_zero_length_lead_segment();
+        // Canonical-name counterpart of the index-0 shifted global-self
+        // `TwoIntersects` visited-pair dedup probe.
+        let mut pline = Polyline::new();
+        pline.add(-3.0, 1.0, 0.0);
+        pline.add(-3.0, 1.0, 0.0); // zero-length lead segment
+        pline.add(-1.0, 0.0, 1.0);
+        pline.add(1.0, 0.0, 0.0);
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(-2.0, 2.0, 0.0);
+        pline.add(-2.0, 0.0, 0.0);
+        pline.add(2.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .basic_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 2 && intr.start_index2 == 6)
+                    || (intr.start_index1 == 6 && intr.start_index2 == 2)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            2,
+            "expected two basic intersects for shifted pair (2,6), actual basics: {:?}",
+            intrs.basic_intersects
+        );
+        assert!(
+            target_pair
+                .iter()
+                .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(-1.0, 0.0), 1e-5))
+                && target_pair
+                    .iter()
+                    .any(|intr| intr.point.fuzzy_eq_eps(Vector2::new(1.0, 0.0), 1e-5)),
+            "expected both two-intersect points for shifted pair (2,6), actual pair points: {:?}",
+            target_pair.iter().map(|x| x.point).collect::<Vec<_>>()
+        );
     }
 
     #[test]
@@ -6090,8 +6489,34 @@ mod global_self_intersect_tests {
     #[test]
     fn non_local_coincident_arc_overlap_reversed_second_segment_pair_is_not_duplicated_with_zero_length_lead_segment_index0_shift()
      {
-        // Canonical-name alias for direct index-0-shift counterpart tracing.
-        non_local_coincident_arc_overlap_reversed_second_segment_pair_is_not_duplicated_with_zero_length_lead_segment();
+        // Canonical-name counterpart of the index-0 shifted reversed-second-
+        // segment coincident-arc overlap dedup probe.
+        let quarter = bulge_from_angle(std::f64::consts::FRAC_PI_2);
+        let mut pline = Polyline::new();
+        pline.add(1.0, 1.0, 0.0);
+        pline.add(1.0, 1.0, 1.0); // zero-length lead + original first vertex
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(3.0, 2.0, 0.0);
+        pline.add(1.0, 2.0, 0.0);
+        pline.add(3.0, 1.0, -quarter);
+        pline.add(2.0, 0.0, 0.0);
+
+        let intrs = global_self_intersects(&pline, &pline.create_approx_aabb_index());
+        let target_pair = intrs
+            .overlapping_intersects
+            .iter()
+            .filter(|intr| {
+                (intr.start_index1 == 1 && intr.start_index2 == 5)
+                    || (intr.start_index1 == 5 && intr.start_index2 == 1)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            target_pair.len(),
+            1,
+            "expected one overlap for shifted pair (1,5), actual overlaps: {:?}",
+            intrs.overlapping_intersects
+        );
     }
 
     #[test]
