@@ -719,6 +719,96 @@ fn cpp_coincident_commutative_role_flip_matrix_parity() {
 }
 
 #[test]
+fn cpp_coincident_commutative_start_index_rotation_matrix_parity() {
+    fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
+        pline.invert_direction_mut();
+        pline
+    }
+
+    fn rotate_closed_start(pline: &Polyline<f64>, shift: usize) -> Polyline<f64> {
+        let verts: Vec<_> = pline.iter_vertexes().collect();
+        let len = verts.len();
+        let shift = shift % len;
+        let mut result = Polyline::new_closed();
+        for i in 0..len {
+            let v = verts[(i + shift) % len];
+            result.add(v.x, v.y, v.bulge);
+        }
+        result
+    }
+
+    for (case_prefix, inputs) in [
+        (
+            "coincident_case1_",
+            coincident_case1_inputs as fn() -> (Polyline<f64>, Polyline<f64>),
+        ),
+        (
+            "coincident_case2_",
+            coincident_case2_inputs as fn() -> (Polyline<f64>, Polyline<f64>),
+        ),
+    ] {
+        let case_expectations: Vec<_> = cpp_coincident_cases()
+            .into_iter()
+            .filter(|c| c.name.starts_with(case_prefix))
+            .collect();
+
+        let (subject, clip) = inputs();
+        let subject_rotated = rotate_closed_start(&subject, 1);
+        let clip_rotated = rotate_closed_start(&clip, 2);
+
+        let subject_variants = [
+            subject.clone(),
+            subject_rotated.clone(),
+            reversed(subject.clone()),
+            reversed(subject_rotated),
+        ];
+        let clip_variants = [
+            clip.clone(),
+            clip_rotated.clone(),
+            reversed(clip.clone()),
+            reversed(clip_rotated),
+        ];
+
+        for op in [BooleanOp::Or, BooleanOp::And, BooleanOp::Xor] {
+            let expected_case = case_expectations
+                .iter()
+                .find(|c| c.op == op)
+                .unwrap_or_else(|| {
+                    panic!("missing expected case for prefix={case_prefix} op={op:?}")
+                });
+
+            for a in &subject_variants {
+                for b in &clip_variants {
+                    let ab = create_property_set(
+                        a.boolean(b, op).pos_plines.iter().map(|r| &r.pline),
+                        false,
+                    );
+                    let ba = create_property_set(
+                        b.boolean(a, op).pos_plines.iter().map(|r| &r.pline),
+                        false,
+                    );
+
+                    assert!(
+                        geometry_sets_match_ignore_vertex_count(&ab, &expected_case.expected),
+                        "AB mismatch for case_prefix={case_prefix} op={op:?}, ab={ab:?}, expected={:?}",
+                        expected_case.expected
+                    );
+                    assert!(
+                        geometry_sets_match_ignore_vertex_count(&ba, &expected_case.expected),
+                        "BA mismatch for case_prefix={case_prefix} op={op:?}, ba={ba:?}, expected={:?}",
+                        expected_case.expected
+                    );
+                    assert!(
+                        geometry_sets_match_ignore_vertex_count(&ab, &ba),
+                        "AB/BA mismatch for case_prefix={case_prefix} op={op:?}, ab={ab:?}, ba={ba:?}"
+                    );
+                }
+            }
+        }
+    }
+}
+
+#[test]
 fn cpp_coincident_not_complementary_role_flip_matrix_parity() {
     fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
         pline.invert_direction_mut();
