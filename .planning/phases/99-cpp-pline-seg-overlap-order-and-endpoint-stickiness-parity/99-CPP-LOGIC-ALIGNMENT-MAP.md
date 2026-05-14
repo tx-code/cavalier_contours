@@ -1177,6 +1177,14 @@ endpoint-stickiness branch closure.
     default-path index/point outputs, preserving AB/BA role-flip start-index
     mapping, validating branch-specific overlap endpoint-order invariants
     (stable vs swapped), and preserving input immutability.
+- Added Rust options-path wrap-around same-order closure-edge matrix counterpart
+  for source-aligned non-circle arc overlap boundaries with closed `pline2`:
+  - `cpp_wrap_around_same_order_closed_pline2_closure_basic_options_matrix_parity`
+  - verifies `find_intersects_opt` reproduces one-basic + one-overlap
+    closure-edge output for same-order arc direction, including closed-side
+    start-index-rotation cases, while matching default-path index/point
+    outputs, preserving AB/BA role-flip start-index mapping with stable overlap
+    endpoint ordering, and preserving input immutability.
 - Strengthened offset input-immutability parity from single sample to full
   C++-mapped offset fixture matrix:
   - `cpp_parallel_offset_does_not_modify_input`
