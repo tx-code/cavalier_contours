@@ -5455,6 +5455,118 @@ fn cpp_wrap_around_same_order_closed_pline2_closure_basic_options_matrix_parity(
 }
 
 #[test]
+fn cpp_wrap_around_same_order_closed_pline2_closure_basic_flipped_roles_options_parity() {
+    let mut closed_side = Polyline::new_closed();
+    closed_side.add(3.0, 1.0, 0.0);
+    closed_side.add(4.0, 4.0, 0.0);
+    closed_side.add(1.0, 1.0, 1.0);
+
+    let mut open_side = Polyline::new();
+    open_side.add(2.0, 0.0, 1.0);
+    open_side.add(2.0, 2.0, 0.0);
+    open_side.add(3.0, 1.0, 0.0);
+
+    let closed_before: Vec<_> = closed_side.iter_vertexes().collect();
+    let open_before: Vec<_> = open_side.iter_vertexes().collect();
+
+    let closed_aabb = closed_side.create_approx_aabb_index();
+    let open_aabb = open_side.create_approx_aabb_index();
+    let options_ab = FindIntersectsOptions {
+        pline1_aabb_index: Some(&closed_aabb),
+        pos_equal_eps: EPS,
+    };
+    let options_ba = FindIntersectsOptions {
+        pline1_aabb_index: Some(&open_aabb),
+        pos_equal_eps: EPS,
+    };
+
+    let default_ab = closed_side.find_intersects(&open_side);
+    let default_ba = open_side.find_intersects(&closed_side);
+    let ab = closed_side.find_intersects_opt(&open_side, &options_ab);
+    let ba = open_side.find_intersects_opt(&closed_side, &options_ba);
+
+    assert_eq!(
+        ab.basic_intersects.len(),
+        1,
+        "expected one AB basic intersect"
+    );
+    assert_eq!(
+        ab.overlapping_intersects.len(),
+        1,
+        "expected one AB overlap"
+    );
+    assert_eq!(
+        ba.basic_intersects.len(),
+        1,
+        "expected one BA basic intersect"
+    );
+    assert_eq!(
+        ba.overlapping_intersects.len(),
+        1,
+        "expected one BA overlap"
+    );
+
+    assert_eq!(ab.basic_intersects.len(), default_ab.basic_intersects.len());
+    assert_eq!(
+        ab.overlapping_intersects.len(),
+        default_ab.overlapping_intersects.len()
+    );
+    assert_eq!(ba.basic_intersects.len(), default_ba.basic_intersects.len());
+    assert_eq!(
+        ba.overlapping_intersects.len(),
+        default_ba.overlapping_intersects.len()
+    );
+
+    let basic_ab = ab.basic_intersects[0];
+    let basic_ba = ba.basic_intersects[0];
+    let default_basic_ab = default_ab.basic_intersects[0];
+    let default_basic_ba = default_ba.basic_intersects[0];
+    assert_eq!(basic_ab.start_index1, 1);
+    assert_eq!(basic_ab.start_index2, 1);
+    assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+    assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+    assert_eq!(basic_ab.start_index1, default_basic_ab.start_index1);
+    assert_eq!(basic_ab.start_index2, default_basic_ab.start_index2);
+    assert_eq!(basic_ba.start_index1, default_basic_ba.start_index1);
+    assert_eq!(basic_ba.start_index2, default_basic_ba.start_index2);
+    assert!((basic_ab.point.x - 2.0).abs() <= EPS && (basic_ab.point.y - 2.0).abs() <= EPS);
+    assert!(
+        (basic_ab.point.x - basic_ba.point.x).abs() <= EPS
+            && (basic_ab.point.y - basic_ba.point.y).abs() <= EPS
+    );
+
+    let overlap_ab = ab.overlapping_intersects[0];
+    let overlap_ba = ba.overlapping_intersects[0];
+    let default_overlap_ab = default_ab.overlapping_intersects[0];
+    let default_overlap_ba = default_ba.overlapping_intersects[0];
+    assert_eq!(overlap_ab.start_index1, 2);
+    assert_eq!(overlap_ab.start_index2, 0);
+    assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+    assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+    assert_eq!(overlap_ab.start_index1, default_overlap_ab.start_index1);
+    assert_eq!(overlap_ab.start_index2, default_overlap_ab.start_index2);
+    assert_eq!(overlap_ba.start_index1, default_overlap_ba.start_index1);
+    assert_eq!(overlap_ba.start_index2, default_overlap_ba.start_index2);
+    assert!(
+        (overlap_ab.point1.x - 2.0).abs() <= EPS
+            && (overlap_ab.point1.y - 0.0).abs() <= EPS
+            && (overlap_ab.point2.x - 3.0).abs() <= EPS
+            && (overlap_ab.point2.y - 1.0).abs() <= EPS
+    );
+    assert!(
+        (overlap_ab.point1.x - overlap_ba.point1.x).abs() <= EPS
+            && (overlap_ab.point1.y - overlap_ba.point1.y).abs() <= EPS
+            && (overlap_ab.point2.x - overlap_ba.point2.x).abs() <= EPS
+            && (overlap_ab.point2.y - overlap_ba.point2.y).abs() <= EPS
+    );
+
+    let closed_after: Vec<_> = closed_side.iter_vertexes().collect();
+    let open_after: Vec<_> = open_side.iter_vertexes().collect();
+    assert_eq!(closed_after, closed_before, "closed-side mutated by find_intersects_opt");
+    assert_eq!(open_after, open_before, "open-side mutated by find_intersects_opt");
+}
+
+#[test]
 fn cpp_wrap_around_closed_pline1_closure_basic_options_matrix_parity() {
     type Point = (f64, f64);
 

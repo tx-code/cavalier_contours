@@ -1185,6 +1185,13 @@ endpoint-stickiness branch closure.
     start-index-rotation cases, while matching default-path index/point
     outputs, preserving AB/BA role-flip start-index mapping with stable overlap
     endpoint ordering, and preserving input immutability.
+- Added explicit options-path flipped-role counterpart for the same
+  closed-`pline2` same-order closure-edge branch:
+  - `cpp_wrap_around_same_order_closed_pline2_closure_basic_flipped_roles_options_parity`
+  - verifies exact AB start-index attribution from source-aligned
+    `..._with_closure_basic_intersect_flipped_roles` geometry (`basic 1/1`,
+    `overlap 2/0`), while matching default-path index/point outputs, preserving
+    AB/BA role-flip mapping, and preserving input immutability.
 - Added Rust options-path wrap-around closure-edge matrix counterpart for
   source-aligned non-circle arc overlap boundaries with closed `pline1`:
   - `cpp_wrap_around_closed_pline1_closure_basic_options_matrix_parity`
