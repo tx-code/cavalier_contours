@@ -1598,3 +1598,206 @@ fn cpp_overlap_and_basic_intersection_options_matrix_parity() {
         }
     }
 }
+
+#[test]
+fn cpp_overlap_and_basic_intersection_options_normal_closed_side_matrix_parity() {
+    fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
+        assert!(
+            (actual_x - expected_x).abs() <= EPS && (actual_y - expected_y).abs() <= EPS,
+            "point mismatch: actual=({actual_x}, {actual_y}), expected=({expected_x}, {expected_y})"
+        );
+    }
+
+    fn open_side_reversed() -> Polyline<f64> {
+        let mut pline = Polyline::new();
+        pline.add(2.0, 2.0, -1.0);
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(2.0, -1.0, 0.0);
+        pline
+    }
+
+    fn open_side_reversed_nonzero() -> Polyline<f64> {
+        let mut pline = Polyline::new();
+        pline.add(2.0, 2.0, 0.0);
+        pline.add(2.0, 2.0, -1.0);
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(2.0, -1.0, 0.0);
+        pline
+    }
+
+    fn normal_closed_side() -> Polyline<f64> {
+        let mut pline = Polyline::new_closed();
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(4.0, 4.0, 0.0);
+        pline.add(1.0, 1.0, 1.0);
+        pline
+    }
+
+    fn normal_closed_side_rotated() -> Polyline<f64> {
+        let mut pline = Polyline::new_closed();
+        pline.add(4.0, 4.0, 0.0);
+        pline.add(1.0, 1.0, 1.0);
+        pline.add(3.0, 1.0, 0.0);
+        pline
+    }
+
+    let open_variants = [
+        ("open_reversed", open_side_reversed()),
+        ("open_reversed_nonzero", open_side_reversed_nonzero()),
+    ];
+    let closed_variants = [
+        ("normal_closed_side", normal_closed_side()),
+        ("normal_closed_side_rotated", normal_closed_side_rotated()),
+    ];
+
+    for (open_name, lhs) in &open_variants {
+        for (closed_name, rhs) in &closed_variants {
+            let lhs_before: Vec<_> = lhs.iter_vertexes().collect();
+            let rhs_before: Vec<_> = rhs.iter_vertexes().collect();
+
+            let lhs_aabb = lhs.create_approx_aabb_index();
+            let rhs_aabb = rhs.create_approx_aabb_index();
+            let options_ab = FindIntersectsOptions {
+                pline1_aabb_index: Some(&lhs_aabb),
+                pos_equal_eps: EPS,
+            };
+            let options_ba = FindIntersectsOptions {
+                pline1_aabb_index: Some(&rhs_aabb),
+                pos_equal_eps: EPS,
+            };
+
+            let ab = lhs.find_intersects_opt(rhs, &options_ab);
+            let ba = rhs.find_intersects_opt(lhs, &options_ba);
+            let default_ab = lhs.find_intersects(rhs);
+            let default_ba = rhs.find_intersects(lhs);
+
+            assert_eq!(
+                ab.basic_intersects.len(),
+                1,
+                "{open_name}/{closed_name}: expected one AB basic intersect"
+            );
+            assert_eq!(
+                ab.overlapping_intersects.len(),
+                1,
+                "{open_name}/{closed_name}: expected one AB overlap"
+            );
+            assert_eq!(
+                ba.basic_intersects.len(),
+                1,
+                "{open_name}/{closed_name}: expected one BA basic intersect"
+            );
+            assert_eq!(
+                ba.overlapping_intersects.len(),
+                1,
+                "{open_name}/{closed_name}: expected one BA overlap"
+            );
+            assert_eq!(
+                default_ab.basic_intersects.len(),
+                1,
+                "{open_name}/{closed_name}: expected one default AB basic intersect"
+            );
+            assert_eq!(
+                default_ab.overlapping_intersects.len(),
+                1,
+                "{open_name}/{closed_name}: expected one default AB overlap"
+            );
+            assert_eq!(
+                default_ba.basic_intersects.len(),
+                1,
+                "{open_name}/{closed_name}: expected one default BA basic intersect"
+            );
+            assert_eq!(
+                default_ba.overlapping_intersects.len(),
+                1,
+                "{open_name}/{closed_name}: expected one default BA overlap"
+            );
+
+            let basic_ab = ab.basic_intersects[0];
+            let basic_ba = ba.basic_intersects[0];
+            let default_basic_ab = default_ab.basic_intersects[0];
+            let default_basic_ba = default_ba.basic_intersects[0];
+            assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+            assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+            assert_eq!(basic_ab.start_index1, default_basic_ab.start_index1);
+            assert_eq!(basic_ab.start_index2, default_basic_ab.start_index2);
+            assert_eq!(basic_ba.start_index1, default_basic_ba.start_index1);
+            assert_eq!(basic_ba.start_index2, default_basic_ba.start_index2);
+            assert_point_close(basic_ab.point.x, basic_ab.point.y, 2.0, 2.0);
+            assert_point_close(
+                basic_ab.point.x,
+                basic_ab.point.y,
+                basic_ba.point.x,
+                basic_ba.point.y,
+            );
+            assert_point_close(
+                basic_ab.point.x,
+                basic_ab.point.y,
+                default_basic_ab.point.x,
+                default_basic_ab.point.y,
+            );
+            assert_point_close(
+                basic_ba.point.x,
+                basic_ba.point.y,
+                default_basic_ba.point.x,
+                default_basic_ba.point.y,
+            );
+
+            let overlap_ab = ab.overlapping_intersects[0];
+            let overlap_ba = ba.overlapping_intersects[0];
+            let default_overlap_ab = default_ab.overlapping_intersects[0];
+            let default_overlap_ba = default_ba.overlapping_intersects[0];
+            assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+            assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+            assert_eq!(overlap_ab.start_index1, default_overlap_ab.start_index1);
+            assert_eq!(overlap_ab.start_index2, default_overlap_ab.start_index2);
+            assert_eq!(overlap_ba.start_index1, default_overlap_ba.start_index1);
+            assert_eq!(overlap_ba.start_index2, default_overlap_ba.start_index2);
+            assert_point_close(overlap_ab.point1.x, overlap_ab.point1.y, 2.0, 0.0);
+            assert_point_close(overlap_ab.point2.x, overlap_ab.point2.y, 3.0, 1.0);
+            assert_point_close(overlap_ba.point1.x, overlap_ba.point1.y, 3.0, 1.0);
+            assert_point_close(overlap_ba.point2.x, overlap_ba.point2.y, 2.0, 0.0);
+            assert_point_close(
+                overlap_ab.point1.x,
+                overlap_ab.point1.y,
+                default_overlap_ab.point1.x,
+                default_overlap_ab.point1.y,
+            );
+            assert_point_close(
+                overlap_ab.point2.x,
+                overlap_ab.point2.y,
+                default_overlap_ab.point2.x,
+                default_overlap_ab.point2.y,
+            );
+            assert_point_close(
+                overlap_ba.point1.x,
+                overlap_ba.point1.y,
+                default_overlap_ba.point1.x,
+                default_overlap_ba.point1.y,
+            );
+            assert_point_close(
+                overlap_ba.point2.x,
+                overlap_ba.point2.y,
+                default_overlap_ba.point2.x,
+                default_overlap_ba.point2.y,
+            );
+
+            if *open_name == "open_reversed_nonzero" {
+                assert_ne!(basic_ab.start_index1, 0);
+                assert_ne!(basic_ba.start_index2, 0);
+                assert_ne!(overlap_ab.start_index1, 0);
+                assert_ne!(overlap_ba.start_index2, 0);
+            }
+
+            let lhs_after: Vec<_> = lhs.iter_vertexes().collect();
+            let rhs_after: Vec<_> = rhs.iter_vertexes().collect();
+            assert_eq!(
+                lhs_after, lhs_before,
+                "{open_name}/{closed_name}: open-side input mutated by find_intersects_opt"
+            );
+            assert_eq!(
+                rhs_after, rhs_before,
+                "{open_name}/{closed_name}: closed-side input mutated by find_intersects_opt"
+            );
+        }
+    }
+}
