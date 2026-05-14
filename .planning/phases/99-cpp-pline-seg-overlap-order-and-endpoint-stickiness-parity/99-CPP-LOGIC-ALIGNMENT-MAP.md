@@ -21,6 +21,13 @@ endpoint-stickiness branch closure.
   - verifies `sort_and_join_overlapping_intersects` joins last+first slices
     when they connect at `pline2[0]` and increments `end_index_offset` to keep
     the connection vertex in the stitched view.
+- Strengthened full-loop overlap-slice parity probes for coincident circles:
+  - `overlapping_circles_same_dir`
+  - `overlapping_circles_same_dir_flipped_index`
+  - `overlapping_circles_opposing_dir`
+  - verifies `sort_and_join_overlapping_intersects` marks full overlap as
+    `is_loop=true` with stable `start_index` / `end_index_offset` view data in
+    both same-direction and opposing-direction paths.
 - Added bounded collection-level parity for `skip_intr_at_end` endpoint-elision
   symmetry in open vs closed paths:
   - `skip_intr_at_end_open_pline1_uses_next_segment_index`

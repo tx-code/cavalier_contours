@@ -12667,6 +12667,9 @@ mod sort_and_join_overlapping_intersects_tests {
 
         assert_eq!(slices[0].start_indexes, (0, 0));
         assert_eq!(slices[0].end_indexes, (0, 0));
+        assert!(slices[0].is_loop);
+        assert_eq!(slices[0].view_data.start_index, 0);
+        assert_eq!(slices[0].view_data.end_index_offset, 1);
         assert!(!slices[0].opposing_directions);
     }
 
@@ -12698,6 +12701,9 @@ mod sort_and_join_overlapping_intersects_tests {
 
         assert_eq!(slices[0].start_indexes, (1, 0));
         assert_eq!(slices[0].end_indexes, (1, 0));
+        assert!(slices[0].is_loop);
+        assert_eq!(slices[0].view_data.start_index, 0);
+        assert_eq!(slices[0].view_data.end_index_offset, 1);
         assert!(!slices[0].opposing_directions);
     }
 
@@ -12729,6 +12735,9 @@ mod sort_and_join_overlapping_intersects_tests {
 
         assert_eq!(slices[0].start_indexes, (1, 0));
         assert_eq!(slices[0].end_indexes, (1, 0));
+        assert!(slices[0].is_loop);
+        assert_eq!(slices[0].view_data.start_index, 0);
+        assert_eq!(slices[0].view_data.end_index_offset, 1);
         assert!(slices[0].opposing_directions);
     }
 
