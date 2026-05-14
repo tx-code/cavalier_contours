@@ -109,11 +109,16 @@ endpoint-stickiness branch closure.
   - `non_local_coincident_arc_overlap_reversed_second_segment_nonzero_not_duplicated`
   - verifies the non-zero-index reversed-overlap pair contributes one overlap
     entry (no reverse-traversal duplication).
-- Added non-zero + reversed + shared-end skip counterpart for global-self
+- Added non-zero + reversed + shared-end-anchor counterpart for global-self
   `TwoIntersects`:
-  - `non_local_two_intersects_reversed_second_segment_shared_end_filters_one_nonzero`
-  - verifies when one of two intersection points is the shared segment end, the
-    reversed second-segment path keeps only the non-shared point.
+  - `non_local_two_intersects_reversed_second_segment_shared_end_keeps_both_nonzero`
+  - verifies both points are retained when the shared intersection point is not
+    simultaneously the end point of both segments under global-self skip logic.
+- Added complementary non-zero + reversed + no-shared-end counterpart for
+  global-self `TwoIntersects`:
+  - `non_local_two_intersects_reversed_second_segment_keeps_both_nonzero`
+  - verifies both points are retained when the reversed second-segment path has
+    no shared-endpoint skip condition.
 - Added bounded mixed line/arc overlap-adjacent collection-level parity probe:
   - `overlap_endpoint_arc_adjacent_basic_intersect_deduplication`
 - Added closed/open asymmetry probe for mixed line/arc overlap-adjacent dedup:
