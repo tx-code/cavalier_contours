@@ -206,6 +206,11 @@ endpoint-stickiness branch closure.
   - `arc_arc_coincident_disjoint_sweeps_no_intersect`
   - verifies no-intersect behavior when coincident arcs have non-overlapping
     sweeps (including parameter inversion and reversed second-arc direction).
+- Added collection-level no-intersect parity guard for the same coincident-arc
+  disjoint-sweep branch:
+  - `coincident_arc_disjoint_sweeps_no_intersects_collection_level`
+  - verifies `find_intersects` does not surface basic/overlap entries for this
+    branch (including reversed second-arc direction).
 
 ## Next Alignment Targets (No Clipper)
 

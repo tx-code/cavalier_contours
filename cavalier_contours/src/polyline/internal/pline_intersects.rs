@@ -1478,6 +1478,51 @@ mod find_intersects_tests {
     }
 
     #[test]
+    fn coincident_arc_disjoint_sweeps_no_intersects_collection_level() {
+        // Collection-level guard for old C++ `intrPlineSegs` coincident-arc disjoint-sweep
+        // no-intersect branch: coincident arcs with non-overlapping sweeps should not produce
+        // basic or overlap intersects.
+        let quarter = bulge_from_angle(FRAC_PI_2);
+
+        let mut pline1 = Polyline::new();
+        pline1.add(1.0, 0.0, quarter);
+        pline1.add(0.0, 1.0, 0.0);
+
+        let mut pline2 = Polyline::new();
+        pline2.add(-1.0, 0.0, quarter);
+        pline2.add(0.0, -1.0, 0.0);
+
+        let intrs = find_intersects(&pline1, &pline2, &Default::default());
+        assert!(
+            intrs.basic_intersects.is_empty(),
+            "unexpected basic intersects: {:?}",
+            intrs.basic_intersects
+        );
+        assert!(
+            intrs.overlapping_intersects.is_empty(),
+            "unexpected overlapping intersects: {:?}",
+            intrs.overlapping_intersects
+        );
+
+        // Reversing arc2 direction while preserving the same geometric sweep should remain empty.
+        let mut pline2_reversed = Polyline::new();
+        pline2_reversed.add(0.0, -1.0, -quarter);
+        pline2_reversed.add(-1.0, 0.0, 0.0);
+
+        let intrs_reversed = find_intersects(&pline1, &pline2_reversed, &Default::default());
+        assert!(
+            intrs_reversed.basic_intersects.is_empty(),
+            "unexpected basic intersects: {:?}",
+            intrs_reversed.basic_intersects
+        );
+        assert!(
+            intrs_reversed.overlapping_intersects.is_empty(),
+            "unexpected overlapping intersects: {:?}",
+            intrs_reversed.overlapping_intersects
+        );
+    }
+
+    #[test]
     fn opposing_direction_arc_overlap_adjacent_endpoint_deduplication_closed_pline1() {
         let mut pline1 = Polyline::new_closed();
         pline1.add(1.0, 1.0, 1.0);
