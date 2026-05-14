@@ -1,7 +1,9 @@
 mod test_utils;
 
 use cavalier_contours::pline_closed;
-use cavalier_contours::polyline::{BooleanOp, PlineBooleanOptions, PlineSource, Polyline};
+use cavalier_contours::polyline::{
+    BooleanOp, PlineBooleanOptions, PlineSource, PlineSourceMut, Polyline,
+};
 use test_utils::{PlineProperties, aabb_fuzzy_eq_eps, create_property_set};
 
 const EPS: f64 = 1e-4;
@@ -439,6 +441,49 @@ fn cpp_circle_rectangle_topology_delta_snapshot() {
     assert_eq!(sorted_vertex_counts(&exclude_expected), vec![3, 3]);
     assert_eq!(sorted_vertex_counts(&intersect_expected), vec![4]);
     assert_eq!(sorted_vertex_counts(&xor_expected), vec![3, 3, 4, 4]);
+}
+
+#[test]
+fn cpp_circle_rectangle_commutative_role_flip_matrix_parity() {
+    fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
+        pline.invert_direction_mut();
+        pline
+    }
+
+    let (subject, clip) = circle_rectangle_inputs();
+    let subject_reversed = reversed(subject.clone());
+    let clip_reversed = reversed(clip.clone());
+
+    let orientation_pairs = [
+        (&subject, &clip),
+        (&subject, &clip_reversed),
+        (&subject_reversed, &clip),
+        (&subject_reversed, &clip_reversed),
+    ];
+
+    for op in [BooleanOp::Or, BooleanOp::And, BooleanOp::Xor] {
+        let expected = cpp_expected(op);
+
+        for (a, b) in orientation_pairs {
+            let ab =
+                create_property_set(a.boolean(b, op).pos_plines.iter().map(|r| &r.pline), false);
+            let ba =
+                create_property_set(b.boolean(a, op).pos_plines.iter().map(|r| &r.pline), false);
+
+            assert!(
+                geometry_sets_match_ignore_vertex_count(&ab, &expected),
+                "AB mismatch for op={op:?}, ab={ab:?}, expected={expected:?}"
+            );
+            assert!(
+                geometry_sets_match_ignore_vertex_count(&ba, &expected),
+                "BA mismatch for op={op:?}, ba={ba:?}, expected={expected:?}"
+            );
+            assert!(
+                geometry_sets_match_ignore_vertex_count(&ab, &ba),
+                "AB/BA role-flip mismatch for op={op:?}, ab={ab:?}, ba={ba:?}"
+            );
+        }
+    }
 }
 
 #[test]

@@ -169,6 +169,11 @@ endpoint-stickiness branch closure.
   - `cpp_circle_rectangle_intersection_role_flip_symmetry_matrix_parity`
   - verifies AB/BA role inversion (`start_index1 <-> start_index2`) while
     preserving the expected four C++-aligned intersection points.
+- Added combine-derived circle/rectangle commutative role-flip symmetry matrix
+  parity across orientation reversals for C++-mapped operations:
+  - `cpp_circle_rectangle_commutative_role_flip_matrix_parity`
+  - verifies AB and BA both match C++-mapped geometry for `OR`/`AND`/`XOR`
+    and match each other under role inversion.
 
 ## Next Alignment Targets (No Clipper)
 
