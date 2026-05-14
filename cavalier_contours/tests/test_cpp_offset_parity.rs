@@ -1289,3 +1289,99 @@ fn cpp_overlap_endpoint_order_options_role_flip_parity() {
         );
     }
 }
+
+#[test]
+fn cpp_intersection_options_pos_equal_eps_controls_detection() {
+    fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
+        assert!(
+            (actual_x - expected_x).abs() <= EPS && (actual_y - expected_y).abs() <= EPS,
+            "point mismatch: actual=({actual_x}, {actual_y}), expected=({expected_x}, {expected_y})"
+        );
+    }
+
+    let gap = 5e-4;
+
+    let mut near_touch_vertical = Polyline::new();
+    near_touch_vertical.add(0.5, 0.0, 0.0);
+    near_touch_vertical.add(0.5, 1.0 - gap, 0.0);
+
+    let mut horizontal = Polyline::new();
+    horizontal.add(0.0, 1.0, 0.0);
+    horizontal.add(1.0, 1.0, 0.0);
+
+    let lhs_before: Vec<_> = near_touch_vertical.iter_vertexes().collect();
+    let rhs_before: Vec<_> = horizontal.iter_vertexes().collect();
+
+    let lhs_aabb = near_touch_vertical.create_approx_aabb_index();
+    let rhs_aabb = horizontal.create_approx_aabb_index();
+
+    let strict_ab = FindIntersectsOptions {
+        pline1_aabb_index: Some(&lhs_aabb),
+        pos_equal_eps: 1e-6,
+    };
+    let strict_ba = FindIntersectsOptions {
+        pline1_aabb_index: Some(&rhs_aabb),
+        pos_equal_eps: 1e-6,
+    };
+    let loose_ab = FindIntersectsOptions {
+        pline1_aabb_index: Some(&lhs_aabb),
+        pos_equal_eps: 1e-3,
+    };
+    let loose_ba = FindIntersectsOptions {
+        pline1_aabb_index: Some(&rhs_aabb),
+        pos_equal_eps: 1e-3,
+    };
+
+    let strict_ab_result = near_touch_vertical.find_intersects_opt(&horizontal, &strict_ab);
+    let strict_ba_result = horizontal.find_intersects_opt(&near_touch_vertical, &strict_ba);
+    assert!(
+        strict_ab_result.basic_intersects.is_empty(),
+        "strict AB should have no basic intersects, got {:?}",
+        strict_ab_result.basic_intersects
+    );
+    assert!(
+        strict_ba_result.basic_intersects.is_empty(),
+        "strict BA should have no basic intersects, got {:?}",
+        strict_ba_result.basic_intersects
+    );
+    assert!(
+        strict_ab_result.overlapping_intersects.is_empty(),
+        "strict AB should have no overlaps, got {:?}",
+        strict_ab_result.overlapping_intersects
+    );
+    assert!(
+        strict_ba_result.overlapping_intersects.is_empty(),
+        "strict BA should have no overlaps, got {:?}",
+        strict_ba_result.overlapping_intersects
+    );
+
+    let loose_ab_result = near_touch_vertical.find_intersects_opt(&horizontal, &loose_ab);
+    let loose_ba_result = horizontal.find_intersects_opt(&near_touch_vertical, &loose_ba);
+    assert_eq!(loose_ab_result.basic_intersects.len(), 1);
+    assert_eq!(loose_ba_result.basic_intersects.len(), 1);
+    assert!(loose_ab_result.overlapping_intersects.is_empty());
+    assert!(loose_ba_result.overlapping_intersects.is_empty());
+
+    let intr_ab = loose_ab_result.basic_intersects[0];
+    let intr_ba = loose_ba_result.basic_intersects[0];
+    assert_eq!(intr_ab.start_index1, intr_ba.start_index2);
+    assert_eq!(intr_ab.start_index2, intr_ba.start_index1);
+    assert_point_close(intr_ab.point.x, intr_ab.point.y, 0.5, 1.0);
+    assert_point_close(
+        intr_ab.point.x,
+        intr_ab.point.y,
+        intr_ba.point.x,
+        intr_ba.point.y,
+    );
+
+    let lhs_after: Vec<_> = near_touch_vertical.iter_vertexes().collect();
+    let rhs_after: Vec<_> = horizontal.iter_vertexes().collect();
+    assert_eq!(
+        lhs_after, lhs_before,
+        "near-touch vertical polyline mutated by find_intersects_opt"
+    );
+    assert_eq!(
+        rhs_after, rhs_before,
+        "horizontal polyline mutated by find_intersects_opt"
+    );
+}

@@ -1053,6 +1053,13 @@ endpoint-stickiness branch closure.
     second-segment direction for same/opposite overlap orientation, keeps AB/BA
     start-index role flip symmetry, matches default-path overlap output, and
     leaves both inputs immutable.
+- Added Rust options-path tolerance-control counterpart for near-touch
+  intersection detection:
+  - `cpp_intersection_options_pos_equal_eps_controls_detection`
+  - verifies `find_intersects_opt` with explicit `pos_equal_eps` changes
+    near-touch behavior as expected (`1e-6` => no intersects, `1e-3` => one
+    basic intersect), preserves AB/BA role-flip symmetry, and leaves both
+    inputs immutable.
 - Strengthened offset input-immutability parity from single sample to full
   C++-mapped offset fixture matrix:
   - `cpp_parallel_offset_does_not_modify_input`
