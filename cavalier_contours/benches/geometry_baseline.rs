@@ -415,7 +415,7 @@ fn bench_properties(c: &mut Criterion) {
         let mut area_group = c.benchmark_group(format!("properties/area/{mode}"));
         for profile in profiles.iter() {
             area_group.bench_function(BenchmarkId::from_parameter(profile.id.as_str()), |b| {
-                b.iter(|| black_box(black_box(&profile.pline).area()));
+                b.iter(|| black_box(profile.pline.area()));
             });
         }
         area_group.finish();
@@ -423,7 +423,7 @@ fn bench_properties(c: &mut Criterion) {
         let mut extents_group = c.benchmark_group(format!("properties/extents/{mode}"));
         for profile in profiles.iter() {
             extents_group.bench_function(BenchmarkId::from_parameter(profile.id.as_str()), |b| {
-                b.iter(|| black_box(black_box(&profile.pline).extents()));
+                b.iter(|| black_box(profile.pline.extents()));
             });
         }
         extents_group.finish();
@@ -433,7 +433,7 @@ fn bench_properties(c: &mut Criterion) {
             path_length_group.bench_function(
                 BenchmarkId::from_parameter(profile.id.as_str()),
                 |b| {
-                    b.iter(|| black_box(black_box(&profile.pline).path_length()));
+                    b.iter(|| black_box(profile.pline.path_length()));
                 },
             );
         }
@@ -446,7 +446,7 @@ fn bench_properties(c: &mut Criterion) {
                 b.iter(|| {
                     let mut winding_sum = 0;
                     for point in points.iter() {
-                        winding_sum += black_box(&profile.pline).winding_number(black_box(*point));
+                        winding_sum += profile.pline.winding_number(*point);
                     }
                     black_box(winding_sum)
                 });

@@ -62,6 +62,7 @@ Historical profile and operation mapping is recorded in `04-BENCHMARK-MAP.md`.
 An additional local cross-language snapshot was recorded on 2026-05-15:
 
 - `.planning/phases/04-benchmark-baseline/04-RUST-CPP-SNAPSHOT-2026-05-15.md`
+- `.planning/phases/04-benchmark-baseline/04-RUST-CPP-PROPERTIES-SNAPSHOT-2026-05-15.md`
 
 This is comparative evidence only (same profile families, different benchmark
 harness implementations). It is not a release gate or CI threshold.
