@@ -2787,6 +2787,19 @@ endpoint-stickiness branch closure.
     closing the current
     `cpp_*role_flip*parity* -> cpp_*parity*` canonical-name gap in
     `test_cpp_offset_parity.rs`.
+- Added canonical role-flip options-path aliases for remaining role-flip
+  matrix-only branches:
+  - `cpp_reversed_endpoint_closure_basic_role_flip_options_parity`
+  - `cpp_reversed_endpoint_closure_basic_intersect_role_flip_options_parity`
+  - `cpp_wrap_around_closed_side_reversed_closure_basic_role_flip_options_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_role_flip_options_parity`
+  - `cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_role_flip_options_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_role_flip_options_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_role_flip_options_parity`
+  - each alias delegates to its existing
+    `*_role_flip_options_matrix_parity` guard, closing the current
+    `*_role_flip_options_matrix_parity -> *_role_flip_options_parity`
+    canonical-name gaps.
 
 ## Next Alignment Targets (No Clipper)
 
