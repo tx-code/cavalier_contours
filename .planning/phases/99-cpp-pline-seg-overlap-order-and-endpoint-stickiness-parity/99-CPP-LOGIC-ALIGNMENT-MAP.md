@@ -2512,6 +2512,13 @@ endpoint-stickiness branch closure.
   - verifies role inversion swaps overlap endpoint ordering for
     `arc2_reverse_dir` and preserves endpoint ordering for `both_reverse_dir`
     in `pline_seg_intr`.
+- Added source-aligned pline-segment role-flip overlap-order parity guards for
+  the remaining non-circle partial arc/arc overlap direction branches:
+  - `cpp_pline_seg_arc_arc_partial_overlap_same_order_role_flip_order_parity`
+  - `cpp_pline_seg_arc_arc_partial_overlap_arc1_reverse_dir_role_flip_order_parity`
+  - verifies role inversion preserves overlap endpoint ordering for
+    `same_order` and swaps overlap endpoint ordering for `arc1_reverse_dir` in
+    `pline_seg_intr`.
 
 ## Next Alignment Targets (No Clipper)
 
