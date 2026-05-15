@@ -2833,6 +2833,23 @@ endpoint-stickiness branch closure.
   - each alias delegates to its existing `*_options_matrix_parity` guard,
     reducing the current
     `*_options_matrix_parity -> *_options_parity` canonical-name gaps.
+- Added canonical matrix aliases for reverse-dir both-closed
+  start-index-rotation options families:
+  - `cpp_arc1_reverse_dir_both_closed_start_index_rotation_options_matrix_parity`
+  - `cpp_arc1_reverse_dir_both_closed_start_index_rotation_role_flip_options_matrix_parity`
+  - `cpp_arc1_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_matrix_parity`
+  - `cpp_arc1_reverse_dir_both_closed_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity`
+  - `cpp_both_reverse_dir_both_closed_start_index_rotation_options_matrix_parity`
+  - `cpp_both_reverse_dir_both_closed_start_index_rotation_role_flip_options_matrix_parity`
+  - `cpp_both_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_matrix_parity`
+  - `cpp_both_reverse_dir_both_closed_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity`
+  - `cpp_arc2_reverse_dir_both_closed_start_index_rotation_options_matrix_parity`
+  - `cpp_arc2_reverse_dir_both_closed_start_index_rotation_role_flip_options_matrix_parity`
+  - `cpp_arc2_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_matrix_parity`
+  - `cpp_arc2_reverse_dir_both_closed_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity`
+  - each alias delegates to the corresponding existing `*_options_parity`
+    guard, reducing the current
+    `*_options_parity -> *_options_matrix_parity` naming gaps.
 
 ## Next Alignment Targets (No Clipper)
 

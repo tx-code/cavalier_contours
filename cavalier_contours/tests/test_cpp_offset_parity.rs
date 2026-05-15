@@ -8743,7 +8743,17 @@ fn cpp_arc1_reverse_dir_both_closed_options_matrix_parity() {
 }
 
 #[test]
+fn cpp_arc1_reverse_dir_both_closed_start_index_rotation_options_matrix_parity() {
+    cpp_arc1_reverse_dir_both_closed_start_index_rotation_options_parity();
+}
+
+#[test]
 fn cpp_arc1_reverse_dir_both_closed_start_index_rotation_options_parity() {
+    cpp_arc1_reverse_dir_both_closed_start_index_rotation_role_flip_options_parity();
+}
+
+#[test]
+fn cpp_arc1_reverse_dir_both_closed_start_index_rotation_role_flip_options_matrix_parity() {
     cpp_arc1_reverse_dir_both_closed_start_index_rotation_role_flip_options_parity();
 }
 
@@ -9057,7 +9067,19 @@ fn cpp_arc1_reverse_dir_both_closed_start_index_rotation_role_flip_options_parit
 }
 
 #[test]
+fn cpp_arc1_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_matrix_parity() {
+    cpp_arc1_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_parity();
+}
+
+#[test]
 fn cpp_arc1_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_parity() {
+    cpp_arc1_reverse_dir_both_closed_start_index_rotation_zero_length_lead_role_flip_options_parity(
+    );
+}
+
+#[test]
+fn cpp_arc1_reverse_dir_both_closed_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity()
+ {
     cpp_arc1_reverse_dir_both_closed_start_index_rotation_zero_length_lead_role_flip_options_parity(
     );
 }
@@ -9656,7 +9678,17 @@ fn cpp_both_reverse_dir_both_closed_options_matrix_parity() {
 }
 
 #[test]
+fn cpp_both_reverse_dir_both_closed_start_index_rotation_options_matrix_parity() {
+    cpp_both_reverse_dir_both_closed_start_index_rotation_options_parity();
+}
+
+#[test]
 fn cpp_both_reverse_dir_both_closed_start_index_rotation_options_parity() {
+    cpp_both_reverse_dir_both_closed_start_index_rotation_role_flip_options_parity();
+}
+
+#[test]
+fn cpp_both_reverse_dir_both_closed_start_index_rotation_role_flip_options_matrix_parity() {
     cpp_both_reverse_dir_both_closed_start_index_rotation_role_flip_options_parity();
 }
 
@@ -9970,7 +10002,19 @@ fn cpp_both_reverse_dir_both_closed_start_index_rotation_role_flip_options_parit
 }
 
 #[test]
+fn cpp_both_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_matrix_parity() {
+    cpp_both_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_parity();
+}
+
+#[test]
 fn cpp_both_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_parity() {
+    cpp_both_reverse_dir_both_closed_start_index_rotation_zero_length_lead_role_flip_options_parity(
+    );
+}
+
+#[test]
+fn cpp_both_reverse_dir_both_closed_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity()
+ {
     cpp_both_reverse_dir_both_closed_start_index_rotation_zero_length_lead_role_flip_options_parity(
     );
 }
@@ -10562,7 +10606,17 @@ fn cpp_arc2_reverse_dir_both_closed_options_matrix_parity() {
 }
 
 #[test]
+fn cpp_arc2_reverse_dir_both_closed_start_index_rotation_options_matrix_parity() {
+    cpp_arc2_reverse_dir_both_closed_start_index_rotation_options_parity();
+}
+
+#[test]
 fn cpp_arc2_reverse_dir_both_closed_start_index_rotation_options_parity() {
+    cpp_arc2_reverse_dir_both_closed_start_index_rotation_role_flip_options_parity();
+}
+
+#[test]
+fn cpp_arc2_reverse_dir_both_closed_start_index_rotation_role_flip_options_matrix_parity() {
     cpp_arc2_reverse_dir_both_closed_start_index_rotation_role_flip_options_parity();
 }
 
@@ -10821,7 +10875,19 @@ fn cpp_arc2_reverse_dir_both_closed_start_index_rotation_role_flip_options_parit
 }
 
 #[test]
+fn cpp_arc2_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_matrix_parity() {
+    cpp_arc2_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_parity();
+}
+
+#[test]
 fn cpp_arc2_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_parity() {
+    cpp_arc2_reverse_dir_both_closed_start_index_rotation_zero_length_lead_role_flip_options_parity(
+    );
+}
+
+#[test]
+fn cpp_arc2_reverse_dir_both_closed_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity()
+ {
     cpp_arc2_reverse_dir_both_closed_start_index_rotation_zero_length_lead_role_flip_options_parity(
     );
 }
