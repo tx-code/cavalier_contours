@@ -70,6 +70,13 @@ Observed values:
 
 This indicates practical parity for the two residual tiny-shape create cases.
 
+A same-day rerun with the same long-window settings also stayed at parity:
+
+| Case | Rust `ns/iter` | C++ `ns/iter` | Ratio |
+|------|----------------|---------------|-------|
+| `circle` | `103` | `103.62` | `0.994` |
+| `diamond` | `114` | `114.44` | `0.996` |
+
 ## Notes
 
 - This snapshot is directional evidence, not a CI threshold.
