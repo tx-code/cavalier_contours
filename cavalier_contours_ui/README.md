@@ -2,9 +2,13 @@
 
 This is the ui app for visualizing, testing, and demonstrating the cavalier_contours crate.
 
-Github CI publishes latest on master branch to github pages.
+Github CI publishes latest on `master` branch to GitHub Pages.
 
-[👉 Click to run the web demo 👈](https://www.cavaliercontours.dev/).
+- Upstream demo: [https://www.cavaliercontours.dev/](https://www.cavaliercontours.dev/)
+- Fork demo default: `https://<github-username>.github.io/<repo-name>/`
+
+If you want a custom domain for Pages, set repository variable `PAGES_PUBLIC_URL`
+to that domain URL (for example `https://demo.example.com`).
 
 The app is built with:
 - [egui](https://github.com/emilk/egui) (immediate mode GUI library)

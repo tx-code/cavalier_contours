@@ -8,14 +8,14 @@
       "type": "image/png"
     },
     {
-      "src": "./assets/maskable_icon-512.png",
+      "src": "./assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "image/png"
+      "purpose": "maskable"
     }
   ],
   "lang": "en-US",
-  "id": "/index.html",
+  "id": "./",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "white",
