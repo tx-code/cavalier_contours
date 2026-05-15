@@ -2887,6 +2887,19 @@ endpoint-stickiness branch closure.
   - each alias delegates to the corresponding existing `*_options_parity`
     guard, reducing this family's
     `*_options_parity -> *_options_matrix_parity` naming gaps.
+- Added canonical matrix aliases for wrap-around open-side-reversed
+  closed-side-reversed options families:
+  - `cpp_wrap_around_open_side_reversed_closed_side_reversed_options_matrix_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_side_reversed_role_flip_options_matrix_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_side_reversed_nonzero_open_index_options_matrix_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_side_reversed_role_flip_nonzero_open_index_options_matrix_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_side_reversed_start_index_rotation_options_matrix_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_side_reversed_start_index_rotation_role_flip_options_matrix_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_side_reversed_start_index_rotation_zero_length_lead_options_matrix_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_side_reversed_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity`
+  - each alias delegates to the corresponding existing `*_options_parity`
+    guard, reducing this family's
+    `*_options_parity -> *_options_matrix_parity` naming gaps.
 
 ## Next Alignment Targets (No Clipper)
 
