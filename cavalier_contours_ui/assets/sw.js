@@ -3,7 +3,7 @@ var filesToCache = [
   './',
   './index.html',
   './cavalier_contours_ui.js',
-  './cavalier_contours_bg.wasm',
+  './cavalier_contours_ui_bg.wasm',
 ];
 
 /* Start the service worker and cache all of the app's content */
