@@ -2909,6 +2909,15 @@ endpoint-stickiness branch closure.
   - each alias delegates to the corresponding existing `*_options_parity`
     guard, reducing this family's
     `*_options_parity -> *_options_matrix_parity` naming gaps.
+- Added canonical matrix aliases for wrap-around overlap-endpoint
+  arc-adjacent-dedup start-index-rotation options families:
+  - `cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_start_index_rotation_options_matrix_parity`
+  - `cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_start_index_rotation_role_flip_options_matrix_parity`
+  - `cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_start_index_rotation_zero_length_lead_options_matrix_parity`
+  - `cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity`
+  - each alias delegates to the corresponding existing `*_options_parity`
+    guard, reducing this family's
+    `*_options_parity -> *_options_matrix_parity` naming gaps.
 
 ## Next Alignment Targets (No Clipper)
 
