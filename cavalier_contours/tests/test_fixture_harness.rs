@@ -159,20 +159,20 @@ fn properties_seed() -> FixtureCase {
     )
 }
 
-fn metadata_only_gap_seed() -> FixtureCase {
+fn metadata_only_not_comparable_seed() -> FixtureCase {
     FixtureCase::new(
-        "metadata-only-gap-future-oracle-classification",
-        current_rust_provenance("phase-02-metadata-only-gap-seed"),
+        "metadata-only-future-oracle-classification",
+        current_rust_provenance("phase-02-metadata-only-seed"),
         GeometryModel::PolygonPath,
         FixtureOperation::Offset(OffsetFixtureInput {
             input: Polyline::new(),
             offset: 0.0,
             options: OffsetFixtureOptions::default(),
         }),
-        ComparisonMode::Gap,
+        ComparisonMode::NotComparable,
         FixtureTolerance::default(),
         ExpectedFixtureData::MetadataOnly {
-            reason: "records a future oracle/comparability gap without executing assertions",
+            reason: "records a future oracle comparability classification without executing assertions",
         },
     )
 }
@@ -196,16 +196,13 @@ fn current_rust_seed_fixtures_execute_through_runner() {
 
 #[test]
 fn metadata_only_seed_is_recorded_without_execution() {
-    let fixtures = vec![metadata_only_gap_seed()];
+    let fixtures = vec![metadata_only_not_comparable_seed()];
     let run_summary = run_fixture(&fixtures[0]);
     let metadata = fixture_metadata(&fixtures);
 
     assert!(!run_summary.executed);
     assert_eq!(metadata.len(), 1);
-    assert_eq!(
-        metadata[0].id,
-        "metadata-only-gap-future-oracle-classification"
-    );
-    assert_eq!(metadata[0].comparison, ComparisonMode::Gap);
+    assert_eq!(metadata[0].id, "metadata-only-future-oracle-classification");
+    assert_eq!(metadata[0].comparison, ComparisonMode::NotComparable);
     assert!(!metadata[0].executable);
 }

@@ -13,7 +13,7 @@ radius, and low public-surface risk. Higher total is better for the first Phase
 | 1 | `rect-clip-convenience` | Phase 1 `01-AUDIT.md` RectClip source appendix; Phase 5 `05-CLIPPER2-INVENTORY.md` rect clipping deferred record | `clipper2` | 5 | 4 | 4 | 5 | 4 | 22 | `absorb-now` | **Selected first slice**. Add a small Rust convenience API that clips a closed polyline to an axis-aligned rectangle by reusing existing arc-aware boolean intersection. No Clipper2 runtime dependency. |
 | 2 | `boolean-collapsed-area-thresholding` | Phase 6 `06-ROBUSTNESS-BACKLOG.md` rank 2 current Rust gap | `current-rust-gap` | 4 | 4 | 3 | 3 | 3 | 17 | `defer` | Valuable but needs a public-case failing regression before changing defaults or ergonomics. |
 | 3 | `clipper2-polygons-017-intersection-evenodd` | Phase 5 `05-ORACLE-EVIDENCE.md`; Phase 6 backlog rank 3 | `clipper2` | 3 | 4 | 3 | 3 | 4 | 17 | `evidence-only` | Keep as future oracle promotion; mapping from text fixture to two-polyline Rust boolean is not yet precise enough for first slice. |
-| 4 | `historical-cpp-combine-circle-rectangle-union` | Phase 3 `03-INVENTORY.md`; Phase 6 backlog rank 4 | `old-cpp` | 2 | 2 | 5 | 4 | 5 | 18 | `evidence-only` | Metadata-only vertex-count divergence remains evidence because area/path/extents are equivalent. |
+| 4 | `historical-cpp-combine-circle-rectangle-union` | Phase 3 `03-INVENTORY.md`; Phase 6 backlog rank 4 | `old-cpp` | 3 | 2 | 5 | 5 | 5 | 20 | `evidence-only` | Executable geometry parity is already green; remaining vertex-count delta is a representation/topology detail only. |
 | 5 | `offset-round-orientation-exterior-corpus` | Phase 5 `05-ORACLE-EVIDENCE.md`; Phase 6 backlog rank 5 | `clipper2` | 3 | 3 | 3 | 2 | 4 | 15 | `defer` | Needs stronger expected properties before execution; avoid broad offset semantics changes in first slice. |
 | 6 | `open-path-clipper-lines-suite` | Phase 5 `05-ORACLE-EVIDENCE.md`; Phase 6 backlog rank 6 | `clipper2` | 1 | 3 | 4 | 1 | 3 | 12 | `not-comparable` | Open-path clipping does not match current closed area boolean scope. |
 | 7 | `spatial-index-query-behavior-record` | Phase 3 `03-INVENTORY.md`; Phase 4 benchmark mapping | `old-cpp` | 3 | 2 | 3 | 3 | 5 | 16 | `evidence-only` | Keep as benchmark/reference evidence rather than public capability absorption. |
@@ -44,8 +44,9 @@ Expected impact:
   regression proves a default or API change is needed.
 - `clipper2-polygons-017-intersection-evenodd`: evidence-only until the manual
   mapping is precise enough to avoid parser work.
-- `historical-cpp-combine-circle-rectangle-union`: evidence-only because the
-  current difference is vertex count, not proven geometry property failure.
+- `historical-cpp-combine-circle-rectangle-union`: evidence-only because
+  geometry parity is already executable-green; the remaining difference is
+  vertex-count representation, not a proven geometry property failure.
 - `offset-round-orientation-exterior-corpus`: defer because qualitative
   orientation/exterior checks are not yet a narrow implementation slice.
 - `open-path-clipper-lines-suite`: not-comparable with the current closed-area

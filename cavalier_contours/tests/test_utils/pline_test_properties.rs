@@ -142,7 +142,7 @@ impl PlineProperties {
         eps: f64,
         options: &PropertyExpectationOptions,
     ) -> bool {
-        if self.vertex_count != other.vertex_count {
+        if options.compare_vertex_count && self.vertex_count != other.vertex_count {
             return false;
         }
 

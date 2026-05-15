@@ -19,7 +19,7 @@ Score is 1-5 for each column. Higher total means better Phase 6 target.
 | 1 | `shape-offset-repeat-degenerate-input` | offset, degenerate, repeat vertices, open/closed | `Shape::from_plines` filters only `vertex_count() > 1`; polyline offset already has repeat-position regressions, but shape offset lacks equivalent coverage. | 5 | 4 | 5 | 5 | 5 | 24 | Promote for 06-02/06-03. |
 | 2 | `boolean-collapsed-area-thresholding` | boolean, tolerance, overlap | `test_pline_boolean.rs` uses `collapsed_area_eps: Some(1e-5)` in broad boolean property tests to avoid threshold inconsistencies; public default remains `None`. | 4 | 3 | 4 | 2 | 4 | 17 | Rank for later focused investigation; no default change without failing public-case regression. |
 | 3 | `clipper2-polygons-017-intersection-evenodd` | boolean, intersection, tolerance, overlap | Phase 5 selected `Polygons.txt` case 17 with `SOL_AREA=14779`, `SOL_COUNT=1`, but kept it metadata-only due mapping cost. | 4 | 3 | 3 | 3 | 3 | 16 | Defer executable promotion unless Phase 6 first fix finishes early; no parser work. |
-| 4 | `historical-cpp-combine-circle-rectangle-union` | boolean, overlap, tangent | Phase 3 metadata-only `Gap`: old C++ expected `vertex_count=10`; current Rust keeps equivalent area/path/extents with `vertex_count=8`. | 2 | 5 | 5 | 4 | 2 | 18 | No production fix unless property/topology failure is proven; keep as divergence evidence. |
+| 4 | `historical-cpp-combine-circle-rectangle-union` | boolean, overlap, tangent | Phase 3 executable parity now validates old C++ geometry (`area/path/extents`) with `compare_vertex_count=false`; remaining difference is topology/representation (`10` vs `8` vertices after normalization). | 1 | 5 | 5 | 5 | 4 | 20 | Closed as geometry parity; keep only as topology delta evidence (no production algorithm fix queued). |
 | 5 | `offset-round-orientation-exterior-corpus` | offset, tolerance, overlap | Phase 5 `Offsets.txt` round polygon cases skip stored area/count and validate qualitative orientation/exterior properties. | 3 | 3 | 2 | 2 | 3 | 13 | Defer; needs better expected properties before execution. |
 | 6 | `open-path-clipper-lines-suite` | open/closed, boolean | Clipper2 `Lines.txt` is open-path clipping; current Rust boolean fixture path is closed area polylines. | 3 | 4 | 2 | 1 | 1 | 11 | Not comparable in this phase. |
 | 7 | `spatial-index-query-behavior-record` | intersection, spatial index | Phase 3 records old C++ static spatial index query IDs and early-stop behavior as metadata; Phase 4 has benchmark coverage. | 2 | 3 | 4 | 3 | 3 | 15 | Keep as benchmark/reference evidence, not Phase 6 first fix. |
@@ -63,9 +63,9 @@ instead of treating open input as clockwise area loops.
 
 ## No-Fix / Defer Decisions
 
-- `historical-cpp-combine-circle-rectangle-union`: keep as a metadata-only gap
-  for now. The recorded mismatch is vertex count, while area/path/extents are
-  equivalent. That is not enough evidence for a production fix.
+- `historical-cpp-combine-circle-rectangle-union`: closed as executable
+  geometry parity in Phase 3 fixture harness. Remaining vertex-count delta is a
+  representation detail, not a proven geometry correctness failure.
 - `clipper2-polygons-017-intersection-evenodd`: keep as future oracle evidence.
   It may become a manual fixture later, but broad `Polygons.txt` parsing is out
   of Phase 6.

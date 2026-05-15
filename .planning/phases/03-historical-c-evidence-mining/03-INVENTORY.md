@@ -29,7 +29,7 @@
 |------------|-------------|--------------|----------------|-----------------|--------------------------|------------------|-----------------------------|--------------|
 | `historical-cpp-offset-closed-rectangle-inward` | `tests/tests/TEST_cavc_parallel_offset.cpp` | `closed_rectangle_inward` | Offset | `ApproximateParity` | `vertex_count=4`, `area=96`, `path_length=44`, extents `(2,2)-(18,8)` | default | convert to metadata-only `Gap` with observed mismatch | `executable-green` |
 | `historical-cpp-offset-collapsed-rectangle` | `tests/tests/TEST_cavc_parallel_offset.cpp` | `collapsed_rectangle` | Offset | `ApproximateParity` | empty offset result | default | metadata-only `Gap` if current Rust emits geometry | `executable-green` |
-| `historical-cpp-combine-circle-rectangle-union` | `tests/tests/TEST_cavc_combine_plines.cpp` | `circle_rectangle_union`, `combine_mode=0` | Boolean | `Gap` | old `expectedRemaining` row has `vertex_count=10`; current Rust produces equivalent area/path/extents with `vertex_count=8` | default | metadata-only gap record | `metadata-only-gap` |
+| `historical-cpp-combine-circle-rectangle-union` | `tests/tests/TEST_cavc_combine_plines.cpp` | `circle_rectangle_union`, `combine_mode=0` | Boolean | `ApproximateParity` | old `expectedRemaining` row (`vertex_count=10`, `area=109.15381629282`, `path_length=52.324068506275`, extents `(0,-10)-(10,10)`); compare geometry with relaxed topology (`compare_vertex_count=false`) | default | fallback to metadata-only only if geometry parity fails | `executable-green` |
 | `historical-cpp-properties-ccw-circle-x-aligned` | `tests/tests/TEST_cavc_pline_function.cpp` | `ccw_circle_x_aligned`, radius `5`, center `(1,1)` | Properties | `ApproximateParity` | computed old test expectations: `PI*25`, `2*PI*5`, extents `(-4,-4)-(6,6)` | default | metadata-only `Gap` if current property calculation differs | `executable-green` |
 
 ## Metadata-Only Evidence
@@ -52,7 +52,7 @@
 
 | Gate | Status | Notes |
 |------|--------|-------|
-| `cargo test -p cavalier_contours --test test_historical_cavalier_contours` | pass | Executes `executable-green` offset/property fixtures and asserts `metadata-only-gap` / `metadata-only-not-comparable` records do not execute. |
+| `cargo test -p cavalier_contours --test test_historical_cavalier_contours` | pass | Executes `executable-green` offset/boolean/property fixtures (including the circle-rectangle union geometry parity case) and asserts `metadata-only-not-comparable` records do not execute. |
 | `cargo test -p cavalier_contours --test test_fixture_harness` | pass | Confirms Phase 2 seed fixtures still execute through the extended harness. |
 | `cargo test --workspace` | pass | Full workspace gate passed after inventory/test synchronization. |
 

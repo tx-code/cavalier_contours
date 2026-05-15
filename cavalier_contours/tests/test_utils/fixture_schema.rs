@@ -119,13 +119,27 @@ pub struct FixtureTolerance {
     pub remove_redundant_eps: f64,
 }
 
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy)]
 pub struct PropertyExpectationOptions {
+    pub compare_vertex_count: bool,
     pub compare_orientation: bool,
     pub compare_open_closed: bool,
     pub compare_repeat_vertices: bool,
     pub compare_user_data: bool,
     pub compare_abs_area: bool,
+}
+
+impl Default for PropertyExpectationOptions {
+    fn default() -> Self {
+        Self {
+            compare_vertex_count: true,
+            compare_orientation: false,
+            compare_open_closed: false,
+            compare_repeat_vertices: false,
+            compare_user_data: false,
+            compare_abs_area: false,
+        }
+    }
 }
 
 #[derive(Debug, Clone)]

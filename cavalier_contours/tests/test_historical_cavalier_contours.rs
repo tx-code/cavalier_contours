@@ -28,6 +28,14 @@ fn historical_property_options() -> PropertyExpectationOptions {
     PropertyExpectationOptions::default()
 }
 
+fn historical_geometry_parity_options() -> PropertyExpectationOptions {
+    PropertyExpectationOptions {
+        compare_vertex_count: false,
+        compare_abs_area: true,
+        ..PropertyExpectationOptions::default()
+    }
+}
+
 fn historical_cpp_offset_closed_rectangle_inward() -> FixtureCase {
     FixtureCase::new(
         "historical-cpp-offset-closed-rectangle-inward",
@@ -110,10 +118,21 @@ fn historical_cpp_combine_circle_rectangle_union() -> FixtureCase {
             op: BooleanOp::Or,
             options: BooleanFixtureOptions::default(),
         }),
-        ComparisonMode::Gap,
+        ComparisonMode::ApproximateParity,
         FixtureTolerance::default(),
-        ExpectedFixtureData::MetadataOnly {
-            reason: "old C++ union expected vertex_count=10 while current Rust produces equivalent properties with vertex_count=8",
+        ExpectedFixtureData::Boolean {
+            pos_result: vec![PlineProperties::new(
+                10,
+                109.15381629282,
+                52.324068506275,
+                0.0,
+                -10.0,
+                10.0,
+                10.0,
+                vec![],
+            )],
+            neg_result: vec![],
+            options: historical_geometry_parity_options(),
         },
     )
 }
@@ -191,13 +210,13 @@ fn executable_historical_fixtures() -> Vec<FixtureCase> {
     vec![
         historical_cpp_offset_closed_rectangle_inward(),
         historical_cpp_offset_collapsed_rectangle(),
+        historical_cpp_combine_circle_rectangle_union(),
         historical_cpp_properties_ccw_circle_x_aligned(),
     ]
 }
 
 fn metadata_only_historical_records() -> Vec<FixtureCase> {
     vec![
-        historical_cpp_combine_circle_rectangle_union(),
         historical_cpp_c_api_surface_migration_record(),
         historical_cpp_static_spatial_index_query_record(),
     ]
@@ -250,6 +269,15 @@ fn historical_fixture_metadata_is_observable() {
     );
     assert_metadata(
         &executable_metadata,
+        "historical-cpp-combine-circle-rectangle-union",
+        "tests/tests/TEST_cavc_combine_plines.cpp",
+        UsageLabel::TranslatedFixtureCandidate,
+        ComparisonMode::ApproximateParity,
+        FixtureOperationKind::Boolean,
+        true,
+    );
+    assert_metadata(
+        &executable_metadata,
         "historical-cpp-properties-ccw-circle-x-aligned",
         "tests/tests/TEST_cavc_pline_function.cpp",
         UsageLabel::TranslatedFixtureCandidate,
@@ -261,15 +289,6 @@ fn historical_fixture_metadata_is_observable() {
     let metadata_only_records = metadata_only_historical_records();
     let metadata_only = fixture_metadata(&metadata_only_records);
 
-    assert_metadata(
-        &metadata_only,
-        "historical-cpp-combine-circle-rectangle-union",
-        "tests/tests/TEST_cavc_combine_plines.cpp",
-        UsageLabel::TranslatedFixtureCandidate,
-        ComparisonMode::Gap,
-        FixtureOperationKind::Boolean,
-        false,
-    );
     assert_metadata(
         &metadata_only,
         "historical-cpp-c-api-surface-migration-record",
