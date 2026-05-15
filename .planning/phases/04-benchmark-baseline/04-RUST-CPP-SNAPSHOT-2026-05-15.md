@@ -36,7 +36,7 @@ Using Rust bencher `ns/iter` vs C++ `real_time` converted to `ns/iter`:
 
 | Family | Compared pairs | Median Rust/C++ ratio | Main observation |
 |--------|----------------|-----------------------|------------------|
-| `spatial_index` | 36 | `0.788` | Rust is faster in most pairs; native create small-shape cases are slightly slower. |
+| `spatial_index` | 36 | `0.777` | Rust is faster in most pairs; native create small-shape cases are slightly slower. |
 | `offset` | 18 | `0.876` | Rust is faster in all compared pairs. |
 | `boolean` (`combine`) | 36 | `0.606` | Rust is faster in all compared pairs. |
 
@@ -48,9 +48,9 @@ Largest Rust-slower cases from this snapshot:
 
 | Rust ID | Rust/C++ ratio | Delta |
 |--------|-----------------|-------|
-| `spatial_index/create/native/circle` | `1.141` | `+14.1%` |
+| `spatial_index/create/native/circle` | `1.122` | `+12.2%` |
 | `spatial_index/create/native/diamond` | `1.093` | `+9.3%` |
-| `spatial_index/create/native/square` | `1.076` | `+7.6%` |
+| `spatial_index/create/native/square` | `1.040` | `+4.0%` |
 
 No large Rust-slower outlier was observed outside these small native-create
 cases.
@@ -60,5 +60,7 @@ cases.
 - This snapshot is directional evidence, not a CI threshold.
 - Criterion and Google Benchmark use different harness implementations; absolute
   numbers are not interchangeable without that context.
+- Spatial-index results include the same-day Rust micro-optimization that
+  switched index creation loops to direct segment-index iteration.
 - Raw local artifacts are under `target/bench-compare/` and are intentionally
   untracked.

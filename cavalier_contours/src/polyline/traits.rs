@@ -942,11 +942,26 @@ pub trait PlineSource {
             return unwrap_spatial_index(StaticAABB2DIndexBuilder::new(0));
         }
 
-        let seg_count = if self.is_closed() { vc } else { vc - 1 };
+        let is_closed = self.is_closed();
+        let seg_count = if is_closed { vc } else { vc - 1 };
 
         let mut builder = StaticAABB2DIndexBuilder::new(seg_count);
+        let last = vc - 1;
 
-        for (v1, v2) in self.iter_segments() {
+        for i in 0..last {
+            let v1 = self.at(i);
+            let v2 = self.at(i + 1);
+            let approx_aabb = seg_fast_approx_bounding_box(v1, v2);
+            builder.add(
+                approx_aabb.min_x,
+                approx_aabb.min_y,
+                approx_aabb.max_x,
+                approx_aabb.max_y,
+            );
+        }
+        if is_closed {
+            let v1 = self.at(last);
+            let v2 = self.at(0);
             let approx_aabb = seg_fast_approx_bounding_box(v1, v2);
             builder.add(
                 approx_aabb.min_x,
@@ -974,11 +989,26 @@ pub trait PlineSource {
             return unwrap_spatial_index(StaticAABB2DIndexBuilder::new(0));
         }
 
-        let seg_count = if self.is_closed() { vc } else { vc - 1 };
+        let is_closed = self.is_closed();
+        let seg_count = if is_closed { vc } else { vc - 1 };
 
         let mut builder = StaticAABB2DIndexBuilder::new(seg_count);
+        let last = vc - 1;
 
-        for (v1, v2) in self.iter_segments() {
+        for i in 0..last {
+            let v1 = self.at(i);
+            let v2 = self.at(i + 1);
+            let approx_aabb = seg_bounding_box(v1, v2);
+            builder.add(
+                approx_aabb.min_x,
+                approx_aabb.min_y,
+                approx_aabb.max_x,
+                approx_aabb.max_y,
+            );
+        }
+        if is_closed {
+            let v1 = self.at(last);
+            let v2 = self.at(0);
             let approx_aabb = seg_bounding_box(v1, v2);
             builder.add(
                 approx_aabb.min_x,
