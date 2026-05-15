@@ -52,3 +52,6 @@ The full benchmark uses a broad-coverage Criterion configuration:
 This records a repeatable local baseline, not a performance budget or CI
 threshold.
 
+A post-phase local snapshot comparing Rust vs old C++ benchmark families is
+recorded in
+`.planning/phases/04-benchmark-baseline/04-RUST-CPP-SNAPSHOT-2026-05-15.md`.
