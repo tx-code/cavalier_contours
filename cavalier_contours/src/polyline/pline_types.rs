@@ -287,7 +287,9 @@ where
         Self {
             pline1_aabb_index: None,
             pos_equal_eps: T::from(1e-5).unwrap(),
-            collapsed_area_eps: None,
+            // default filter keeps boolean results stable around tiny collapsed loops caused by
+            // floating-point thresholding differences across equivalent input permutations
+            collapsed_area_eps: Some(T::from(1e-5).unwrap()),
         }
     }
 }

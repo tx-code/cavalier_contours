@@ -11,7 +11,7 @@ radius, and low public-surface risk. Higher total is better for the first Phase
 | Rank | Candidate ID | Source evidence | Source family | Semantic fit | User value | Evidence | Low blast | API/FFI risk | Total | Classification | Decision |
 |------|--------------|-----------------|---------------|--------------|------------|----------|-----------|--------------|-------|----------------|----------|
 | 1 | `rect-clip-convenience` | Phase 1 `01-AUDIT.md` RectClip source appendix; Phase 5 `05-CLIPPER2-INVENTORY.md` rect clipping deferred record | `clipper2` | 5 | 4 | 4 | 5 | 4 | 22 | `absorb-now` | **Selected first slice**. Add a small Rust convenience API that clips a closed polyline to an axis-aligned rectangle by reusing existing arc-aware boolean intersection. No Clipper2 runtime dependency. |
-| 2 | `boolean-collapsed-area-thresholding` | Phase 6 `06-ROBUSTNESS-BACKLOG.md` rank 2 current Rust gap | `current-rust-gap` | 4 | 4 | 3 | 3 | 3 | 17 | `defer` | Valuable but needs a public-case failing regression before changing defaults or ergonomics. |
+| 2 | `boolean-collapsed-area-thresholding` | Phase 6 `06-ROBUSTNESS-BACKLOG.md`; later default-path public regressions and fix | `current-rust-gap` | 4 | 4 | 5 | 3 | 3 | 19 | `closed-later` | Completed in later robustness alignment work: default path now applies `collapsed_area_eps=Some(1e-5)` and regression tests cover the reported collapsed-loop cases. |
 | 3 | `clipper2-polygons-017-intersection-evenodd` | Phase 5 `05-ORACLE-EVIDENCE.md`; Phase 6 backlog rank 3 | `clipper2` | 3 | 4 | 3 | 3 | 4 | 17 | `evidence-only` | Keep as future oracle promotion; mapping from text fixture to two-polyline Rust boolean is not yet precise enough for first slice. |
 | 4 | `historical-cpp-combine-circle-rectangle-union` | Phase 3 `03-INVENTORY.md`; Phase 6 backlog rank 4 | `old-cpp` | 3 | 2 | 5 | 5 | 5 | 20 | `evidence-only` | Executable geometry parity is already green; remaining vertex-count delta is a representation/topology detail only. |
 | 5 | `offset-round-orientation-exterior-corpus` | Phase 5 `05-ORACLE-EVIDENCE.md`; Phase 6 backlog rank 5 | `clipper2` | 3 | 3 | 3 | 2 | 4 | 15 | `defer` | Needs stronger expected properties before execution; avoid broad offset semantics changes in first slice. |
@@ -40,8 +40,9 @@ Expected impact:
 
 ## Deferred / Rejected Candidates
 
-- `boolean-collapsed-area-thresholding`: defer until a focused public
-  regression proves a default or API change is needed.
+- `boolean-collapsed-area-thresholding`: closed in later work after focused
+  public regressions proved default-path instability; default now applies
+  `collapsed_area_eps=Some(1e-5)` with dedicated regression coverage.
 - `clipper2-polygons-017-intersection-evenodd`: evidence-only until the manual
   mapping is precise enough to avoid parser work.
 - `historical-cpp-combine-circle-rectangle-union`: evidence-only because
