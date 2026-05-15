@@ -2812,6 +2812,27 @@ endpoint-stickiness branch closure.
   - each alias delegates to its corresponding role-flip options alias, closing
     the current `*_role_flip_options_parity -> *_options_parity` naming gaps
     for this family.
+- Added canonical non-role options-path aliases for remaining
+  non-role matrix-only branches:
+  - `cpp_overlap_and_basic_intersection_options_parity`
+  - `cpp_skip_intr_at_end_options_parity`
+  - `cpp_non_circle_closed_overlap_adjacent_dedup_options_parity`
+  - `cpp_opposing_direction_closed_overlap_adjacent_dedup_options_parity`
+  - `cpp_overlap_endpoint_arc_adjacent_dedup_options_parity`
+  - `cpp_reversed_endpoint_adjacent_line_flip_both_closed_options_parity`
+  - `cpp_arc1_reverse_dir_both_closed_options_parity`
+  - `cpp_both_reverse_dir_both_closed_options_parity`
+  - `cpp_arc2_reverse_dir_both_closed_options_parity`
+  - `cpp_wrap_around_closed_pline1_dedup_options_parity`
+  - `cpp_wrap_around_closed_pline2_dedup_options_parity`
+  - `cpp_wrap_around_same_order_closed_pline2_closure_basic_options_parity`
+  - `cpp_wrap_around_closed_pline1_closure_basic_options_parity`
+  - `cpp_wrap_around_both_closed_dedup_options_parity`
+  - `cpp_wrap_around_overlap_endpoint_dedup_options_parity`
+  - `cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_options_parity`
+  - each alias delegates to its existing `*_options_matrix_parity` guard,
+    reducing the current
+    `*_options_matrix_parity -> *_options_parity` canonical-name gaps.
 
 ## Next Alignment Targets (No Clipper)
 
