@@ -21890,6 +21890,12 @@ fn cpp_wrap_around_open_side_reversed_closed_side_reversed_start_index_rotation_
 }
 
 #[test]
+fn cpp_wrap_around_closed_side_reversed_closure_basic_nonzero_open_index_options_parity() {
+    cpp_wrap_around_closed_side_reversed_closure_basic_role_flip_nonzero_open_index_options_parity(
+    );
+}
+
+#[test]
 fn cpp_wrap_around_closed_side_reversed_closure_basic_role_flip_nonzero_open_index_options_parity()
 {
     fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
@@ -22184,6 +22190,12 @@ fn cpp_wrap_around_open_side_reversed_closed_side_reversed_role_flip_nonzero_ope
 }
 
 #[test]
+fn cpp_wrap_around_open_side_reversed_closed_pline2_with_closure_basic_nonzero_open_index_options_parity()
+ {
+    cpp_wrap_around_open_side_reversed_closed_pline2_with_closure_basic_role_flip_nonzero_open_index_options_parity();
+}
+
+#[test]
 fn cpp_wrap_around_open_side_reversed_closed_pline2_with_closure_basic_role_flip_nonzero_open_index_options_parity()
  {
     fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
@@ -22328,6 +22340,12 @@ fn cpp_wrap_around_open_side_reversed_closed_pline2_with_closure_basic_role_flip
         closed_after, closed_before,
         "closed-side input mutated by find_intersects_opt"
     );
+}
+
+#[test]
+fn cpp_wrap_around_open_side_reversed_closed_pline2_with_closure_basic_intersect_nonzero_open_index_options_parity()
+ {
+    cpp_wrap_around_open_side_reversed_closed_pline2_with_closure_basic_intersect_role_flip_nonzero_open_index_options_parity();
 }
 
 #[test]
