@@ -13,7 +13,7 @@ repository.workspace = true
 version.workspace = true
 
 [features]
-default = []
+default = ["unsafe_optimizations"]
 # Enable serde serialize/deserialize for polylines and vertexes
 serde = ["dep:serde"]
 # Enable unsafe optimizations in the static_aabb2d_index dependency

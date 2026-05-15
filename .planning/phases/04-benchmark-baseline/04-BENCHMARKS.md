@@ -28,6 +28,8 @@ The benchmark target uses Criterion `0.8.2` with:
 - `sample_size = 10`
 - `warm_up_time = 100ms`
 - `measurement_time = 300ms`
+- crate default feature set includes `unsafe_optimizations` (forwarded to
+  `static_aabb2d_index`)
 
 This is a repeatable baseline configuration for broad coverage across many
 profile families. It is not a production regression threshold.
