@@ -11258,6 +11258,155 @@ fn cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_intersect_star
 }
 
 #[test]
+fn cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_start_index_rotation_zero_length_lead_role_flip_options_parity()
+ {
+    fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
+        assert!(
+            (actual_x - expected_x).abs() <= EPS && (actual_y - expected_y).abs() <= EPS,
+            "point mismatch: actual=({actual_x}, {actual_y}), expected=({expected_x}, {expected_y})"
+        );
+    }
+
+    let mut closed_pline2_rotated_zero_lead = Polyline::new_closed();
+    closed_pline2_rotated_zero_lead.add(1.0, 3.0, 0.0);
+    closed_pline2_rotated_zero_lead.add(1.0, 3.0, 0.0);
+    closed_pline2_rotated_zero_lead.add(3.0, 1.0, bulge_from_angle(-FRAC_PI_2));
+    closed_pline2_rotated_zero_lead.add(2.0, 0.0, 0.0);
+
+    let mut open_side_reversed = Polyline::new();
+    open_side_reversed.add(2.0, 2.0, -1.0);
+    open_side_reversed.add(2.0, 0.0, 0.0);
+    open_side_reversed.add(2.0, -1.0, 0.0);
+
+    let closed_before: Vec<_> = closed_pline2_rotated_zero_lead.iter_vertexes().collect();
+    let open_before: Vec<_> = open_side_reversed.iter_vertexes().collect();
+
+    let closed_aabb = closed_pline2_rotated_zero_lead.create_approx_aabb_index();
+    let open_aabb = open_side_reversed.create_approx_aabb_index();
+    let options_ab = FindIntersectsOptions {
+        pline1_aabb_index: Some(&closed_aabb),
+        pos_equal_eps: EPS,
+    };
+    let options_ba = FindIntersectsOptions {
+        pline1_aabb_index: Some(&open_aabb),
+        pos_equal_eps: EPS,
+    };
+
+    let ab = closed_pline2_rotated_zero_lead.find_intersects_opt(&open_side_reversed, &options_ab);
+    let ba = open_side_reversed.find_intersects_opt(&closed_pline2_rotated_zero_lead, &options_ba);
+    let default_ab = closed_pline2_rotated_zero_lead.find_intersects(&open_side_reversed);
+    let default_ba = open_side_reversed.find_intersects(&closed_pline2_rotated_zero_lead);
+
+    assert_eq!(ab.basic_intersects.len(), 1);
+    assert_eq!(ab.overlapping_intersects.len(), 1);
+    assert_eq!(ba.basic_intersects.len(), 1);
+    assert_eq!(ba.overlapping_intersects.len(), 1);
+    assert_eq!(default_ab.basic_intersects.len(), 1);
+    assert_eq!(default_ab.overlapping_intersects.len(), 1);
+    assert_eq!(default_ba.basic_intersects.len(), 1);
+    assert_eq!(default_ba.overlapping_intersects.len(), 1);
+
+    let basic_ab = ab.basic_intersects[0];
+    let basic_ba = ba.basic_intersects[0];
+    let default_basic_ab = default_ab.basic_intersects[0];
+    let default_basic_ba = default_ba.basic_intersects[0];
+    assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+    assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+    assert_eq!(basic_ab.start_index1, default_basic_ab.start_index1);
+    assert_eq!(basic_ab.start_index2, default_basic_ab.start_index2);
+    assert_eq!(basic_ba.start_index1, default_basic_ba.start_index1);
+    assert_eq!(basic_ba.start_index2, default_basic_ba.start_index2);
+    assert_eq!(basic_ab.start_index2, 0);
+    assert!(basic_ab.start_index1 > 0);
+    assert_eq!(basic_ba.start_index1, 0);
+    assert!(basic_ba.start_index2 > 0);
+    assert_point_close(basic_ab.point.x, basic_ab.point.y, 2.0, 2.0);
+    assert_point_close(
+        basic_ab.point.x,
+        basic_ab.point.y,
+        basic_ba.point.x,
+        basic_ba.point.y,
+    );
+    assert_point_close(
+        basic_ab.point.x,
+        basic_ab.point.y,
+        default_basic_ab.point.x,
+        default_basic_ab.point.y,
+    );
+    assert_point_close(
+        basic_ba.point.x,
+        basic_ba.point.y,
+        default_basic_ba.point.x,
+        default_basic_ba.point.y,
+    );
+
+    let overlap_ab = ab.overlapping_intersects[0];
+    let overlap_ba = ba.overlapping_intersects[0];
+    let default_overlap_ab = default_ab.overlapping_intersects[0];
+    let default_overlap_ba = default_ba.overlapping_intersects[0];
+    assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+    assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+    assert_eq!(overlap_ab.start_index1, default_overlap_ab.start_index1);
+    assert_eq!(overlap_ab.start_index2, default_overlap_ab.start_index2);
+    assert_eq!(overlap_ba.start_index1, default_overlap_ba.start_index1);
+    assert_eq!(overlap_ba.start_index2, default_overlap_ba.start_index2);
+    assert_eq!(overlap_ab.start_index2, 0);
+    assert!(overlap_ab.start_index1 > 0);
+    assert_eq!(overlap_ba.start_index1, 0);
+    assert!(overlap_ba.start_index2 > 0);
+    assert_point_close(overlap_ab.point1.x, overlap_ab.point1.y, 3.0, 1.0);
+    assert_point_close(overlap_ab.point2.x, overlap_ab.point2.y, 2.0, 0.0);
+    // For this open-side-reversed branch, role inversion keeps overlap ordering.
+    assert_point_close(
+        overlap_ab.point1.x,
+        overlap_ab.point1.y,
+        overlap_ba.point1.x,
+        overlap_ba.point1.y,
+    );
+    assert_point_close(
+        overlap_ab.point2.x,
+        overlap_ab.point2.y,
+        overlap_ba.point2.x,
+        overlap_ba.point2.y,
+    );
+    assert_point_close(
+        overlap_ab.point1.x,
+        overlap_ab.point1.y,
+        default_overlap_ab.point1.x,
+        default_overlap_ab.point1.y,
+    );
+    assert_point_close(
+        overlap_ab.point2.x,
+        overlap_ab.point2.y,
+        default_overlap_ab.point2.x,
+        default_overlap_ab.point2.y,
+    );
+    assert_point_close(
+        overlap_ba.point1.x,
+        overlap_ba.point1.y,
+        default_overlap_ba.point1.x,
+        default_overlap_ba.point1.y,
+    );
+    assert_point_close(
+        overlap_ba.point2.x,
+        overlap_ba.point2.y,
+        default_overlap_ba.point2.x,
+        default_overlap_ba.point2.y,
+    );
+
+    let closed_after: Vec<_> = closed_pline2_rotated_zero_lead.iter_vertexes().collect();
+    let open_after: Vec<_> = open_side_reversed.iter_vertexes().collect();
+    assert_eq!(
+        closed_after, closed_before,
+        "closed-side input mutated by find_intersects_opt"
+    );
+    assert_eq!(
+        open_after, open_before,
+        "open-side input mutated by find_intersects_opt"
+    );
+}
+
+#[test]
 fn cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_intersect_start_index_rotation_zero_length_lead_options_parity()
  {
     fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
