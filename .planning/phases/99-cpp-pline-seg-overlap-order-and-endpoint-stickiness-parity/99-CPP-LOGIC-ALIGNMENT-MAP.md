@@ -2722,6 +2722,17 @@ endpoint-stickiness branch closure.
     invariants, rotated index attribution semantics, and input immutability),
     closing the remaining zero-length-lead/non-zero canonical pairing gaps for
     `*_start_index_rotation_options_parity`.
+- Added Rust options-path canonical non-role aliases for reverse-dir both-closed
+  start-index-rotation branches:
+  - `cpp_arc1_reverse_dir_both_closed_start_index_rotation_options_parity`
+  - `cpp_arc1_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_parity`
+  - `cpp_arc2_reverse_dir_both_closed_start_index_rotation_options_parity`
+  - `cpp_arc2_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_parity`
+  - `cpp_both_reverse_dir_both_closed_start_index_rotation_options_parity`
+  - `cpp_both_reverse_dir_both_closed_start_index_rotation_zero_length_lead_options_parity`
+  - each alias delegates to existing role-flip guards, preserving validated
+    assertion behavior while closing canonical non-role naming gaps for this
+    reverse-dir branch family.
 
 ## Next Alignment Targets (No Clipper)
 
