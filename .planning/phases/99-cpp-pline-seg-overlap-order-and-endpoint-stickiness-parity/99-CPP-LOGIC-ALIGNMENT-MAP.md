@@ -2626,6 +2626,16 @@ endpoint-stickiness branch closure.
     `both_closed_start_index_rotation_closed_pline2_role_flip`) with single
     basic + overlap behavior, AB/BA role inversion, swapped overlap endpoint
     ordering, and start-index attribution semantics.
+- Added Rust options-path canonical-name counterpart for `arc2_reverse_dir`
+  both-closed start-index-rotation role-flip fixture matrix:
+  - `cpp_arc2_reverse_dir_both_closed_start_index_rotation_role_flip_options_parity`
+  - verifies `find_intersects_opt` remains aligned with default-path
+    `find_intersects` outputs across role-flip lanes
+    (`both_closed_start_index_rotation_role_flip`,
+    `both_closed_start_index_rotation_closed_pline1_role_flip`,
+    `both_closed_start_index_rotation_closed_pline2_role_flip`) with no-basic
+    overlap behavior, AB/BA role inversion, swapped overlap endpoint ordering,
+    and start-index attribution semantics.
 
 ## Next Alignment Targets (No Clipper)
 
