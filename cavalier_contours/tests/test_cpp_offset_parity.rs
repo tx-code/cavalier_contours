@@ -612,6 +612,11 @@ fn cpp_circle_rectangle_intersection_matrix_parity() {
 }
 
 #[test]
+fn cpp_circle_rectangle_intersection_symmetry_matrix_parity() {
+    cpp_circle_rectangle_intersection_role_flip_symmetry_matrix_parity();
+}
+
+#[test]
 fn cpp_circle_rectangle_intersection_role_flip_symmetry_matrix_parity() {
     fn assert_role_flip_symmetry(
         ab: &cavalier_contours::polyline::PlineIntersectsCollection<f64>,
@@ -1195,6 +1200,11 @@ fn cpp_overlap_and_basic_intersection_options_role_flip_parity_nonzero_open_inde
         closed_after, closed_before,
         "closed-side input mutated by find_intersects_opt"
     );
+}
+
+#[test]
+fn cpp_overlap_endpoint_order_options_parity() {
+    cpp_overlap_endpoint_order_options_role_flip_parity();
 }
 
 #[test]

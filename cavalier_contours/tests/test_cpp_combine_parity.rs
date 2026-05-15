@@ -821,6 +821,11 @@ fn cpp_coincident_combine_options_full_matrix_does_not_modify_input() {
 }
 
 #[test]
+fn cpp_circle_rectangle_commutative_matrix_parity() {
+    cpp_circle_rectangle_commutative_role_flip_matrix_parity();
+}
+
+#[test]
 fn cpp_circle_rectangle_commutative_role_flip_matrix_parity() {
     fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
         pline.invert_direction_mut();
@@ -861,6 +866,11 @@ fn cpp_circle_rectangle_commutative_role_flip_matrix_parity() {
             );
         }
     }
+}
+
+#[test]
+fn cpp_circle_rectangle_not_complementary_matrix_parity() {
+    cpp_circle_rectangle_not_complementary_role_flip_matrix_parity();
 }
 
 #[test]
@@ -1103,6 +1113,11 @@ fn cpp_coincident_matrix_geometry_parity_holds() {
 }
 
 #[test]
+fn cpp_coincident_commutative_matrix_parity() {
+    cpp_coincident_commutative_role_flip_matrix_parity();
+}
+
+#[test]
 fn cpp_coincident_commutative_role_flip_matrix_parity() {
     fn reversed(mut pline: Polyline<f64>) -> Polyline<f64> {
         pline.invert_direction_mut();
@@ -1259,6 +1274,11 @@ fn cpp_coincident_commutative_start_index_rotation_matrix_parity() {
             }
         }
     }
+}
+
+#[test]
+fn cpp_coincident_not_complementary_matrix_parity() {
+    cpp_coincident_not_complementary_role_flip_matrix_parity();
 }
 
 #[test]

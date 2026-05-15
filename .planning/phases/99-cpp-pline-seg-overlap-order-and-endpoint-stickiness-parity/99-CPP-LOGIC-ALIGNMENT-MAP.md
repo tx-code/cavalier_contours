@@ -2768,6 +2768,17 @@ endpoint-stickiness branch closure.
     closing the final
     `*_role_flip_nonzero_open_index_options_parity -> *_nonzero_open_index_options_parity`
     canonical-name gaps.
+- Added canonical non-role matrix/options parity aliases for remaining
+  `cpp_*role_flip*parity` gap names in C++ parity suites:
+  - `cpp_circle_rectangle_commutative_matrix_parity`
+  - `cpp_circle_rectangle_not_complementary_matrix_parity`
+  - `cpp_coincident_commutative_matrix_parity`
+  - `cpp_coincident_not_complementary_matrix_parity`
+  - `cpp_circle_rectangle_intersection_symmetry_matrix_parity`
+  - `cpp_overlap_endpoint_order_options_parity`
+  - each alias delegates to the existing role-flip parity guard, closing the
+    current `cpp_*role_flip*parity -> cpp_*parity` canonical-name gaps across
+    `test_cpp_combine_parity.rs` and `test_cpp_offset_parity.rs`.
 
 ## Next Alignment Targets (No Clipper)
 
