@@ -278,8 +278,11 @@ where
     // bounding box from the rectangle formed by extending the chord by the sagitta, note this
     // approximate bounding box is always equal to or bigger than the true bounding box
     let b = v1.bulge;
-    let offs_x = b * (v2.y - v1.y) / T::two();
-    let offs_y = -b * (v2.x - v1.x) / T::two();
+    let half_b = b / T::two();
+    let dx = v2.x - v1.x;
+    let dy = v2.y - v1.y;
+    let offs_x = half_b * dy;
+    let offs_y = -half_b * dx;
 
     let (pt_x_min, pt_x_max) = min_max(v1.x + offs_x, v2.x + offs_x);
     let (pt_y_min, pt_y_max) = min_max(v1.y + offs_y, v2.y + offs_y);

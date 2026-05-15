@@ -58,15 +58,15 @@ No additional Rust-slower outlier was observed.
 To verify the two tiny residual cases, we reran only
 `spatial_index/create/native/{circle,diamond}` with longer windows:
 
-- Rust: `--measurement-time 2 --sample-size 50`
-- C++: `--benchmark_min_time=1s`
+- Rust: `--measurement-time 5 --sample-size 100`
+- C++: `--benchmark_min_time=3s`
 
 Observed values:
 
 | Case | Rust `ns/iter` | C++ `ns/iter` | Ratio |
 |------|----------------|---------------|-------|
-| `circle` | `104` | `102.84` | `1.011` |
-| `diamond` | `108` | `111.48` | `0.969` |
+| `circle` | `101` | `101.45` | `0.996` |
+| `diamond` | `107` | `111.06` | `0.963` |
 
 This indicates practical parity for the two residual tiny-shape create cases.
 
