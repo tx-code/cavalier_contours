@@ -2712,6 +2712,16 @@ endpoint-stickiness branch closure.
   - aliases delegate to existing non-zero guards (`*_role_flip_options_parity`
     and `*_with_normal_closed_side_*_options_parity`) to keep canonical
     zero-length-lead/non-zero naming paired while reusing validated assertions.
+- Added Rust options-path canonical-name non-zero counterparts for wrap-around
+  same-order closed-`pline2` closure-basic start-index-rotation branches:
+  - `cpp_wrap_around_same_order_closed_pline2_closure_basic_start_index_rotation_options_parity`
+  - `cpp_wrap_around_same_order_closed_pline2_closure_basic_intersect_start_index_rotation_options_parity`
+  - verifies `find_intersects_opt` remains aligned with default-path
+    `find_intersects` outputs for same-order closed-`pline2` start-index-rotation
+    lanes (counts, AB/BA role inversion, branch-specific overlap endpoint-order
+    invariants, rotated index attribution semantics, and input immutability),
+    closing the remaining zero-length-lead/non-zero canonical pairing gaps for
+    `*_start_index_rotation_options_parity`.
 
 ## Next Alignment Targets (No Clipper)
 
