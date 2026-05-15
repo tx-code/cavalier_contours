@@ -21608,7 +21608,18 @@ fn cpp_wrap_around_open_side_reversed_closed_side_reversed_start_index_rotation_
 }
 
 #[test]
+fn cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_options_matrix_parity() {
+    cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_options_parity();
+}
+
+#[test]
 fn cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_options_parity() {
+    cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_role_flip_options_parity();
+}
+
+#[test]
+fn cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_role_flip_options_matrix_parity()
+ {
     cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_role_flip_options_parity();
 }
 
@@ -21901,7 +21912,19 @@ fn cpp_wrap_around_open_side_reversed_closed_side_reversed_start_index_rotation_
 }
 
 #[test]
+fn cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_zero_length_lead_options_matrix_parity()
+ {
+    cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_zero_length_lead_options_parity();
+}
+
+#[test]
 fn cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_zero_length_lead_options_parity()
+ {
+    cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_zero_length_lead_role_flip_options_parity();
+}
+
+#[test]
+fn cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity()
  {
     cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_zero_length_lead_role_flip_options_parity();
 }
@@ -22217,7 +22240,19 @@ fn cpp_wrap_around_open_side_reversed_closed_side_reversed_start_index_rotation_
 }
 
 #[test]
+fn cpp_wrap_around_closed_side_reversed_closure_basic_nonzero_open_index_options_matrix_parity() {
+    cpp_wrap_around_closed_side_reversed_closure_basic_nonzero_open_index_options_parity();
+}
+
+#[test]
 fn cpp_wrap_around_closed_side_reversed_closure_basic_nonzero_open_index_options_parity() {
+    cpp_wrap_around_closed_side_reversed_closure_basic_role_flip_nonzero_open_index_options_parity(
+    );
+}
+
+#[test]
+fn cpp_wrap_around_closed_side_reversed_closure_basic_role_flip_nonzero_open_index_options_matrix_parity()
+ {
     cpp_wrap_around_closed_side_reversed_closure_basic_role_flip_nonzero_open_index_options_parity(
     );
 }
