@@ -2606,6 +2606,16 @@ endpoint-stickiness branch closure.
     `both_closed_start_index_rotation_closed_pline2_role_flip`) with no-basic
     overlap-dedup behavior, AB/BA role inversion, stable overlap endpoint
     ordering, and start-index attribution semantics.
+- Added Rust options-path canonical-name counterpart for reversed-endpoint
+  adjacent-line-flip both-closed start-index-rotation role-flip fixture matrix:
+  - `cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_role_flip_options_parity`
+  - verifies `find_intersects_opt` remains aligned with default-path
+    `find_intersects` outputs across role-flip lanes
+    (`both_closed_start_index_rotation_role_flip`,
+    `both_closed_start_index_rotation_closed_pline1_role_flip`,
+    `both_closed_start_index_rotation_closed_pline2_role_flip`) with dedup of
+    the shared overlap endpoint from basic intersects, AB/BA role inversion,
+    swapped overlap endpoint ordering, and start-index attribution semantics.
 
 ## Next Alignment Targets (No Clipper)
 
