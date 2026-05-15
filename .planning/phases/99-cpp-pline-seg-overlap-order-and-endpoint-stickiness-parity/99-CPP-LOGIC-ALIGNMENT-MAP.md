@@ -2058,6 +2058,13 @@ endpoint-stickiness branch closure.
   - collection-level `*_closure_basic*_role_flip_symmetry` functions now all
     have explicit `*_nonzero_open_index` counterparts in `pline_intersects`
     (`BASE_COUNT=11`, `MISSING_COUNT=0`).
+- Added Rust options-path counterpart for non-circle wrap-around same-order
+  closed-`pline2` nonzero-open-index closure-basic branch:
+  - `cpp_wrap_around_same_order_closed_pline2_nonzero_open_index_options_parity`
+  - verifies `find_intersects_opt` remains aligned with default-path
+    `find_intersects` outputs (counts, index attribution, points, AB/BA role
+    symmetry, and input immutability) when open-side segment indices are
+    shifted off zero via a zero-length lead.
 
 ## Next Alignment Targets (No Clipper)
 
