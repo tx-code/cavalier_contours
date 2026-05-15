@@ -4,7 +4,7 @@ This is the ui app for visualizing, testing, and demonstrating the cavalier_cont
 
 Github CI publishes latest on `master` branch to GitHub Pages.
 
-- Upstream demo: [https://www.cavaliercontours.dev/](https://www.cavaliercontours.dev/)
+- This repo demo: [https://tx-code.github.io/cavalier_contours/](https://tx-code.github.io/cavalier_contours/)
 - Fork demo default: `https://<github-username>.github.io/<repo-name>/`
 
 If you want a custom domain for Pages, set repository variable `PAGES_PUBLIC_URL`
