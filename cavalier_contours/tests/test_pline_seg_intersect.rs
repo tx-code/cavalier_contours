@@ -896,6 +896,64 @@ fn arc_arc_partial_overlap_both_reverse_dir_flipped() {
 }
 
 #[test]
+fn cpp_pline_seg_arc_arc_partial_overlap_arc2_reverse_dir_role_flip_order_parity() {
+    // Source-aligned with old C++ `intrPlineSegs` coincident-arc overlap branch:
+    // when arc2 is reversed, role inversion swaps overlap endpoint ordering.
+    let v1 = PlineVertex::new(1.0, 1.0, 1.0);
+    let v2 = PlineVertex::new(3.0, 1.0, 0.0);
+    let u1 = PlineVertex::new(2.0, 2.0, -1.0);
+    let u2 = PlineVertex::new(2.0, 0.0, 0.0);
+
+    let ab = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    let ba = pline_seg_intr(u1, u2, v1, v2, 1e-5);
+
+    let (ab_p1, ab_p2) = match ab {
+        OverlappingArcs { point1, point2 } => (point1, point2),
+        other => panic!("expected OverlappingArcs for AB, got {other:?}"),
+    };
+    let (ba_p1, ba_p2) = match ba {
+        OverlappingArcs { point1, point2 } => (point1, point2),
+        other => panic!("expected OverlappingArcs for BA, got {other:?}"),
+    };
+
+    assert!(ab_p1.fuzzy_eq(Vector2::new(3.0, 1.0)));
+    assert!(ab_p2.fuzzy_eq(Vector2::new(2.0, 0.0)));
+    assert!(ba_p1.fuzzy_eq(Vector2::new(2.0, 0.0)));
+    assert!(ba_p2.fuzzy_eq(Vector2::new(3.0, 1.0)));
+    assert!(ab_p1.fuzzy_eq(ba_p2));
+    assert!(ab_p2.fuzzy_eq(ba_p1));
+}
+
+#[test]
+fn cpp_pline_seg_arc_arc_partial_overlap_both_reverse_dir_role_flip_order_parity() {
+    // Source-aligned with old C++ `intrPlineSegs` coincident-arc overlap branch:
+    // when both arcs are reversed, role inversion keeps overlap endpoint ordering.
+    let v1 = PlineVertex::new(3.0, 1.0, -1.0);
+    let v2 = PlineVertex::new(1.0, 1.0, 0.0);
+    let u1 = PlineVertex::new(2.0, 2.0, -1.0);
+    let u2 = PlineVertex::new(2.0, 0.0, 0.0);
+
+    let ab = pline_seg_intr(v1, v2, u1, u2, 1e-5);
+    let ba = pline_seg_intr(u1, u2, v1, v2, 1e-5);
+
+    let (ab_p1, ab_p2) = match ab {
+        OverlappingArcs { point1, point2 } => (point1, point2),
+        other => panic!("expected OverlappingArcs for AB, got {other:?}"),
+    };
+    let (ba_p1, ba_p2) = match ba {
+        OverlappingArcs { point1, point2 } => (point1, point2),
+        other => panic!("expected OverlappingArcs for BA, got {other:?}"),
+    };
+
+    assert!(ab_p1.fuzzy_eq(Vector2::new(3.0, 1.0)));
+    assert!(ab_p2.fuzzy_eq(Vector2::new(2.0, 0.0)));
+    assert!(ba_p1.fuzzy_eq(Vector2::new(3.0, 1.0)));
+    assert!(ba_p2.fuzzy_eq(Vector2::new(2.0, 0.0)));
+    assert!(ab_p1.fuzzy_eq(ba_p1));
+    assert!(ab_p2.fuzzy_eq(ba_p2));
+}
+
+#[test]
 fn arc_arc_opposite_direction_touch_at_ends_bug() {
     // This test case reproduces the bug where arcs have the same radius and center but opposite
     // directions and only touch at the end points.

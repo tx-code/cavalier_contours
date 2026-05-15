@@ -2505,6 +2505,13 @@ endpoint-stickiness branch closure.
     (no-basic overlap-only counts, AB/BA role inversion with expected swapped
     overlap endpoint ordering, zero-length-lead index attribution semantics,
     and input immutability).
+- Added source-aligned pline-segment role-flip overlap-order parity guards for
+  non-circle partial arc/arc overlap reversed-direction branches:
+  - `cpp_pline_seg_arc_arc_partial_overlap_arc2_reverse_dir_role_flip_order_parity`
+  - `cpp_pline_seg_arc_arc_partial_overlap_both_reverse_dir_role_flip_order_parity`
+  - verifies role inversion swaps overlap endpoint ordering for
+    `arc2_reverse_dir` and preserves endpoint ordering for `both_reverse_dir`
+    in `pline_seg_intr`.
 
 ## Next Alignment Targets (No Clipper)
 
