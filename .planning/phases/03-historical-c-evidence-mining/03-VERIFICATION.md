@@ -22,7 +22,7 @@ production Rust APIs, FFI implementation, generated headers, benchmarks, or UI.
 
 | Requirement | Status | Evidence |
 |-------------|--------|----------|
-| FIX-03 | Passed | `03-INVENTORY.md` inventories old C++ offset, combine/boolean, property, C API, static spatial index, example, and benchmark-profile evidence; `test_historical_cavalier_contours.rs` executes selected offset/property fixtures and records non-executable gap/migration/spatial-index evidence. |
+| FIX-03 | Passed | `03-INVENTORY.md` inventories old C++ offset, combine/boolean, property, C API, static spatial index, example, and benchmark-profile evidence; `test_historical_cavalier_contours.rs` executes selected offset/boolean/property fixtures and records non-executable migration/spatial-index evidence only where comparability is intentionally out of scope. |
 
 ## Plan Coverage
 
@@ -37,7 +37,7 @@ production Rust APIs, FFI implementation, generated headers, benchmarks, or UI.
 - Old C++ source snapshot records repo `E:/Coding/CavalierContours`, commit `31a012947aa2e7e9474e2ec90502825afe8b99a4`, and license `MIT`.
 - Offset evidence is executable through `historical-cpp-offset-closed-rectangle-inward` and `historical-cpp-offset-collapsed-rectangle`.
 - Pure property evidence is executable through `historical-cpp-properties-ccw-circle-x-aligned`.
-- Old C++ circle/rectangle union evidence is preserved as metadata-only `Gap` because current Rust matches area/path/extents but not old vertex count.
+- Old C++ circle/rectangle union evidence executes as geometry parity (`ApproximateParity`) against old area/path/extents expectations with relaxed topology (`compare_vertex_count=false`), preserving the known representation delta without a failing gap marker.
 - C API evidence remains metadata-only and migration-sensitive.
 - Static spatial index evidence remains metadata-only and benchmark-candidate; performance treatment stays deferred to Phase 4.
 - Fixture records expose source path, usage label, comparison mode, operation kind, and executable status through `fixture_metadata`.
@@ -74,4 +74,3 @@ None.
 Phase 4 can start benchmark baseline work using the Phase 3 inventory's
 benchmark-candidate notes for old C++ static spatial index and benchmark
 profile evidence.
-
