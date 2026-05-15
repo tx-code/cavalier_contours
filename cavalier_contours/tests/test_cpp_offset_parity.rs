@@ -18017,6 +18017,12 @@ fn cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_start_index_ro
 }
 
 #[test]
+fn cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_start_index_rotation_options_parity()
+ {
+    cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_start_index_rotation_options_matrix_parity();
+}
+
+#[test]
 fn cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_start_index_rotation_zero_length_lead_options_parity()
  {
     fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
@@ -19191,6 +19197,12 @@ fn cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_clos
 }
 
 #[test]
+fn cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_start_index_rotation_options_parity()
+ {
+    cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_start_index_rotation_options_matrix_parity();
+}
+
+#[test]
 fn cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_start_index_rotation_zero_length_lead_options_parity()
  {
     fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
@@ -19343,6 +19355,12 @@ fn cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_start_ind
         closed_after, closed_before,
         "normal-closed-side input mutated by find_intersects_opt"
     );
+}
+
+#[test]
+fn cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_start_index_rotation_options_parity()
+ {
+    cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_start_index_rotation_options_matrix_parity();
 }
 
 #[test]
@@ -19792,6 +19810,12 @@ fn cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_intersect
         closed_after, closed_before,
         "normal-closed-side input mutated by find_intersects_opt"
     );
+}
+
+#[test]
+fn cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_start_index_rotation_options_parity()
+ {
+    cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_start_index_rotation_options_matrix_parity();
 }
 
 #[test]

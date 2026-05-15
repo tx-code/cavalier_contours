@@ -2688,6 +2688,15 @@ endpoint-stickiness branch closure.
     `closed_pline2_with_closure_basic_intersect_start_index_rotation_role_flip`)
     with one-basic + one-overlap behavior, AB/BA role inversion, swapped overlap
     endpoint ordering, and closed-side vs open-side index attribution semantics.
+- Added Rust options-path canonical-name aliases for wrap-around
+  open-side-reversed start-index-rotation (non-role-flip) fixture branches:
+  - `cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_start_index_rotation_options_parity`
+  - `cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_start_index_rotation_options_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_start_index_rotation_options_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_start_index_rotation_options_parity`
+  - each alias delegates to an existing `*_options_matrix_parity`
+    implementation so canonical non-zero names stay paired with the
+    corresponding zero-length-lead variants without duplicating assertion logic.
 
 ## Next Alignment Targets (No Clipper)
 
