@@ -1,0 +1,54 @@
+---
+phase: 99-cpp-pline-seg-overlap-order-and-endpoint-stickiness-parity
+plan: 133
+subsystem: both-reverse-dir-nonzero-role-flip-options-path-parity
+tags: [cpp-parity, find-intersects, arc-overlap, both-closed, both-reverse-dir, role-flip, options]
+requires:
+  - phase: 99-cpp-pline-seg-overlap-order-and-endpoint-stickiness-parity
+    provides: both_reverse_dir both-closed branch baselines
+provides:
+  - options-path canonical-name parity guard for both_reverse_dir both-closed start-index-rotation role-flip fixture matrix
+affects: [tests, planning-docs]
+tech-stack:
+  added: []
+  patterns: [bounded-regression-probe]
+key-files:
+  created:
+    - .planning/phases/99-cpp-pline-seg-overlap-order-and-endpoint-stickiness-parity/99-133-SUMMARY.md
+  modified:
+    - cavalier_contours/tests/test_cpp_offset_parity.rs
+    - .planning/phases/99-cpp-pline-seg-overlap-order-and-endpoint-stickiness-parity/99-CPP-LOGIC-ALIGNMENT-MAP.md
+key-decisions:
+  - "Add explicit options-path coverage for non-zero-lead role-flip lanes in the both_reverse_dir both-closed branch to keep canonical-name parity and index semantics pinned."
+requirements-completed: [PAR-323]
+duration: 8min
+completed: 2026-05-15
+---
+
+# Plan 99-133 Summary
+
+## Completed
+
+- Added Rust options-path canonical counterpart for `both_reverse_dir`
+  both-closed start-index-rotation role-flip fixture matrix:
+  - `cpp_both_reverse_dir_both_closed_start_index_rotation_role_flip_options_parity`
+- The new test verifies:
+  - `find_intersects_opt` and default `find_intersects` parity for AB/BA outputs,
+  - one-basic + one-overlap behavior across:
+    - `both_closed_start_index_rotation_role_flip`,
+    - `both_closed_start_index_rotation_closed_pline1_role_flip`,
+    - `both_closed_start_index_rotation_closed_pline2_role_flip`,
+  - stable overlap endpoint ordering under role inversion,
+  - start-index attribution semantics,
+  - input polyline immutability.
+- Updated `99-CPP-LOGIC-ALIGNMENT-MAP.md` with this canonical options-path
+  evidence.
+
+## Verification
+
+- `cargo test -p cavalier_contours cpp_both_reverse_dir_both_closed_start_index_rotation_role_flip_options_parity -- --nocapture` - pass.
+- `cargo test -p cavalier_contours non_circle_partial_arc_overlap_both_reverse_dir_both_closed_start_index_rotation_role_flip_symmetry -- --nocapture` - pass.
+- `cargo fmt --all --check` - pass.
+- `cargo test --workspace -q` - pass.
+- `gsd-sdk query validate.health --project-dir E:\Coding\cavalier_contours` - healthy.
+- `gsd-sdk query state.validate --project-dir E:\Coding\cavalier_contours` - pass.
