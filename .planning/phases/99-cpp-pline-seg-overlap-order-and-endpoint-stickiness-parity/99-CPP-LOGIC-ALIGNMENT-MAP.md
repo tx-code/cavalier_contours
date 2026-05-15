@@ -2733,6 +2733,24 @@ endpoint-stickiness branch closure.
   - each alias delegates to existing role-flip guards, preserving validated
     assertion behavior while closing canonical non-role naming gaps for this
     reverse-dir branch family.
+- Added Rust options-path canonical non-role aliases for remaining
+  start-index-rotation role-flip-only branches:
+  - `cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_options_parity`
+  - `cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_zero_length_lead_options_parity`
+  - `cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_options_parity`
+  - `cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_zero_length_lead_options_parity`
+  - `cpp_wrap_around_non_circle_arc_overlap_deduplication_reversed_order_start_index_rotation_options_parity`
+  - `cpp_wrap_around_non_circle_arc_overlap_deduplication_reversed_order_start_index_rotation_zero_length_lead_options_parity`
+  - `cpp_wrap_around_non_circle_arc_overlap_deduplication_same_order_start_index_rotation_options_parity`
+  - `cpp_wrap_around_non_circle_arc_overlap_deduplication_same_order_start_index_rotation_zero_length_lead_options_parity`
+  - `cpp_wrap_around_open_side_reversed_closed_side_reversed_options_parity`
+  - `cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_start_index_rotation_options_parity`
+  - `cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_start_index_rotation_zero_length_lead_options_parity`
+  - `cpp_wrap_around_overlap_endpoint_dedup_start_index_rotation_options_parity`
+  - `cpp_wrap_around_overlap_endpoint_dedup_start_index_rotation_zero_length_lead_options_parity`
+  - each alias delegates to its existing role-flip guard, closing the remaining
+    `*_role_flip_options_parity -> *_options_parity` canonical-name gaps for
+    the current options-path parity surface.
 
 ## Next Alignment Targets (No Clipper)
 

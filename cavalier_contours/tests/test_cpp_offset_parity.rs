@@ -7809,6 +7809,11 @@ fn cpp_reversed_endpoint_adjacent_line_flip_both_closed_options_matrix_parity() 
 }
 
 #[test]
+fn cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_options_parity() {
+    cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_role_flip_options_parity();
+}
+
+#[test]
 fn cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_role_flip_options_parity()
  {
     type Point = (f64, f64);
@@ -8089,6 +8094,12 @@ fn cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_rol
             case.name
         );
     }
+}
+
+#[test]
+fn cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_zero_length_lead_options_parity()
+ {
+    cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_zero_length_lead_role_flip_options_parity();
 }
 
 #[test]
@@ -13867,6 +13878,11 @@ fn cpp_wrap_around_overlap_endpoint_dedup_options_matrix_parity() {
 }
 
 #[test]
+fn cpp_wrap_around_overlap_endpoint_dedup_start_index_rotation_options_parity() {
+    cpp_wrap_around_overlap_endpoint_dedup_start_index_rotation_role_flip_options_parity();
+}
+
+#[test]
 fn cpp_wrap_around_overlap_endpoint_dedup_start_index_rotation_role_flip_options_parity() {
     type Point = (f64, f64);
 
@@ -14120,6 +14136,12 @@ fn cpp_wrap_around_overlap_endpoint_dedup_start_index_rotation_role_flip_options
             case.name
         );
     }
+}
+
+#[test]
+fn cpp_wrap_around_overlap_endpoint_dedup_start_index_rotation_zero_length_lead_options_parity() {
+    cpp_wrap_around_overlap_endpoint_dedup_start_index_rotation_zero_length_lead_role_flip_options_parity(
+    );
 }
 
 #[test]
@@ -14683,6 +14705,11 @@ fn cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_options_matrix_parity() {
 }
 
 #[test]
+fn cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_start_index_rotation_options_parity() {
+    cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_start_index_rotation_role_flip_options_parity();
+}
+
+#[test]
 fn cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_start_index_rotation_role_flip_options_parity()
  {
     type Point = (f64, f64);
@@ -14937,6 +14964,12 @@ fn cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_start_index_rotation_role
             case.name
         );
     }
+}
+
+#[test]
+fn cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_start_index_rotation_zero_length_lead_options_parity()
+ {
+    cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_start_index_rotation_zero_length_lead_role_flip_options_parity();
 }
 
 #[test]
@@ -15196,6 +15229,12 @@ fn cpp_wrap_around_overlap_endpoint_arc_adjacent_dedup_start_index_rotation_zero
             case.name
         );
     }
+}
+
+#[test]
+fn cpp_wrap_around_non_circle_arc_overlap_deduplication_same_order_start_index_rotation_zero_length_lead_options_parity()
+ {
+    cpp_wrap_around_non_circle_arc_overlap_deduplication_same_order_start_index_rotation_zero_length_lead_role_flip_options_parity();
 }
 
 #[test]
@@ -15475,6 +15514,12 @@ fn cpp_wrap_around_non_circle_arc_overlap_deduplication_same_order_start_index_r
 }
 
 #[test]
+fn cpp_wrap_around_non_circle_arc_overlap_deduplication_reversed_order_start_index_rotation_zero_length_lead_options_parity()
+ {
+    cpp_wrap_around_non_circle_arc_overlap_deduplication_reversed_order_start_index_rotation_zero_length_lead_role_flip_options_parity();
+}
+
+#[test]
 fn cpp_wrap_around_non_circle_arc_overlap_deduplication_reversed_order_start_index_rotation_zero_length_lead_role_flip_options_parity()
  {
     type Point = (f64, f64);
@@ -15751,6 +15796,12 @@ fn cpp_wrap_around_non_circle_arc_overlap_deduplication_reversed_order_start_ind
 }
 
 #[test]
+fn cpp_wrap_around_non_circle_arc_overlap_deduplication_same_order_start_index_rotation_options_parity()
+ {
+    cpp_wrap_around_non_circle_arc_overlap_deduplication_same_order_start_index_rotation_role_flip_options_parity();
+}
+
+#[test]
 fn cpp_wrap_around_non_circle_arc_overlap_deduplication_same_order_start_index_rotation_role_flip_options_parity()
  {
     type Point = (f64, f64);
@@ -16021,6 +16072,12 @@ fn cpp_wrap_around_non_circle_arc_overlap_deduplication_same_order_start_index_r
             case.name
         );
     }
+}
+
+#[test]
+fn cpp_wrap_around_non_circle_arc_overlap_deduplication_reversed_order_start_index_rotation_options_parity()
+ {
+    cpp_wrap_around_non_circle_arc_overlap_deduplication_reversed_order_start_index_rotation_role_flip_options_parity();
 }
 
 #[test]
@@ -16717,6 +16774,11 @@ fn cpp_wrap_around_closed_side_reversed_closure_basic_role_flip_options_matrix_p
         open_after, open_before,
         "open-side input mutated by find_intersects_opt"
     );
+}
+
+#[test]
+fn cpp_wrap_around_open_side_reversed_closed_side_reversed_options_parity() {
+    cpp_wrap_around_open_side_reversed_closed_side_reversed_role_flip_options_parity();
 }
 
 #[test]
@@ -21213,6 +21275,11 @@ fn cpp_wrap_around_open_side_reversed_closed_side_reversed_start_index_rotation_
 }
 
 #[test]
+fn cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_options_parity() {
+    cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_role_flip_options_parity();
+}
+
+#[test]
 fn cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_role_flip_options_parity()
  {
     fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
@@ -21498,6 +21565,12 @@ fn cpp_wrap_around_open_side_reversed_closed_side_reversed_start_index_rotation_
         open_after, open_before,
         "open-side input mutated by find_intersects_opt"
     );
+}
+
+#[test]
+fn cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_zero_length_lead_options_parity()
+ {
+    cpp_wrap_around_closed_side_reversed_closure_basic_start_index_rotation_zero_length_lead_role_flip_options_parity();
 }
 
 #[test]
