@@ -2563,6 +2563,28 @@ endpoint-stickiness branch closure.
     `both_closed_start_index_rotation_closed_pline2_zero_length_lead_role_flip`)
     with no-basic overlap-dedup behavior, AB/BA role inversion, swapped overlap
     endpoint ordering, and zero-length-lead index attribution semantics.
+- Added Rust options-path canonical-name counterpart for wrap-around
+  non-circle arc-overlap dedup same-order start-index-rotation role-flip
+  fixture matrix:
+  - `cpp_wrap_around_non_circle_arc_overlap_deduplication_same_order_start_index_rotation_role_flip_options_parity`
+  - verifies `find_intersects_opt` remains aligned with default-path
+    `find_intersects` outputs across role-flip lanes
+    (`both_closed_start_index_rotation_role_flip`,
+    `both_closed_start_index_rotation_closed_pline1_role_flip`,
+    `both_closed_start_index_rotation_closed_pline2_role_flip`) with no-basic
+    overlap-dedup behavior, AB/BA role inversion, stable overlap endpoint
+    ordering, and start-index attribution semantics.
+- Added Rust options-path canonical-name counterpart for wrap-around
+  non-circle arc-overlap dedup reversed-order start-index-rotation role-flip
+  fixture matrix:
+  - `cpp_wrap_around_non_circle_arc_overlap_deduplication_reversed_order_start_index_rotation_role_flip_options_parity`
+  - verifies `find_intersects_opt` remains aligned with default-path
+    `find_intersects` outputs across role-flip lanes
+    (`both_closed_start_index_rotation_role_flip`,
+    `both_closed_start_index_rotation_closed_pline1_role_flip`,
+    `both_closed_start_index_rotation_closed_pline2_role_flip`) with no-basic
+    overlap-dedup behavior, AB/BA role inversion, swapped overlap endpoint
+    ordering, and start-index attribution semantics.
 
 ## Next Alignment Targets (No Clipper)
 
