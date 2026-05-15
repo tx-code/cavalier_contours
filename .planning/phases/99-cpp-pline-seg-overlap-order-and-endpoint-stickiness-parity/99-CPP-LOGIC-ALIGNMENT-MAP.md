@@ -2779,6 +2779,14 @@ endpoint-stickiness branch closure.
   - each alias delegates to the existing role-flip parity guard, closing the
     current `cpp_*role_flip*parity -> cpp_*parity` canonical-name gaps across
     `test_cpp_combine_parity.rs` and `test_cpp_offset_parity.rs`.
+- Added canonical non-role alias for the remaining role-flip non-zero open-index
+  options parity branch:
+  - `cpp_overlap_and_basic_intersection_options_parity_nonzero_open_index`
+  - alias delegates to
+    `cpp_overlap_and_basic_intersection_options_role_flip_parity_nonzero_open_index`,
+    closing the current
+    `cpp_*role_flip*parity* -> cpp_*parity*` canonical-name gap in
+    `test_cpp_offset_parity.rs`.
 
 ## Next Alignment Targets (No Clipper)
 

@@ -1058,6 +1058,11 @@ fn cpp_circle_rectangle_intersection_full_matrix_does_not_modify_input() {
 }
 
 #[test]
+fn cpp_overlap_and_basic_intersection_options_parity_nonzero_open_index() {
+    cpp_overlap_and_basic_intersection_options_role_flip_parity_nonzero_open_index();
+}
+
+#[test]
 fn cpp_overlap_and_basic_intersection_options_role_flip_parity_nonzero_open_index() {
     fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
         assert!(
