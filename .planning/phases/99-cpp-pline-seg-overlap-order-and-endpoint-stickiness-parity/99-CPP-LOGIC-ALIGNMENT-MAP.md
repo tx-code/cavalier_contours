@@ -2697,6 +2697,13 @@ endpoint-stickiness branch closure.
   - each alias delegates to an existing `*_options_matrix_parity`
     implementation so canonical non-zero names stay paired with the
     corresponding zero-length-lead variants without duplicating assertion logic.
+- Added Rust options-path canonical-name aliases for reversed-endpoint
+  start-index-rotation (non-role-flip) non-zero fixture branches:
+  - `cpp_reversed_endpoint_closure_basic_start_index_rotation_options_parity`
+  - `cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_options_parity`
+  - each alias delegates to an existing non-zero role-flip options parity
+    guard to keep canonical zero-length-lead/non-zero naming paired while
+    preserving the validated assertion logic.
 
 ## Next Alignment Targets (No Clipper)
 

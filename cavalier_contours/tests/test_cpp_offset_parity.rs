@@ -6026,6 +6026,11 @@ fn cpp_reversed_endpoint_closure_basic_start_index_rotation_zero_length_lead_opt
 }
 
 #[test]
+fn cpp_reversed_endpoint_closure_basic_start_index_rotation_options_parity() {
+    cpp_reversed_endpoint_closure_basic_start_index_rotation_role_flip_options_parity();
+}
+
+#[test]
 fn cpp_reversed_endpoint_closure_basic_start_index_rotation_role_flip_options_parity() {
     type Point = (f64, f64);
 
@@ -6917,6 +6922,11 @@ fn cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_zero_lengt
             case.name
         );
     }
+}
+
+#[test]
+fn cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_options_parity() {
+    cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_role_flip_options_parity();
 }
 
 #[test]
