@@ -7874,7 +7874,19 @@ fn cpp_reversed_endpoint_adjacent_line_flip_both_closed_options_matrix_parity() 
 }
 
 #[test]
+fn cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_options_matrix_parity()
+{
+    cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_options_parity();
+}
+
+#[test]
 fn cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_options_parity() {
+    cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_role_flip_options_parity();
+}
+
+#[test]
+fn cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_role_flip_options_matrix_parity()
+ {
     cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_role_flip_options_parity();
 }
 
@@ -8162,7 +8174,20 @@ fn cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_rol
 }
 
 #[test]
+fn cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_zero_length_lead_options_matrix_parity()
+ {
+    cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_zero_length_lead_options_parity(
+    );
+}
+
+#[test]
 fn cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_zero_length_lead_options_parity()
+ {
+    cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_zero_length_lead_role_flip_options_parity();
+}
+
+#[test]
+fn cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity()
  {
     cpp_reversed_endpoint_adjacent_line_flip_both_closed_start_index_rotation_zero_length_lead_role_flip_options_parity();
 }
