@@ -5137,6 +5137,295 @@ fn cpp_reversed_endpoint_closure_basic_intersect_role_flip_nonzero_open_index_op
 }
 
 #[test]
+fn cpp_reversed_endpoint_closure_basic_intersect_options_matrix_parity() {
+    type Point = (f64, f64);
+
+    #[derive(Clone)]
+    struct Case {
+        name: &'static str,
+        lhs: Polyline<f64>,
+        rhs: Polyline<f64>,
+        expected_basic_point: Point,
+        expected_overlap_point_a: Point,
+        expected_overlap_point_b: Point,
+    }
+
+    fn assert_point_close(actual_x: f64, actual_y: f64, expected_x: f64, expected_y: f64) {
+        assert!(
+            (actual_x - expected_x).abs() <= EPS && (actual_y - expected_y).abs() <= EPS,
+            "point mismatch: actual=({actual_x}, {actual_y}), expected=({expected_x}, {expected_y})"
+        );
+    }
+
+    fn endpoint_set_matches(
+        ax: f64,
+        ay: f64,
+        bx: f64,
+        by: f64,
+        expected_a: Point,
+        expected_b: Point,
+    ) -> bool {
+        let same_order = (ax - expected_a.0).abs() <= EPS
+            && (ay - expected_a.1).abs() <= EPS
+            && (bx - expected_b.0).abs() <= EPS
+            && (by - expected_b.1).abs() <= EPS;
+        let swapped_order = (ax - expected_b.0).abs() <= EPS
+            && (ay - expected_b.1).abs() <= EPS
+            && (bx - expected_a.0).abs() <= EPS
+            && (by - expected_a.1).abs() <= EPS;
+        same_order || swapped_order
+    }
+
+    fn closed_side_a() -> Polyline<f64> {
+        let mut pline = Polyline::new_closed();
+        pline.add(1.0, 1.0, 1.0);
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(4.0, 1.0, 0.0);
+        pline.add(0.0, -3.0, 0.0);
+        pline
+    }
+
+    fn closed_side_a_rotated() -> Polyline<f64> {
+        let mut pline = Polyline::new_closed();
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(4.0, 1.0, 0.0);
+        pline.add(0.0, -3.0, 0.0);
+        pline.add(1.0, 1.0, 1.0);
+        pline
+    }
+
+    fn open_side_reversed() -> Polyline<f64> {
+        let mut pline = Polyline::new();
+        pline.add(2.0, 2.0, -1.0);
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(2.0, -1.0, 0.0);
+        pline
+    }
+
+    fn open_side_normal() -> Polyline<f64> {
+        let mut pline = Polyline::new();
+        pline.add(1.0, 1.0, 1.0);
+        pline.add(3.0, 1.0, 0.0);
+        pline.add(4.0, 1.0, 0.0);
+        pline
+    }
+
+    fn closed_side_b() -> Polyline<f64> {
+        let mut pline = Polyline::new_closed();
+        pline.add(2.0, 2.0, -1.0);
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(2.0, -1.0, 0.0);
+        pline.add(2.0, -3.0, 0.0);
+        pline
+    }
+
+    fn closed_side_b_rotated() -> Polyline<f64> {
+        let mut pline = Polyline::new_closed();
+        pline.add(2.0, 0.0, 0.0);
+        pline.add(2.0, -1.0, 0.0);
+        pline.add(2.0, -3.0, 0.0);
+        pline.add(2.0, 2.0, -1.0);
+        pline
+    }
+
+    let cases = [
+        Case {
+            name: "closed_pline1_with_closure_basic_intersect",
+            lhs: closed_side_a(),
+            rhs: open_side_reversed(),
+            expected_basic_point: (2.0, -1.0),
+            expected_overlap_point_a: (3.0, 1.0),
+            expected_overlap_point_b: (2.0, 0.0),
+        },
+        Case {
+            name: "closed_pline1_with_closure_basic_intersect_start_index_rotation",
+            lhs: closed_side_a_rotated(),
+            rhs: open_side_reversed(),
+            expected_basic_point: (2.0, -1.0),
+            expected_overlap_point_a: (3.0, 1.0),
+            expected_overlap_point_b: (2.0, 0.0),
+        },
+        Case {
+            name: "closed_pline2_with_closure_basic_intersect",
+            lhs: open_side_normal(),
+            rhs: closed_side_b(),
+            expected_basic_point: (2.0, 0.0),
+            expected_overlap_point_a: (3.0, 1.0),
+            expected_overlap_point_b: (2.0, 0.0),
+        },
+        Case {
+            name: "closed_pline2_with_closure_basic_intersect_start_index_rotation",
+            lhs: open_side_normal(),
+            rhs: closed_side_b_rotated(),
+            expected_basic_point: (2.0, 0.0),
+            expected_overlap_point_a: (3.0, 1.0),
+            expected_overlap_point_b: (2.0, 0.0),
+        },
+    ];
+
+    for case in &cases {
+        let lhs_before: Vec<_> = case.lhs.iter_vertexes().collect();
+        let rhs_before: Vec<_> = case.rhs.iter_vertexes().collect();
+
+        let lhs_aabb = case.lhs.create_approx_aabb_index();
+        let rhs_aabb = case.rhs.create_approx_aabb_index();
+        let options_ab = FindIntersectsOptions {
+            pline1_aabb_index: Some(&lhs_aabb),
+            pos_equal_eps: EPS,
+        };
+        let options_ba = FindIntersectsOptions {
+            pline1_aabb_index: Some(&rhs_aabb),
+            pos_equal_eps: EPS,
+        };
+
+        let ab = case.lhs.find_intersects_opt(&case.rhs, &options_ab);
+        let ba = case.rhs.find_intersects_opt(&case.lhs, &options_ba);
+        let default_ab = case.lhs.find_intersects(&case.rhs);
+        let default_ba = case.rhs.find_intersects(&case.lhs);
+
+        assert_eq!(
+            ab.basic_intersects.len(),
+            1,
+            "{}: AB basic count",
+            case.name
+        );
+        assert_eq!(
+            ab.overlapping_intersects.len(),
+            1,
+            "{}: AB overlap count",
+            case.name
+        );
+        assert_eq!(
+            ba.basic_intersects.len(),
+            1,
+            "{}: BA basic count",
+            case.name
+        );
+        assert_eq!(
+            ba.overlapping_intersects.len(),
+            1,
+            "{}: BA overlap count",
+            case.name
+        );
+        assert_eq!(default_ab.basic_intersects.len(), 1);
+        assert_eq!(default_ab.overlapping_intersects.len(), 1);
+        assert_eq!(default_ba.basic_intersects.len(), 1);
+        assert_eq!(default_ba.overlapping_intersects.len(), 1);
+
+        let basic_ab = ab.basic_intersects[0];
+        let basic_ba = ba.basic_intersects[0];
+        let default_basic_ab = default_ab.basic_intersects[0];
+        let default_basic_ba = default_ba.basic_intersects[0];
+        assert_eq!(basic_ab.start_index1, basic_ba.start_index2);
+        assert_eq!(basic_ab.start_index2, basic_ba.start_index1);
+        assert_eq!(basic_ab.start_index1, default_basic_ab.start_index1);
+        assert_eq!(basic_ab.start_index2, default_basic_ab.start_index2);
+        assert_eq!(basic_ba.start_index1, default_basic_ba.start_index1);
+        assert_eq!(basic_ba.start_index2, default_basic_ba.start_index2);
+        assert_point_close(
+            basic_ab.point.x,
+            basic_ab.point.y,
+            case.expected_basic_point.0,
+            case.expected_basic_point.1,
+        );
+        assert_point_close(
+            basic_ab.point.x,
+            basic_ab.point.y,
+            basic_ba.point.x,
+            basic_ba.point.y,
+        );
+        assert_point_close(
+            basic_ab.point.x,
+            basic_ab.point.y,
+            default_basic_ab.point.x,
+            default_basic_ab.point.y,
+        );
+        assert_point_close(
+            basic_ba.point.x,
+            basic_ba.point.y,
+            default_basic_ba.point.x,
+            default_basic_ba.point.y,
+        );
+
+        let overlap_ab = ab.overlapping_intersects[0];
+        let overlap_ba = ba.overlapping_intersects[0];
+        let default_overlap_ab = default_ab.overlapping_intersects[0];
+        let default_overlap_ba = default_ba.overlapping_intersects[0];
+        assert_eq!(overlap_ab.start_index1, overlap_ba.start_index2);
+        assert_eq!(overlap_ab.start_index2, overlap_ba.start_index1);
+        assert_eq!(overlap_ab.start_index1, default_overlap_ab.start_index1);
+        assert_eq!(overlap_ab.start_index2, default_overlap_ab.start_index2);
+        assert_eq!(overlap_ba.start_index1, default_overlap_ba.start_index1);
+        assert_eq!(overlap_ba.start_index2, default_overlap_ba.start_index2);
+        assert!(
+            endpoint_set_matches(
+                overlap_ab.point1.x,
+                overlap_ab.point1.y,
+                overlap_ab.point2.x,
+                overlap_ab.point2.y,
+                case.expected_overlap_point_a,
+                case.expected_overlap_point_b
+            ),
+            "{}: unexpected AB overlap endpoints: {:?}",
+            case.name,
+            overlap_ab
+        );
+        assert!(
+            endpoint_set_matches(
+                overlap_ba.point1.x,
+                overlap_ba.point1.y,
+                overlap_ba.point2.x,
+                overlap_ba.point2.y,
+                case.expected_overlap_point_a,
+                case.expected_overlap_point_b
+            ),
+            "{}: unexpected BA overlap endpoints: {:?}",
+            case.name,
+            overlap_ba
+        );
+        assert!(
+            endpoint_set_matches(
+                default_overlap_ab.point1.x,
+                default_overlap_ab.point1.y,
+                default_overlap_ab.point2.x,
+                default_overlap_ab.point2.y,
+                case.expected_overlap_point_a,
+                case.expected_overlap_point_b
+            ),
+            "{}: unexpected default AB overlap endpoints: {:?}",
+            case.name,
+            default_overlap_ab
+        );
+        assert!(
+            endpoint_set_matches(
+                default_overlap_ba.point1.x,
+                default_overlap_ba.point1.y,
+                default_overlap_ba.point2.x,
+                default_overlap_ba.point2.y,
+                case.expected_overlap_point_a,
+                case.expected_overlap_point_b
+            ),
+            "{}: unexpected default BA overlap endpoints: {:?}",
+            case.name,
+            default_overlap_ba
+        );
+
+        let lhs_after: Vec<_> = case.lhs.iter_vertexes().collect();
+        let rhs_after: Vec<_> = case.rhs.iter_vertexes().collect();
+        assert_eq!(
+            lhs_after, lhs_before,
+            "{}: lhs mutated by find_intersects_opt",
+            case.name
+        );
+        assert_eq!(
+            rhs_after, rhs_before,
+            "{}: rhs mutated by find_intersects_opt",
+            case.name
+        );
+    }
+}
+
+#[test]
 fn cpp_reversed_endpoint_closure_basic_intersect_role_flip_options_matrix_parity() {
     type Point = (f64, f64);
 

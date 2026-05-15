@@ -2441,6 +2441,13 @@ endpoint-stickiness branch closure.
     role-flip variants (counts, AB/BA role inversion, expected swapped overlap
     endpoint ordering, including start-index-rotation lanes, and input
     immutability).
+- Added Rust options-path canonical-name counterpart for non-circle
+  reversed-endpoint-order closure-basic-intersect fixture matrix:
+  - `cpp_reversed_endpoint_closure_basic_intersect_options_matrix_parity`
+  - verifies `find_intersects_opt` remains aligned with default-path
+    `find_intersects` outputs across closed-`pline1` and closed-`pline2`
+    branches (counts, AB/BA symmetry, overlap endpoint-set behavior, including
+    start-index-rotation lanes, and input immutability).
 
 ## Next Alignment Targets (No Clipper)
 
