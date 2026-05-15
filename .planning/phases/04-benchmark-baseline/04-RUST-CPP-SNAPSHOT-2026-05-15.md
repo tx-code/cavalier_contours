@@ -36,7 +36,7 @@ Using Rust bencher `ns/iter` vs C++ `real_time` converted to `ns/iter`:
 
 | Family | Compared pairs | Median Rust/C++ ratio | Main observation |
 |--------|----------------|-----------------------|------------------|
-| `spatial_index` | 36 | `0.740` | Rust is faster in most pairs; only two small native-create cases remain slightly slower. |
+| `spatial_index` | 36 | `0.767` | Rust is faster in most pairs; only two tiny native-create cases remain slightly slower (near parity). |
 | `offset` | 18 | `0.856` | Rust is faster in all compared pairs. |
 | `boolean` (`combine`) | 36 | `0.604` | Rust is faster in all compared pairs. |
 
@@ -48,8 +48,8 @@ Remaining Rust-slower cases from this snapshot:
 
 | Rust ID | Rust/C++ ratio | Delta |
 |--------|-----------------|-------|
-| `spatial_index/create/native/circle` | `1.063` | `+6.3%` |
-| `spatial_index/create/native/diamond` | `1.028` | `+2.8%` |
+| `spatial_index/create/native/circle` | `1.013` | `+1.3%` |
+| `spatial_index/create/native/diamond` | `1.010` | `+1.0%` |
 
 No additional Rust-slower outlier was observed.
 
@@ -60,5 +60,8 @@ No additional Rust-slower outlier was observed.
   numbers are not interchangeable without that context.
 - `cavalier_contours` default features in this snapshot include
   `unsafe_optimizations` for `static_aabb2d_index`.
+- Rust `spatial_index/create/*` benchmark IDs in this snapshot removed an
+  unnecessary input `black_box` wrapper so very-small-case measurements better
+  reflect index-build cost.
 - Raw local artifacts are under `target/bench-compare/` and are intentionally
   untracked.

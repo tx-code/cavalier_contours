@@ -385,7 +385,7 @@ fn bench_spatial_index(c: &mut Criterion) {
         let mut create_group = c.benchmark_group(format!("spatial_index/create/{mode}"));
         for profile in profiles.iter() {
             create_group.bench_function(BenchmarkId::from_parameter(profile.id.as_str()), |b| {
-                b.iter(|| black_box(black_box(&profile.pline).create_approx_aabb_index()));
+                b.iter(|| black_box(profile.pline.create_approx_aabb_index()));
             });
         }
         create_group.finish();
