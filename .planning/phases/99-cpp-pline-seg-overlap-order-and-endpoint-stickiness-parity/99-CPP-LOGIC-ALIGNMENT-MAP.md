@@ -2751,6 +2751,14 @@ endpoint-stickiness branch closure.
   - each alias delegates to its existing role-flip guard, closing the remaining
     `*_role_flip_options_parity -> *_options_parity` canonical-name gaps for
     the current options-path parity surface.
+- Added Rust options-path canonical non-role matrix alias for the remaining
+  wrap-around open-side-reversed closed-`pline2` closure-basic-intersect
+  start-index-rotation role-flip matrix branch:
+  - `cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_intersect_start_index_rotation_options_matrix_parity`
+  - alias delegates to the existing role-flip matrix guard
+    (`..._role_flip_options_matrix_parity`), closing the last
+    `*_role_flip_options_matrix_parity -> *_options_matrix_parity`
+    canonical-name gap.
 
 ## Next Alignment Targets (No Clipper)
 
