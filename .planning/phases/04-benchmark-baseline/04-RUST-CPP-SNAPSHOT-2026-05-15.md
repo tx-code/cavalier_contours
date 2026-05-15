@@ -53,6 +53,23 @@ Remaining Rust-slower cases from this snapshot:
 
 No additional Rust-slower outlier was observed.
 
+### Targeted Long-Run Recheck
+
+To verify the two tiny residual cases, we reran only
+`spatial_index/create/native/{circle,diamond}` with longer windows:
+
+- Rust: `--measurement-time 2 --sample-size 50`
+- C++: `--benchmark_min_time=1s`
+
+Observed values:
+
+| Case | Rust `ns/iter` | C++ `ns/iter` | Ratio |
+|------|----------------|---------------|-------|
+| `circle` | `104` | `102.84` | `1.011` |
+| `diamond` | `108` | `111.48` | `0.969` |
+
+This indicates practical parity for the two residual tiny-shape create cases.
+
 ## Notes
 
 - This snapshot is directional evidence, not a CI threshold.
