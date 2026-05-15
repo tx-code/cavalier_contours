@@ -47,7 +47,8 @@ benchmark groups for:
 - `spatial_index/create/native`, `spatial_index/create/no_arcs`,
   `spatial_index/query_reuse_stack/native`, and
   `spatial_index/query_reuse_stack/no_arcs`: `create_approx_aabb_index` and
-  query-with-reused-stack style workloads.
+  query-with-reused-stack style workloads. Query IDs run with prebuilt index
+  and reused query buffers outside the timed loop, matching old C++ `QuerySetup`.
 - `properties/area/*`, `properties/extents/*`, `properties/path_length/*`, and
   `properties/winding_number_grid/*`: property calls over mapped profile
   families.

@@ -228,15 +228,19 @@ fn count_boolean_result(
     result.pos_plines.len() + result.neg_plines.len()
 }
 
-fn spatial_query_sum(pline: &Polyline<f64>) -> usize {
-    let index = pline.create_approx_aabb_index();
-    let mut stack = Vec::new();
+fn spatial_query_sum_with_reused_index(
+    pline: &Polyline<f64>,
+    index: &cavalier_contours::static_aabb2d_index::StaticAABB2DIndex<f64>,
+    query_results: &mut Vec<usize>,
+    stack: &mut Vec<usize>,
+) -> usize {
     let mut total = 0;
 
     for (i, j) in pline.iter_segment_indexes() {
         let bb = seg_fast_approx_bounding_box(pline.at(i), pline.at(j));
-        let mut visitor = |_: usize| {
-            total += 1;
+        query_results.clear();
+        let mut visitor = |hit: usize| {
+            query_results.push(hit);
         };
         index.visit_query_with_stack(
             bb.min_x - 0.1,
@@ -244,8 +248,9 @@ fn spatial_query_sum(pline: &Polyline<f64>) -> usize {
             bb.max_x + 0.1,
             bb.max_y + 0.1,
             &mut visitor,
-            &mut stack,
+            stack,
         );
+        total += query_results.len();
     }
 
     total
@@ -387,8 +392,18 @@ fn bench_spatial_index(c: &mut Criterion) {
 
         let mut query_group = c.benchmark_group(format!("spatial_index/query_reuse_stack/{mode}"));
         for profile in profiles {
+            let index = profile.pline.create_approx_aabb_index();
+            let mut query_results = Vec::new();
+            let mut stack = Vec::new();
             query_group.bench_function(BenchmarkId::from_parameter(profile.id.as_str()), |b| {
-                b.iter(|| black_box(spatial_query_sum(black_box(&profile.pline))));
+                b.iter(|| {
+                    black_box(spatial_query_sum_with_reused_index(
+                        black_box(&profile.pline),
+                        black_box(&index),
+                        black_box(&mut query_results),
+                        black_box(&mut stack),
+                    ))
+                });
             });
         }
         query_group.finish();

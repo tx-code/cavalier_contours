@@ -49,8 +49,9 @@ old source path.
 - Native arc benchmark IDs measure current Rust arc-aware behavior.
 - No-arcs benchmark IDs derive inputs with `arcs_to_approx_lines(0.01)` before
   the timed loop. Conversion cost is excluded.
+- Query-reuse-stack IDs mirror old C++ `QuerySetup`: prebuilt index plus reused
+  `query_results` and `query_stack` buffers are created outside the timed loop.
 - Clipper2 runtime/oracle cost is excluded from Phase 4 and remains Phase 5
   policy.
 - Generated Criterion output under `target/criterion` is local-only evidence and
   is not committed.
-
