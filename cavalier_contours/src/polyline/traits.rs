@@ -389,13 +389,16 @@ pub trait PlineSource {
             if !v1.bulge_is_zero() {
                 // add arc segment area
                 let b = v1.bulge.abs();
+                let b_sq = b * b;
                 let sweep_angle = angle_from_bulge(b);
-                let triangle_base = (v2.pos() - v1.pos()).length();
-                let radius = triangle_base * ((b * b + Self::Num::one()) / (Self::Num::four() * b));
-                let sagitta = b * triangle_base / Self::Num::two();
-                let triangle_height = radius - sagitta;
-                let double_sector_area = sweep_angle * radius * radius;
-                let double_triangle_area = triangle_base * triangle_height;
+                let dx = v2.x - v1.x;
+                let dy = v2.y - v1.y;
+                let chord_len_sq = dx * dx + dy * dy;
+                let quarter_b_inv = Self::Num::one() / (Self::Num::four() * b);
+                let radius_factor = (b_sq + Self::Num::one()) * quarter_b_inv;
+                let radius_sq = chord_len_sq * radius_factor * radius_factor;
+                let double_sector_area = sweep_angle * radius_sq;
+                let double_triangle_area = chord_len_sq * (Self::Num::one() - b_sq) * quarter_b_inv;
                 let mut double_arc_area = double_sector_area - double_triangle_area;
                 if v1.bulge_is_neg() {
                     double_arc_area = -double_arc_area;

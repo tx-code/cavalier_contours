@@ -35,11 +35,11 @@ Using Rust bencher `ns/iter` vs C++ `real_time` converted to `ns/iter`:
 
 | Metric | Pairs | Median Rust/C++ ratio | Rust slower count |
 |--------|-------|------------------------|-------------------|
-| `area` | 18 | `0.758` | `2/18` |
-| `extents` | 18 | `0.737` | `1/18` |
-| `path_length` | 18 | `0.695` | `0/18` |
-| `winding_number_grid` | 18 | `0.704` | `1/18` |
-| **All properties** | **72** | **`0.715`** | **`4/72`** |
+| `area` | 18 | `0.775` | `1/18` |
+| `extents` | 18 | `0.726` | `1/18` |
+| `path_length` | 18 | `0.692` | `0/18` |
+| `winding_number_grid` | 18 | `0.694` | `0/18` |
+| **All properties** | **72** | **`0.711`** | **`2/72`** |
 
 Interpretation: ratio `< 1` means Rust faster, `> 1` means Rust slower.
 
@@ -47,10 +47,8 @@ Interpretation: ratio `< 1` means Rust faster, `> 1` means Rust slower.
 
 | Key | Rust/C++ ratio | Delta |
 |-----|-----------------|-------|
-| `area|native|pathological_profile1_10` | `1.083` | `+8.3%` |
-| `winding_number_grid|no_arcs|pathological_profile1_100` | `1.028` | `+2.8%` |
 | `extents|native|diamond` | `1.013` | `+1.3%` |
-| `area|native|pathological_profile1_50` | `1.001` | `+0.1%` |
+| `area|native|pathological_profile1_10` | `1.003` | `+0.3%` |
 
 ## Targeted Long-Run Recheck
 
@@ -61,18 +59,18 @@ Targeted reruns with longer windows:
 
 | Case | Rust `ns/iter` | C++ `ns/iter` | Ratio |
 |------|----------------|---------------|-------|
-| `area|native|pathological_profile1_10` | `69` | `64.18` | `1.075` |
+| `area|native|pathological_profile1_10` | `64` | `64.18` | `0.997` |
 | `winding_number_grid|no_arcs|pathological_profile1_100` | `153427` | `164634` | `0.932` |
-| `extents|native|diamond` | `12` | `11.60` | `1.034` |
+| `extents|native|diamond` | `11` | `11.60` | `0.948` |
 
-The only consistent residual slower point is the small absolute gap in
-`area|native|pathological_profile1_10`; other residuals are near parity or
-flip direction under longer runs.
+All three rechecked residuals are at parity-or-better under longer runs.
 
 ## Notes
 
 - This is comparative evidence, not a CI threshold.
 - Criterion and Google Benchmark use different harness implementations.
+- Arc-area computation was optimized to avoid per-segment `sqrt` in the Rust
+  area path while preserving semantics.
 - Rust property benches in this snapshot remove unnecessary input `black_box`
   wrappers so measurements better reflect property-call cost.
 - Raw local artifacts remain under `target/bench-compare/` and are untracked.
