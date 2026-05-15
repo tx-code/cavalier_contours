@@ -2113,6 +2113,14 @@ endpoint-stickiness branch closure.
     `find_intersects` outputs (counts, AB/BA role inversion, branch-specific
     overlap endpoint ordering, rotated zero-length-lead index attribution
     semantics, and input immutability).
+- Added Rust options-path counterpart for non-circle wrap-around
+  open-side-reversed + closed-side-reversed start-index-rotation
+  zero-length-lead role-flip fixture:
+  - `cpp_wrap_around_open_side_reversed_closed_side_reversed_start_index_rotation_zero_length_lead_options_parity`
+  - verifies `find_intersects_opt` remains aligned with default-path
+    `find_intersects` outputs (counts, AB/BA role inversion, branch-specific
+    overlap endpoint ordering, rotated zero-length-lead index attribution
+    semantics, and input immutability).
 
 ## Next Alignment Targets (No Clipper)
 
