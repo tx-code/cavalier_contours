@@ -3676,6 +3676,11 @@ fn cpp_reversed_endpoint_closure_basic_options_matrix_parity() {
 }
 
 #[test]
+fn cpp_reversed_endpoint_closure_basic_options_parity() {
+    cpp_reversed_endpoint_closure_basic_role_flip_options_parity();
+}
+
+#[test]
 fn cpp_reversed_endpoint_closure_basic_role_flip_options_parity() {
     cpp_reversed_endpoint_closure_basic_role_flip_options_matrix_parity();
 }
@@ -5443,6 +5448,11 @@ fn cpp_reversed_endpoint_closure_basic_intersect_options_matrix_parity() {
             case.name
         );
     }
+}
+
+#[test]
+fn cpp_reversed_endpoint_closure_basic_intersect_options_parity() {
+    cpp_reversed_endpoint_closure_basic_intersect_role_flip_options_parity();
 }
 
 #[test]
@@ -16663,6 +16673,11 @@ fn cpp_wrap_around_closed_side_reversed_closure_basic_options_matrix_parity() {
 }
 
 #[test]
+fn cpp_wrap_around_closed_side_reversed_closure_basic_options_parity() {
+    cpp_wrap_around_closed_side_reversed_closure_basic_role_flip_options_parity();
+}
+
+#[test]
 fn cpp_wrap_around_closed_side_reversed_closure_basic_role_flip_options_parity() {
     cpp_wrap_around_closed_side_reversed_closure_basic_role_flip_options_matrix_parity();
 }
@@ -17352,6 +17367,11 @@ fn cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_clos
 }
 
 #[test]
+fn cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_options_parity() {
+    cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_role_flip_options_parity();
+}
+
+#[test]
 fn cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_role_flip_options_parity() {
     cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_role_flip_options_matrix_parity(
     );
@@ -17501,6 +17521,11 @@ fn cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_role_flip_opti
 }
 
 #[test]
+fn cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_options_parity() {
+    cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_role_flip_options_parity();
+}
+
+#[test]
 fn cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_role_flip_options_parity() {
     cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_role_flip_options_matrix_parity();
 }
@@ -17636,6 +17661,12 @@ fn cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_role_flip
         open_after, open_before,
         "open-side input mutated by find_intersects_opt"
     );
+}
+
+#[test]
+fn cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_options_parity()
+ {
+    cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_role_flip_options_parity();
 }
 
 #[test]
@@ -17775,6 +17806,12 @@ fn cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_clos
         open_after, open_before,
         "open-side input mutated by find_intersects_opt"
     );
+}
+
+#[test]
+fn cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_options_parity()
+ {
+    cpp_wrap_around_open_side_reversed_closed_pline2_with_normal_closed_side_closure_basic_intersect_role_flip_options_parity();
 }
 
 #[test]
