@@ -2704,6 +2704,14 @@ endpoint-stickiness branch closure.
   - each alias delegates to an existing non-zero role-flip options parity
     guard to keep canonical zero-length-lead/non-zero naming paired while
     preserving the validated assertion logic.
+- Added Rust options-path canonical-name aliases for wrap-around
+  open-side-reversed closure-basic-intersect start-index-rotation (non-role-flip)
+  non-zero fixture branches:
+  - `cpp_wrap_around_open_side_reversed_closed_pline2_closure_basic_intersect_start_index_rotation_options_parity`
+  - `cpp_wrap_around_open_side_reversed_normal_closed_side_closure_basic_intersect_start_index_rotation_options_parity`
+  - aliases delegate to existing non-zero guards (`*_role_flip_options_parity`
+    and `*_with_normal_closed_side_*_options_parity`) to keep canonical
+    zero-length-lead/non-zero naming paired while reusing validated assertions.
 
 ## Next Alignment Targets (No Clipper)
 
