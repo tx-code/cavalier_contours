@@ -16,7 +16,7 @@ radius, and low public-surface risk. Higher total is better for the first Phase
 | 4 | `historical-cpp-combine-circle-rectangle-union` | Phase 3 `03-INVENTORY.md`; Phase 6 backlog rank 4 | `old-cpp` | 3 | 2 | 5 | 5 | 5 | 20 | `evidence-only` | Executable geometry parity is already green; remaining vertex-count delta is a representation/topology detail only. |
 | 5 | `offset-round-orientation-exterior-corpus` | Phase 5 `05-ORACLE-EVIDENCE.md`; Phase 6 backlog rank 5 | `clipper2` | 3 | 3 | 3 | 2 | 4 | 15 | `defer` | Needs stronger expected properties before execution; avoid broad offset semantics changes in first slice. |
 | 6 | `open-path-clipper-lines-suite` | Phase 5 `05-ORACLE-EVIDENCE.md`; Phase 6 backlog rank 6 | `clipper2` | 1 | 3 | 4 | 1 | 3 | 12 | `not-comparable` | Open-path clipping does not match current closed area boolean scope. |
-| 7 | `spatial-index-query-behavior-record` | Phase 3 `03-INVENTORY.md`; Phase 4 benchmark mapping | `old-cpp` | 3 | 2 | 3 | 3 | 5 | 16 | `evidence-only` | Keep as benchmark/reference evidence rather than public capability absorption. |
+| 7 | `spatial-index-query-behavior-record` | Phase 3 `03-INVENTORY.md`; Phase 4 benchmark mapping | `old-cpp` | 4 | 2 | 5 | 5 | 5 | 21 | `evidence-only` | Query/visit semantics already have executable parity coverage; keep this candidate as benchmark/reference evidence rather than public capability absorption. |
 
 ## Selected First Slice
 

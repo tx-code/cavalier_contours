@@ -39,7 +39,7 @@ production Rust APIs, FFI implementation, generated headers, benchmarks, or UI.
 - Pure property evidence is executable through `historical-cpp-properties-ccw-circle-x-aligned`.
 - Old C++ circle/rectangle union evidence executes as geometry parity (`ApproximateParity`) against old area/path/extents expectations with relaxed topology (`compare_vertex_count=false`), preserving the known representation delta without a failing gap marker.
 - C API evidence remains metadata-only and migration-sensitive.
-- Static spatial index evidence remains metadata-only and benchmark-candidate; performance treatment stays deferred to Phase 4.
+- Static spatial index query behavior has executable parity coverage in `test_cpp_static_spatial_index_parity.rs` (`query`, `visit_query`, and early-stop visitor semantics), while throughput benchmark treatment stays deferred to Phase 4.
 - Fixture records expose source path, usage label, comparison mode, operation kind, and executable status through `fixture_metadata`.
 - Fixture comparison uses property parity and centralized Phase 2 tolerances.
 - No public Rust API, FFI implementation, generated header, benchmark, or UI scope drift occurred.
@@ -49,6 +49,7 @@ production Rust APIs, FFI implementation, generated headers, benchmarks, or UI.
 - `gsd-sdk query phase-plan-index 3` - passed, 3/3 plans have summaries.
 - `gsd-sdk query check.decision-coverage-plan .planning/phases/03-historical-c-evidence-mining .planning/phases/03-historical-c-evidence-mining/03-CONTEXT.md` - passed, 13/13 decisions covered.
 - `cargo test -p cavalier_contours --test test_historical_cavalier_contours -- --nocapture` - passed, 3 tests.
+- `cargo test -p cavalier_contours --test test_cpp_static_spatial_index_parity -- --nocapture` - passed, 3 tests.
 - `cargo test -p cavalier_contours --test test_fixture_harness` - passed, 2 tests.
 - `cargo test --workspace` - passed, workspace tests for core, FFI, UI, and doctests.
 - `cargo fmt --all --check` - passed.

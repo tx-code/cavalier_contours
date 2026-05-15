@@ -22,7 +22,7 @@ Score is 1-5 for each column. Higher total means better Phase 6 target.
 | 4 | `historical-cpp-combine-circle-rectangle-union` | boolean, overlap, tangent | Phase 3 executable parity now validates old C++ geometry (`area/path/extents`) with `compare_vertex_count=false`; remaining difference is topology/representation (`10` vs `8` vertices after normalization). | 1 | 5 | 5 | 5 | 4 | 20 | Closed as geometry parity; keep only as topology delta evidence (no production algorithm fix queued). |
 | 5 | `offset-round-orientation-exterior-corpus` | offset, tolerance, overlap | Phase 5 `Offsets.txt` round polygon cases skip stored area/count and validate qualitative orientation/exterior properties. | 3 | 3 | 2 | 2 | 3 | 13 | Defer; needs better expected properties before execution. |
 | 6 | `open-path-clipper-lines-suite` | open/closed, boolean | Clipper2 `Lines.txt` is open-path clipping; current Rust boolean fixture path is closed area polylines. | 3 | 4 | 2 | 1 | 1 | 11 | Not comparable in this phase. |
-| 7 | `spatial-index-query-behavior-record` | intersection, spatial index | Phase 3 records old C++ static spatial index query IDs and early-stop behavior as metadata; Phase 4 has benchmark coverage. | 2 | 3 | 4 | 3 | 3 | 15 | Keep as benchmark/reference evidence, not Phase 6 first fix. |
+| 7 | `spatial-index-query-behavior-record` | intersection, spatial index | Old C++ static spatial index query IDs and early-stop behavior now have executable parity (`test_cpp_static_spatial_index_parity`); Phase 4 still owns throughput benchmark coverage. | 1 | 5 | 5 | 5 | 4 | 20 | Correctness parity closed; keep only as benchmark/reference evidence, not Phase 6 first fix. |
 
 ## Required Risk Family Coverage
 

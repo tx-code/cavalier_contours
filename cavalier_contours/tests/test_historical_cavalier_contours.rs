@@ -201,7 +201,7 @@ fn historical_cpp_static_spatial_index_query_record() -> FixtureCase {
         ComparisonMode::NotComparable,
         FixtureTolerance::default(),
         ExpectedFixtureData::MetadataOnly {
-            reason: "old static spatial index query and visitor behavior is metadata only; benchmark treatment is deferred to Phase 4",
+            reason: "static spatial index query parity is covered by test_cpp_static_spatial_index_parity; this record keeps benchmark-candidate provenance deferred to Phase 4",
         },
     )
 }

@@ -17,7 +17,7 @@
 | `tests/tests/TEST_cavc_parallel_offset.cpp` | Offset result counts and properties for rectangles, diamonds, arcs, collapse cases, and reversed inputs. | executable candidate | `translated-fixture-candidate` | Use property parity; reversed area sign cases are useful later but not required for this phase. |
 | `tests/tests/TEST_cavc_combine_plines.cpp` | Old `combine_mode` 0..3 boolean results with unordered property comparison and area sign ignored. | executable candidate | `translated-fixture-candidate` | Prefer explicitly constructed circle/rectangle cases; avoid broad constructor-table import. |
 | `tests/tests/TEST_cavc_pline_function.cpp` | Area, path length, extents, winding, closest point, and offset expectations for circle/half-circle cases. | executable candidate | `translated-fixture-candidate` | Pure property cases need a narrow test-only `Properties` fixture operation. |
-| `tests/tests/TEST_staticspatialindex.cpp` | Static spatial index add/finish/query/visit behavior, including early-stop query visitor. | metadata-only / deferred | `translated-fixture-candidate`, `benchmark-candidate` | Behavior notes only in Phase 3; performance and benchmark mapping defer to Phase 4. |
+| `tests/tests/TEST_staticspatialindex.cpp` | Static spatial index add/finish/query/visit behavior, including early-stop query visitor. | query parity executable + benchmark deferred | `translated-fixture-candidate`, `benchmark-candidate` | Query/visit/early-stop parity is executable in `test_cpp_static_spatial_index_parity.rs`; throughput benchmark mapping still defers to Phase 4. |
 | `c_api_include/cavaliercontours.h` | Old C API surface for pline creation, lists, offset, combine, area/path/extents, winding, and closest point. | metadata-only / not comparable | `migration-sensitive` | No Rust FFI implementation or `cavalier_contours_ffi.h` change in Phase 3. |
 | `src/cavaliercontours.cpp` | Old C API implementation routing to C++ polyline operations. | metadata-only / not comparable | `migration-sensitive` | Records migration-sensitive behavior shape without copying implementation code. |
 | `examples/*.cpp`, `README.md` | Usage examples and behavior notes. | deferred | `reference-only`, `translated-fixture-candidate` | Inventory-only unless a later phase promotes a case. |
@@ -37,7 +37,7 @@
 | Record ID | Source path | Usage label | Comparison mode | Operation kind | Final status | Rationale |
 |-----------|-------------|-------------|-----------------|----------------|--------------|-----------|
 | `historical-cpp-c-api-surface-migration-record` | `c_api_include/cavaliercontours.h`; `src/cavaliercontours.cpp` | `migration-sensitive` | `NotComparable` | Properties metadata | `metadata-only-not-comparable` | Records old construction/list/offset/combine/property function surface for migration notes. Phase 3 makes no C FFI code or generated header change. |
-| `historical-cpp-static-spatial-index-query-record` | `tests/tests/TEST_staticspatialindex.cpp` | `translated-fixture-candidate`, `benchmark-candidate` | `NotComparable` | Offset metadata | `metadata-only-not-comparable` | Records query result IDs `{6,29,31,75}`, visitor semantics, and early-stop behavior. Performance treatment is deferred to Phase 4. |
+| `historical-cpp-static-spatial-index-query-record` | `tests/tests/TEST_staticspatialindex.cpp` | `translated-fixture-candidate`, `benchmark-candidate` | `NotComparable` | Offset metadata | `metadata-only-not-comparable` | Keeps benchmark-candidate provenance in fixture metadata; executable query parity (`{6,29,31,75}` + early-stop semantics) lives in `test_cpp_static_spatial_index_parity.rs`. |
 
 ## Deferred Evidence
 
@@ -53,6 +53,7 @@
 | Gate | Status | Notes |
 |------|--------|-------|
 | `cargo test -p cavalier_contours --test test_historical_cavalier_contours` | pass | Executes `executable-green` offset/boolean/property fixtures (including the circle-rectangle union geometry parity case) and asserts `metadata-only-not-comparable` records do not execute. |
+| `cargo test -p cavalier_contours --test test_cpp_static_spatial_index_parity` | pass | Executes old C++ static index query parity (`query`, `visit_query`, and early-stop visitor semantics) against `TEST_staticspatialindex.cpp` evidence. |
 | `cargo test -p cavalier_contours --test test_fixture_harness` | pass | Confirms Phase 2 seed fixtures still execute through the extended harness. |
 | `cargo test --workspace` | pass | Full workspace gate passed after inventory/test synchronization. |
 
