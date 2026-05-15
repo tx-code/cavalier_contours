@@ -4018,6 +4018,11 @@ fn cpp_reversed_endpoint_closure_basic_role_flip_options_matrix_parity() {
 }
 
 #[test]
+fn cpp_reversed_endpoint_closure_basic_nonzero_open_index_options_matrix_parity() {
+    cpp_reversed_endpoint_closure_basic_nonzero_open_index_options_parity();
+}
+
+#[test]
 fn cpp_reversed_endpoint_closure_basic_nonzero_open_index_options_parity() {
     type Point = (f64, f64);
 
@@ -4306,6 +4311,11 @@ fn cpp_reversed_endpoint_closure_basic_nonzero_open_index_options_parity() {
             case.name
         );
     }
+}
+
+#[test]
+fn cpp_reversed_endpoint_closure_basic_role_flip_nonzero_open_index_options_matrix_parity() {
+    cpp_reversed_endpoint_closure_basic_role_flip_nonzero_open_index_options_parity();
 }
 
 #[test]
@@ -4606,6 +4616,11 @@ fn cpp_reversed_endpoint_closure_basic_role_flip_nonzero_open_index_options_pari
 }
 
 #[test]
+fn cpp_reversed_endpoint_closure_basic_intersect_nonzero_open_index_options_matrix_parity() {
+    cpp_reversed_endpoint_closure_basic_intersect_nonzero_open_index_options_parity();
+}
+
+#[test]
 fn cpp_reversed_endpoint_closure_basic_intersect_nonzero_open_index_options_parity() {
     type Point = (f64, f64);
 
@@ -4887,6 +4902,12 @@ fn cpp_reversed_endpoint_closure_basic_intersect_nonzero_open_index_options_pari
             case.name
         );
     }
+}
+
+#[test]
+fn cpp_reversed_endpoint_closure_basic_intersect_role_flip_nonzero_open_index_options_matrix_parity()
+ {
+    cpp_reversed_endpoint_closure_basic_intersect_role_flip_nonzero_open_index_options_parity();
 }
 
 #[test]
@@ -5788,6 +5809,12 @@ fn cpp_reversed_endpoint_closure_basic_intersect_role_flip_options_matrix_parity
 }
 
 #[test]
+fn cpp_reversed_endpoint_closure_basic_start_index_rotation_zero_length_lead_options_matrix_parity()
+{
+    cpp_reversed_endpoint_closure_basic_start_index_rotation_zero_length_lead_options_parity();
+}
+
+#[test]
 fn cpp_reversed_endpoint_closure_basic_start_index_rotation_zero_length_lead_options_parity() {
     type Point = (f64, f64);
 
@@ -6086,7 +6113,17 @@ fn cpp_reversed_endpoint_closure_basic_start_index_rotation_zero_length_lead_opt
 }
 
 #[test]
+fn cpp_reversed_endpoint_closure_basic_start_index_rotation_options_matrix_parity() {
+    cpp_reversed_endpoint_closure_basic_start_index_rotation_options_parity();
+}
+
+#[test]
 fn cpp_reversed_endpoint_closure_basic_start_index_rotation_options_parity() {
+    cpp_reversed_endpoint_closure_basic_start_index_rotation_role_flip_options_parity();
+}
+
+#[test]
+fn cpp_reversed_endpoint_closure_basic_start_index_rotation_role_flip_options_matrix_parity() {
     cpp_reversed_endpoint_closure_basic_start_index_rotation_role_flip_options_parity();
 }
 
@@ -6384,6 +6421,12 @@ fn cpp_reversed_endpoint_closure_basic_start_index_rotation_role_flip_options_pa
             case.name
         );
     }
+}
+
+#[test]
+fn cpp_reversed_endpoint_closure_basic_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity()
+ {
+    cpp_reversed_endpoint_closure_basic_start_index_rotation_zero_length_lead_role_flip_options_parity();
 }
 
 #[test]
@@ -6686,6 +6729,12 @@ fn cpp_reversed_endpoint_closure_basic_start_index_rotation_zero_length_lead_rol
 }
 
 #[test]
+fn cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_zero_length_lead_options_matrix_parity()
+ {
+    cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_zero_length_lead_options_parity();
+}
+
+#[test]
 fn cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_zero_length_lead_options_parity()
  {
     type Point = (f64, f64);
@@ -6985,7 +7034,18 @@ fn cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_zero_lengt
 }
 
 #[test]
+fn cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_options_matrix_parity() {
+    cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_options_parity();
+}
+
+#[test]
 fn cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_options_parity() {
+    cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_role_flip_options_parity();
+}
+
+#[test]
+fn cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_role_flip_options_matrix_parity()
+ {
     cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_role_flip_options_parity();
 }
 
@@ -7283,6 +7343,12 @@ fn cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_role_flip_
             case.name
         );
     }
+}
+
+#[test]
+fn cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity()
+ {
+    cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_zero_length_lead_role_flip_options_parity();
 }
 
 #[test]

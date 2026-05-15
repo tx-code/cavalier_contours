@@ -2859,6 +2859,23 @@ endpoint-stickiness branch closure.
   - each alias delegates to the corresponding existing `*_options_parity`
     guard, reducing this family's
     `*_options_parity -> *_options_matrix_parity` naming gaps.
+- Added canonical matrix aliases for reversed-endpoint closure-basic and
+  closure-basic-intersect options families:
+  - `cpp_reversed_endpoint_closure_basic_nonzero_open_index_options_matrix_parity`
+  - `cpp_reversed_endpoint_closure_basic_role_flip_nonzero_open_index_options_matrix_parity`
+  - `cpp_reversed_endpoint_closure_basic_start_index_rotation_options_matrix_parity`
+  - `cpp_reversed_endpoint_closure_basic_start_index_rotation_role_flip_options_matrix_parity`
+  - `cpp_reversed_endpoint_closure_basic_start_index_rotation_zero_length_lead_options_matrix_parity`
+  - `cpp_reversed_endpoint_closure_basic_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity`
+  - `cpp_reversed_endpoint_closure_basic_intersect_nonzero_open_index_options_matrix_parity`
+  - `cpp_reversed_endpoint_closure_basic_intersect_role_flip_nonzero_open_index_options_matrix_parity`
+  - `cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_options_matrix_parity`
+  - `cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_role_flip_options_matrix_parity`
+  - `cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_zero_length_lead_options_matrix_parity`
+  - `cpp_reversed_endpoint_closure_basic_intersect_start_index_rotation_zero_length_lead_role_flip_options_matrix_parity`
+  - each alias delegates to the corresponding existing `*_options_parity`
+    guard, reducing these families'
+    `*_options_parity -> *_options_matrix_parity` naming gaps.
 
 ## Next Alignment Targets (No Clipper)
 
