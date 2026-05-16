@@ -6,4 +6,3 @@ pub mod pline_boolean;
 pub mod pline_contains;
 pub mod pline_intersects;
 pub mod pline_offset;
-pub mod pline_profile_offset;

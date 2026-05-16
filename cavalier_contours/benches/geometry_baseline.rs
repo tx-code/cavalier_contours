@@ -1,7 +1,6 @@
 use cavalier_contours::core::math::Vector2;
 use cavalier_contours::polyline::{
-    BooleanOp, PlineCreation, PlineOffsetProfileMode, PlineProfileOffsetOptions, PlineSource,
-    PlineSourceMut, Polyline, seg_fast_approx_bounding_box,
+    BooleanOp, PlineCreation, PlineSource, PlineSourceMut, Polyline, seg_fast_approx_bounding_box,
 };
 use criterion::{BenchmarkId, Criterion, criterion_group, criterion_main};
 use std::{
@@ -204,25 +203,6 @@ fn profile_modes() -> [(&'static str, Vec<BenchmarkProfile>); 2] {
     ]
 }
 
-fn constant_profile(pline: &Polyline<f64>, offset: f64) -> Vec<f64> {
-    vec![offset; pline.vertex_count()]
-}
-
-fn variable_profile_wave(pline: &Polyline<f64>, offset: f64) -> Vec<f64> {
-    let vertex_count = pline.vertex_count();
-    if vertex_count == 0 {
-        return Vec::new();
-    }
-    // Keep all distances the same sign as `offset` so benchmark inputs remain valid.
-    (0..vertex_count)
-        .map(|i| {
-            let t = i as f64 / vertex_count as f64;
-            let factor = 1.0 + 0.3 * (TAU * t).sin();
-            offset * factor
-        })
-        .collect()
-}
-
 fn shifted_profile(profile: &Polyline<f64>, x: f64, y: f64) -> Polyline<f64> {
     let mut shifted = profile.clone();
     shifted.translate_mut(x, y);
@@ -321,108 +301,6 @@ fn bench_offsets(c: &mut Criterion) {
         }
 
         group.finish();
-    }
-}
-
-fn bench_profile_offsets(c: &mut Criterion) {
-    for (mode, profiles) in profile_modes() {
-        let mut group = c.benchmark_group(format!("offset_profile/constant/{mode}"));
-
-        for profile in profiles {
-            let options = PlineProfileOffsetOptions::default();
-            let test_profiles: Vec<Vec<f64>> = (1..=profile.offset_count)
-                .flat_map(|i| {
-                    let offset = i as f64 * profile.offset_delta;
-                    [
-                        constant_profile(&profile.pline, offset),
-                        constant_profile(&profile.pline, -offset),
-                    ]
-                })
-                .collect();
-
-            group.bench_function(BenchmarkId::from_parameter(profile.id.as_str()), |b| {
-                b.iter(|| {
-                    let mut result_count = 0;
-                    for prof in test_profiles.iter() {
-                        result_count += black_box(&profile.pline)
-                            .parallel_offset_profile(black_box(prof), black_box(&options))
-                            .expect("constant profile offset benchmark setup should be valid")
-                            .len();
-                    }
-                    black_box(result_count)
-                });
-            });
-        }
-
-        group.finish();
-    }
-}
-
-fn bench_variable_profile_offsets(c: &mut Criterion) {
-    for (mode, profiles) in profile_modes() {
-        let mut linear_group = c.benchmark_group(format!("offset_profile/variable_linear/{mode}"));
-
-        for profile in profiles.iter() {
-            let options = PlineProfileOffsetOptions::default();
-            let test_profiles: Vec<Vec<f64>> = (1..=profile.offset_count)
-                .flat_map(|i| {
-                    let offset = i as f64 * profile.offset_delta;
-                    [
-                        variable_profile_wave(&profile.pline, offset),
-                        variable_profile_wave(&profile.pline, -offset),
-                    ]
-                })
-                .collect();
-
-            linear_group.bench_function(BenchmarkId::from_parameter(profile.id.as_str()), |b| {
-                b.iter(|| {
-                    let mut result_count = 0;
-                    for prof in test_profiles.iter() {
-                        result_count += black_box(&profile.pline)
-                            .parallel_offset_profile(black_box(prof), black_box(&options))
-                            .expect(
-                                "variable profile (linear) offset benchmark setup should be valid",
-                            )
-                            .len();
-                    }
-                    black_box(result_count)
-                });
-            });
-        }
-        linear_group.finish();
-
-        let mut step_group = c.benchmark_group(format!("offset_profile/variable_step/{mode}"));
-        for profile in profiles {
-            let options = PlineProfileOffsetOptions {
-                profile_mode: PlineOffsetProfileMode::StepPerSegment,
-                ..Default::default()
-            };
-            let test_profiles: Vec<Vec<f64>> = (1..=profile.offset_count)
-                .flat_map(|i| {
-                    let offset = i as f64 * profile.offset_delta;
-                    [
-                        variable_profile_wave(&profile.pline, offset),
-                        variable_profile_wave(&profile.pline, -offset),
-                    ]
-                })
-                .collect();
-
-            step_group.bench_function(BenchmarkId::from_parameter(profile.id.as_str()), |b| {
-                b.iter(|| {
-                    let mut result_count = 0;
-                    for prof in test_profiles.iter() {
-                        result_count += black_box(&profile.pline)
-                            .parallel_offset_profile(black_box(prof), black_box(&options))
-                            .expect(
-                                "variable profile (step) offset benchmark setup should be valid",
-                            )
-                            .len();
-                    }
-                    black_box(result_count)
-                });
-            });
-        }
-        step_group.finish();
     }
 }
 
@@ -584,6 +462,6 @@ criterion_group! {
         .sample_size(10)
         .warm_up_time(Duration::from_millis(100))
         .measurement_time(Duration::from_millis(300));
-    targets = bench_offsets, bench_profile_offsets, bench_variable_profile_offsets, bench_booleans, bench_intersections, bench_spatial_index, bench_properties
+    targets = bench_offsets, bench_booleans, bench_intersections, bench_spatial_index, bench_properties
 }
 criterion_main!(geometry_baseline);
