@@ -294,6 +294,65 @@ where
     }
 }
 
+/// Interpolation mode for profile-based offset distance along each segment.
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum PlineOffsetProfileMode {
+    /// Offset distance changes linearly from start vertex profile value to end vertex profile value.
+    LinearPerSegment,
+    /// Offset distance is held constant for each segment using the start vertex profile value.
+    StepPerSegment,
+}
+
+/// Struct to hold options parameters when performing profile-based polyline offset.
+#[derive(Debug, Clone)]
+pub struct PlineProfileOffsetOptions<T = f64>
+where
+    T: Real,
+{
+    /// Fuzzy comparison epsilon used for determining if two positions are equal.
+    pub pos_equal_eps: T,
+    /// Controls profile interpolation along each segment.
+    pub profile_mode: PlineOffsetProfileMode,
+}
+
+impl<T> PlineProfileOffsetOptions<T>
+where
+    T: Real,
+{
+    #[inline]
+    pub fn new() -> Self {
+        Self {
+            pos_equal_eps: T::from(1e-5).unwrap(),
+            profile_mode: PlineOffsetProfileMode::LinearPerSegment,
+        }
+    }
+}
+
+impl<T> Default for PlineProfileOffsetOptions<T>
+where
+    T: Real,
+{
+    #[inline]
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+/// Error type for profile-based polyline offset operations.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum PlineProfileOffsetError {
+    /// Number of profile values does not match polyline vertex count.
+    InvalidProfileLength { expected: usize, actual: usize },
+    /// Profile values include both positive and negative non-zero distances.
+    MixedOffsetSigns,
+    /// Closed polyline support is not implemented for this profile offset mode.
+    ClosedPolylineUnsupported,
+    /// A segment is not supported by the current profile offset implementation.
+    ArcSegmentUnsupported { seg_start_index: usize },
+    /// A segment has near-zero length and cannot produce a stable offset direction.
+    DegenerateSegment { seg_start_index: usize },
+}
+
 impl<T> Default for PlineBooleanOptions<'_, T>
 where
     T: Real,

@@ -20,7 +20,8 @@ use crate::{
 use super::{
     BooleanOp, BooleanResult, ClosestPointResult, FindIntersectsOptions, PlineBooleanOptions,
     PlineIntersectVisitor, PlineIntersectsCollection, PlineOffsetOptions, PlineOrientation,
-    PlineSelfIntersectOptions, PlineVertex, arc_seg_bounding_box,
+    PlineProfileOffsetError, PlineProfileOffsetOptions, PlineSelfIntersectOptions, PlineVertex,
+    arc_seg_bounding_box,
     internal::{
         pline_boolean::polyline_boolean,
         pline_contains::polyline_contains,
@@ -29,6 +30,7 @@ use super::{
             visit_local_self_intersects,
         },
         pline_offset::parallel_offset,
+        pline_profile_offset::parallel_offset_profile_line_only,
     },
     seg_bounding_box, seg_closest_point, seg_fast_approx_bounding_box, seg_length,
     seg_split_at_point,
@@ -1642,6 +1644,25 @@ pub trait PlineSource {
         options: &PlineOffsetOptions<Self::Num>,
     ) -> Vec<Self::OutputPolyline> {
         parallel_offset(self, offset, options)
+    }
+
+    /// Experimental profile-based offset using one offset value per vertex.
+    ///
+    /// `profile` must have length equal to [PlineSource::vertex_count].
+    ///
+    /// Current implementation scope:
+    /// - supports open polylines only,
+    /// - supports line segments only (`bulge == 0` for every segment),
+    /// - returns [PlineProfileOffsetError::MixedOffsetSigns] if profile includes both positive and
+    ///   negative non-zero distances.
+    ///
+    /// This API is intended for variable-offset exploration and may evolve.
+    fn parallel_offset_profile(
+        &self,
+        profile: &[Self::Num],
+        options: &PlineProfileOffsetOptions<Self::Num>,
+    ) -> Result<Vec<Self::OutputPolyline>, PlineProfileOffsetError> {
+        parallel_offset_profile_line_only(self, profile, options)
     }
 
     /// Perform a boolean `operation` between this polyline and another using default options.
