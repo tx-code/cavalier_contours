@@ -6,14 +6,42 @@ All notable changes to the cavalier_contours crate will be documented in this fi
 
 ### Added ⭐
 
+- (no changes yet)
+
+## 0.8.0 - 2026-05-16
+
+### Added ⭐
+
 - Added `PlineSource::rect_clip` and `PlineSource::rect_clip_opt` as
   convenience APIs for clipping closed area polylines against axis-aligned
   rectangles through the existing boolean intersection path.
+- Added `PlineInversionView` as a read-only reversed-direction `PlineSource`
+  adapter to avoid cloning + `invert_direction_mut` for inversion workflows.
+- Added `seg_arc_from_radius_center` as an inverse helper to
+  `seg_arc_radius_and_center` for constructing arc segments from radius/center
+  and angle sweep.
+- Added/expanded upstream issue regression coverage for issues
+  `#35`, `#38`, `#43`, `#44`, `#76`, `#79`, and `#82`.
 
 ### Fixed 🐛
 
 - Improved `parallel_offset` robustness for repeat-position/degenerate input by sanitizing repeat
   vertices in release builds and guarding offset vector normalization against near-zero vectors.
+- Fixed multiple upstream-reported offset/boolean edge cases covered by the new
+  regression set (including `#38`, `#43`, `#79`, and `#82`).
+- Improved polyline slice/end-point validation stability near tiny final
+  segments and near-vertex intersections in boolean/offset internal paths.
+
+### Changed 🔧
+
+- Clarified boolean API limitations for self-intersecting closed polylines in
+  trait docs.
+- Documented fixed-width C ABI (`u32`/`uint32_t`) count/index rationale in FFI
+  docs.
+- Documented WASM UI export expectations (`default`/`initSync`) and direct
+  wasm-bindgen API guidance in UI docs.
+- Added README notes for unsupported variable offset distance and community C#
+  wrapper reference.
 
 ## 0.7.0 - 2026-01-02
 
