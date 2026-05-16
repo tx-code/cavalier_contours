@@ -7,8 +7,9 @@ use crate::{
         traits::Real,
     },
     polyline::{
-        PlineCreation, PlineOffsetProfileMode, PlineProfileOffsetError, PlineProfileOffsetOptions,
-        PlineSource, PlineSourceMut, Polyline, seg_arc_radius_and_center,
+        PlineCreation, PlineOffsetOptions, PlineOffsetProfileMode, PlineProfileOffsetError,
+        PlineProfileOffsetOptions, PlineSource, PlineSourceMut, Polyline,
+        seg_arc_radius_and_center,
     },
 };
 use num_traits::NumCast;
@@ -116,6 +117,23 @@ where
     }
 
     Ok(())
+}
+
+#[inline]
+fn constant_profile_offset<T>(profile: &[T], pos_equal_eps: T) -> Option<T>
+where
+    T: Real,
+{
+    if profile.is_empty() {
+        return None;
+    }
+
+    let first = profile[0];
+    if profile.iter().all(|&d| (d - first).abs() <= pos_equal_eps) {
+        Some(first)
+    } else {
+        None
+    }
 }
 
 fn linearize_arcs_with_profile<P, T>(
@@ -320,6 +338,18 @@ where
     }
 
     validate_profile(profile, options.pos_equal_eps)?;
+
+    if let Some(offset) = constant_profile_offset(profile, options.pos_equal_eps) {
+        let offset_options = PlineOffsetOptions {
+            pos_equal_eps: options.pos_equal_eps,
+            ..Default::default()
+        };
+        return Ok(crate::polyline::internal::pline_offset::parallel_offset(
+            polyline,
+            offset,
+            &offset_options,
+        ));
+    }
 
     let has_arcs = polyline.iter_segments().any(|(v1, _)| !v1.bulge_is_zero());
     let mut result: Vec<O> = if has_arcs {

@@ -1,6 +1,7 @@
 use cavalier_contours::core::math::Vector2;
 use cavalier_contours::polyline::{
-    BooleanOp, PlineCreation, PlineSource, PlineSourceMut, Polyline, seg_fast_approx_bounding_box,
+    BooleanOp, PlineCreation, PlineProfileOffsetOptions, PlineSource, PlineSourceMut, Polyline,
+    seg_fast_approx_bounding_box,
 };
 use criterion::{BenchmarkId, Criterion, criterion_group, criterion_main};
 use std::{
@@ -203,6 +204,10 @@ fn profile_modes() -> [(&'static str, Vec<BenchmarkProfile>); 2] {
     ]
 }
 
+fn constant_profile(pline: &Polyline<f64>, offset: f64) -> Vec<f64> {
+    vec![offset; pline.vertex_count()]
+}
+
 fn shifted_profile(profile: &Polyline<f64>, x: f64, y: f64) -> Polyline<f64> {
     let mut shifted = profile.clone();
     shifted.translate_mut(x, y);
@@ -293,6 +298,40 @@ fn bench_offsets(c: &mut Criterion) {
                             .len();
                         result_count += black_box(&profile.pline)
                             .parallel_offset(black_box(-offset))
+                            .len();
+                    }
+                    black_box(result_count)
+                });
+            });
+        }
+
+        group.finish();
+    }
+}
+
+fn bench_profile_offsets(c: &mut Criterion) {
+    for (mode, profiles) in profile_modes() {
+        let mut group = c.benchmark_group(format!("offset_profile/constant/{mode}"));
+
+        for profile in profiles {
+            let options = PlineProfileOffsetOptions::default();
+            let test_profiles: Vec<Vec<f64>> = (1..=profile.offset_count)
+                .flat_map(|i| {
+                    let offset = i as f64 * profile.offset_delta;
+                    [
+                        constant_profile(&profile.pline, offset),
+                        constant_profile(&profile.pline, -offset),
+                    ]
+                })
+                .collect();
+
+            group.bench_function(BenchmarkId::from_parameter(profile.id.as_str()), |b| {
+                b.iter(|| {
+                    let mut result_count = 0;
+                    for prof in test_profiles.iter() {
+                        result_count += black_box(&profile.pline)
+                            .parallel_offset_profile(black_box(prof), black_box(&options))
+                            .expect("constant profile offset benchmark setup should be valid")
                             .len();
                     }
                     black_box(result_count)
@@ -462,6 +501,6 @@ criterion_group! {
         .sample_size(10)
         .warm_up_time(Duration::from_millis(100))
         .measurement_time(Duration::from_millis(300));
-    targets = bench_offsets, bench_booleans, bench_intersections, bench_spatial_index, bench_properties
+    targets = bench_offsets, bench_profile_offsets, bench_booleans, bench_intersections, bench_spatial_index, bench_properties
 }
 criterion_main!(geometry_baseline);

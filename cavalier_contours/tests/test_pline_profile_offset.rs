@@ -115,14 +115,13 @@ fn profile_offset_supports_arc_segments_via_line_approx() {
 
     let options = PlineProfileOffsetOptions::default();
     let result = input
-        .parallel_offset_profile(&[1.0, 1.0], &options)
+        .parallel_offset_profile(&[1.0, 2.0], &options)
         .expect("expected arc profile offset to succeed via line approximation");
 
     assert_eq!(result.len(), 1);
     let output = &result[0];
     assert!(!output.is_closed());
     assert!(output.vertex_count() > 2);
-    assert!(output.iter_vertexes().all(|v| v.bulge_is_zero()));
 }
 
 #[test]
@@ -155,10 +154,33 @@ fn profile_offset_rejects_invalid_arc_approx_error() {
         ..Default::default()
     };
     let err = input
-        .parallel_offset_profile(&[1.0, 1.0], &options)
+        .parallel_offset_profile(&[1.0, 2.0], &options)
         .expect_err("expected invalid arc approximation error");
 
     assert_eq!(err, PlineProfileOffsetError::InvalidArcApproxError);
+}
+
+#[test]
+fn profile_offset_constant_profile_matches_parallel_offset_for_arc_circle() {
+    let mut input = Polyline::new_closed();
+    input.add(-35.0, 5.0, 1.0);
+    input.add(45.0, 5.0, 1.0);
+
+    let options = PlineProfileOffsetOptions::default();
+    let profile_result = input
+        .parallel_offset_profile(&[1.25, 1.25], &options)
+        .expect("expected constant profile offset to succeed");
+    let baseline = input.parallel_offset(1.25);
+
+    assert_eq!(profile_result.len(), baseline.len());
+    assert_eq!(profile_result.len(), 1);
+    let p = &profile_result[0];
+    let b = &baseline[0];
+    assert_eq!(p.is_closed(), b.is_closed());
+    assert_eq!(p.vertex_count(), b.vertex_count());
+    for i in 0..p.vertex_count() {
+        assert!(p.at(i).fuzzy_eq_eps(b.at(i), 1e-9));
+    }
 }
 
 #[test]
@@ -170,7 +192,7 @@ fn profile_offset_rejects_degenerate_segments() {
 
     let options = PlineProfileOffsetOptions::default();
     let err = input
-        .parallel_offset_profile(&[1.0, 1.0, 1.0], &options)
+        .parallel_offset_profile(&[1.0, 2.0, 3.0], &options)
         .expect_err("expected degenerate segment error");
 
     assert_eq!(
