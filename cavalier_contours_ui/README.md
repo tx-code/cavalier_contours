@@ -40,3 +40,11 @@ trunk serve
 ```
 
 Then go to [http://localhost:8080/#dev](http://localhost:8080/#dev) in your browser (`/#dev` is important to force not loading a stale cached version).
+
+## WASM Output FAQ
+
+If you build and inspect the generated JS bundle and only see `default` and `initSync`, that is expected for this UI app build.
+
+- `cavalier_contours_ui` is an eframe/trunk web application entrypoint, not a JS-callable API surface.
+- For running the demo, use `trunk serve` or `trunk build`; do not call exported geometry functions directly from the generated JS bundle.
+- If you need direct JS-callable geometry functions, create a separate `wasm-bindgen` wrapper crate that exports the functions you need from `cavalier_contours`.

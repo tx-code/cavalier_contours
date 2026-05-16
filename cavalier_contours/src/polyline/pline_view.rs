@@ -319,8 +319,17 @@ where
         );
 
         let current_vertex = source.at(intersect_index);
+        // Keep this classification at least as loose as view-data validation so near-vertex
+        // intersects do not route through the split branch and trip debug assertions.
+        let validation_eps = T::from(Self::VALIDATION_EPS).unwrap();
+        let vertex_snap_eps = if pos_equal_eps > validation_eps {
+            pos_equal_eps
+        } else {
+            validation_eps
+        };
+
         let (end_index_offset, updated_end_bulge) =
-            if end_intersect.fuzzy_eq_eps(current_vertex.pos(), pos_equal_eps) {
+            if end_intersect.fuzzy_eq_eps(current_vertex.pos(), vertex_snap_eps) {
                 // intersect lies on top of vertex at start of segment
                 let offset = traverse_count - 1;
                 let updated_end_bulge = if offset != 0 {
@@ -651,15 +660,20 @@ where
             };
         }
 
-        // end point should never lie directly on top of end index segment start
-        if self
-            .end_point
-            .fuzzy_eq_eps(source.at(end_index).pos(), validation_eps)
-        {
-            return ViewDataValidation::EndPointOnFinalOffsetVertex {
-                end_point: self.end_point,
-                final_offset_vertex: source.at(end_index),
-            };
+        // End point should usually not lie directly on top of final segment start.
+        // However with very short final segments the end point can fall within epsilon of both
+        // segment endpoints (numerically ambiguous), which is still a valid slice in practice.
+        let final_seg_start = source.at(end_index).pos();
+        if self.end_point.fuzzy_eq_eps(final_seg_start, validation_eps) {
+            let final_seg_end = source.at(source.next_wrapping_index(end_index)).pos();
+            let ambiguous_tiny_final_seg =
+                self.end_point.fuzzy_eq_eps(final_seg_end, validation_eps);
+            if !ambiguous_tiny_final_seg {
+                return ViewDataValidation::EndPointOnFinalOffsetVertex {
+                    end_point: self.end_point,
+                    final_offset_vertex: source.at(end_index),
+                };
+            }
         }
 
         if self.end_index_offset == 0 {

@@ -691,6 +691,7 @@ where
     }
 
     // load all the slice start points into spatial index
+    let mut slice_start_points = Vec::with_capacity(slices.len());
     let aabb_index = {
         let mut builder = StaticAABB2DIndexBuilder::new(slices.len());
 
@@ -700,6 +701,7 @@ where
             } else {
                 slice.view_data.updated_start.pos()
             };
+            slice_start_points.push(pt);
             builder.add(pt.x, pt.y, pt.x, pt.y);
         }
 
@@ -783,23 +785,38 @@ where
             }
             loop_count += 1;
 
-            query_results.clear();
-            let mut query_visitor = |i: usize| {
-                // skip already visited
-                if i == beginning_slice_idx || !visited_slice_idx[i] {
-                    query_results.push(i);
-                }
-            };
-
             let ep = current_pline.last().unwrap().pos();
-            aabb_index.visit_query_with_stack(
-                ep.x - pos_equal_eps,
-                ep.y - pos_equal_eps,
-                ep.x + pos_equal_eps,
-                ep.y + pos_equal_eps,
-                &mut query_visitor,
-                &mut query_stack,
-            );
+            let pos_equal_eps_sq = pos_equal_eps * pos_equal_eps;
+
+            query_results.clear();
+            {
+                let mut query_visitor = |i: usize| {
+                    // skip already visited except when looping back to beginning
+                    if i != beginning_slice_idx && visited_slice_idx[i] {
+                        return;
+                    }
+
+                    let start_pt = slice_start_points[i];
+                    if dist_squared(start_pt, ep) <= pos_equal_eps_sq {
+                        query_results.push(i);
+                    }
+                };
+
+                aabb_index.visit_query_with_stack(
+                    ep.x - pos_equal_eps,
+                    ep.y - pos_equal_eps,
+                    ep.x + pos_equal_eps,
+                    ep.y + pos_equal_eps,
+                    &mut query_visitor,
+                    &mut query_stack,
+                );
+            }
+
+            query_results.sort_unstable_by(|a, b| {
+                let dist_a = dist_squared(slice_start_points[*a], ep);
+                let dist_b = dist_squared(slice_start_points[*b], ep);
+                dist_a.total_cmp(&dist_b)
+            });
 
             if query_results.is_empty() {
                 // may arrive here due to epsilon/thresholds around overlapping segments,
@@ -977,20 +994,61 @@ where
                     BooleanResult::empty(BooleanResultInfo::Disjoint)
                 }
             } else {
-                // keep all slices from pline1 that are in pline2 and all slices from pline2 that
-                // are in pline1
-                let pruned_slices =
-                    prune_slices(pline1, pline2, &boolean_info, BooleanOp::And, pos_equal_eps);
+                let build_and_pos_plines = |info: &ProcessForBooleanResult<T>, eps: T| {
+                    // keep all slices from pline1 that are in pline2 and all slices from pline2
+                    // that are in pline1
+                    let pruned_slices = prune_slices(pline1, pline2, info, BooleanOp::And, eps);
+                    let stitch_selector = OrAndStitchSelector::from_pruned_slices(&pruned_slices);
+                    stitch_slices_into_closed_polylines(
+                        &pruned_slices.slices_remaining,
+                        pline1,
+                        pline2,
+                        &stitch_selector,
+                        eps,
+                        collapsed_area_eps,
+                    )
+                };
 
-                let stitch_selector = OrAndStitchSelector::from_pruned_slices(&pruned_slices);
-                let pos_plines = stitch_slices_into_closed_polylines(
-                    &pruned_slices.slices_remaining,
-                    pline1,
-                    pline2,
-                    &stitch_selector,
-                    pos_equal_eps,
-                    collapsed_area_eps,
-                );
+                let mut pos_plines = build_and_pos_plines(&boolean_info, pos_equal_eps);
+
+                // If AND returned empty from an intersected case, retry once with a tighter
+                // epsilon to reduce ambiguous stitch choices around nearly-coincident endpoints.
+                if pos_plines.is_empty() {
+                    let tighter_eps = pos_equal_eps * T::from(0.1).unwrap();
+                    if tighter_eps < pos_equal_eps {
+                        let tighter_info =
+                            process_for_boolean(pline1, pline2, pline1_aabb_index, tighter_eps);
+                        if tighter_info.any_intersects() {
+                            let retry_pos_plines = build_and_pos_plines(&tighter_info, tighter_eps);
+                            if !retry_pos_plines.is_empty() {
+                                pos_plines = retry_pos_plines;
+                            }
+                        }
+                    }
+                }
+
+                // Narrow fallback for single-slice overlap intersections that collapse to a
+                // line-only loop during stitching.
+                if pos_plines.is_empty()
+                    && boolean_info.overlapping_slices.len() == 1
+                    && boolean_info.intersects.len() == 1
+                {
+                    let overlap = &boolean_info.overlapping_slices[0].view_data;
+                    let sp = overlap.updated_start.pos();
+                    let ep = overlap.end_point;
+                    if !sp.fuzzy_eq_eps(ep, pos_equal_eps) {
+                        let mut overlap_pline = O::with_capacity(2, true);
+                        overlap_pline.add(sp.x, sp.y, T::zero());
+                        overlap_pline.add(ep.x, ep.y, T::zero());
+
+                        let mut composite_userdata: Vec<u64> = Vec::new();
+                        composite_userdata.extend(pline1.get_userdata_values());
+                        composite_userdata.extend(pline2.get_userdata_values());
+                        overlap_pline.set_userdata_values(composite_userdata.iter().copied());
+
+                        pos_plines.push(BooleanResultPline::new(overlap_pline, Vec::new()));
+                    }
+                }
 
                 BooleanResult::new(pos_plines, Vec::new(), BooleanResultInfo::Intersected)
             }

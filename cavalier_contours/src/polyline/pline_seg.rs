@@ -56,6 +56,63 @@ where
     (radius, center)
 }
 
+/// Construct a single arc segment from circle parameters.
+///
+/// This is the inverse helper of [seg_arc_radius_and_center]: it creates start/end polyline
+/// vertexes from a `center`, `radius`, and angle sweep.
+///
+/// `is_clockwise=false` creates a counter clockwise segment, `is_clockwise=true` creates a
+/// clockwise segment.
+///
+/// The resulting segment follows the library's single-segment arc limitation (`abs(bulge) <= 1`,
+/// up to a half-circle sweep). For larger sweeps split the arc into multiple segments.
+///
+/// # Examples
+///
+/// ```
+/// # use cavalier_contours::polyline::*;
+/// # use cavalier_contours::core::math::*;
+/// // quarter circle centered at origin from +X to +Y (counter clockwise)
+/// let (v1, v2) = seg_arc_from_radius_center(
+///     1.0,
+///     Vector2::new(0.0, 0.0),
+///     0.0,
+///     std::f64::consts::FRAC_PI_2,
+///     false,
+/// );
+///
+/// assert!(v1.pos().fuzzy_eq(Vector2::new(1.0, 0.0)));
+/// assert!(v2.pos().fuzzy_eq(Vector2::new(0.0, 1.0)));
+/// assert!((v1.bulge - (std::f64::consts::PI / 8.0).tan()).abs() < 1e-12);
+/// ```
+pub fn seg_arc_from_radius_center<T>(
+    radius: T,
+    center: Vector2<T>,
+    start_angle: T,
+    end_angle: T,
+    is_clockwise: bool,
+) -> (PlineVertex<T>, PlineVertex<T>)
+where
+    T: Real,
+{
+    debug_assert!(radius > T::zero(), "radius must be > 0");
+
+    let sweep = delta_angle_signed(start_angle, end_angle, is_clockwise);
+    debug_assert!(
+        sweep.abs() <= T::pi(),
+        "single arc segment sweep must be <= PI in magnitude"
+    );
+
+    let start_point = point_on_circle(radius, center, start_angle);
+    let end_point = point_on_circle(radius, center, end_angle);
+    let bulge = bulge_from_angle(sweep);
+
+    (
+        PlineVertex::new(start_point.x, start_point.y, bulge),
+        PlineVertex::new(end_point.x, end_point.y, T::zero()),
+    )
+}
+
 /// Result from splitting a segment using [seg_split_at_point].
 #[derive(Debug, Copy, Clone)]
 pub struct SplitResult<T = f64>

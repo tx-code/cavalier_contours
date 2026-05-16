@@ -26,6 +26,10 @@ The resulting shared library file will be located in `/target/release`, the file
 ## Compatibility Notes
 
 - The C FFI is intentionally versioned as a stable C ABI surface.
+- Count/index parameters and out-values intentionally use fixed-width `uint32_t`
+  (Rust `u32`) instead of platform-dependent `size_t`/`usize`.
+  This keeps the ABI shape consistent across 32-bit and 64-bit targets for
+  downstream bindings.
 - New Rust-only convenience helpers (for example `rect_clip`) may be available
   in the Rust crate before a dedicated C wrapper is added.
 - Regenerate `cavalier_contours_ffi.h` only when the C ABI surface changes.

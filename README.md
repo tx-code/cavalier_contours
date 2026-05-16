@@ -61,6 +61,7 @@ Migration guidance for users coming from old C++ CavalierContours is in
 
 - Bulge values for arcs only support values between -1.0 and 1.0 (up to half-circle) for arcs, workaround: use multiple arc segments to form larger arcs
 - Only [rounded joins](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/stroke-linejoin#round) are supported for parallel offsets (other join types are not implemented)
+- Variable offset distance (per-vertex/per-segment offsets) is not currently implemented
 - Parallel offsets and boolean operations behave differently for resulting overlapping segments:
   - Parallel offset result always retains overlapping segments (longest valid connection when joining slices)
   - Boolean operation result always combines/merges/removes overlapping segments (based on boolean operation)
@@ -74,6 +75,10 @@ Migration guidance for users coming from old C++ CavalierContours is in
 - **cavalier_contours_ffi**: C FFI bindings for use from C/C++ and other languages. [`cavalier_contours_ffi` README](cavalier_contours_ffi/README.md)
 - **cavalier_contours_ui**: Web-based UI demo (WASM, using [egui](https://github.com/emilk/egui)). [`cavalier_contours_ui` README](cavalier_contours_ui/README.md) ([live page](https://www.cavaliercontours.dev/))
 - **examples**: examples demonstrating some of cavalier_contours functionality. [`examples` README](examples/README.md)
+
+## Community Wrappers
+
+- C#/.NET wrapper (community maintained): [FsDiG/CavalierContoursSharp](https://github.com/FsDiG/CavalierContoursSharp)
 
 ## Requirements
 

@@ -1,4 +1,9 @@
 //! This module contains the C foreign function interface for cavalier_contours.
+//!
+//! ABI note: count/index parameters intentionally use fixed-width `u32` on the
+//! C boundary (generated as `uint32_t`), instead of platform-dependent
+//! `size_t`/`usize`, to keep the ABI consistent across 32-bit and 64-bit
+//! consumers.
 #![allow(non_camel_case_types)]
 use cavalier_contours::{
     core::math::Vector2,

@@ -1239,6 +1239,23 @@ where
         point_valid_dist(slice.end_point, query_stack)
     };
 
+    let try_open_dual_single_intersect_fallback =
+        |result: &mut Vec<PlineViewData<T>>, query_stack: &mut Vec<usize>| {
+            if !result.is_empty()
+                || original_polyline.is_closed()
+                || !self_intrs.is_empty()
+                || !dual_intrs.overlapping_intersects.is_empty()
+                || dual_intrs.basic_intersects.len() != 1
+            {
+                return;
+            }
+
+            let full_slice = PlineViewData::from_entire_pline(raw_offset_polyline);
+            if slice_is_valid(&full_slice, query_stack) {
+                result.push(full_slice);
+            }
+        };
+
     if !original_polyline.is_closed() {
         // build first slice that ends at the first intersect since we will not wrap back to
         // capture it as in the case of a closed polyline
@@ -1303,6 +1320,7 @@ where
                 {
                     result.push(s);
                 }
+                try_open_dual_single_intersect_fallback(&mut result, &mut query_stack);
                 return result;
             };
 
@@ -1321,6 +1339,8 @@ where
             result.push(s);
         }
     }
+
+    try_open_dual_single_intersect_fallback(&mut result, &mut query_stack);
 
     result
 }

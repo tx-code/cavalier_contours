@@ -1687,6 +1687,12 @@ pub trait PlineSource {
     /// end to end to form them. For the result `pline1` refers to `self`, and `pline2` refers to
     /// `other`.
     ///
+    /// # Limitations
+    ///
+    /// Both inputs must be simple closed polylines. Self-intersecting closed polylines are not
+    /// supported by the boolean algorithm and may produce unreliable results. Split
+    /// self-intersecting paths into simple loops before calling this method.
+    ///
     /// # Panics
     ///
     /// Panics if `Self::Num` type fails to cast to/from a `u16` (required for spatial index).
