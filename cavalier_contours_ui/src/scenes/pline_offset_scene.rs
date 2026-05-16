@@ -1,7 +1,8 @@
 use cavalier_contours::{
     pline_closed,
     polyline::{
-        PlineOffsetOptions, PlineSource, PlineSourceMut, Polyline,
+        PlineOffsetOptions, PlineOffsetProfileMode, PlineProfileOffsetOptions, PlineSource,
+        PlineSourceMut, Polyline,
         internal::pline_offset::{
             RawPlineOffsetSeg, create_raw_offset_polyline, create_untrimmed_raw_offset_segs,
         },
@@ -10,7 +11,7 @@ use cavalier_contours::{
 use eframe::egui::{CentralPanel, Rect, ScrollArea, Slider, Ui, Vec2};
 use egui::Id;
 use egui_plot::{Plot, PlotPoint};
-use std::borrow::Cow;
+use std::{borrow::Cow, f64::consts::TAU};
 
 use crate::editor::PolylineEditor;
 use crate::plotting::{PlinePlotData, PlinesPlotItem, RawPlineOffsetSegsPlotItem};
@@ -23,6 +24,8 @@ pub struct PlineOffsetScene {
     // NOTE: just one polyline but Vec used for passing into editor
     pline: Vec<Polyline>,
     mode: Mode,
+    offset_method: OffsetMethod,
+    profile_variation: f64,
     offset: f64,
     interaction_state: InteractionState,
     polyline_editor: PolylineEditor,
@@ -36,6 +39,27 @@ enum Mode {
     },
     RawOffset,
     RawOffsetSegments,
+}
+
+#[derive(Clone, Copy, PartialEq)]
+enum OffsetMethod {
+    Uniform,
+    ProfileLinear,
+    ProfileStep,
+}
+
+impl OffsetMethod {
+    fn label(&self) -> &'static str {
+        match self {
+            OffsetMethod::Uniform => "Uniform",
+            OffsetMethod::ProfileLinear => "Profile Linear",
+            OffsetMethod::ProfileStep => "Profile Step",
+        }
+    }
+
+    fn is_profile(self) -> bool {
+        !matches!(self, OffsetMethod::Uniform)
+    }
 }
 
 impl Mode {
@@ -96,6 +120,8 @@ impl Default for PlineOffsetScene {
                 handle_self_intersects: true,
                 max_offset_count: 10,
             },
+            offset_method: OffsetMethod::Uniform,
+            profile_variation: 0.3,
             offset: 1.0,
             interaction_state: InteractionState {
                 grabbed_vertex: None,
@@ -116,12 +142,22 @@ impl Scene for PlineOffsetScene {
         let PlineOffsetScene {
             pline,
             mode,
+            offset_method,
+            profile_variation,
             offset,
             interaction_state,
             polyline_editor,
         } = self;
 
-        controls_panel(ui, mode, offset, interaction_state, polyline_editor);
+        controls_panel(
+            ui,
+            mode,
+            offset_method,
+            profile_variation,
+            offset,
+            interaction_state,
+            polyline_editor,
+        );
 
         interaction_state.zoom_to_fit |= init;
         plot_area(
@@ -129,6 +165,8 @@ impl Scene for PlineOffsetScene {
             settings,
             pline,
             mode,
+            offset_method,
+            profile_variation,
             offset,
             interaction_state,
             polyline_editor,
@@ -139,6 +177,8 @@ impl Scene for PlineOffsetScene {
 fn controls_panel(
     ui: &mut Ui,
     mode: &mut Mode,
+    offset_method: &mut OffsetMethod,
+    profile_variation: &mut f64,
     offset: &mut f64,
     interaction_state: &mut InteractionState,
     polyline_editor: &mut PolylineEditor,
@@ -184,6 +224,49 @@ fn controls_panel(
                     max_offset_count,
                 } = mode
                 {
+                    ui.horizontal(|ui| {
+                        ui.label("Offset Strategy:");
+                        egui::ComboBox::from_id_salt("offset_strategy_combo")
+                            .selected_text(offset_method.label())
+                            .show_ui(ui, |ui| {
+                                ui.selectable_value(
+                                    offset_method,
+                                    OffsetMethod::Uniform,
+                                    OffsetMethod::Uniform.label(),
+                                )
+                                .on_hover_text("Use the classic scalar parallel_offset API");
+                                ui.selectable_value(
+                                    offset_method,
+                                    OffsetMethod::ProfileLinear,
+                                    OffsetMethod::ProfileLinear.label(),
+                                )
+                                .on_hover_text(
+                                    "Use parallel_offset_profile with linear per-segment interpolation",
+                                );
+                                ui.selectable_value(
+                                    offset_method,
+                                    OffsetMethod::ProfileStep,
+                                    OffsetMethod::ProfileStep.label(),
+                                )
+                                .on_hover_text(
+                                    "Use parallel_offset_profile with step per-segment interpolation",
+                                );
+                            });
+                    });
+
+                    if offset_method.is_profile() {
+                        egui::Frame::default()
+                            .stroke(ui.visuals().widgets.noninteractive.bg_stroke)
+                            .corner_radius(ui.visuals().widgets.noninteractive.corner_radius)
+                            .inner_margin(Vec2::splat(ui.spacing().item_spacing.x))
+                            .show(ui, |ui| {
+                                ui.label("Profile Variation").on_hover_text(
+                                    "Wave amplitude for variable offset profile (0.0 = constant profile)",
+                                );
+                                ui.add(Slider::new(profile_variation, 0.0..=0.95));
+                            });
+                    }
+
                     egui::Frame::default()
                         .stroke(ui.visuals().widgets.noninteractive.bg_stroke)
                         .corner_radius(ui.visuals().widgets.noninteractive.corner_radius)
@@ -226,6 +309,8 @@ fn plot_area(
     settings: &SceneSettings,
     plines: &mut Vec<Polyline>,
     mode: &Mode,
+    offset_method: &OffsetMethod,
+    profile_variation: &f64,
     offset: &f64,
     interaction_state: &mut InteractionState,
     polyline_editor: &mut PolylineEditor,
@@ -246,7 +331,14 @@ fn plot_area(
         Mode::Offset {
             handle_self_intersects,
             max_offset_count,
-        } => build_offset(pline, offset, handle_self_intersects, max_offset_count),
+        } => build_offset(
+            pline,
+            offset,
+            offset_method,
+            profile_variation,
+            handle_self_intersects,
+            max_offset_count,
+        ),
         Mode::RawOffset => build_raw_offset(pline, offset),
         Mode::RawOffsetSegments => build_raw_offset_segments(pline, offset),
     };
@@ -354,9 +446,61 @@ fn plot_area(
 fn build_offset(
     pline: &Polyline,
     offset: &f64,
+    offset_method: &OffsetMethod,
+    profile_variation: &f64,
     handle_self_intersects: &bool,
     max_offset_count: &usize,
 ) -> SceneState {
+    fn variable_profile_wave(pline: &Polyline, offset: f64, profile_variation: f64) -> Vec<f64> {
+        let vertex_count = pline.vertex_count();
+        if vertex_count == 0 {
+            return Vec::new();
+        }
+        // Keep variation under 1.0 so all per-vertex distances retain the same sign.
+        let variation = profile_variation.clamp(0.0, 0.95);
+        (0..vertex_count)
+            .map(|i| {
+                let t = i as f64 / vertex_count as f64;
+                let factor = 1.0 + variation * (TAU * t).sin();
+                offset * factor
+            })
+            .collect()
+    }
+
+    fn offset_once(
+        pline: &Polyline,
+        offset: f64,
+        offset_method: OffsetMethod,
+        profile_variation: f64,
+        offset_opt: &PlineOffsetOptions<f64>,
+    ) -> Vec<Polyline> {
+        match offset_method {
+            OffsetMethod::Uniform => pline.parallel_offset_opt(offset, offset_opt),
+            OffsetMethod::ProfileLinear | OffsetMethod::ProfileStep => {
+                let profile_mode = match offset_method {
+                    OffsetMethod::ProfileLinear => PlineOffsetProfileMode::LinearPerSegment,
+                    OffsetMethod::ProfileStep => PlineOffsetProfileMode::StepPerSegment,
+                    OffsetMethod::Uniform => unreachable!(),
+                };
+                let profile_options = PlineProfileOffsetOptions {
+                    pos_equal_eps: offset_opt.pos_equal_eps,
+                    profile_mode,
+                    ..Default::default()
+                };
+                let profile = variable_profile_wave(pline, offset, profile_variation);
+                let result: Result<Vec<Polyline>, _> =
+                    pline.parallel_offset_profile(&profile, &profile_options);
+                match result {
+                    Ok(v) => v,
+                    Err(err) => {
+                        eprintln!("profile offset failed in UI demo scene: {err:?}");
+                        Vec::new()
+                    }
+                }
+            }
+        }
+    }
+
     let mut all_offset_plines = Vec::new();
     let offset_opt = PlineOffsetOptions {
         handle_self_intersects: *handle_self_intersects,
@@ -373,7 +517,13 @@ fn build_offset(
     let orientation = pline.orientation();
 
     // current offset polylines
-    let mut offset_plines = pline.parallel_offset_opt(*offset, &offset_opt);
+    let mut offset_plines = offset_once(
+        pline.as_ref(),
+        *offset,
+        *offset_method,
+        *profile_variation,
+        &offset_opt,
+    );
 
     let mut same_orientation = Vec::new();
     let mut diff_orientation = Vec::new();
@@ -391,7 +541,13 @@ fn build_offset(
 
         // repeat offset for same orientation ones
         for pl in same_orientation.iter() {
-            offset_plines.extend(pl.parallel_offset_opt(*offset, &offset_opt));
+            offset_plines.extend(offset_once(
+                pl,
+                *offset,
+                *offset_method,
+                *profile_variation,
+                &offset_opt,
+            ));
         }
 
         // accumulate results
