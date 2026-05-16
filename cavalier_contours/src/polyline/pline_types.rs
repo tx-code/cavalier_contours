@@ -313,6 +313,8 @@ where
     pub pos_equal_eps: T,
     /// Controls profile interpolation along each segment.
     pub profile_mode: PlineOffsetProfileMode,
+    /// Maximum distance error used when approximating arc segments into line segments.
+    pub arc_approx_error: T,
 }
 
 impl<T> PlineProfileOffsetOptions<T>
@@ -324,6 +326,7 @@ where
         Self {
             pos_equal_eps: T::from(1e-5).unwrap(),
             profile_mode: PlineOffsetProfileMode::LinearPerSegment,
+            arc_approx_error: T::from(1e-3).unwrap(),
         }
     }
 }
@@ -345,12 +348,14 @@ pub enum PlineProfileOffsetError {
     InvalidProfileLength { expected: usize, actual: usize },
     /// Profile values include both positive and negative non-zero distances.
     MixedOffsetSigns,
-    /// Closed polyline support is not implemented for this profile offset mode.
-    ClosedPolylineUnsupported,
     /// A segment is not supported by the current profile offset implementation.
     ArcSegmentUnsupported { seg_start_index: usize },
     /// A segment has near-zero length and cannot produce a stable offset direction.
     DegenerateSegment { seg_start_index: usize },
+    /// Arc approximation error must be strictly greater than zero.
+    InvalidArcApproxError,
+    /// Arc approximation failed due numeric conversion limits.
+    ArcApproximationFailed { seg_start_index: usize },
 }
 
 impl<T> Default for PlineBooleanOptions<'_, T>

@@ -108,24 +108,25 @@ fn profile_offset_rejects_mixed_signs() {
 }
 
 #[test]
-fn profile_offset_rejects_arc_segments() {
+fn profile_offset_supports_arc_segments_via_line_approx() {
     let mut input = Polyline::new();
     input.add(0.0, 0.0, 1.0);
-    input.add(1.0, 0.0, 0.0);
+    input.add(2.0, 0.0, 0.0);
 
     let options = PlineProfileOffsetOptions::default();
-    let err = input
+    let result = input
         .parallel_offset_profile(&[1.0, 1.0], &options)
-        .expect_err("expected arc unsupported error");
+        .expect("expected arc profile offset to succeed via line approximation");
 
-    assert_eq!(
-        err,
-        PlineProfileOffsetError::ArcSegmentUnsupported { seg_start_index: 0 }
-    );
+    assert_eq!(result.len(), 1);
+    let output = &result[0];
+    assert!(!output.is_closed());
+    assert!(output.vertex_count() > 2);
+    assert!(output.iter_vertexes().all(|v| v.bulge_is_zero()));
 }
 
 #[test]
-fn profile_offset_rejects_closed_polyline_for_now() {
+fn profile_offset_supports_closed_polyline() {
     let mut input = Polyline::new_closed();
     input.add(0.0, 0.0, 0.0);
     input.add(10.0, 0.0, 0.0);
@@ -133,11 +134,31 @@ fn profile_offset_rejects_closed_polyline_for_now() {
     input.add(0.0, 10.0, 0.0);
 
     let options = PlineProfileOffsetOptions::default();
-    let err = input
+    let result = input
         .parallel_offset_profile(&[1.0, 1.0, 1.0, 1.0], &options)
-        .expect_err("expected closed polyline unsupported error");
+        .expect("expected closed profile offset to succeed");
 
-    assert_eq!(err, PlineProfileOffsetError::ClosedPolylineUnsupported);
+    assert_eq!(result.len(), 1);
+    let output = &result[0];
+    assert!(output.is_closed());
+    assert!(output.vertex_count() >= 3);
+}
+
+#[test]
+fn profile_offset_rejects_invalid_arc_approx_error() {
+    let mut input = Polyline::new();
+    input.add(0.0, 0.0, 1.0);
+    input.add(2.0, 0.0, 0.0);
+
+    let options = PlineProfileOffsetOptions {
+        arc_approx_error: 0.0,
+        ..Default::default()
+    };
+    let err = input
+        .parallel_offset_profile(&[1.0, 1.0], &options)
+        .expect_err("expected invalid arc approximation error");
+
+    assert_eq!(err, PlineProfileOffsetError::InvalidArcApproxError);
 }
 
 #[test]

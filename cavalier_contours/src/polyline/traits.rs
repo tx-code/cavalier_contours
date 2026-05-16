@@ -30,7 +30,7 @@ use super::{
             visit_local_self_intersects,
         },
         pline_offset::parallel_offset,
-        pline_profile_offset::parallel_offset_profile_line_only,
+        pline_profile_offset::parallel_offset_profile as parallel_offset_profile_impl,
     },
     seg_bounding_box, seg_closest_point, seg_fast_approx_bounding_box, seg_length,
     seg_split_at_point,
@@ -1651,8 +1651,10 @@ pub trait PlineSource {
     /// `profile` must have length equal to [PlineSource::vertex_count].
     ///
     /// Current implementation scope:
-    /// - supports open polylines only,
-    /// - supports line segments only (`bulge == 0` for every segment),
+    /// - supports open and closed polylines,
+    /// - line segments are processed directly,
+    /// - arc segments are first approximated to line segments using
+    ///   [PlineProfileOffsetOptions::arc_approx_error],
     /// - returns [PlineProfileOffsetError::MixedOffsetSigns] if profile includes both positive and
     ///   negative non-zero distances.
     ///
@@ -1662,7 +1664,7 @@ pub trait PlineSource {
         profile: &[Self::Num],
         options: &PlineProfileOffsetOptions<Self::Num>,
     ) -> Result<Vec<Self::OutputPolyline>, PlineProfileOffsetError> {
-        parallel_offset_profile_line_only(self, profile, options)
+        parallel_offset_profile_impl(self, profile, options)
     }
 
     /// Perform a boolean `operation` between this polyline and another using default options.
